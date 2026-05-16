@@ -1,5 +1,7 @@
 # @golden-passport/ds-patternfly
 
+[![npm version](https://img.shields.io/npm/v/@golden-passport/ds-patternfly.svg)](https://www.npmjs.com/package/@golden-passport/ds-patternfly)
+
 A brandable React design system built on **PatternFly 6**, designed to accelerate front-end work for BPM/automation projects (e.g. KIE).
 
 ## Layout
