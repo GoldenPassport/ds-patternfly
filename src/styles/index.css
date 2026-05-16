@@ -1,0 +1,879 @@
+/*
+ * @golden-passport/ds-patternfly base stylesheet.
+ *
+ * Consumers should import this AFTER PatternFly's base stylesheet:
+ *   import "@patternfly/react-core/dist/styles/base.css";
+ *   import "@golden-passport/ds-patternfly/styles";
+ *
+ * Brand-specific CSS variables are injected at runtime by <ThemeProvider> as
+ * `[data-brand="..."]` rules; the rules below are minimal cross-brand defaults
+ * and small layout/utility helpers used by the components.
+ */
+
+:root {
+  --gp-z-skip-link: 9999;
+  --gp-transition-fast: 120ms ease-out;
+}
+
+/*
+ * Universal focus-ring colour + width.
+ *
+ * PF6 only sets `outline-offset` on focused components — it relies on the
+ * browser default for the rest, which renders as a thin (1–2px) system-
+ * coloured line. To get a consistent themed ring at a sensible width, we
+ * force outline-color, outline-width, and outline-style ourselves.
+ *
+ * Position (offset) is left to the focus-ring system (inner / outer
+ * blocks below) and to PF6's own component-specific declarations, so this
+ * rule is purely about what the ring *looks like*, not where it sits.
+ */
+[data-brand] :focus-visible {
+  outline-color: var(--gp-color-focus-ring, currentColor);
+  outline-width: 2px;
+  outline-style: solid;
+}
+
+/*
+ * Custom-input safety net — for consumer-authored controls (non-PF
+ * elements) that need an outline-offset too. PF components handle their
+ * own offset via the focus-ring config. Excludes anything with a
+ * `pf-v6-*` class so this doesn't override PF's per-component offset.
+ */
+[data-brand] :focus-visible:not([class*="pf-v6-"]):not(:is(.pf-v6-c-form-control *, .pf-v6-c-text-input-group *)) {
+  outline-offset: 2px;
+}
+
+/*
+ * AppShell main landmark — used as the SkipToContent target.
+ */
+.gp-main {
+  min-block-size: 100%;
+  outline: none;
+}
+
+/*
+ * PrimaryDetailLayout responsive grid.
+ * Side-by-side at md+, stacked below.
+ */
+.gp-primary-detail {
+  display: grid;
+  grid-template-columns: 1fr;
+  block-size: 100%;
+  gap: 0;
+}
+
+@media (min-width: 768px) {
+  .gp-primary-detail {
+    grid-template-columns: minmax(280px, 360px) 1fr;
+  }
+}
+
+.gp-primary-detail__list {
+  border-inline-end: 1px solid var(--gp-color-border, #d2d2d2);
+  background: var(--gp-color-surface, #ffffff);
+  overflow-y: auto;
+}
+
+.gp-primary-detail__detail {
+  background: var(--gp-color-surface, #ffffff);
+  overflow-y: auto;
+  padding: var(--gp-space-md, 16px);
+}
+
+/* On small screens we toggle which pane is visible via [data-pane]. */
+@media (max-width: 767.98px) {
+  .gp-primary-detail[data-pane="list"] .gp-primary-detail__detail {
+    display: none;
+  }
+  .gp-primary-detail[data-pane="detail"] .gp-primary-detail__list {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .gp-primary-detail__back-button {
+    display: none;
+  }
+}
+
+/*
+ * Button radius unification — PF6 ships standard buttons with pill radius
+ * (--BorderRadius from --border--radius--pill) but link / plain variants
+ * with small radius (6px). Side-by-side that reads as inconsistent —
+ * Save (pill) next to Cancel (link, rounded rectangle hover pill).
+ *
+ * Force link and plain to also use the pill radius so all action
+ * buttons share the same shape regardless of variant. m-control variant
+ * stays on small radius — those buttons nest inside InputGroups with
+ * inputs, where pill would look out of place.
+ */
+.pf-v6-c-button.pf-m-link,
+.pf-v6-c-button.pf-m-plain {
+  --pf-v6-c-button--m-link--BorderRadius: var(--pf-t--global--border--radius--pill);
+  --pf-v6-c-button--m-plain--BorderRadius: var(--pf-t--global--border--radius--pill);
+
+  /* Height parity with standard buttons. PF6 sets link/plain border
+     widths to 0 (--width--action--plain--*) while standard buttons get
+     1px (--width--action--*), so a link button is 2px shorter than a
+     primary button next to it. Force link/plain to use the same widths
+     as standard so the box-model height matches across all three states. */
+  --pf-v6-c-button--m-link--BorderWidth: var(--pf-t--global--border--width--action--default);
+  --pf-v6-c-button--m-link--hover--BorderWidth: var(--pf-t--global--border--width--action--hover);
+  --pf-v6-c-button--m-link--m-clicked--BorderWidth: var(--pf-t--global--border--width--action--clicked);
+  --pf-v6-c-button--m-plain--BorderWidth: var(--pf-t--global--border--width--action--default);
+  --pf-v6-c-button--m-plain--hover--BorderWidth: var(--pf-t--global--border--width--action--hover);
+  --pf-v6-c-button--m-plain--m-clicked--BorderWidth: var(--pf-t--global--border--width--action--clicked);
+
+  /* PF6 sets link/plain BorderColor to `--border--color--high-contrast`
+     which we mapped to text-regular (near-black). At PF's default 0px
+     width that doesn't render; once we force 1px above for height parity
+     it becomes a visible thin dark border. Transparent across all three
+     states keeps the height parity without rendering a visible border. */
+  --pf-v6-c-button--m-link--BorderColor: transparent;
+  --pf-v6-c-button--m-link--hover--BorderColor: transparent;
+  --pf-v6-c-button--m-link--m-clicked--BorderColor: transparent;
+  --pf-v6-c-button--m-plain--BorderColor: transparent;
+  --pf-v6-c-button--m-plain--hover--BorderColor: transparent;
+  --pf-v6-c-button--m-plain--m-clicked--BorderColor: transparent;
+}
+
+/*
+ * Form-control icon alignment.
+ *
+ * PF6 sets `.pf-v6-c-form-control { align-items: start }` so leading/trailing
+ * icons sit at the top of the cell — correct for multi-line TextArea, wrong
+ * for everything else (TextInput leading icon, validation icon, FormSelect
+ * arrow, DatePicker calendar, TimePicker clock). Override to center for
+ * single-line inputs; the :has(textarea) exclusion preserves PF6's
+ * intentional behaviour for TextArea.
+ */
+.pf-v6-c-form-control:not(:has(textarea)) {
+  align-items: center;
+}
+
+/*
+ * Focus-ring placement across the system — inputs, buttons, menus,
+ * dropdowns. Selected via <ThemeProvider focusRing="outer" | "inner">.
+ *
+ * PF6 ships a mixed default: form-controls use a hardcoded inner ring
+ * (-6px outline-offset on .pf-v6-c-form-control), while buttons and most
+ * other components read from the global `--pf-t--global--focus-ring--
+ * position--offset` token (PF default +2px → outer). Both modes here
+ * normalise that mixed default.
+ *
+ * Default mode is "outer" — applied via the `gp-focus-ring-outer` class
+ * the ThemeProvider sets on its wrapper.
+ */
+
+/* OUTER mode — make form inputs match the outer ring buttons/menus
+   already use. Buttons/menus need no override here. */
+.gp-focus-ring-outer .pf-v6-c-form-control,
+.gp-focus-ring-outer .pf-v6-c-text-input-group {
+  --pf-v6-c-form-control--OutlineOffset: 2px;
+}
+
+/* OUTER mode — TextArea content padding: PF6 derives the textarea's
+   interior padding from `OutlineOffset` (specifically `calc(-1 *
+   OutlineOffset)`). That works only while the offset is negative. When
+   we flip the offset positive, the derived padding goes negative and
+   content jams against the textarea border. Re-pin those four padding
+   tokens so textarea content keeps its breathing room. */
+.gp-focus-ring-outer .pf-v6-c-form-control:has(textarea) {
+  --pf-v6-c-form-control--textarea--PaddingBlockStart--offset: var(--pf-t--global--spacer--sm);
+  --pf-v6-c-form-control--textarea--PaddingBlockEnd--offset: var(--pf-t--global--spacer--sm);
+  --pf-v6-c-form-control--textarea--PaddingInlineStart--offset: var(--pf-t--global--spacer--md);
+  --pf-v6-c-form-control--textarea--PaddingInlineEnd--offset: var(--pf-t--global--spacer--md);
+}
+
+/* INNER mode — flip everything to a consistent tight inset ring.
+   Buttons read the global focus-ring offset token, so flipping it
+   covers Button. Other components hardcode `outline-offset` directly,
+   so we override them by selector. Inputs default to -6px (deep
+   inset) which reads inconsistently next to the -2px buttons get;
+   normalise to -2px so input rings sit visibly close to the border
+   but on the same scale as everything else in inner mode. */
+.gp-focus-ring-inner {
+  --pf-t--global--focus-ring--position--offset: -2px;
+}
+
+.gp-focus-ring-inner .pf-v6-c-form-control,
+.gp-focus-ring-inner .pf-v6-c-text-input-group {
+  --pf-v6-c-form-control--OutlineOffset: -4px;
+}
+
+/*
+ * TextInputGroup focus shape — PF6 hardcodes the inner <input>'s
+ * outline-offset to -6px (deeply inset, ignores our focus-ring config)
+ * and never sets a border-radius on it, so the focus outline renders as
+ * a sharp-cornered rectangle that doesn't match the rounded wrapper.
+ *
+ *   - Pin the inner input's border-radius to match the wrapper's so the
+ *     outline curves with the visible frame.
+ *   - Override the inner input's outline-offset per focus-ring mode so
+ *     it follows the system instead of PF6's stock -6px.
+ */
+.pf-v6-c-text-input-group__text-input {
+  border-radius: var(--pf-v6-c-text-input-group__text--BorderRadius--base);
+}
+
+.gp-focus-ring-outer .pf-v6-c-text-input-group {
+  --pf-v6-c-text-input-group__text-input--OutlineOffset: 2px;
+}
+
+.gp-focus-ring-inner .pf-v6-c-text-input-group {
+  --pf-v6-c-text-input-group__text-input--OutlineOffset: -4px;
+}
+
+/*
+ * Standalone CalendarMonth popup chrome — opt-in via `gp-calendar-popup`
+ * on a wrapper around CalendarMonth when you're using it as a popup
+ * WITHOUT PF6's Popover chrome (e.g. via the bare Popper positioner).
+ * Adds brand-themed border / radius / shadow / bg so the calendar reads
+ * as a self-contained surface even without an outer wrapper.
+ *
+ * Strong shadow stack — popups should clearly separate from the page
+ * regardless of how close the bg colours are.
+ */
+.gp-calendar-popup {
+  background: var(--gp-color-bg-elevated, #ffffff);
+  border: 1px solid var(--gp-color-border-subtle, #d2d2d2);
+  border-radius: var(--gp-radius-md);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.18),
+    0 4px 8px rgba(0, 0, 0, 0.10);
+  padding: var(--gp-space-sm, 8px);
+  /* Clip inner content (CalendarMonth's bg, header bg, etc.) to the
+     wrapper's rounded corners so child surfaces don't bleed past. The
+     box-shadow stays outside the clip via a separate stacking context
+     created by the border-radius itself. */
+  overflow: hidden;
+}
+
+/*
+ * PF6 Popover / floating-surface lift. Even with the floating bg now
+ * overridden to the elevated surface (white in light, gray-700 in dark),
+ * the chromatic contrast against the page can be subtle. Strengthen
+ * PF6's default popover shadow so the depth cue carries even when the
+ * colour cue is faint. Same shadow stack as gp-calendar-popup so
+ * Popover-chromed and bare-popup popups read identically.
+ */
+.pf-v6-c-popover {
+  --pf-v6-c-popover--BoxShadow:
+    0 12px 32px rgba(0, 0, 0, 0.18),
+    0 4px 8px rgba(0, 0, 0, 0.10);
+  /* Subtle border to define the edge against light surfaces — purely
+     defensive for cases where the shadow alone isn't enough (high-bg
+     pages, low-contrast monitors, prefers-reduced-motion). */
+  --pf-v6-c-popover--BorderColor: var(--gp-color-border-subtle);
+  --pf-v6-c-popover--BorderWidth: 1px;
+  /* Pin content radius to brand md so the popover's rounded corners
+     match the rest of the elevated-surface system. */
+  --pf-v6-c-popover__content--BorderRadius: var(--gp-radius-md);
+  /* Arrow box-shadow needs to match the popover body's shadow scale or
+     the arrow looks like a separately-floating tile. Use the same
+     shadow stack so arrow + body read as one continuous surface. */
+  --pf-v6-c-popover__arrow--BoxShadow:
+    0 12px 32px rgba(0, 0, 0, 0.18),
+    0 4px 8px rgba(0, 0, 0, 0.10);
+}
+
+/*
+ * CalendarMonth header year input — PF6's default cell (9ch) is just
+ * wide enough to show the four digits plus the browser-native spinner,
+ * but a longer-glyph numeral font or zoom can truncate the year. Bump
+ * the cell width so the full year always shows comfortably alongside
+ * the spinner buttons.
+ */
+.pf-v6-c-calendar-month__header-year {
+  min-width: 6rem;
+}
+
+/*
+ * CalendarMonth — today + weekend highlights.
+ *
+ * Today: full info-coloured treatment — bg tint, border, and bold text
+ * all from the brand info palette so "today" reads as a clearly marked,
+ * theme-aware date. Selected stays as a brand-orange filled circle, so
+ * the two states remain visually distinct (info-blue today vs brand-
+ * orange selected). When today IS the selected day, the brand fill wins
+ * (selection is the stronger signal).
+ *
+ * Weekends: PF6 has no built-in weekend modifier, but the calendar is a
+ * 7-column grid, so columns 1 and 7 are weekend cells when weekStart
+ * defaults to Sunday (PF6's default). Subtle secondary tint highlights
+ * the working week. Consumers using weekStart=1 (Monday) can override
+ * the selectors with a higher-specificity rule.
+ */
+/* Today (when not also selected). Selected wins because it's the
+   stronger user-action signal — when today IS selected, the cell
+   should read as brand-filled, not info-bordered + brand-filled.
+   Set the underlying tokens AND pin the rendered values directly so
+   neither focus state nor the inner-focus-ring outline-offset trick
+   overrides today's info treatment. */
+.pf-v6-c-calendar-month__dates-cell.pf-m-current:not(.pf-m-selected) {
+  --pf-v6-c-calendar-month__dates-cell--m-current__date--BackgroundColor: var(--gp-color-status-info-bg);
+  --pf-v6-c-calendar-month__dates-cell--m-current__date--BorderColor: var(--gp-color-status-info-text);
+  /* PF6's today border width comes from `--border--width--high-contrast--regular`
+     which resolves to 0px in the standard theme (it's a high-contrast-mode
+     opt-in). Force a real width so the info-text border actually renders. */
+  --pf-v6-c-calendar-month__dates-cell--m-current__date--BorderWidth: 2px;
+  --pf-v6-c-calendar-month__date--focus--after--BorderColor: var(--gp-color-status-info-text);
+  --pf-v6-c-calendar-month__date--BackgroundColor: var(--gp-color-status-info-bg);
+  --pf-v6-c-calendar-month__date--BorderColor: var(--gp-color-status-info-text);
+  --pf-v6-c-calendar-month__date--BorderWidth: 2px;
+}
+.pf-v6-c-calendar-month__dates-cell.pf-m-current:not(.pf-m-selected) .pf-v6-c-calendar-month__date {
+  color: var(--gp-color-status-info-text);
+  font-weight: 600;
+}
+/* Hover on today shouldn't lose the info treatment. */
+.pf-v6-c-calendar-month__dates-cell.pf-m-current:not(.pf-m-selected) .pf-v6-c-calendar-month__date:hover {
+  --pf-v6-c-calendar-month__date--BackgroundColor: var(--gp-color-status-info-bg);
+  color: var(--gp-color-status-info-text);
+}
+
+/* Weekend cells (Sat / Sun for PF's default weekStart=0). Excluded for
+   selected, disabled, and today — those have stronger styling that
+   should win. */
+.pf-v6-c-calendar-month__dates-row .pf-v6-c-calendar-month__dates-cell:first-child:not(.pf-m-selected):not(.pf-m-disabled):not(.pf-m-current),
+.pf-v6-c-calendar-month__dates-row .pf-v6-c-calendar-month__dates-cell:last-child:not(.pf-m-selected):not(.pf-m-disabled):not(.pf-m-current) {
+  --pf-v6-c-calendar-month__date--BackgroundColor: var(--gp-color-status-info-bg);
+}
+
+/*
+ * Internal-stepper recipe — caret-up / caret-down inside an input frame
+ * (see NumberInput stories). Two square buttons stack to fill the input's
+ * full height; each button = 50% of the input height, width = height
+ * (square). Backgrounds fully contained inside the input wrapper border.
+ *
+ *   <div className="gp-stepper-stack">
+ *     <button className="gp-stepper-btn" ...>...</button>
+ *     <button className="gp-stepper-btn" ...>...</button>
+ *   </div>
+ */
+.gp-stepper-stack {
+  align-self: stretch;          /* override TextInputGroupUtilities align-items: center */
+  display: flex;
+  flex-direction: column;
+  /* Aspect-ratio 1:2 (width:height) on the stack — when the input is
+     40px tall the stack auto-derives a 20px width. Children fill the
+     stack and split its height 50/50 → automatic squares. Doing the
+     geometry on the stack avoids fighting flex's content-floor rules
+     on the buttons themselves. */
+  aspect-ratio: 1 / 2;
+  /* Inset from the wrapper border so hover/click chrome doesn't paint
+     over it. align-self: stretch would otherwise touch top/bottom; the
+     trailing margin pulls us off the right border. The leading margin
+     gives a small visual gap between the input text and the stepper
+     column so the two pieces don't read as one merged element. */
+  margin-block: 3px;
+  margin-inline: var(--gp-space-xs, 4px) 3px;
+}
+
+.gp-stepper-btn {
+  flex: 1 1 0;                  /* each button = 50% of stack height */
+  min-block-size: 0;            /* break flex auto-min */
+  inline-size: 100%;            /* fill the stack's (aspect-derived) width */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  /* Use a slightly tighter radius than --radius-sm — at the small size
+     of these buttons (~20px) the standard sm radius reads heavier than
+     intended. tiny (4px) keeps the corners crisp and prevents any
+     visual overflow against the wrapper's own rounded corners. */
+  border-radius: var(--gp-radius-tiny);
+  background: transparent;
+  color: var(--gp-color-text-subtle);
+  cursor: pointer;
+  transition: background-color 120ms ease-out, color 120ms ease-out;
+}
+/* Cap the icon so it sits comfortably inside the square without
+   pushing the button wider than the stack. */
+.gp-stepper-btn > svg {
+  inline-size: 60%;
+  block-size: 60%;
+}
+.gp-stepper-btn:hover {
+  background: var(--gp-color-bg-secondary-default);
+  color: var(--gp-color-text-regular);
+}
+.gp-stepper-btn:active {
+  background: var(--gp-color-bg-secondary-hover);
+  color: var(--gp-color-text-regular);
+}
+.gp-stepper-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/*
+ * PF6 form-control's `::after` pseudo draws a coloured edge on hover and
+ * expanded/active states, defaulting to the global hover/clicked border
+ * tokens (which we've mapped to the brand colour). When an input is
+ * focused, the user sees that brand-coloured edge stacked on top of our
+ * link-blue focus outline — reads as a two-ring sandwich.
+ *
+ * Re-point the form-control's hover/expanded edge colours to the focus-
+ * ring colour so the whole interaction reads in one consistent blue.
+ * Other components that use `--border--color--hover` keep their brand
+ * tint — this override is form-control-specific.
+ */
+.pf-v6-c-form-control {
+  --pf-v6-c-form-control--hover--after--BorderColor: var(--gp-color-focus-ring);
+  --pf-v6-c-form-control--m-expanded--after--BorderColor: var(--gp-color-focus-ring);
+}
+
+.gp-focus-ring-inner .pf-v6-c-menu-toggle:focus-visible,
+.gp-focus-ring-inner .pf-v6-c-dropdown__toggle:focus-visible,
+.gp-focus-ring-inner .pf-v6-c-select__toggle:focus-visible,
+.gp-focus-ring-inner .pf-v6-c-tabs__link:focus-visible,
+.gp-focus-ring-inner .pf-v6-c-nav__link:focus-visible,
+.gp-focus-ring-inner .pf-v6-c-data-list__item-row:focus-visible,
+.gp-focus-ring-inner .pf-v6-c-jump-links__link:focus-visible,
+.gp-focus-ring-inner .pf-v6-c-label:focus-visible,
+.gp-focus-ring-inner .pf-v6-c-calendar-month__date:focus-visible {
+  outline-offset: -2px;
+}
+
+/*
+ * Form spacing — PF6 ships tight defaults (--gp-spacer-xs = ~4px between
+ * input and helper text, narrow gap between label and input). On dense
+ * settings forms that's fine; for normal forms it reads as cramped. Bump
+ * both gaps so the label, input, and helper text have room to breathe.
+ *
+ * Affects every FormGroup in every consumer page.
+ */
+.pf-v6-c-form__group {
+  --pf-v6-c-form__group--Gap: var(--pf-t--global--spacer--sm);
+}
+
+.pf-v6-c-form__helper-text {
+  --pf-v6-c-form__helper-text--MarginBlockStart: var(--pf-t--global--spacer--sm);
+}
+
+/*
+ * FormSelect chevron + status icons (success/warning/error) live inside
+ * `.pf-v6-c-form-control__utilities` — a flex container that PF6 ships
+ * with default `align-items: stretch` and an asymmetric `padding-block-
+ * start` (no matching block-end). On single-line inputs this anchors the
+ * icons to the top of the input cell rather than the vertical centre.
+ *
+ * Centre the flex children and drop the top-only padding for non-textarea
+ * cases. TextArea keeps PF6's top-anchored behaviour because its utilities
+ * should sit at the top of the multi-line cell.
+ */
+.pf-v6-c-form-control:not(:has(textarea)) .pf-v6-c-form-control__utilities {
+  align-items: center;
+  padding-block-start: 0;
+  /*
+   * Symmetrical inline padding — the trailing utilities cell (chevron,
+   * status icons) should sit the same distance from the input border
+   * as the leading text. PF6's chain can land on a smaller value in
+   * some chains (status overrides etc.) which makes the right side
+   * read tighter than the left. Pin to the canonical inset.
+   */
+  padding-inline-end: var(--pf-v6-c-form-control--inset--base);
+}
+
+/*
+ * Elevated input opt-in.
+ *
+ * Inputs default to a transparent background so they adopt whatever
+ * container they sit in (page, Card, Modal, Drawer). When an input needs to
+ * read as visually elevated above its container — usually for a hero search,
+ * a standalone "create" form, or any spotlight surface — apply
+ * `gp-is-elevated` to the input or its FormGroup wrapper.
+ *
+ *   <TextInput className="gp-is-elevated" ... />
+ *   <FormGroup className="gp-is-elevated" ...> ... </FormGroup>
+ *   <NumberInput className="gp-is-elevated" ... />  (covers nested input-group)
+ *
+ * The elevated surface is white in light mode (subtle lift from the cream
+ * page) and gray-800 in dark mode (subtle lift from the gray-900 page).
+ */
+.gp-is-elevated.pf-v6-c-form-control,
+.gp-is-elevated .pf-v6-c-form-control,
+.gp-is-elevated.pf-v6-c-input-group .pf-v6-c-input-group__item.pf-m-box,
+.gp-is-elevated .pf-v6-c-input-group .pf-v6-c-input-group__item.pf-m-box {
+  background-color: var(--gp-color-bg-elevated, #ffffff);
+}
+
+
+/* ---------------------------------------------------------------
+ * Masthead logo — vertical centering.
+ *
+ * PF6's MastheadLogo defaults to `display: block`. When the logo
+ * child is text, that's fine (line-height centers it). But when the
+ * child is an <img> or <svg> (the canonical PF pattern, e.g.
+ * `<MastheadLogo><img src="/logo.svg" /></MastheadLogo>`), the image
+ * sits on the inline text baseline — leaving uneven space above
+ * and below it within the masthead band.
+ *
+ * Make the logo a flex container so any child (text, img, svg,
+ * composite Brand) is vertically centered consistently.
+ * --------------------------------------------------------------- */
+.pf-v6-c-masthead__logo {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+.pf-v6-c-masthead__logo > img,
+.pf-v6-c-masthead__logo > svg {
+  display: block;
+  max-height: 100%;
+}
+
+/* ---------------------------------------------------------------
+ * Nav — active-state polish.
+ *
+ * PF6's default Nav active state is just a subtle bg pill, with no
+ * left-edge accent (the border tokens resolve to 0 width in our
+ * brand). On the white sidebar surface the pill turns invisible.
+ *
+ * Treatment:
+ *  - Hover background = `--gp-color-brand-hover` (deep brand brown);
+ *    text flips to the on-brand foreground for legibility.
+ *  - Active background = `--gp-color-brand-text` (the brand text
+ *    colour — typically the readable mid-tone of the brand palette);
+ *    text uses the on-brand foreground.
+ *  - Both states use `--gp-color-brand-on` for foreground so the
+ *    contrast ratio stays past WCAG AA on either dark fill.
+ *  - Bolder weight on active for clearer hierarchy.
+ *  - Smooth color transitions between states.
+ * --------------------------------------------------------------- */
+.pf-v6-c-nav__link {
+  /* Background-fill opacity knob — default 1 (fully opaque brand
+   * colour). Set on the Nav (or any ancestor) to soften the fill
+   * without changing the brand hue:
+   *   <Nav style={{ "--gp-nav-bg-opacity": 0.15 } as CSSProperties}>
+   *
+   * Implementation note: the default is provided via var() fallback
+   * (not as a redeclaration on .pf-v6-c-nav__link), so a consumer
+   * override on the Nav actually inherits down to the link. */
+  --pf-v6-c-nav__link--hover--BackgroundColor: color-mix(
+    in srgb,
+    var(--gp-color-brand-hover) calc(var(--gp-nav-bg-opacity, 1) * 100%),
+    transparent
+  );
+  --pf-v6-c-nav__link--hover--Color: var(--gp-color-brand-on);
+  --pf-v6-c-nav__link--m-current--BackgroundColor: color-mix(
+    in srgb,
+    var(--gp-color-brand-text) calc(var(--gp-nav-bg-opacity, 1) * 100%),
+    transparent
+  );
+  --pf-v6-c-nav__link--m-current--Color: var(--gp-color-brand-on);
+  position: relative;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+.pf-v6-c-nav__link.pf-m-current {
+  font-weight: 600;
+}
+/* Icon colour follows the link colour on hover / active so the glyph
+ * stays legible against the dark brand fill.
+ *
+ * When the consumer dials --gp-nav-bg-opacity below ~0.5, the dark
+ * brand fill becomes too sheer to support white text — flip text and
+ * icon to the regular text colour at that point so contrast survives. */
+.pf-v6-c-nav__link:hover .pf-v6-c-nav__link-icon,
+.pf-v6-c-nav__link.pf-m-current .pf-v6-c-nav__link-icon {
+  color: var(--gp-color-brand-on);
+}
+.pf-v6-c-nav[style*="--gp-nav-bg-opacity"] .pf-v6-c-nav__link {
+  /* Soft-fill mode — white text on a sheer brand wash would fail
+   * contrast, so flip foreground to the regular text/icon colour.
+   * Only applies when the consumer has explicitly dialled the knob;
+   * the default opaque fill keeps the on-brand white text. */
+  --pf-v6-c-nav__link--hover--Color: var(--gp-color-text-regular);
+  --pf-v6-c-nav__link--m-current--Color: var(--gp-color-text-regular);
+}
+.pf-v6-c-nav[style*="--gp-nav-bg-opacity"] .pf-v6-c-nav__link:hover .pf-v6-c-nav__link-icon,
+.pf-v6-c-nav[style*="--gp-nav-bg-opacity"] .pf-v6-c-nav__link.pf-m-current .pf-v6-c-nav__link-icon {
+  color: var(--gp-color-icon-regular);
+}
+
+/* ---------------------------------------------------------------
+ * Nav — naked variant.
+ *
+ * Opt-in via `gp-nav-naked` on the Nav (or any ancestor). Strips
+ * background fills entirely; the only state cues are text colour
+ * and weight. Use when the nav sits in a layout that already
+ * provides visual emphasis (sidebar in a card, in-page TOC,
+ * footer nav) and a filled active pill would be visually noisy.
+ *
+ *   Idle    — subtle text colour
+ *   Hover   — regular text colour (darken)
+ *   Active  — regular text colour + bold weight
+ * --------------------------------------------------------------- */
+.gp-nav-naked .pf-v6-c-nav__link,
+.gp-nav-naked .pf-v6-c-nav__link:hover,
+.gp-nav-naked .pf-v6-c-nav__link.pf-m-hover,
+.gp-nav-naked .pf-v6-c-nav__link:focus,
+.gp-nav-naked .pf-v6-c-nav__link.pf-m-current,
+.gp-nav-naked .pf-v6-c-nav__link.pf-m-current:hover {
+  --pf-v6-c-nav__link--hover--BackgroundColor: transparent;
+  --pf-v6-c-nav__link--m-current--BackgroundColor: transparent;
+  background-color: transparent;
+}
+.gp-nav-naked .pf-v6-c-nav__link {
+  --pf-v6-c-nav__link--hover--Color: var(--gp-color-text-regular);
+  --pf-v6-c-nav__link--m-current--Color: var(--gp-color-text-regular);
+}
+.gp-nav-naked .pf-v6-c-nav__link:hover .pf-v6-c-nav__link-icon,
+.gp-nav-naked .pf-v6-c-nav__link.pf-m-current .pf-v6-c-nav__link-icon {
+  color: var(--gp-color-icon-regular);
+}
+
+/* Group titles (NavGroup) — bump weight + tracking so they read as
+ * section labels, not list items. */
+.pf-v6-c-nav__section-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--gp-color-text-subtle);
+}
+
+
+/* ---------------------------------------------------------------
+ * Tabs — transparent link background.
+ *
+ * PF6 defaults `--pf-v6-c-tabs__link--BackgroundColor` to a brand-
+ * tinted surface that fights with whatever container the Tabs sit
+ * in (PageSection, Card, Modal, Drawer). Make the tab link
+ * background transparent so the strip adopts its surrounding
+ * surface — the underline / box variants still carry the visual
+ * "selected" cue without needing a fill.
+ * --------------------------------------------------------------- */
+.pf-v6-c-tabs {
+  --pf-v6-c-tabs__link--BackgroundColor: transparent;
+  /* PF6's `.pf-v6-c-tabs__link:where(:hover, :focus)` rule overrides
+   * the link bg back to `--pf-v6-c-tabs__link--hover--BackgroundColor`
+   * on hover and focus — so the default token alone isn't enough. We
+   * also need to point the hover token at transparent. */
+  --pf-v6-c-tabs__link--hover--BackgroundColor: transparent;
+  /* And the m-current link bg tokens (used by the default, m-box,
+   * and m-box-secondary variants). Without zeroing these too the
+   * selected tab keeps a tinted fill even when the default link
+   * bg is transparent. */
+  --pf-v6-c-tabs__item--m-current__link--BackgroundColor: transparent;
+  --pf-v6-c-tabs--m-box__item--m-current__link--BackgroundColor: transparent;
+  --pf-v6-c-tabs--m-box--m-secondary__item--m-current__link--BackgroundColor: transparent;
+  --pf-v6-c-tabs__item--m-current--BackgroundColor: transparent;
+  --pf-v6-c-tabs--m-box__item--m-current--BackgroundColor: transparent;
+  --pf-v6-c-tabs--m-box--m-secondary__item--m-current--BackgroundColor: transparent;
+  /* The Box variant additionally paints the parent <li> (item) — for both
+   * default and current states. PF6 chains __item--BackgroundColor →
+   * --m-box__item--BackgroundColor (line 41 of tabs.css), so the link
+   * being transparent isn't enough — the item under it still shows. */
+  --pf-v6-c-tabs__item--BackgroundColor: transparent;
+  --pf-v6-c-tabs--m-box__item--BackgroundColor: transparent;
+  --pf-v6-c-tabs--m-box--m-secondary__item--BackgroundColor: transparent;
+  /* Box variant carries its own link-bg chain (default + hover) that
+   * supersedes the base link tokens. Zero the box-specific ones too
+   * so isBox / variant="secondary" tabs stay transparent across all
+   * three states. */
+  --pf-v6-c-tabs--m-box__link--BackgroundColor: transparent;
+  --pf-v6-c-tabs--m-box__link--hover--BackgroundColor: transparent;
+  --pf-v6-c-tabs--m-box--m-secondary__link--BackgroundColor: transparent;
+  --pf-v6-c-tabs--m-box--m-secondary__link--hover--BackgroundColor: transparent;
+}
+
+/* ---------------------------------------------------------------
+ * Popover — surface recolour helpers.
+ *
+ * When a consumer wants a popover that isn't on the default
+ * elevated surface (e.g. a quiet variant on a brand surface, or
+ * matching the page-secondary tone), the content AND the arrow
+ * must update together — otherwise the caret tip floats in the
+ * wrong colour and looks visually disconnected.
+ *
+ * `gp-popover-secondary` is a turn-key opt-in that sets both
+ * tokens to `--gp-color-bg-secondary-default`. For arbitrary
+ * colours, set `--gp-popover-bg` instead (works the same way).
+ *
+ *   <Popover className="gp-popover-secondary" ...>
+ *
+ *   <Popover
+ *     style={{ "--gp-popover-bg": "var(--my-color)" } as CSSProperties}
+ *     ...
+ *   />
+ * --------------------------------------------------------------- */
+.pf-v6-c-popover.gp-popover-secondary,
+.pf-v6-c-popover[style*="--gp-popover-bg"] {
+  --pf-v6-c-popover__content--BackgroundColor: var(--gp-popover-bg, var(--gp-color-bg-secondary-default));
+  --pf-v6-c-popover__arrow--BackgroundColor: var(--gp-popover-bg, var(--gp-color-bg-secondary-default));
+}
+
+/* ---------------------------------------------------------------
+ * Tabs — hover & active text emphasis.
+ *
+ * PF6 has no hover-color token for tabs (only hover-background) —
+ * the only chromatic cue inactive tabs get on hover is a bg shift,
+ * which we already neutralised by making the link bg transparent.
+ * Without any text emphasis, hover felt invisible.
+ *
+ * Hover  — text darkens to text-regular and gains visual weight
+ * Active — same treatment (PF6's m-current already darkens the
+ *          text colour; we add the weight cue too)
+ *
+ * Implementation note — the weight is simulated via -webkit-text-
+ * stroke rather than font-weight. Increasing font-weight on hover
+ * widens glyphs and shifts sibling tabs as the user moves across
+ * the strip; the text-stroke approach widens glyphs in place
+ * without changing font metrics, so the strip stays pixel-stable.
+ * --------------------------------------------------------------- */
+.pf-v6-c-tabs__link {
+  transition: color 120ms ease;
+}
+.pf-v6-c-tabs__link:hover,
+.pf-v6-c-tabs__link.pf-m-hover,
+.pf-v6-c-tabs__link:focus,
+.pf-v6-c-tabs__item.pf-m-current .pf-v6-c-tabs__link {
+  color: var(--gp-color-text-regular);
+}
+.pf-v6-c-tabs__link:hover .pf-v6-c-tabs__item-text,
+.pf-v6-c-tabs__link.pf-m-hover .pf-v6-c-tabs__item-text,
+.pf-v6-c-tabs__link:focus .pf-v6-c-tabs__item-text,
+.pf-v6-c-tabs__item.pf-m-current .pf-v6-c-tabs__item-text {
+  -webkit-text-stroke: 0.45px currentColor;
+}
+
+/* ---------------------------------------------------------------
+ * Slider — active rail fill.
+ *
+ * PF6's slider fills the active portion (left of the thumb) with
+ * `--border--color--hover` — a neutral gray that doesn't read as
+ * "selected" against the gray base rail. Tint with a SLIGHTLY
+ * LIGHTER variant of the brand colour so the active fill connects
+ * visually to the brand-coloured thumb without competing with it.
+ * 65% brand mixed with white gives a soft brand wash — visibly
+ * brand-coloured but quieter than the saturated thumb above it.
+ * --------------------------------------------------------------- */
+/* Specificity bump via [data-brand] ancestor — PF6's `.pf-v6-c-slider`
+ * rule sets this token in its own block, and source-order means PF wins
+ * when both selectors are equally specific. The ThemeProvider always
+ * wraps the lib in [data-brand="..."], so chaining it raises us to
+ * (0,2,0) vs PF's (0,1,0) and the override sticks. */
+[data-brand] .pf-v6-c-slider {
+  --pf-v6-c-slider__rail-track--before--fill--BackgroundColor: color-mix(
+    in srgb,
+    var(--gp-color-brand-default) 65%,
+    #ffffff
+  );
+}
+
+/* ---------------------------------------------------------------
+ * Skeleton — brand-tinted shimmer.
+ *
+ * PF6's Skeleton uses a 3-stop linear-gradient: secondary-default
+ * → secondary-hover → secondary-default. The middle stop (the
+ * highlight that sweeps across) is just a slightly darker grey,
+ * which reads as "loading" but doesn't carry the brand colour.
+ *
+ * Tint the highlight with the primary brand colour at a low alpha
+ * so the sweep reads as "loading, this app" instead of generic
+ * grey shimmer. Stops 1 and 3 stay neutral so the resting
+ * placeholder shape is still a calm grey.
+ * --------------------------------------------------------------- */
+[data-brand] .pf-v6-c-skeleton {
+  --pf-v6-c-skeleton--after--LinearGradientColorStop2: color-mix(
+    in srgb,
+    var(--gp-color-brand-default) 22%,
+    var(--gp-color-bg-secondary-default)
+  );
+}
+
+/* ---------------------------------------------------------------
+ * TextInputGroup — chip / Label sizing inside the input row.
+ *
+ * PF6's TextInputGroup__main is `display: flex` with default
+ * `align-items: stretch`, so any Labels (chips) rendered inline
+ * stretch to the full 40px input row height — they look like
+ * full-height bars rather than compact chips. Switch them to
+ * `align-self: center` so they sit at their natural ~26px height
+ * centred vertically inside the input padding.
+ * --------------------------------------------------------------- */
+[data-brand] .pf-v6-c-text-input-group__main .pf-v6-c-label {
+  align-self: center;
+  height: auto;
+}
+
+/* ---------------------------------------------------------------
+ * Accordion — bordered variant divider visibility.
+ *
+ * PF6 wires the bordered variant's per-item bottom border to
+ * `--border--color--default`, which our brand maps to the same cream
+ * tone the accordion surface uses — so the dividers between items in
+ * `isBordered` accordions are invisible against the surrounding
+ * background.
+ *
+ * Override the bordered-variant border-end colour with a low-alpha
+ * dark wash so it reads as a hairline divider on either light or
+ * dark mode without changing other components that legitimately use
+ * the cream border.
+ * --------------------------------------------------------------- */
+[data-brand] .pf-v6-c-accordion.pf-m-bordered .pf-v6-c-accordion__item {
+  --pf-v6-c-accordion__item--m-bordered--BorderBlockEndColor: color-mix(
+    in srgb,
+    var(--gp-color-text-regular) 12%,
+    transparent
+  );
+}
+
+/* ---------------------------------------------------------------
+ * Accordion — hover affordance.
+ *
+ * PF6 maps the toggle hover bg to `action--plain--hover`, which our
+ * brand points at `secondary.default` — typically the same value as
+ * the accordion's own surface, leaving the hover invisible. Tint
+ * with a very subtle brand-coloured wash so the hover row reads
+ * against either the accordion's cream surface or a card body.
+ * --------------------------------------------------------------- */
+[data-brand] .pf-v6-c-accordion__toggle {
+  --pf-v6-c-accordion__toggle--hover--BackgroundColor: color-mix(
+    in srgb,
+    var(--gp-color-brand-default) 8%,
+    transparent
+  );
+  transition: background-color 120ms ease;
+}
+
+/* ---------------------------------------------------------------
+ * Floating menu trigger gap.
+ *
+ * PF6's Popper-based menus (Dropdown, Select, MenuToggle-driven
+ * menus, OverflowMenu, Popover-style flyouts) sit flush against
+ * the trigger by default — visually, the menu's edge merges with
+ * the trigger's edge with no breathing room. Add a small margin on
+ * the menu container so there's always a clear ~4px gap between
+ * trigger and menu, no matter the placement.
+ *
+ * Margin works here because Popper positions the element via
+ * `transform: translate()` — the margin is part of the element's
+ * box and shifts it away from the trigger after positioning. This
+ * applies to all four directions; the consistent gap reads as
+ * "menu floats above the trigger" rather than "menu sticks to it".
+ * --------------------------------------------------------------- */
+[data-brand] .pf-v6-c-menu,
+[data-brand] .pf-v6-c-popover {
+  margin: var(--gp-menu-trigger-gap, 4px);
+}
+
+/* ---------------------------------------------------------------
+ * ProgressStepper — thicker connector line.
+ *
+ * PF6's horizontal connector defaults to `--border--width--divider--
+ * default` (1px), which reads as a thin hairline between step icons
+ * and gets visually lost on cream / dark backgrounds. Bump to 2px
+ * so the connector reads as a deliberate progress track. Same bump
+ * for the vertical connector (variant isVertical) to keep the two
+ * orientations consistent.
+ * --------------------------------------------------------------- */
+[data-brand] .pf-v6-c-progress-stepper {
+  --pf-v6-c-progress-stepper--m-horizontal__step-connector--before--BorderBlockEndWidth: 2px;
+  --pf-v6-c-progress-stepper--m-vertical__step-connector--before--BorderInlineEndWidth: 2px;
+}

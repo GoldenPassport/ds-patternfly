@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": [
+    "./main.ts",
+    "./preview.tsx",
+    "./tsconfig.json",
+    "../src/**/*"
+  ]
+}
