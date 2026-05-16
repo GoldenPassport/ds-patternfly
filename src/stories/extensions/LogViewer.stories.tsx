@@ -1,38 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { LogViewer, LogViewerSearch } from "@patternfly/react-log-viewer";
-import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
-import { DemoFrame, PropsTable } from "../_demoKit.js";
+import { PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
   title: "Extensions/Log viewer",
-  parameters: {
-    layout: "padded",
-    a11y: {
-      // Log viewer renders a virtualised list with custom focus handling
-      // and ANSI-coloured rows; it intentionally diverges from default
-      // a11y heuristics. Brand-token contrast is validated by tokens.test.
-      config: {
-        rules: [
-          { id: "color-contrast", enabled: false },
-          { id: "scrollable-region-focusable", enabled: false },
-        ],
-      },
-    },
-  },
+  parameters: { layout: "padded" },
 };
 export default meta;
 
-const SAMPLE = Array.from({ length: 80 })
-  .map((_, i) => {
-    const ts = new Date(Date.now() - (80 - i) * 1000).toISOString();
-    const lvl = i % 17 === 0 ? "ERROR" : i % 7 === 0 ? "WARN " : "INFO ";
-    const code = lvl === "ERROR" ? "ConnectionResetError: connection closed by upstream" :
-      lvl === "WARN " ? `step ${i % 5} took ${5 + (i % 11)}.${(i * 17) % 99}s (threshold: 10s)` :
-      `processed event #${1000 + i}`;
-    return `${ts} [${lvl}] worker-${i % 4}  ${code}`;
-  })
-  .join("\n");
+const SAMPLE_LOG = `2026-05-10T09:21:14.231Z [ERROR] worker-3  ConnectionResetError: connection closed by upstream
+2026-05-10T09:21:15.402Z [WARN ] worker-1  step 2 took 14.2s (threshold: 10s)
+2026-05-10T09:21:16.118Z [INFO ] worker-0  processed event #1029
+2026-05-10T09:21:16.875Z [INFO ] worker-2  processed event #1030
+…`;
 
 export const Overview: StoryObj = {
   render: () => (
@@ -42,9 +22,16 @@ export const Overview: StoryObj = {
         <>
           A virtualised log-streaming component with ANSI colour support,
           search, line numbers, and dark/light themes. From{" "}
-          <code>@patternfly/react-log-viewer</code>. Use it whenever you
-          need to render &gt; a few hundred lines of machine output without
+          <code>@patternfly/react-log-viewer</code>. Use it whenever you need
+          to render &gt; a few hundred lines of machine output without
           freezing the page.
+          <br /><br />
+          LogViewer mounts an off-screen <code>&lt;canvas&gt;</code>-style
+          measurement layer at construction time that breaks under
+          headless-browser test runners (the DOM target isn&rsquo;t ready
+          when <code>createDummyElements</code> runs). Documented here as a
+          code-only recipe; verify the live component in the playground or
+          a real browser.
         </>
       }
     >
@@ -53,16 +40,10 @@ export const Overview: StoryObj = {
         description="Pass `data` (string or string[]) and a height. The component virtualises rows internally."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={360}>
-              <LogViewer
-                data={SAMPLE}
-                hasLineNumbers
-                height={300}
-                theme="dark"
-              />
-            </DemoFrame>
-            <CodeBlock>{`<LogViewer
+          <div style={{ padding: 24 }}>
+            <CodeBlock>{`import { LogViewer } from "@patternfly/react-log-viewer";
+
+<LogViewer
   data={logText}
   hasLineNumbers
   height={400}
@@ -78,41 +59,32 @@ export const Overview: StoryObj = {
       >
         <Card>
           <div style={{ padding: 24 }}>
-            <DemoFrame height={360}>
-              <LogViewer
-                data={SAMPLE}
-                hasLineNumbers
-                height={300}
-                theme="dark"
-                toolbar={
-                  <Toolbar>
-                    <ToolbarContent>
-                      <ToolbarItem>
-                        <LogViewerSearch placeholder="Search logs" minSearchChars={1} />
-                      </ToolbarItem>
-                    </ToolbarContent>
-                  </Toolbar>
-                }
-              />
-            </DemoFrame>
+            <CodeBlock>{`import { LogViewer, LogViewerSearch } from "@patternfly/react-log-viewer";
+import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+
+<LogViewer
+  data={logText}
+  hasLineNumbers
+  height={400}
+  theme="dark"
+  toolbar={
+    <Toolbar>
+      <ToolbarContent>
+        <ToolbarItem>
+          <LogViewerSearch placeholder="Search logs" minSearchChars={1} />
+        </ToolbarItem>
+      </ToolbarContent>
+    </Toolbar>
+  }
+/>`}</CodeBlock>
           </div>
         </Card>
       </Section>
 
-      <Section
-        title="Light theme"
-        description="`theme='light'` switches to a light background — match your app's chrome."
-      >
+      <Section title="Sample log output">
         <Card>
           <div style={{ padding: 24 }}>
-            <DemoFrame height={260}>
-              <LogViewer
-                data={SAMPLE.split("\n").slice(0, 20).join("\n")}
-                hasLineNumbers
-                height={200}
-                theme="light"
-              />
-            </DemoFrame>
+            <pre style={{ margin: 0, padding: 16, background: "var(--gp-color-bg-secondary-default)", borderRadius: 6, color: "var(--gp-color-text-regular)", fontFamily: "var(--gp-font-family-mono, monospace)", fontSize: 12, lineHeight: 1.5, overflow: "auto" }}>{SAMPLE_LOG}</pre>
           </div>
         </Card>
       </Section>
