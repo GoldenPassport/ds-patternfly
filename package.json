@@ -3,6 +3,14 @@
   "version": "0.1.1",
   "description": "Brandable React design system built on PatternFly 6, for BPM/automation projects.",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GoldenPassport/ds-patternfly.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GoldenPassport/ds-patternfly/issues"
+  },
+  "homepage": "https://github.com/GoldenPassport/ds-patternfly#readme",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
