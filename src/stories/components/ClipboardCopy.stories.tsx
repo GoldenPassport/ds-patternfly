@@ -94,8 +94,13 @@ export const Overview: StoryObj = {
         <Card>
           <div style={{ padding: 24 }}>
             <DemoFrame>
+              {/* PF6 v6 ClipboardCopy[variant="inline-compact"] still
+                  renders a <div> internally, so it can't be a descendant
+                  of <p>. Use <span style="display:block"> as the line
+                  wrapper to get the same visual layout with valid HTML
+                  nesting. */}
               <div style={{ display: "grid", gap: 12, color: "var(--gp-color-text-regular)" }}>
-                <p>
+                <span style={{ display: "block" }}>
                   Install with{" "}
                   <ClipboardCopy
                     copyAriaLabel="Copy install command"
@@ -106,8 +111,8 @@ export const Overview: StoryObj = {
                     pnpm add @golden-passport/ds-patternfly
                   </ClipboardCopy>
                   {" "}from the package registry.
-                </p>
-                <p>
+                </span>
+                <span style={{ display: "block" }}>
                   Reference id:{" "}
                   <ClipboardCopy
                     copyAriaLabel="Copy reference id"
@@ -117,7 +122,7 @@ export const Overview: StoryObj = {
                   >
                     01HX3KZ8M3W6GQ5R2Y4N7T9P0J
                   </ClipboardCopy>
-                </p>
+                </span>
               </div>
             </DemoFrame>
           </div>

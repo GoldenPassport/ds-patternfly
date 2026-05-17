@@ -93,12 +93,18 @@ export const Overview: StoryObj = {
             <div style={{ padding: 24 }}>
               <DemoFrame>
                 <div style={{ minWidth: 200 }}>
+                  {/* The extension renders each VerticalTabsTab as <li>;
+                      nested VerticalTabsTab children must be wrapped in a
+                      sub-VerticalTabs (<ul>) so the markup stays valid
+                      (<li> can't appear directly inside <li>). */}
                   <VerticalTabs restrictTabs activeTab>
                     <VerticalTabsTab title="Overview" active />
                     <VerticalTabsTab title="Configuration" hasActiveDescendant>
-                      <VerticalTabsTab title="General" active />
-                      <VerticalTabsTab title="Networking" />
-                      <VerticalTabsTab title="Storage" />
+                      <VerticalTabs>
+                        <VerticalTabsTab title="General" active />
+                        <VerticalTabsTab title="Networking" />
+                        <VerticalTabsTab title="Storage" />
+                      </VerticalTabs>
                     </VerticalTabsTab>
                     <VerticalTabsTab title="Permissions" />
                   </VerticalTabs>

@@ -682,6 +682,12 @@ const isExcluded = (date: Date): boolean => {
             <div style={{ padding: 24, display: "grid", gap: 16 }}>
               <DemoFrame>
                 <FormGroup label="Date — French month names" fieldId="fr">
+                  {/* prev/nextMonthAriaLabel live on CalendarMonth, not
+                      DatePicker — PF6 v6 doesn't pass them through, so
+                      they'd leak to the DOM as unknown attrs. Leave the
+                      defaults in place; consumers needing fully-translated
+                      arrows should build a custom Button + Popover +
+                      CalendarMonth (see the "Custom trigger" recipe). */}
                   <DatePicker
                     dateFormat={fmtDDMMYYYY}
                     dateParse={parseDDMMYYYY}
@@ -690,11 +696,9 @@ const isExcluded = (date: Date): boolean => {
                     buttonAriaLabel="Ouvrir le sélecteur de date"
                     monthFormat={(d) => monthsFR[d.getMonth()] ?? ""}
                     locale="fr-FR"
-                    prevMonthAriaLabel="Mois précédent"
-                    nextMonthAriaLabel="Mois suivant"
                     invalidFormatText="Format invalide. Utiliser JJ/MM/AAAA."
-                                      appendTo={() => document.body}
-/>
+                    appendTo={() => document.body}
+                  />
                 </FormGroup>
               </DemoFrame>
               <CodeBlock>{`const monthsFR = ["janvier","février","mars",...,"décembre"];

@@ -51,6 +51,7 @@ export const Overview: StoryObj = {
                 <Gallery hasGutter minWidths={{ default: "260px" }}>
                   <GalleryItem>
                     <CatalogTile
+                      id="catalog-workflow-engine"
                       featured
                       href="#/featured"
                       icon={<CubeIcon style={{ fontSize: 28 }} />}
@@ -66,6 +67,7 @@ export const Overview: StoryObj = {
                   </GalleryItem>
                   <GalleryItem>
                     <CatalogTile
+                      id="catalog-log-delivery"
                       featured={false}
                       href="#/standard"
                       icon={<CubeIcon style={{ fontSize: 28 }} />}
@@ -100,6 +102,7 @@ export const Overview: StoryObj = {
                   {["small", "medium", "large"].map((size) => (
                     <GalleryItem key={size}>
                       <CatalogTile
+                        id={`catalog-size-${size}`}
                         featured={false}
                         href=""
                         title={size}
@@ -129,6 +132,7 @@ export const Overview: StoryObj = {
                 <Gallery hasGutter minWidths={{ default: "260px" }}>
                   <GalleryItem>
                     <CatalogTile
+                      id="catalog-ci-runner"
                       featured={false}
                       href=""
                       title="CI runner"

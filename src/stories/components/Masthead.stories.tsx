@@ -66,7 +66,23 @@ const acmeBrand = (
 
 const meta: Meta = {
   title: "Components/Masthead",
-  parameters: { layout: "padded" },
+  parameters: {
+    layout: "padded",
+    a11y: {
+      // The Basic + Display-variants demos each mount a full Page (so the
+      // hamburger drives a real sidenav drawer) — two Pages on one doc
+      // produce two <main>/<header> landmarks. In real apps you only ever
+      // render one Page per route, so these uniqueness rules are doc-only
+      // false-positives.
+      config: {
+        rules: [
+          { id: "landmark-no-duplicate-main", enabled: false },
+          { id: "landmark-no-duplicate-banner", enabled: false },
+          { id: "landmark-unique", enabled: false },
+        ],
+      },
+    },
+  },
 };
 export default meta;
 
