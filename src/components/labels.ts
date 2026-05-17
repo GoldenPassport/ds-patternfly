@@ -6,7 +6,7 @@
  * apps) or build their own `*Labels` object via their translation library.
  */
 
-export interface AppShellLabels {
+export interface ShellLabels {
   /** "Skip to main content" link text. */
   skipToContent: string;
   /** Aria-label for the masthead landmark. */
@@ -17,7 +17,7 @@ export interface AppShellLabels {
   toggleSidebar: string;
 }
 
-export const appShellEnLabels: AppShellLabels = {
+export const shellEnLabels: ShellLabels = {
   skipToContent: "Skip to main content",
   mastheadAriaLabel: "Application header",
   sidebarAriaLabel: "Primary navigation",

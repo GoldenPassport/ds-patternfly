@@ -1,5 +1,7 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
+  Brand,
   Button,
   Masthead,
   MastheadBrand,
@@ -7,13 +9,60 @@ import {
   MastheadLogo,
   MastheadMain,
   MastheadToggle,
+  Nav,
+  NavItem,
+  NavList,
+  Page,
+  PageSection,
+  PageSidebar,
+  PageSidebarBody,
+  PageToggleButton,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
 import { BellIcon, CogIcon } from "@patternfly/react-icons";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
-import { DemoFrame, PropsTable } from "../_demoKit.js";
+import {
+  DemoFrame,
+  PropsTable,
+  sidenavDrawerCss,
+  useSidenavOffClick,
+} from "../_demoKit.js";
+
+// Same Acme SVG logo pair used by Components/Brand and the Shell demo.
+// Wide variant for ≥ sm viewports, icon-only logomark for narrower widths.
+const svg = (m: string) =>
+  "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(m);
+
+const acmeIcon = svg(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+    <circle cx="20" cy="20" r="20" fill="#0066cc"/>
+    <path d="M11 28 L20 10 L29 28 M14.5 22 L25.5 22" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </svg>`,
+);
+const acmeWide = svg(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40">
+    <circle cx="20" cy="20" r="20" fill="#0066cc"/>
+    <path d="M11 28 L20 10 L29 28 M14.5 22 L25.5 22" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <text x="52" y="27" fill="#0a0a0a" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">Acme</text>
+  </svg>`,
+);
+
+const acmeBrand = (
+  <Brand
+    src={acmeWide}
+    alt="Acme"
+    widths={{ default: "40px", sm: "60px", md: "180px" }}
+  >
+    <source media="(min-width: 1200px)" srcSet={acmeWide} />
+    <source media="(min-width: 992px)"  srcSet={acmeWide} />
+    <source media="(min-width: 768px)"  srcSet={acmeWide} />
+    <source media="(min-width: 576px)"  srcSet={acmeIcon} />
+    <source media="(min-width: 320px)"  srcSet={acmeIcon} />
+    <source                              srcSet={acmeWide} />
+  </Brand>
+);
 
 const meta: Meta = {
   title: "Components/Masthead",
@@ -21,8 +70,45 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Overview: StoryObj = {
-  render: () => (
+// Tiny sidebar nav used by the Page-mounted Masthead demos. Kept local —
+// each Masthead example needs a sidebar to drive when the hamburger clicks,
+// otherwise the canonical "sidenav drawer (hamburger toggle)" pattern can't
+// be illustrated.
+function DemoSidebarNav({ label }: { label: string }) {
+  return (
+    <Nav aria-label={label}>
+      <NavList>
+        <NavItem itemId={0} isActive>Dashboard</NavItem>
+        <NavItem itemId={1}>Workflows</NavItem>
+        <NavItem itemId={2}>Settings</NavItem>
+      </NavList>
+    </Nav>
+  );
+}
+
+function OverviewStory() {
+  // Basic demo: inline single-row masthead + sidenav drawer.
+  const [basicOpen, setBasicOpen] = useState(true);
+  useSidenavOffClick({
+    open: basicOpen,
+    close: () => setBasicOpen(false),
+    containerId: "basic-masthead-demo",
+    sidebarId: "basic-masthead-sidebar",
+    toggleId: "basic-masthead-toggle",
+  });
+
+  // Display-variants demo: stacked two-row masthead at the default breakpoint
+  // + sidenav drawer.
+  const [stackOpen, setStackOpen] = useState(true);
+  useSidenavOffClick({
+    open: stackOpen,
+    close: () => setStackOpen(false),
+    containerId: "stack-masthead-demo",
+    sidebarId: "stack-masthead-sidebar",
+    toggleId: "stack-masthead-toggle",
+  });
+
+  return (
     <FoundationPage
       title="Masthead"
       intro={
@@ -35,98 +121,158 @@ export const Overview: StoryObj = {
         </>
       }
     >
+      <style
+        dangerouslySetInnerHTML={{
+          __html: [
+            sidenavDrawerCss("basic-masthead-demo"),
+            sidenavDrawerCss("stack-masthead-demo"),
+          ].join("\n"),
+        }}
+      />
+
       <Section
         title="Basic — toggle + brand + content"
-        description="Standalone Masthead (without Page) uses Button isHamburger as the toggle. When mounted inside a Page, swap the Button for PageToggleButton — that wires sidebar collapse automatically."
+        description="Mounted inside a Page so the hamburger drives a real sidenav drawer (PageToggleButton + PageSidebar). Click the hamburger or anywhere outside the sidebar to collapse it — same sidenav-drawer pattern used across the docs."
       >
         <Card>
           <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Masthead id="basic-masthead">
-                <MastheadMain>
-                  <MastheadToggle>
-                    <Button
-                      variant="plain"
-                      isHamburger
-                      onClick={() => {}}
-                      aria-label="Global navigation"
-                    />
-                  </MastheadToggle>
-                  <MastheadBrand>
-                    <MastheadLogo component="a" href="#">
-                      <strong style={{ color: "var(--gp-color-text-regular)" }}>
-                        Acme
-                      </strong>
-                    </MastheadLogo>
-                  </MastheadBrand>
-                </MastheadMain>
-                <MastheadContent>
-                  <Toolbar isStatic id="basic-masthead-toolbar">
-                    <ToolbarContent>
-                      <ToolbarItem align={{ default: "alignEnd" }}>
-                        <Button variant="plain" aria-label="Notifications">
-                          <BellIcon />
-                        </Button>
-                      </ToolbarItem>
-                      <ToolbarItem>
-                        <Button variant="plain" aria-label="Settings">
-                          <CogIcon />
-                        </Button>
-                      </ToolbarItem>
-                    </ToolbarContent>
-                  </Toolbar>
-                </MastheadContent>
-              </Masthead>
-            </DemoFrame>
-            <CodeBlock>{`<Masthead id="basic-masthead">
-  <MastheadMain>
-    <MastheadToggle>
-      <Button variant="plain" isHamburger onClick={toggleSidebar} aria-label="Global navigation" />
-    </MastheadToggle>
-    <MastheadBrand>
-      <MastheadLogo component="a" href="/">
-        <img src="/logo.svg" alt="Acme" />
-      </MastheadLogo>
-    </MastheadBrand>
-  </MastheadMain>
-  <MastheadContent>
-    <Toolbar isStatic id="masthead-toolbar">
-      <ToolbarContent>
-        <ToolbarItem align={{ default: "alignEnd" }}>
-          <Button variant="plain" aria-label="Notifications"><BellIcon /></Button>
-        </ToolbarItem>
-      </ToolbarContent>
-    </Toolbar>
-  </MastheadContent>
-</Masthead>`}</CodeBlock>
+            <div id="basic-masthead-demo">
+              <DemoFrame height={320}>
+                <Page
+                  masthead={
+                    <Masthead id="basic-masthead" display={{ default: "inline" }}>
+                      <MastheadMain>
+                        <MastheadToggle>
+                          <PageToggleButton
+                            isHamburgerButton
+                            aria-label="Global navigation"
+                            isSidebarOpen={basicOpen}
+                            onSidebarToggle={() => setBasicOpen((v) => !v)}
+                            id="basic-masthead-toggle"
+                          />
+                        </MastheadToggle>
+                        <MastheadBrand>
+                          <MastheadLogo component="a" href="#">
+                            {acmeBrand}
+                          </MastheadLogo>
+                        </MastheadBrand>
+                      </MastheadMain>
+                      <MastheadContent>
+                        <Toolbar isStatic id="basic-masthead-toolbar">
+                          <ToolbarContent>
+                            <ToolbarItem align={{ default: "alignEnd" }}>
+                              <Button variant="plain" aria-label="Notifications">
+                                <BellIcon />
+                              </Button>
+                            </ToolbarItem>
+                            <ToolbarItem>
+                              <Button variant="plain" aria-label="Settings">
+                                <CogIcon />
+                              </Button>
+                            </ToolbarItem>
+                          </ToolbarContent>
+                        </Toolbar>
+                      </MastheadContent>
+                    </Masthead>
+                  }
+                  sidebar={
+                    <PageSidebar isSidebarOpen={basicOpen} id="basic-masthead-sidebar">
+                      <PageSidebarBody>
+                        <DemoSidebarNav label="Basic masthead demo" />
+                      </PageSidebarBody>
+                    </PageSidebar>
+                  }
+                >
+                  <PageSection aria-label="Basic masthead body">
+                    <span style={{ color: "var(--gp-color-text-subtle)" }}>
+                      Page body — the hamburger toggles the sidenav drawer.
+                    </span>
+                  </PageSection>
+                </Page>
+              </DemoFrame>
+            </div>
+            <CodeBlock>{`<Page
+  masthead={
+    <Masthead display={{ default: "inline" }}>
+      <MastheadMain>
+        <MastheadToggle>
+          <PageToggleButton
+            isHamburgerButton
+            aria-label="Global navigation"
+            isSidebarOpen={open}
+            onSidebarToggle={() => setOpen(v => !v)}
+          />
+        </MastheadToggle>
+        <MastheadBrand>{/* logo */}</MastheadBrand>
+      </MastheadMain>
+      <MastheadContent>{/* toolbar */}</MastheadContent>
+    </Masthead>
+  }
+  sidebar={
+    <PageSidebar isSidebarOpen={open}>
+      <PageSidebarBody>
+        <Nav aria-label="Primary">{/* nav items */}</Nav>
+      </PageSidebarBody>
+    </PageSidebar>
+  }
+>
+  <PageSection>{/* page content */}</PageSection>
+</Page>`}</CodeBlock>
           </div>
         </Card>
       </Section>
 
       <Section
         title="Display variants"
-        description="display={{ default: 'inline' | 'stack' }} controls whether MastheadMain and MastheadContent sit side-by-side or stack vertically. Mix with breakpoints for responsive shells."
+        description="display={{ default: 'inline' | 'stack' }} controls whether MastheadMain and MastheadContent sit side-by-side or stack vertically. This demo uses stack — toggle, brand, and content land on row 2 under the brand row. Hamburger still drives the sidenav drawer (same off-click close)."
       >
         <Card>
           <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Masthead id="stack-masthead" display={{ default: "stack" }}>
-                <MastheadMain>
-                  <MastheadBrand>
-                    <MastheadLogo component="a" href="#">
-                      <strong style={{ color: "var(--gp-color-text-regular)" }}>
-                        Acme
-                      </strong>
-                    </MastheadLogo>
-                  </MastheadBrand>
-                </MastheadMain>
-                <MastheadContent>
-                  <span style={{ color: "var(--gp-color-text-subtle)" }}>
-                    Stacked content row
-                  </span>
-                </MastheadContent>
-              </Masthead>
-            </DemoFrame>
+            <div id="stack-masthead-demo">
+              <DemoFrame height={340}>
+                <Page
+                  masthead={
+                    <Masthead id="stack-masthead" display={{ default: "stack" }}>
+                      <MastheadMain>
+                        <MastheadToggle>
+                          <PageToggleButton
+                            isHamburgerButton
+                            aria-label="Global navigation"
+                            isSidebarOpen={stackOpen}
+                            onSidebarToggle={() => setStackOpen((v) => !v)}
+                            id="stack-masthead-toggle"
+                          />
+                        </MastheadToggle>
+                        <MastheadBrand>
+                          <MastheadLogo component="a" href="#">
+                            {acmeBrand}
+                          </MastheadLogo>
+                        </MastheadBrand>
+                      </MastheadMain>
+                      <MastheadContent>
+                        <span style={{ color: "var(--gp-color-text-subtle)" }}>
+                          Stacked content row
+                        </span>
+                      </MastheadContent>
+                    </Masthead>
+                  }
+                  sidebar={
+                    <PageSidebar isSidebarOpen={stackOpen} id="stack-masthead-sidebar">
+                      <PageSidebarBody>
+                        <DemoSidebarNav label="Stack masthead demo" />
+                      </PageSidebarBody>
+                    </PageSidebar>
+                  }
+                >
+                  <PageSection aria-label="Stack masthead body">
+                    <span style={{ color: "var(--gp-color-text-subtle)" }}>
+                      Stacked masthead — hamburger lives on row 2 with the
+                      content; clicking it drives the sidenav drawer.
+                    </span>
+                  </PageSection>
+                </Page>
+              </DemoFrame>
+            </div>
             <CodeBlock>{`<Masthead display={{ default: "stack", lg: "inline" }}>
   {/* stack on small viewports, inline on lg+ */}
 </Masthead>`}</CodeBlock>
@@ -141,13 +287,15 @@ export const Overview: StoryObj = {
         <Card>
           <div style={{ padding: 24 }}>
             <DemoFrame>
-              <Masthead id="inset-masthead" inset={{ default: "insetSm" }}>
+              <Masthead
+                id="inset-masthead"
+                display={{ default: "inline" }}
+                inset={{ default: "insetSm" }}
+              >
                 <MastheadMain>
                   <MastheadBrand>
                     <MastheadLogo component="a" href="#">
-                      <strong style={{ color: "var(--gp-color-text-regular)" }}>
-                        Acme
-                      </strong>
+                      {acmeBrand}
                     </MastheadLogo>
                   </MastheadBrand>
                 </MastheadMain>
@@ -223,5 +371,9 @@ import { Brand } from "@patternfly/react-core";
         </Card>
       </Section>
     </FoundationPage>
-  ),
+  );
+}
+
+export const Overview: StoryObj = {
+  render: () => <OverviewStory />,
 };

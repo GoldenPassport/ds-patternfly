@@ -35,7 +35,7 @@ const focusedStyle: CSSProperties = {
 /**
  * Keyboard-only "skip to main content" link. Renders invisibly until focused,
  * at which point it pops into the top-left of the viewport. Place it as the
- * first focusable element inside `<AppShell>`.
+ * first focusable element inside `<Shell>`.
  */
 export function SkipToContent({ targetId, label }: SkipToContentProps) {
   return (

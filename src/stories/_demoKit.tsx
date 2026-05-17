@@ -1,4 +1,82 @@
+import { useEffect } from "react";
 import type { CSSProperties, ReactNode } from "react";
+
+/**
+ * CSS block that scopes the PF6 Page sidenav-drawer animation to a container
+ * id. Provides:
+ *   - push mode at DemoFrame widths (PF6 only auto-switches to push at viewport
+ *     ≥ xl, but the docs render Pages inside a narrower DemoFrame),
+ *   - smooth, same-speed open/close (cubic-bezier + width transition, with
+ *     `overflow: hidden` held across BOTH states so content doesn't snap into
+ *     view on the open transition).
+ *
+ * Pair with `useSidenavOffClick` to close the drawer when the user clicks
+ * outside the sidebar / toggle.
+ */
+export function sidenavDrawerCss(containerId: string) {
+  const c = `#${containerId}`;
+  return [
+    `${c} .pf-v6-c-page {`,
+    `  grid-template-areas: "header header" "sidebar main";`,
+    `  grid-template-columns: auto 1fr;`,
+    `}`,
+    `${c} .pf-v6-c-page__sidebar {`,
+    `  position: static;`,
+    `  width: var(--pf-v6-c-page__sidebar--xl--Width);`,
+    `  overflow: hidden;`,
+    `  transition: width 220ms cubic-bezier(0.4, 0, 0.2, 1);`,
+    `}`,
+    `${c} .pf-v6-c-page__sidebar.pf-m-collapsed {`,
+    `  width: 0;`,
+    `}`,
+  ].join("\n");
+}
+
+/**
+ * Off-click close for the PF6 PageSidebar / PageToggleButton sidenav-drawer
+ * pattern. Listens for mousedown on the document (and the Storybook iframe
+ * document, since clicks inside the demo originate there); closes the drawer
+ * when the click falls outside the sidebar and toggle elements but inside the
+ * demo container.
+ */
+export function useSidenavOffClick({
+  open,
+  close,
+  containerId,
+  sidebarId,
+  toggleId,
+}: {
+  open: boolean;
+  close: () => void;
+  containerId: string;
+  sidebarId: string;
+  toggleId: string;
+}) {
+  useEffect(() => {
+    if (!open) return undefined;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Element | null;
+      if (!target) return;
+      const ownerDoc = target.ownerDocument;
+      const root = ownerDoc.getElementById(containerId);
+      if (!root || !root.contains(target)) return;
+      const sidebar = ownerDoc.getElementById(sidebarId);
+      const toggle = ownerDoc.getElementById(toggleId);
+      if (sidebar?.contains(target) || toggle?.contains(target)) return;
+      close();
+    };
+    document.addEventListener("mousedown", handler, true);
+    const iframe = document.querySelector(
+      "iframe#storybook-preview-iframe",
+    ) as HTMLIFrameElement | null;
+    const iframeDoc = iframe?.contentDocument;
+    iframeDoc?.addEventListener("mousedown", handler, true);
+    return () => {
+      document.removeEventListener("mousedown", handler, true);
+      iframeDoc?.removeEventListener("mousedown", handler, true);
+    };
+  }, [open, close, containerId, sidebarId, toggleId]);
+}
 
 /**
  * Inline note used on every form/input page to remind the reader that the

@@ -43,15 +43,15 @@ export {
 
 // Components + label contracts/defaults
 export {
-  AppShell,
+  Shell,
   PrimaryDetailLayout,
   Hyperlink,
-  appShellEnLabels,
+  shellEnLabels,
   primaryDetailLayoutEnLabels,
 } from "./components/index.js";
 export type {
-  AppShellProps,
-  AppShellLabels,
+  ShellProps,
+  ShellLabels,
   PrimaryDetailLayoutProps,
   PrimaryDetailLayoutLabels,
   HyperlinkProps,

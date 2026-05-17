@@ -31,7 +31,7 @@ const ROWS: Row[] = [
       "Validates brand contrast in tests; emits CSS vars used by all downstream components.",
   },
   {
-    component: "AppShell",
+    component: "Shell",
     keyboard: "pass",
     screenReader: "pass",
     focusManagement: "pass",

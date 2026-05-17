@@ -87,7 +87,7 @@ export const Overview: StoryObj = {
             </li>
             <li>
               <strong>Skip-to-content</strong> is built into{" "}
-              <code>AppShell</code>.
+              <code>Shell</code>.
             </li>
             <li>
               <strong>Logical CSS properties</strong> — layouts use{" "}

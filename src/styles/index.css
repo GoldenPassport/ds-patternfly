@@ -526,6 +526,26 @@
 }
 
 /* ---------------------------------------------------------------
+ * Masthead — tighter padding on mobile.
+ *
+ * PF6 ships masthead with `--PaddingInline: spacer--lg` (~24px) and
+ * `--PaddingBlock: spacer--md` (~16px) at every breakpoint. On narrow
+ * viewports that wastes horizontal real-estate the user really wants
+ * for the page title / nav toggle / utility icons. Halve the inline
+ * padding and trim the block padding so the bar reads compact below
+ * `md` (768px) — the standard PF mobile breakpoint we already use
+ * elsewhere in this file.
+ * --------------------------------------------------------------- */
+@media (max-width: 767.98px) {
+  [data-brand] .pf-v6-c-masthead {
+    --pf-v6-c-masthead--PaddingInline: var(--pf-t--global--spacer--md);
+    --pf-v6-c-masthead--PaddingBlock: var(--pf-t--global--spacer--sm);
+    --pf-v6-c-masthead--ColumnGap: var(--pf-t--global--spacer--sm);
+    --pf-v6-c-masthead__main--MarginInlineEnd: var(--pf-t--global--spacer--sm);
+  }
+}
+
+/* ---------------------------------------------------------------
  * Nav — active-state polish.
  *
  * PF6's default Nav active state is just a subtle bg pill, with no

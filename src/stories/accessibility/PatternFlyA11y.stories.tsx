@@ -92,7 +92,7 @@ export const Inheritance: StoryObj = {
               also work both ways.
             </li>
             <li>
-              <strong>Skip-to-content built into AppShell.</strong>
+              <strong>Skip-to-content built into Shell.</strong>
             </li>
           </ul>
         </Card>

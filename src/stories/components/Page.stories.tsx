@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
+  Brand,
   Breadcrumb,
   BreadcrumbItem,
   Card,
   CardBody,
+  Checkbox,
+  Content,
+  FormSelect,
+  FormSelectOption,
+  Gallery,
+  GalleryItem,
   Masthead,
   MastheadBrand,
   MastheadContent,
@@ -19,13 +26,19 @@ import {
   PageSidebar,
   PageSidebarBody,
   PageToggleButton,
+  TextInput,
   Title,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
 import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../_storyKit.js";
-import { DemoFrame, PropsTable } from "../_demoKit.js";
+import {
+  DemoFrame,
+  PropsTable,
+  sidenavDrawerCss,
+  useSidenavOffClick,
+} from "../_demoKit.js";
 
 const meta: Meta = {
   title: "Components/Page",
@@ -36,10 +49,15 @@ const meta: Meta = {
         // The doc page renders several Page instances side-by-side for
         // illustration; in real apps you only ever render one Page per route,
         // so the duplicate <header>/<main>/<nav> landmarks are doc-only.
+        // The live sticky + styled-content demos render Page <main> inside
+        // a fixed-height scrolling container — the rule wants a tabindex
+        // on the scroll region, but Page already manages focus and the
+        // outer container exists only for the doc demo's visible scrollbox.
         rules: [
           { id: "landmark-unique", enabled: false },
           { id: "landmark-no-duplicate-main", enabled: false },
           { id: "landmark-no-duplicate-banner", enabled: false },
+          { id: "scrollable-region-focusable", enabled: false },
         ],
       },
     },
@@ -47,16 +65,453 @@ const meta: Meta = {
 };
 export default meta;
 
-const brandLogo = (
-  <strong style={{ color: "var(--gp-color-text-regular)" }}>Acme</strong>
+// Same Acme SVG logo pair used by Components/Brand, Masthead, and Shell.
+// Wide variant for ≥ sm; icon-only logomark below.
+const svg = (m: string) =>
+  "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(m);
+const acmeIcon = svg(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+    <circle cx="20" cy="20" r="20" fill="#0066cc"/>
+    <path d="M11 28 L20 10 L29 28 M14.5 22 L25.5 22" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </svg>`,
 );
+const acmeWide = svg(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40">
+    <circle cx="20" cy="20" r="20" fill="#0066cc"/>
+    <path d="M11 28 L20 10 L29 28 M14.5 22 L25.5 22" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <text x="52" y="27" fill="#0a0a0a" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">Acme</text>
+  </svg>`,
+);
+
+const brandLogo = (
+  <Brand
+    src={acmeWide}
+    alt="Acme"
+    widths={{ default: "40px", sm: "60px", md: "180px" }}
+  >
+    <source media="(min-width: 1200px)" srcSet={acmeWide} />
+    <source media="(min-width: 992px)"  srcSet={acmeWide} />
+    <source media="(min-width: 768px)"  srcSet={acmeWide} />
+    <source media="(min-width: 576px)"  srcSet={acmeIcon} />
+    <source media="(min-width: 320px)"  srcSet={acmeIcon} />
+    <source                              srcSet={acmeWide} />
+  </Brand>
+);
+
+/**
+ * Live demo of PF6's sticky-header pattern (patternfly.org/components/page
+ * react-demos/sticky-section-breadcrumb-with-breakpoints). Three checkboxes
+ * drive which parts of the header join the sticky group:
+ *
+ *   - Breadcrumb       → drives `groupProps.stickyOnBreakpoint`
+ *   - Page heading     → if true, the <h1> lives in `additionalGroupedContent`
+ *                        (sticky); if false, it goes in a regular body section.
+ *   - Page subheading  → same toggle for the lead paragraph.
+ *
+ * PF6's grouping model: anything passed to `additionalGroupedContent` lives
+ * inside the auto-PageGroup with the breadcrumb. The whole group inherits
+ * `groupProps.stickyOnBreakpoint`, so heading / subheading sticky implicitly
+ * pin the breadcrumb too. The demo body scrolls inside a fixed-height frame
+ * so the stick / unstick transition is visible without scrolling the page.
+ */
+function StickyHeaderDemo() {
+  const [stickyBreadcrumb, setStickyBreadcrumb] = useState(true);
+  const [stickyHeading, setStickyHeading]       = useState(true);
+  const [stickySubheading, setStickySubheading] = useState(false);
+  const [sidenavOpen, setSidenavOpen]           = useState(true);
+  useSidenavOffClick({
+    open: sidenavOpen,
+    close: () => setSidenavOpen(false),
+    containerId: "ds-page-sticky-demo",
+    sidebarId: "ds-page-sticky-sidebar",
+    toggleId: "ds-page-sticky-toggle",
+  });
+
+  // Body sections show the parts that are NOT in the sticky group, in
+  // their normal scrolling position above the gallery.
+  const bodyHeader: ReactNode[] = [];
+  if (!stickyHeading) {
+    bodyHeader.push(
+      <PageSection key="heading">
+        <Content>
+          <h1>Detail page</h1>
+        </Content>
+      </PageSection>,
+    );
+  }
+  if (!stickySubheading) {
+    bodyHeader.push(
+      <PageSection key="subheading">
+        <Content>
+          <p>Scroll the panel to watch the sticky parts pin to the top.</p>
+        </Content>
+      </PageSection>,
+    );
+  }
+
+  // additionalGroupedContent only includes items that should stick.
+  const groupedContent =
+    stickyHeading || stickySubheading ? (
+      <PageSection isWidthLimited aria-labelledby="sticky-h1">
+        <Content>
+          {stickyHeading && <h1 id="sticky-h1">Detail page</h1>}
+          {stickySubheading && (
+            <p>Scroll the panel to watch the sticky parts pin to the top.</p>
+          )}
+        </Content>
+      </PageSection>
+    ) : undefined;
+
+  const anySticky = stickyBreadcrumb || stickyHeading || stickySubheading;
+
+  // Local masthead + sidebar — kept simple since the focus is the sticky
+  // demo, not the chrome. The grouped breadcrumb / additional content
+  // sit inside Page; everything else uses the standard plumbing.
+  const masthead = (
+    <Masthead id="sticky-demo-masthead">
+      <MastheadMain>
+        <MastheadToggle>
+          <PageToggleButton
+            isHamburgerButton
+            aria-label="Global navigation"
+            isSidebarOpen={sidenavOpen}
+            onSidebarToggle={() => setSidenavOpen((v) => !v)}
+            id="ds-page-sticky-toggle"
+          />
+        </MastheadToggle>
+        <MastheadBrand>
+          <MastheadLogo component="a" href="#">
+            {brandLogo}
+          </MastheadLogo>
+        </MastheadBrand>
+      </MastheadMain>
+      <MastheadContent>
+        <Toolbar id="sticky-demo-toolbar" isStatic>
+          <ToolbarContent>
+            <ToolbarItem align={{ default: "alignEnd" }}>
+              <span style={{ color: "var(--gp-color-text-subtle)" }}>
+                Actions
+              </span>
+            </ToolbarItem>
+          </ToolbarContent>
+        </Toolbar>
+      </MastheadContent>
+    </Masthead>
+  );
+
+  const sidebar = (
+    <PageSidebar isSidebarOpen={sidenavOpen} id="ds-page-sticky-sidebar">
+      <PageSidebarBody>
+        <Nav aria-label="Sticky demo nav">
+          <NavList>
+            <NavItem itemId={0} isActive>Overview</NavItem>
+            <NavItem itemId={1}>Configuration</NavItem>
+            <NavItem itemId={2}>Logs</NavItem>
+          </NavList>
+        </Nav>
+      </PageSidebarBody>
+    </PageSidebar>
+  );
+
+  const dashboardBreadcrumb = (
+    <Breadcrumb>
+      <BreadcrumbItem>Home</BreadcrumbItem>
+      <BreadcrumbItem to="#">Workflows</BreadcrumbItem>
+      <BreadcrumbItem to="#" isActive>
+        Detail page
+      </BreadcrumbItem>
+    </Breadcrumb>
+  );
+
+  return (
+    <div style={{ display: "grid", gap: 12 }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 16,
+          padding: 12,
+          border: "1px solid var(--gp-color-border-subtle)",
+          borderRadius: 6,
+          background: "var(--gp-color-bg-secondary-default)",
+        }}
+      >
+        <Checkbox
+          id="sticky-breadcrumb"
+          label="Sticky breadcrumb"
+          isChecked={stickyBreadcrumb}
+          onChange={(_e, v) => setStickyBreadcrumb(v)}
+        />
+        <Checkbox
+          id="sticky-heading"
+          label="Sticky page heading"
+          isChecked={stickyHeading}
+          onChange={(_e, v) => setStickyHeading(v)}
+        />
+        <Checkbox
+          id="sticky-subheading"
+          label="Sticky page subheading"
+          isChecked={stickySubheading}
+          onChange={(_e, v) => setStickySubheading(v)}
+        />
+      </div>
+      <div
+        id="ds-page-sticky-demo"
+        style={{
+          height: 520,
+          overflow: "hidden",
+          border: "1px solid var(--gp-color-border-subtle)",
+          borderRadius: 6,
+        }}
+      >
+        <Page
+          masthead={masthead}
+          sidebar={sidebar}
+          breadcrumb={dashboardBreadcrumb}
+          mainContainerId="sticky-demo-main"
+          isBreadcrumbWidthLimited={false}
+          isBreadcrumbGrouped={anySticky}
+          additionalGroupedContent={groupedContent}
+          groupProps={
+            anySticky ? { stickyOnBreakpoint: { default: "top" } } : undefined
+          }
+        >
+          {bodyHeader}
+          <PageSection isFilled aria-label="Card gallery">
+            <Gallery hasGutter minWidths={{ default: "180px" }}>
+              {Array.from({ length: 30 }).map((_, i) => (
+                <GalleryItem key={i}>
+                  <Card isCompact>
+                    <CardBody>Card {i + 1}</CardBody>
+                  </Card>
+                </GalleryItem>
+              ))}
+            </Gallery>
+          </PageSection>
+        </Page>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Live demo for customising the page content area's chrome — border, radius,
+ * shadow, padding. The controls drive inline styles on the body PageSections
+ * so the user can see the effect across the page header and content blocks
+ * without rebuilding a theme. Real apps should land these as theme tokens /
+ * brand overrides rather than per-PageSection inline styles.
+ */
+const SHADOW_VALUES: Record<string, string> = {
+  none: "none",
+  sm: "0 1px 2px rgba(0,0,0,0.08)",
+  md: "0 2px 8px rgba(0,0,0,0.12)",
+  lg: "0 6px 16px rgba(0,0,0,0.18)",
+};
+
+function StyledContentAreaDemo() {
+  const [hasBorder, setHasBorder]           = useState(true);
+  const [borderColor, setBorderColor]       = useState("#d2d2d2");
+  const [borderThickness, setBorderThickness] = useState(1);
+  const [cornerRadius, setCornerRadius]     = useState(8);
+  const [shadow, setShadow]                 = useState("md");
+  const [padding, setPadding]               = useState(24);
+
+  // Scoped CSS targeting PF6's `.pf-v6-c-page__main-container` — the <div>
+  // that wraps <main> and any sibling chrome. Styling THIS element (rather
+  // than <main> or individual PageSections) gives a single bordered card
+  // around the entire content area. `:has(#styled-demo-main)` keeps the
+  // selector scoped to this demo's container only — other Page instances
+  // on the doc keep PF6's default container styling.
+  const css = `
+    .pf-v6-c-page__main-container:has(#styled-demo-main) {
+      border: ${hasBorder ? `${borderThickness}px solid ${borderColor}` : "none"};
+      border-radius: ${cornerRadius}px;
+      box-shadow: ${SHADOW_VALUES[shadow] ?? "none"};
+      padding: ${padding}px;
+      margin: 8px;
+      background: var(--gp-color-bg-primary-default);
+    }
+  `;
+
+  return (
+    <div style={{ display: "grid", gap: 12 }}>
+      {/* Scoped style block — only targets the #styled-demo-main element
+          inside this demo, not other Page mains on the doc. */}
+      <style dangerouslySetInnerHTML={{ __html: css }} />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: 12,
+          padding: 12,
+          border: "1px solid var(--gp-color-border-subtle)",
+          borderRadius: 6,
+          background: "var(--gp-color-bg-secondary-default)",
+        }}
+      >
+        <Checkbox
+          id="ca-border"
+          label="Border"
+          isChecked={hasBorder}
+          onChange={(_e, v) => setHasBorder(v)}
+        />
+        <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+          Border colour
+          <TextInput
+            id="ca-color"
+            value={borderColor}
+            onChange={(_e, v) => setBorderColor(v)}
+            placeholder="#d2d2d2"
+            isDisabled={!hasBorder}
+          />
+        </label>
+        <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+          Border thickness (px)
+          <TextInput
+            id="ca-thickness"
+            type="number"
+            value={String(borderThickness)}
+            onChange={(_e, v) => setBorderThickness(Number(v) || 0)}
+            isDisabled={!hasBorder}
+          />
+        </label>
+        <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+          Corner radius (px)
+          <TextInput
+            id="ca-radius"
+            type="number"
+            value={String(cornerRadius)}
+            onChange={(_e, v) => setCornerRadius(Number(v) || 0)}
+          />
+        </label>
+        <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+          Shadow
+          <FormSelect
+            id="ca-shadow"
+            value={shadow}
+            onChange={(_e, v) => setShadow(v)}
+            aria-label="Shadow"
+          >
+            <FormSelectOption value="none" label="None" />
+            <FormSelectOption value="sm"   label="Small" />
+            <FormSelectOption value="md"   label="Medium" />
+            <FormSelectOption value="lg"   label="Large" />
+          </FormSelect>
+        </label>
+        <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+          Padding (px)
+          <TextInput
+            id="ca-padding"
+            type="number"
+            value={String(padding)}
+            onChange={(_e, v) => setPadding(Number(v) || 0)}
+          />
+        </label>
+      </div>
+
+      <div
+        style={{
+          height: 520,
+          overflow: "hidden",
+          border: "1px solid var(--gp-color-border-subtle)",
+          borderRadius: 6,
+        }}
+      >
+        <Page
+          masthead={
+            <Masthead id="styled-demo-masthead">
+              <MastheadMain>
+                <MastheadBrand>
+                  <MastheadLogo component="a" href="#">
+                    {brandLogo}
+                  </MastheadLogo>
+                </MastheadBrand>
+              </MastheadMain>
+              <MastheadContent>
+                <Toolbar id="styled-demo-toolbar" isStatic>
+                  <ToolbarContent>
+                    <ToolbarItem align={{ default: "alignEnd" }}>
+                      <span style={{ color: "var(--gp-color-text-subtle)" }}>
+                        Actions
+                      </span>
+                    </ToolbarItem>
+                  </ToolbarContent>
+                </Toolbar>
+              </MastheadContent>
+            </Masthead>
+          }
+          mainContainerId="styled-demo-main"
+        >
+          {/* Page header — styled via the same control set. */}
+          <PageSection aria-labelledby="styled-h1">
+            <Content>
+              <h1 id="styled-h1">Page header</h1>
+              <p>
+                Each PageSection on this page receives the same border / radius /
+                shadow / padding from the controls above.
+              </p>
+            </Content>
+          </PageSection>
+
+          {/* Page content — KPI tiles. */}
+          <PageSection aria-label="KPI tiles">
+            <Gallery hasGutter minWidths={{ default: "180px" }}>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <GalleryItem key={i}>
+                  <Card isCompact>
+                    <CardBody>
+                      <div style={{ color: "var(--gp-color-text-subtle)", fontSize: 13 }}>
+                        Stat {i + 1}
+                      </div>
+                      <div style={{ fontSize: 24, fontWeight: 600 }}>
+                        {String((i + 1) * 42)}
+                      </div>
+                    </CardBody>
+                  </Card>
+                </GalleryItem>
+              ))}
+            </Gallery>
+          </PageSection>
+
+          {/* Page content — long copy. */}
+          <PageSection aria-label="Long copy">
+            <Content>
+              <h2>Section detail</h2>
+              <p>
+                Use this playground to find border / radius / shadow / padding
+                values that match the consuming product&rsquo;s visual
+                language. Land the chosen values as PF6 theme overrides on{" "}
+                <code>--pf-v6-c-page__main-section--*</code> custom properties
+                so every PageSection inherits them automatically.
+              </p>
+            </Content>
+          </PageSection>
+        </Page>
+      </div>
+    </div>
+  );
+}
 
 export const Overview: StoryObj = {
   render: () => {
     // Basic anatomy demo (controlled sidebar)
     const [open, setOpen] = useState(true);
+    useSidenavOffClick({
+      open,
+      close: () => setOpen(false),
+      containerId: "ds-page-basic-demo",
+      sidebarId: "ds-page-sidebar",
+      toggleId: "ds-page-nav-toggle",
+    });
     // Sidebar-behaviour demo (push)
     const [pushOpen, setPushOpen] = useState(true);
+    useSidenavOffClick({
+      open: pushOpen,
+      close: () => setPushOpen(false),
+      containerId: "ds-page-push-demo",
+      sidebarId: "ds-page-push-sidebar",
+      toggleId: "ds-page-push-toggle",
+    });
     const masthead = (
       <Masthead>
         <MastheadMain>
@@ -132,19 +587,24 @@ export const Overview: StoryObj = {
             <code>PageSidebar</code>, and <code>PageSection</code> into the
             standard app skeleton — header bar, optional collapsible sidebar,
             scrolling main content. Use it as the outermost container of every
-            app screen; the lib&rsquo;s own <code>AppShell</code> is built on
+            app screen; the lib&rsquo;s own <code>Shell</code> is built on
             top.
           </>
         }
       >
         <style
           dangerouslySetInnerHTML={{
-            __html:
-              ".gp-doc-page-force-push .pf-v6-c-page {" +
-              " grid-template-areas: \"header header\" \"sidebar main\";" +
-              " grid-template-columns: var(--pf-v6-c-page__sidebar--Width) 1fr;" +
-              " --pf-v6-c-page__sidebar--Width: var(--pf-v6-c-page__sidebar--xl--Width);" +
-              " }",
+            // Shared sidenav-drawer styling — same animation/easing as the
+            // Drawer story's "Sidenav drawer (hamburger toggle)" demo so all
+            // hamburger toggles in the doc behave the same way (push mode,
+            // smooth same-speed open/close, no content-snap on open).
+            __html: [
+              sidenavDrawerCss("ds-page-basic-demo"),
+              sidenavDrawerCss("ds-page-push-demo"),
+              sidenavDrawerCss("ds-page-slots-demo"),
+              sidenavDrawerCss("ds-page-centered-demo"),
+              sidenavDrawerCss("ds-page-sticky-demo"),
+            ].join("\n"),
           }}
         />
         <Section
@@ -153,7 +613,7 @@ export const Overview: StoryObj = {
         >
           <DocCard>
             <div style={{ padding: 24, display: "grid", gap: 16 }}>
-              <div className="gp-doc-page-force-push">
+              <div id="ds-page-basic-demo">
               <DemoFrame height={360}>
                 <Page
                   masthead={masthead}
@@ -223,7 +683,7 @@ const sidebar = (
               <strong style={{ color: "var(--gp-color-text-regular)" }}>
                 Push (desktop) — sidebar shrinks the content column
               </strong>
-              <div className="gp-doc-page-force-push">
+              <div id="ds-page-push-demo">
               <DemoFrame height={300}>
                 <Page
                   masthead={
@@ -336,7 +796,7 @@ const sidebar = (
         >
           <DocCard>
             <div style={{ padding: 24, display: "grid", gap: 16 }}>
-              <div className="gp-doc-page-force-push">
+              <div id="ds-page-slots-demo">
               <DemoFrame height={300}>
                 <Page
                   masthead={slotsMasthead}
@@ -393,7 +853,7 @@ const sidebar = (
         >
           <DocCard>
             <div style={{ padding: 24 }}>
-              <div className="gp-doc-page-force-push">
+              <div id="ds-page-centered-demo">
               <DemoFrame height={260}>
                 <Page masthead={centeredMasthead}>
                   <PageSection
@@ -439,23 +899,60 @@ const sidebar = (
         </Section>
 
         <Section
-          title="Sticky header (PageGroup + breadcrumb)"
-          description="Wrap a Breadcrumb + Title + Tabs cluster in PageGroup with stickyOnBreakpoint to make them stick together as the page scrolls. hasShadowBottom adds a divider when the group is stuck."
+          title="Sticky breadcrumb + heading (groupProps.stickyOnBreakpoint)"
+          description="Page natively groups its `breadcrumb` slot with anything in `additionalGroupedContent` and pins the whole group via `groupProps.stickyOnBreakpoint`. Toggle the boxes below to control which parts of the page header join the sticky group; scroll the inner panel to see them pin."
         >
           <DocCard>
-            <div style={{ padding: 24 }}>
-              <CodeBlock>{`<Page masthead={masthead} sidebar={sidebar}>
-  <PageGroup hasShadowBottom stickyOnBreakpoint={{ default: 'top' }}>
-    <PageBreadcrumb>
-      <Breadcrumb>{/* crumbs */}</Breadcrumb>
-    </PageBreadcrumb>
-    <PageSection><Title headingLevel="h1">Detail</Title></PageSection>
-    <PageSection type="tabs">
-      <Tabs>{/* tabs */}</Tabs>
+            <div style={{ padding: 24, display: "grid", gap: 16 }}>
+              <StickyHeaderDemo />
+              <CodeBlock>{`<Page
+  masthead={masthead}
+  sidebar={sidebar}
+  breadcrumb={<Breadcrumb>{/* crumbs */}</Breadcrumb>}
+  isBreadcrumbGrouped
+  additionalGroupedContent={
+    <PageSection isWidthLimited aria-labelledby="page-h1">
+      <Content>
+        <h1 id="page-h1">Detail page</h1>
+        <p>Subheading copy goes here.</p>
+      </Content>
     </PageSection>
-  </PageGroup>
+  }
+  groupProps={{ stickyOnBreakpoint: { default: "top" } }}
+>
   <PageSection isFilled>{/* main content */}</PageSection>
 </Page>`}</CodeBlock>
+            </div>
+          </DocCard>
+        </Section>
+
+        <Section
+          title="Custom content-area styling"
+          description="Drive border / radius / shadow / padding on the page header + content sections. Use to dial-in the look that matches the consuming product, then land the chosen values as PF6 theme overrides on `--pf-v6-c-page__main-section--*` custom properties so every PageSection inherits them automatically."
+        >
+          <DocCard>
+            <div style={{ padding: 24, display: "grid", gap: 16 }}>
+              <StyledContentAreaDemo />
+              <CodeBlock>{`// Per-section override via inline style (playground):
+<PageSection
+  style={{
+    border: "1px solid #d2d2d2",
+    borderRadius: 8,
+    boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
+    padding: 24,
+    margin: 8,
+  }}
+>
+  {/* content */}
+</PageSection>
+
+// Theme-wide override (preferred — every PageSection inherits):
+:where([data-brand="golden-passport"]) {
+  --pf-v6-c-page__main-section--PaddingBlockStart:  1.5rem;
+  --pf-v6-c-page__main-section--PaddingBlockEnd:    1.5rem;
+  --pf-v6-c-page__main-section--PaddingInlineStart: 1.5rem;
+  --pf-v6-c-page__main-section--PaddingInlineEnd:   1.5rem;
+}`}</CodeBlock>
             </div>
           </DocCard>
         </Section>
@@ -587,11 +1084,11 @@ const sidebar = (
           </DocCard>
         </Section>
 
-        <Section title="When to use Page vs AppShell">
+        <Section title="When to use Page vs Shell">
           <DocCard>
             <ul style={{ margin: 0, padding: "16px 24px 16px 40px", color: "var(--gp-color-text-regular)", lineHeight: 1.8 }}>
-              <li><strong>AppShell</strong> (lib) — opinionated wrapper that requires i18n labels and pre-wires SkipToContent + a default brand. Start here for new apps.</li>
-              <li><strong>Page</strong> (PF6 raw) — when you need full control over masthead/sidebar composition, slot props (banner / breadcrumb / horizontalSubnav), or notification drawer. AppShell calls into Page under the hood.</li>
+              <li><strong>Shell</strong> (lib) — opinionated wrapper that requires i18n labels and pre-wires SkipToContent + a default brand. Start here for new apps.</li>
+              <li><strong>Page</strong> (PF6 raw) — when you need full control over masthead/sidebar composition, slot props (banner / breadcrumb / horizontalSubnav), or notification drawer. Shell calls into Page under the hood.</li>
             </ul>
           </DocCard>
         </Section>
