@@ -286,6 +286,10 @@ function StyledContentAreaDemo() {
   const [cornerRadius, setCornerRadius]     = useState(8);
   const [shadow, setShadow]                 = useState("md");
   const [padding, setPadding]               = useState(24);
+  // Full-height layout — Page becomes isContentFilled, and the last
+  // PageSection takes isFilled + hasOverflowScroll so it stretches to
+  // remaining vertical space and scrolls internally.
+  const [fullHeight, setFullHeight]         = useState(false);
 
   // Scoped CSS targeting PF6's `.pf-v6-c-page__main-container` — the <div>
   // that wraps <main> and any sibling chrome. Styling THIS element (rather
@@ -325,6 +329,12 @@ function StyledContentAreaDemo() {
           label="Border"
           isChecked={hasBorder}
           onChange={(_e, v) => setHasBorder(v)}
+        />
+        <Checkbox
+          id="ca-full-height"
+          label="Full height (scroll inside)"
+          isChecked={fullHeight}
+          onChange={(_e, v) => setFullHeight(v)}
         />
         <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
           Border colour
@@ -412,6 +422,7 @@ function StyledContentAreaDemo() {
             </Masthead>
           }
           mainContainerId="styled-demo-main"
+          isContentFilled={fullHeight}
         >
           {/* Page header — styled via the same control set. */}
           <PageSection aria-labelledby="styled-h1">
@@ -444,8 +455,17 @@ function StyledContentAreaDemo() {
             </Gallery>
           </PageSection>
 
-          {/* Page content — long copy. */}
-          <PageSection aria-label="Long copy">
+          {/* Page content — long copy. When `fullHeight` is on, this
+              section becomes the fillable + scrollable one. PF6's grid
+              layout computes its height from remaining vertical space
+              so the surrounding chrome / bottom margin is automatically
+              subtracted. `aria-label` is required by PF when
+              `hasOverflowScroll` is set. */}
+          <PageSection
+            aria-label="Long copy"
+            isFilled={fullHeight}
+            hasOverflowScroll={fullHeight}
+          >
             <Content>
               <h2>Section detail</h2>
               <p>
@@ -455,6 +475,281 @@ function StyledContentAreaDemo() {
                 <code>--pf-v6-c-page__main-section--*</code> custom properties
                 so every PageSection inherits them automatically.
               </p>
+              {/* Extra paragraphs so the "Full height" toggle has something
+                  to scroll inside the demo's fixed-height frame. */}
+              {fullHeight &&
+                Array.from({ length: 8 }).map((_, i) => (
+                  <p key={i}>
+                    Paragraph {i + 1}. Lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit. Sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                    exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat.
+                  </p>
+                ))}
+            </Content>
+          </PageSection>
+        </Page>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Demo for the "unified surface" layout — sidebar + content sharing one
+ * background, no visible borders / dividers / box around the content area.
+ * The masthead is left at PF6 default tonality so it still reads as the
+ * top frame. PageSection padding stays so content breathes.
+ *
+ * Implementation:
+ *  - Override the per-Page CSS custom properties PF6 uses for sidebar /
+ *    main backgrounds, scoped to the demo container via a
+ *    `:has(#unified-surface-main)` selector so the rest of the doc keeps
+ *    PF6's default theming.
+ *  - The sidebar's separator/border is wiped explicitly — by default PF6
+ *    paints a subtle line between the sidebar and main column.
+ *  - PageSections keep their PF6-default padding; only the chrome around
+ *    them disappears.
+ */
+function UnifiedSurfaceDemo() {
+  const [sidenavOpen, setSidenavOpen] = useState(true);
+  useSidenavOffClick({
+    open: sidenavOpen,
+    close: () => setSidenavOpen(false),
+    containerId: "unified-surface-demo",
+    sidebarId: "unified-surface-sidebar",
+    toggleId: "unified-surface-toggle",
+  });
+
+  // Masthead-chrome controls. These drive the only piece of visible chrome
+  // on the unified-surface layout: the line + shadow that lifts the masthead
+  // off the flat sidebar/content panel below. The sidebar/main wash and the
+  // padding stripping stay constant — only the masthead chrome is tunable.
+  const [hasBorder, setHasBorder] = useState(true);
+  const [borderColor, setBorderColor] = useState("#e6dcc8");
+  const [borderThickness, setBorderThickness] = useState(1);
+  const [shadow, setShadow] = useState<keyof typeof SHADOW_VALUES>("sm");
+  // Full-height layout — Page becomes isContentFilled, and the last
+  // PageSection takes isFilled + hasOverflowScroll so it stretches to the
+  // remaining vertical space (with bottom margin accounted for via PF6's
+  // grid template) and scrolls internally rather than the whole frame.
+  const [fullHeight, setFullHeight] = useState(false);
+
+  // The CSS does three things (masthead is left at PF6 default tonality):
+  //   1. Force the sidebar background to match the main background so the
+  //      two columns read as one continuous surface.
+  //   2. Strip the subtle divider/border PF6 paints between sidebar and
+  //      main, and the box-shadow on the main-container.
+  //   3. Apply the masthead chrome (border + shadow) per the controls
+  //      above — the only visible separator between header and panel.
+  // The shared sidenavDrawerCss is appended so the hamburger still drives
+  // a smooth, same-speed open/close (cubic-bezier transition).
+  const mastheadBorder = hasBorder
+    ? `${borderThickness}px solid ${borderColor}`
+    : "none";
+  const mastheadShadow = SHADOW_VALUES[shadow] ?? "none";
+  const css = `
+    .pf-v6-c-page:has(#unified-surface-main) {
+      --pf-v6-c-page--BackgroundColor: var(--gp-color-bg-primary-default);
+    }
+    .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__sidebar,
+    .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__main,
+    .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__main-container {
+      background: var(--gp-color-bg-primary-default);
+    }
+    .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__sidebar,
+    .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__sidebar.pf-m-expanded,
+    .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__main-container {
+      border: none;
+      box-shadow: none;
+    }
+    .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-masthead {
+      border-bottom: ${mastheadBorder};
+      box-shadow: ${mastheadShadow};
+    }
+    ${sidenavDrawerCss("unified-surface-demo")}
+  `;
+
+  const masthead = (
+    <Masthead id="unified-surface-masthead">
+      <MastheadMain>
+        <MastheadToggle>
+          <PageToggleButton
+            isHamburgerButton
+            aria-label="Global navigation"
+            isSidebarOpen={sidenavOpen}
+            onSidebarToggle={() => setSidenavOpen((v) => !v)}
+            id="unified-surface-toggle"
+          />
+        </MastheadToggle>
+        <MastheadBrand>
+          <MastheadLogo component="a" href="#">
+            {brandLogo}
+          </MastheadLogo>
+        </MastheadBrand>
+      </MastheadMain>
+      <MastheadContent>
+        <Toolbar id="unified-surface-toolbar" isStatic>
+          <ToolbarContent>
+            <ToolbarItem align={{ default: "alignEnd" }}>
+              <span style={{ color: "inherit", opacity: 0.85 }}>Actions</span>
+            </ToolbarItem>
+          </ToolbarContent>
+        </Toolbar>
+      </MastheadContent>
+    </Masthead>
+  );
+
+  const sidebar = (
+    <PageSidebar isSidebarOpen={sidenavOpen} id="unified-surface-sidebar">
+      <PageSidebarBody>
+        <Nav aria-label="Unified-surface demo nav">
+          <NavList>
+            <NavItem itemId={0} isActive>Dashboard</NavItem>
+            <NavItem itemId={1}>Workflows</NavItem>
+            <NavItem itemId={2}>Reports</NavItem>
+            <NavItem itemId={3}>Settings</NavItem>
+          </NavList>
+        </Nav>
+      </PageSidebarBody>
+    </PageSidebar>
+  );
+
+  return (
+    <div style={{ display: "grid", gap: 12 }} id="unified-surface-demo">
+      <style dangerouslySetInnerHTML={{ __html: css }} />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: 12,
+          padding: 12,
+          border: "1px solid var(--gp-color-border-subtle)",
+          borderRadius: 6,
+          background: "var(--gp-color-bg-secondary-default)",
+        }}
+      >
+        <Checkbox
+          id="us-border"
+          label="Masthead border"
+          isChecked={hasBorder}
+          onChange={(_e, v) => setHasBorder(v)}
+        />
+        <Checkbox
+          id="us-full-height"
+          label="Full height (scroll inside)"
+          isChecked={fullHeight}
+          onChange={(_e, v) => setFullHeight(v)}
+        />
+        <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+          Border colour
+          <TextInput
+            id="us-color"
+            value={borderColor}
+            onChange={(_e, v) => setBorderColor(v)}
+            placeholder="#e6dcc8"
+            isDisabled={!hasBorder}
+          />
+        </label>
+        <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+          Border thickness (px)
+          <TextInput
+            id="us-thickness"
+            type="number"
+            value={String(borderThickness)}
+            onChange={(_e, v) => setBorderThickness(Number(v) || 0)}
+            isDisabled={!hasBorder}
+          />
+        </label>
+        <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+          Shadow
+          <FormSelect
+            id="us-shadow"
+            value={shadow}
+            onChange={(_e, v) => setShadow(v as keyof typeof SHADOW_VALUES)}
+            aria-label="Shadow"
+          >
+            <FormSelectOption value="none" label="None" />
+            <FormSelectOption value="sm" label="Small" />
+            <FormSelectOption value="md" label="Medium" />
+            <FormSelectOption value="lg" label="Large" />
+          </FormSelect>
+        </label>
+      </div>
+      <div
+        style={{
+          height: 520,
+          overflow: "hidden",
+          border: "1px solid var(--gp-color-border-subtle)",
+          borderRadius: 6,
+        }}
+      >
+        <Page
+          masthead={masthead}
+          sidebar={sidebar}
+          mainContainerId="unified-surface-main"
+          isContentFilled={fullHeight}
+        >
+          <PageSection aria-labelledby="unified-h1">
+            <Content>
+              <h1 id="unified-h1">Dashboard</h1>
+              <p>
+                Sidebar and content share one background. The masthead keeps
+                PF6&rsquo;s default tonality. PageSection keeps its default
+                padding so content breathes — there&rsquo;s just no card /
+                border / shadow around it.
+              </p>
+            </Content>
+          </PageSection>
+          <PageSection aria-label="KPI tiles">
+            <Gallery hasGutter minWidths={{ default: "180px" }}>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <GalleryItem key={i}>
+                  <Card isCompact>
+                    <CardBody>
+                      <div style={{ color: "var(--gp-color-text-subtle)", fontSize: 13 }}>
+                        Stat {i + 1}
+                      </div>
+                      <div style={{ fontSize: 24, fontWeight: 600 }}>
+                        {String((i + 1) * 23)}
+                      </div>
+                    </CardBody>
+                  </Card>
+                </GalleryItem>
+              ))}
+            </Gallery>
+          </PageSection>
+          {/* Long-copy section. When `fullHeight` is on, this section
+              becomes the fillable + scrollable one — PF6's grid layout
+              computes its height from remaining vertical space, so any
+              bottom chrome (footer / padding) is automatically subtracted.
+              `aria-label` is required by PF when `hasOverflowScroll` is set. */}
+          <PageSection
+            aria-label="Long copy"
+            isFilled={fullHeight}
+            hasOverflowScroll={fullHeight}
+          >
+            <Content>
+              <h2>Section detail</h2>
+              <p>
+                Use this layout when the shell should read as one continuous
+                surface — common for editorial / docs-style apps where the
+                sidebar is treated as a table of contents rather than a
+                separate panel.
+              </p>
+              {/* Extra paragraphs so the "Full height" toggle has something
+                  to scroll inside the demo's fixed-height frame. */}
+              {fullHeight &&
+                Array.from({ length: 8 }).map((_, i) => (
+                  <p key={i}>
+                    Paragraph {i + 1}. Lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit. Sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                    exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat. Duis aute irure dolor in reprehenderit in
+                    voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                  </p>
+                ))}
             </Content>
           </PageSection>
         </Page>
@@ -586,16 +881,21 @@ export const Overview: StoryObj = {
             <div style={{ padding: 24, display: "grid", gap: 16 }}>
               <div id="ds-page-basic-demo">
               <DemoFrame height={360}>
+                {/* isContentFilled puts Page into grid layout; the last
+                    PageSection with isFilled stretches to the remaining
+                    vertical space so the body fills the frame instead of
+                    bunching at the top. */}
                 <Page
                   masthead={masthead}
                   sidebar={sidebar}
+                  isContentFilled
                 >
                   <PageSection aria-labelledby="ds-page-h1">
                     <Title headingLevel="h1" id="ds-page-h1">
                       Dashboard
                     </Title>
                   </PageSection>
-                  <PageSection variant="secondary" aria-label="Stats">
+                  <PageSection variant="secondary" aria-label="Stats" isFilled>
                     <span style={{ color: "var(--gp-color-text-subtle)" }}>
                       Secondary-toned section.
                     </span>
@@ -693,8 +993,9 @@ const sidebar = (
                       </PageSidebarBody>
                     </PageSidebar>
                   }
+                  isContentFilled
                 >
-                  <PageSection aria-label="Push main">
+                  <PageSection aria-label="Push main" isFilled>
                     <span style={{ color: "var(--gp-color-text-subtle)" }}>
                       Toggle the hamburger — the main content column reflows
                       to fill the freed width.
@@ -789,8 +1090,9 @@ const sidebar = (
                       <BreadcrumbItem isActive>Onboarding</BreadcrumbItem>
                     </Breadcrumb>
                   }
+                  isContentFilled
                 >
-                  <PageSection aria-labelledby="slots-h1">
+                  <PageSection aria-labelledby="slots-h1" isFilled>
                     <Title headingLevel="h1" id="slots-h1">
                       Onboarding
                     </Title>
@@ -923,6 +1225,35 @@ const sidebar = (
   --pf-v6-c-page__main-section--PaddingBlockEnd:    1.5rem;
   --pf-v6-c-page__main-section--PaddingInlineStart: 1.5rem;
   --pf-v6-c-page__main-section--PaddingInlineEnd:   1.5rem;
+}`}</CodeBlock>
+            </div>
+          </DocCard>
+        </Section>
+
+        <Section
+          title="Unified surface — flat sidebar + content"
+          description="Sidebar and content share one background. The masthead stays at PF6's default tonality, lifted off the flat panel below by a 1px bottom border + soft shadow. Padding is preserved on PageSections, but there's no card / border / shadow / divider around the content area. Useful for editorial or docs-style apps where the sidebar reads as a TOC, not a separate panel."
+        >
+          <DocCard>
+            <div style={{ padding: 24, display: "grid", gap: 16 }}>
+              <UnifiedSurfaceDemo />
+              <CodeBlock>{`// Scope the override to one Page so the rest of the doc / app
+// keeps PF6's default theming. Land these as theme tokens once
+// you're happy with the look.
+.app-shell-unified .pf-v6-c-page__sidebar,
+.app-shell-unified .pf-v6-c-page__main,
+.app-shell-unified .pf-v6-c-page__main-container {
+  background: var(--gp-color-bg-primary-default);
+}
+.app-shell-unified .pf-v6-c-page__sidebar,
+.app-shell-unified .pf-v6-c-page__main-container {
+  border: none;
+  box-shadow: none;
+}
+/* Lift the masthead off the flat panel below. */
+.app-shell-unified .pf-v6-c-masthead {
+  border-bottom: 1px solid var(--gp-color-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }`}</CodeBlock>
             </div>
           </DocCard>
