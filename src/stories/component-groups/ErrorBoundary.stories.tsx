@@ -43,6 +43,30 @@ export const Overview: StoryObj = {
         >
           <Card>
             <div style={{ padding: 24, display: "grid", gap: 16 }}>
+              {/* The error page's "Show details" disclosure lives inside
+                  a `.pf-v6-c-expandable-section`, which PF6 paints as a
+                  full-width flex container. Inside the EmptyState's
+                  centred 600px column that overflows to ~1252px wide,
+                  pushing the toggle button far to the right. Re-centre
+                  the flex container so the button sits under the error
+                  title where the canonical PF6 demo places it. */}
+              <style
+                dangerouslySetInnerHTML={{
+                  __html: [
+                    /* react-component-groups paints a JSS class on the
+                       errorDescription stack item that stretches it past
+                       its parent stack — clamp it back to 100% so the
+                       expandable-section beneath can centre properly. */
+                    ".pf-v6-c-empty-state [class*='errorDescription'] {",
+                    "  max-width: 100%;",
+                    "}",
+                    ".pf-v6-c-empty-state .pf-v6-c-expandable-section {",
+                    "  justify-content: center;",
+                    "  max-width: 100%;",
+                    "}",
+                  ].join("\n"),
+                }}
+              />
               <DemoFrame>
                 <div style={{ display: "grid", gap: 12 }}>
                   <Button variant="danger" onClick={() => setBoom((b) => !b)}>
