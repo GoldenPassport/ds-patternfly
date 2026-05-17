@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Brand } from "@patternfly/react-core";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
+import { AcmeLogo } from "../_acmeLogo.js";
 
 const meta: Meta = {
   title: "Components/Brand",
@@ -24,12 +25,10 @@ const acmeIcon = svg(
     <path d="M11 28 L20 10 L29 28 M14.5 22 L25.5 22" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
   </svg>`,
 );
-const acmeIconDark = svg(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-    <circle cx="20" cy="20" r="20" fill="#0a0a0a"/>
-    <path d="M11 28 L20 10 L29 28 M14.5 22 L25.5 22" stroke="#ffd966" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  </svg>`,
-);
+// Dark-theme variant — same Acme identity (blue circle, white chevron)
+// so the brand mark stays consistent across themes. Only the wordmark
+// text colour flips to a light grey for readability on dark surfaces.
+const acmeIconDark = acmeIcon;
 // Logomark + wordmark. The same mark plus the "Acme" name beside it.
 // Used at md+ where there's room for both.
 const acmeWide = svg(
@@ -41,9 +40,9 @@ const acmeWide = svg(
 );
 const acmeWideDark = svg(
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40">
-    <circle cx="20" cy="20" r="20" fill="#0a0a0a"/>
-    <path d="M11 28 L20 10 L29 28 M14.5 22 L25.5 22" stroke="#ffd966" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    <text x="52" y="27" fill="#ffd966" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">Acme</text>
+    <circle cx="20" cy="20" r="20" fill="#0066cc"/>
+    <path d="M11 28 L20 10 L29 28 M14.5 22 L25.5 22" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <text x="52" y="27" fill="#f5f5f5" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">Acme</text>
   </svg>`,
 );
 
@@ -69,7 +68,10 @@ export const Overview: StoryObj = {
         <Card>
           <div style={{ padding: 24, display: "grid", gap: 16 }}>
             <DemoFrame>
-              <Brand src={acmeWide} alt="Acme" heights={{ default: "32px" }} />
+              {/* AcmeLogo picks the wordmark colour from the active
+                  ThemeProvider mode so the logo stays readable when the
+                  Storybook toolbar flips to dark. */}
+              <AcmeLogo />
             </DemoFrame>
             <CodeBlock>{`<Brand src="/logo.svg" alt="Acme" heights={{ default: "32px" }} />`}</CodeBlock>
           </div>
@@ -83,11 +85,7 @@ export const Overview: StoryObj = {
         <Card>
           <div style={{ padding: 24, display: "grid", gap: 16 }}>
             <DemoFrame>
-              <Brand
-                src={acmeWide}
-                alt="Acme"
-                heights={{ default: "24px", md: "32px", lg: "40px" }}
-              />
+              <AcmeLogo />
             </DemoFrame>
             <CodeBlock>{`<Brand
   src="/logo.svg"
@@ -105,18 +103,7 @@ export const Overview: StoryObj = {
         <Card>
           <div style={{ padding: 24, display: "grid", gap: 16 }}>
             <DemoFrame>
-              <Brand
-                src={acmeWide}
-                alt="Acme"
-                widths={{ default: "40px", sm: "60px", md: "220px" }}
-              >
-                <source media="(min-width: 1200px)" srcSet={acmeWide} />
-                <source media="(min-width: 992px)"  srcSet={acmeWide} />
-                <source media="(min-width: 768px)"  srcSet={acmeWide} />
-                <source media="(min-width: 576px)"  srcSet={acmeIcon} />
-                <source media="(min-width: 320px)"  srcSet={acmeIcon} />
-                <source                              srcSet={acmeWide} />
-              </Brand>
+              <AcmeLogo />
             </DemoFrame>
             <CodeBlock>{`import { Brand } from "@patternfly/react-core";
 import pfLogo   from "../../assets/PF-HorizontalLogo-Color.svg";

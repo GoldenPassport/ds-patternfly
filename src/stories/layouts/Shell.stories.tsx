@@ -3,7 +3,6 @@ import { expect, userEvent, within } from "storybook/test";
 import { useState } from "react";
 import {
   Avatar,
-  Brand,
   Breadcrumb,
   BreadcrumbItem,
   Button,
@@ -39,41 +38,13 @@ import {
 import PageHeader from "@patternfly/react-component-groups/dist/dynamic/PageHeader";
 import { Shell } from "../../components/Shell.js";
 import { shellEnLabels } from "../../components/labels.js";
+import { AcmeLogo } from "../_acmeLogo.js";
 
-// Same Acme logo SVGs documented on the Components/Brand story. Two
-// variants — `wide` (logomark + wordmark) for ≥ sm viewports, `icon`
-// (logomark only) for mobile where horizontal room is scarce.
+// Shared svg-data-URI helper. The Acme brand logo lives in
+// `src/stories/_acmeLogo.tsx` (colour-aware for dark mode); only the
+// avatar SVG is still inlined here.
 const svg = (m: string) =>
   "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(m);
-
-const acmeIcon = svg(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-    <circle cx="20" cy="20" r="20" fill="#0066cc"/>
-    <path d="M11 28 L20 10 L29 28 M14.5 22 L25.5 22" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  </svg>`,
-);
-const acmeWide = svg(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40">
-    <circle cx="20" cy="20" r="20" fill="#0066cc"/>
-    <path d="M11 28 L20 10 L29 28 M14.5 22 L25.5 22" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    <text x="52" y="27" fill="#0a0a0a" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">Acme</text>
-  </svg>`,
-);
-
-const acmeBrand = (
-  <Brand
-    src={acmeWide}
-    alt="Acme"
-    widths={{ default: "40px", sm: "60px", md: "180px" }}
-  >
-    <source media="(min-width: 1200px)" srcSet={acmeWide} />
-    <source media="(min-width: 992px)"  srcSet={acmeWide} />
-    <source media="(min-width: 768px)"  srcSet={acmeWide} />
-    <source media="(min-width: 576px)"  srcSet={acmeIcon} />
-    <source media="(min-width: 320px)"  srcSet={acmeIcon} />
-    <source                              srcSet={acmeWide} />
-  </Brand>
-);
 
 const avatarSrc = svg(
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
@@ -235,7 +206,7 @@ export const WithSidebarAndPrimaryDetail: Story = {
     return (
       <Shell
         labels={shellEnLabels}
-        brandLogo={acmeBrand}
+        brandLogo={<AcmeLogo />}
         mastheadActions={<MastheadActions />}
         sidebar={
           <Nav aria-label="Main">
