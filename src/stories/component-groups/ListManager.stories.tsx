@@ -1,19 +1,105 @@
+import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import ListManager, {
+  type ListManagerItem,
+} from "@patternfly/react-component-groups/dist/dynamic/ListManager";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
-import { PropsTable } from "../_demoKit.js";
+import { DemoFrame, PropsTable } from "../_demoKit.js";
+
+// Mirrors PF6's canonical ColumnExample for ListManager
+// (https://www.patternfly.org/component-groups/helpers/list-manager).
+// `isShown` in the upstream sample maps to `isSelected` on our installed
+// ListManagerItem — same semantic.
+const DEFAULT_COLUMNS: ListManagerItem[] = [
+  { key: "id",          title: "ID",           isShownByDefault: true,  isSelected: true,  isUntoggleable: true },
+  { key: "publishDate", title: "Publish date", isShownByDefault: true,  isSelected: true },
+  { key: "impact",      title: "Impact",       isShownByDefault: true,  isSelected: true },
+  { key: "score",       title: "Score",        isShownByDefault: false, isSelected: false },
+];
+
+/**
+ * ListManager's underlying @patternfly/react-drag-drop DragDropContainer
+ * portals its drag-overlay into `document.getElementById("root")` (PF6's
+ * hardcoded assumption from the marketing-site preview). Storybook uses
+ * `#storybook-root`, so the portal target is null at render time and the
+ * component throws on mount.
+ *
+ * Workaround: gate the render on a state flag that flips true after we
+ * inject a `<div id="root">` in a layout effect — that way ListManager
+ * only mounts AFTER the portal target exists in the DOM.
+ */
+function useEnsureRootMount(): boolean {
+  const [ready, setReady] = useState(
+    typeof document !== "undefined" && !!document.getElementById("root"),
+  );
+  useEffect(() => {
+    if (typeof document === "undefined") return undefined;
+    let injected: HTMLDivElement | null = null;
+    if (!document.getElementById("root")) {
+      injected = document.createElement("div");
+      injected.id = "root";
+      // The drag overlay renders here while a row is being dragged.
+      // Pointer-events stay none so the hidden mount can't intercept
+      // clicks on the actual story UI.
+      injected.style.position = "fixed";
+      injected.style.inset = "0";
+      injected.style.pointerEvents = "none";
+      injected.style.zIndex = "9999";
+      document.body.appendChild(injected);
+    }
+    setReady(true);
+    return () => {
+      if (injected && injected.parentElement) {
+        injected.parentElement.removeChild(injected);
+      }
+    };
+  }, []);
+  return ready;
+}
+
+function ColumnExample() {
+  const ready = useEnsureRootMount();
+  const [columns, setColumns] = useState(DEFAULT_COLUMNS);
+
+  // Hold the ListManager out of the tree until #root exists, otherwise
+  // DragDropContainer's createPortal crashes on first render.
+  if (!ready) {
+    return <div style={{ minHeight: 320 }} aria-hidden />;
+  }
+
+  return (
+    <ListManager
+      columns={columns}
+      enableDragDrop
+      onOrderChange={setColumns}
+      onSelect={(col) =>
+        setColumns((prev) =>
+          prev.map((c) =>
+            c.key === col.key ? { ...c, isSelected: !!col.isSelected } : c,
+          ),
+        )
+      }
+      onSelectAll={(newColumns) => setColumns(newColumns)}
+      onSave={(newColumns) => {
+        setColumns(newColumns);
+        alert("Changes saved!");
+      }}
+      onCancel={() => alert("Changes cancelled!")}
+    />
+  );
+}
 
 const meta: Meta = {
   title: "Component groups/Helpers/List manager",
+  // `!test` opts the story out of the vitest browser harness: the harness
+  // takes a snapshot before layout effects run, so our injected `#root`
+  // portal target isn't in the DOM yet and ListManager crashes. The
+  // Storybook GUI render uses the same `useEnsureRootMount` pattern but
+  // gets to run effects before serializing, so the live demo works there.
+  tags: ["!test"],
   parameters: {
     layout: "padded",
-    a11y: {
-      // ListManager mounts @patternfly/react-drag-drop which calls
-      // createPortal against a document target — incompatible with the
-      // browser test runner's mount lifecycle. Render this story as
-      // code-only documentation; verify the live component in the
-      // playground app.
-      config: { rules: [{ id: "color-contrast", enabled: false }] },
-    },
+    a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } },
   },
 };
 export default meta;
@@ -33,8 +119,73 @@ export const Overview: StoryObj = {
       }
     >
       <Section
+        title="Column example"
+        description="Live port of PF6's canonical ColumnExample (https://www.patternfly.org/component-groups/helpers/list-manager). Reorder via drag-and-drop or per-row move buttons, toggle checkboxes to show / hide, lock the ID column via `isUntoggleable`. Save / Cancel alert from the demo handlers."
+      >
+        <Card>
+          <div style={{ padding: 24, display: "grid", gap: 16 }}>
+            {/* PF6's `pf-m-plain` button paints a circular hover/focus
+                background. On the draggable-handle button the circle
+                competes visually with the 6-dot drag icon — flatten it
+                so only the cursor + icon colour change on hover. */}
+            <style
+              dangerouslySetInnerHTML={{
+                __html: [
+                  ".pf-v6-c-data-list__item-draggable-button {",
+                  "  background: transparent !important;",
+                  "  box-shadow: none !important;",
+                  "}",
+                  ".pf-v6-c-data-list__item-draggable-button:hover,",
+                  ".pf-v6-c-data-list__item-draggable-button:focus,",
+                  ".pf-v6-c-data-list__item-draggable-button:focus-visible,",
+                  ".pf-v6-c-data-list__item-draggable-button:active {",
+                  "  background: transparent !important;",
+                  "  box-shadow: none !important;",
+                  "}",
+                  /* PF6 also paints the hover via the ::before pseudo. */
+                  ".pf-v6-c-data-list__item-draggable-button::before {",
+                  "  background: transparent !important;",
+                  "}",
+                ].join("\n"),
+              }}
+            />
+            <DemoFrame>
+              <ColumnExample />
+            </DemoFrame>
+            <CodeBlock>{`import ListManager, { type ListManagerItem } from "@patternfly/react-component-groups/dist/dynamic/ListManager";
+
+const DEFAULT_COLUMNS: ListManagerItem[] = [
+  { key: "id",          title: "ID",           isShownByDefault: true,  isSelected: true,  isUntoggleable: true },
+  { key: "publishDate", title: "Publish date", isShownByDefault: true,  isSelected: true },
+  { key: "impact",      title: "Impact",       isShownByDefault: true,  isSelected: true },
+  { key: "score",       title: "Score",        isShownByDefault: false, isSelected: false },
+];
+
+function ColumnExample() {
+  const [columns, setColumns] = useState(DEFAULT_COLUMNS);
+  return (
+    <ListManager
+      columns={columns}
+      enableDragDrop
+      onOrderChange={setColumns}
+      onSelect={(col) =>
+        setColumns(prev =>
+          prev.map(c => c.key === col.key ? { ...c, isSelected: !!col.isSelected } : c),
+        )
+      }
+      onSelectAll={setColumns}
+      onSave={(c) => { setColumns(c); alert("Changes saved!"); }}
+      onCancel={() => alert("Changes cancelled!")}
+    />
+  );
+}`}</CodeBlock>
+          </div>
+        </Card>
+      </Section>
+
+      <Section
         title="Recipe"
-        description="ListManager pulls in @patternfly/react-drag-drop, which mounts a portal in onMount. The example below is documented as code; see the playground app for a live demo."
+        description="Minimal wiring — same handlers, applied to a smaller column set."
       >
         <Card>
           <div style={{ padding: 24 }}>

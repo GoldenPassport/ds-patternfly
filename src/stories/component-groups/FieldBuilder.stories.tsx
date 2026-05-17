@@ -41,7 +41,34 @@ export const Overview: StoryObj = {
         >
           <Card>
             <div style={{ padding: 24, display: "grid", gap: 16 }}>
+              {/* FieldBuilder renders as a PF6 Table. The Table's TDs
+                  default to `padding-inline: 0`, so the Name / Value
+                  columns butt against each other and the row edges.
+                  Scope a bit of inline padding + a touch more row gap
+                  to give the inputs room to breathe. */}
+              <style
+                dangerouslySetInnerHTML={{
+                  // PF6 Table cells read their padding from CSS custom
+                  // properties; `pf-m-compact` (used by FieldBuilder's
+                  // inner Table) zeros the inline ones. Override the
+                  // tokens at the wrapper so the override survives PF6's
+                  // own selectors regardless of breakpoint/grid mode.
+                  __html: [
+                    ".gp-field-builder-demo .pf-v6-c-table {",
+                    "  --pf-v6-c-table--cell--PaddingInlineStart: 0;",
+                    "  --pf-v6-c-table--cell--PaddingInlineEnd: 12px;",
+                    "  --pf-v6-c-table--cell--PaddingBlockStart: 0.75rem;",
+                    "  --pf-v6-c-table--cell--PaddingBlockEnd: 0.75rem;",
+                    "}",
+                    ".gp-field-builder-demo .pf-v6-c-table__td:last-child,",
+                    ".gp-field-builder-demo .pf-v6-c-table__th:last-child {",
+                    "  --pf-v6-c-table--cell--PaddingInlineEnd: 0;",
+                    "}",
+                  ].join("\n"),
+                }}
+              />
               <DemoFrame>
+                <div className="gp-field-builder-demo">
                 <FieldBuilder
                   label="Environment variables"
                   firstColumnLabel="Name"
@@ -68,6 +95,7 @@ export const Overview: StoryObj = {
                     />,
                   ]}
                 </FieldBuilder>
+                </div>
               </DemoFrame>
               <CodeBlock>{`<FieldBuilder
   label="Environment variables"
@@ -93,7 +121,9 @@ export const Overview: StoryObj = {
           <Card>
             <div style={{ padding: 24 }}>
               <DemoFrame>
-                <SingleColumnDemo />
+                <div className="gp-field-builder-demo">
+                  <SingleColumnDemo />
+                </div>
               </DemoFrame>
             </div>
           </Card>
