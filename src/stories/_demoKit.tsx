@@ -52,7 +52,10 @@ export function sidenavDrawerCss(
 ) {
   const c = `#${containerId}`;
   // Overlay-mode rules. Apply at default (narrow) widths and below the
-  // breakpoint via a container query.
+  // breakpoint via a container query. The sidebar floats from the
+  // start-inline edge with a shadow on its end-inline edge — in LTR
+  // that's a right-edge shadow + slide-from-left; `:dir(rtl)` flips
+  // both to a left-edge shadow + slide-from-right.
   const overlayRules = [
     `${c} .pf-v6-c-page {`,
     `  position: relative;`,
@@ -65,12 +68,19 @@ export function sidenavDrawerCss(
     `  width: var(--pf-v6-c-page__sidebar--xl--Width);`,
     `  overflow: hidden;`,
     `  z-index: 1000;`,
-    `  box-shadow: 0 0 24px rgba(0, 0, 0, 0.18);`,
+    `  /* End-inline shadow (right in LTR). RTL flip below. */`,
+    `  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.18);`,
     `  transform: translateX(0);`,
     `  transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1);`,
     `}`,
+    `:dir(rtl) ${c} .pf-v6-c-page__sidebar {`,
+    `  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.18);`,
+    `}`,
     `${c} .pf-v6-c-page__sidebar.pf-m-collapsed {`,
     `  transform: translateX(-100%);`,
+    `}`,
+    `:dir(rtl) ${c} .pf-v6-c-page__sidebar.pf-m-collapsed {`,
+    `  transform: translateX(100%);`,
     `}`,
     `${c} .pf-v6-c-page:has(.pf-v6-c-page__sidebar.pf-m-expanded)::before {`,
     `  content: "";`,

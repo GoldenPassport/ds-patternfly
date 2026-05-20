@@ -10,7 +10,7 @@ import {
   PageSidebarBody,
   PageToggleButton,
 } from "@patternfly/react-core";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { SkipToContent } from "../a11y/SkipToContent.js";
 import type { ShellLabels } from "./labels.js";
 
@@ -45,12 +45,12 @@ export interface ShellProps {
    */
   mastheadDisplay?: MastheadDisplay;
   /**
-   * When true, clicking outside the sidebar / hamburger toggle closes the
-   * sidebar — the overlay-mode sidenav-drawer dismiss gesture. Defaults
-   * to `false` because the Shell renders a pinned push-mode sidebar at
-   * desktop widths, where the off-click close is wrong (clicking into
-   * the main content shouldn't collapse a permanent rail). Opt in for
-   * overlay-only or mobile-first shells.
+   * @deprecated No longer needed — the Shell now uses PF6's native
+   * `isManagedSidebar` which closes the sidebar on outside click only
+   * when it's in overlay mode (mobile / narrow viewport). In push mode
+   * (desktop, sidebar pinned beside content) outside clicks are
+   * ignored. The prop is accepted for backward compatibility and has
+   * no effect.
    */
   closeSidebarOnOutsideClick?: boolean;
   /** Page body. Wrapped in the `<main>` landmark targeted by SkipToContent. */
@@ -66,15 +66,21 @@ const SHELL_ROOT_ID = "gp-app-shell-root";
 const SIDEBAR_ID = "gp-sidebar";
 const TOGGLE_ID = "gp-sidebar-toggle";
 
+// Threshold below which the sidebar is treated as overlay (mobile)
+// and PF6's main-click-close should fire normally; at or above this
+// width the sidebar is pinned in push mode and outside clicks are
+// ignored. Matches the `md` PF6 breakpoint (48rem = 768px).
+const PUSH_BREAKPOINT_PX = 768;
+
 /**
  * Top-level application shell: SkipToContent + Masthead + (optional) Sidebar + main.
  *
- * Owns the sidebar open state locally rather than delegating to Page's
- * `isManagedSidebar` — the managed mode aria-hides the sidebar at narrow
- * widths (PF6's responsive default), which renders the Nav landmark
- * inaccessible to keyboard / screen-reader users on those breakpoints
- * unless the user opens it manually. Local state keeps the nav landmark
- * reachable to assistive tech at every breakpoint.
+ * Sidebar state is owned by PF6's native `isManagedSidebar` — Page picks
+ * push vs overlay automatically from viewport width and wires
+ * main-click-to-close on overlay (mobile). A capture-phase mousedown
+ * listener blocks PF6's main-click handler when the Shell is wide
+ * enough to render the sidebar in push mode, so a pinned desktop rail
+ * only collapses via the hamburger toggle.
  *
  * All user-facing strings come from `labels` — no hardcoded English here.
  */
@@ -84,50 +90,39 @@ export function Shell({
   sidebar,
   mastheadActions,
   mastheadDisplay = DEFAULT_MASTHEAD_DISPLAY,
-  closeSidebarOnOutsideClick = false,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  closeSidebarOnOutsideClick,
   children,
 }: ShellProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
-  // Off-click close — when the sidebar is open and the user clicks anywhere
-  // outside the sidebar AND outside the hamburger toggle, collapse it. This
-  // matches the canonical sidenav-drawer pattern (see Components/Drawer →
-  // "Sidenav drawer (hamburger toggle)" in the docs).
+  // Block PF6's isManagedSidebar main-click-close when the sidebar is
+  // visually pinned in push mode (Shell width ≥ md). PF6 attaches a
+  // bubble-phase mousedown listener on the page main; ours runs in
+  // capture phase and stopImmediatePropagation's before PF6's handler
+  // gets the event. In overlay mode (Shell < md) we let PF6 close on
+  // outside click — the canonical mobile drawer dismiss gesture.
   useEffect(() => {
-    if (!closeSidebarOnOutsideClick || !sidebar || !sidebarOpen) return undefined;
-    const handler = (e: MouseEvent) => {
-      const target = e.target as Element | null;
-      if (!target) return;
+    if (!sidebar) return undefined;
+    const handler = (e: Event) => {
       const root = rootRef.current;
-      if (!root || !root.contains(target)) return;
-      const sidebarEl = root.ownerDocument.getElementById(SIDEBAR_ID);
-      const toggleEl = root.ownerDocument.getElementById(TOGGLE_ID);
-      if (sidebarEl?.contains(target) || toggleEl?.contains(target)) return;
-      setSidebarOpen(false);
+      if (!root) return;
+      const pageMain = root.querySelector(".pf-v6-c-page__main");
+      if (!pageMain || !pageMain.contains(e.target as Node)) return;
+      const isPush = root.getBoundingClientRect().width >= PUSH_BREAKPOINT_PX;
+      if (isPush) e.stopImmediatePropagation();
     };
     document.addEventListener("mousedown", handler, true);
-    return () => document.removeEventListener("mousedown", handler, true);
-  }, [closeSidebarOnOutsideClick, sidebar, sidebarOpen]);
+    document.addEventListener("touchstart", handler, true);
+    return () => {
+      document.removeEventListener("mousedown", handler, true);
+      document.removeEventListener("touchstart", handler, true);
+    };
+  }, [sidebar]);
 
-  // Structure per PF6 docs:
-  //   <Masthead>
-  //     <MastheadMain>
-  //       <MastheadToggle>…</MastheadToggle>   ← TOGGLE LIVES HERE, not a sibling
-  //       <MastheadBrand>
-  //         <MastheadLogo>{brand}</MastheadLogo>
-  //       </MastheadBrand>
-  //     </MastheadMain>
-  //     <MastheadContent>{actions}</MastheadContent>
-  //   </Masthead>
-  //
-  // display={{ default: "stack", lg: "inline" }}:
-  //   - stack  — brand spans row 1, toggle + content land on row 2 (mobile + tablet)
-  //   - inline — everything on one row (lg / desktop, where the sidebar is a
-  //              permanent rail and the masthead has horizontal room).
-  //
-  // PageToggleButton with `isHamburgerButton` renders PF6's built-in hamburger
-  // glyph — no manual BarsIcon child needed.
+  // PageToggleButton + PageSidebar read state from PageContext (Page
+  // owns it via isManagedSidebar) — no isSidebarOpen / onSidebarToggle
+  // props needed here.
   const masthead = (
     <Masthead
       aria-label={labels.mastheadAriaLabel}
@@ -139,8 +134,6 @@ export function Shell({
             <PageToggleButton
               isHamburgerButton
               aria-label={labels.toggleSidebar}
-              isSidebarOpen={sidebarOpen}
-              onSidebarToggle={() => setSidebarOpen((v) => !v)}
               id={TOGGLE_ID}
             />
           </MastheadToggle>
@@ -154,22 +147,28 @@ export function Shell({
   );
 
   const sidebarEl = sidebar ? (
-    <PageSidebar
-      isSidebarOpen={sidebarOpen}
-      aria-label={labels.sidebarAriaLabel}
-      id={SIDEBAR_ID}
-    >
+    <PageSidebar aria-label={labels.sidebarAriaLabel} id={SIDEBAR_ID}>
       <PageSidebarBody>{sidebar}</PageSidebarBody>
     </PageSidebar>
   ) : undefined;
 
   return (
     <div id={SHELL_ROOT_ID} ref={rootRef}>
-      {/* Sidenav-drawer animation — same easing / duration as the
-       *  Components/Drawer "Sidenav drawer (hamburger toggle)" demo so the
-       *  shell, its stories, and the Drawer docs all behave identically.
-       *  `overflow: hidden` held across BOTH states stops sidebar content
-       *  from snapping into view on the open transition. */}
+      {/* Scoped CSS:
+       *  - Sidenav-drawer animation — same easing / duration as the
+       *    Page story demos. `overflow: hidden` held across both states
+       *    stops sidebar content from snapping into view on open.
+       *  - Mobile masthead fit — PF6 reserves a fixed 11.8125rem
+       *    (~189px) for `.pf-v6-c-masthead__logo` via its own custom
+       *    property, which pushes the action toolbar off-screen on
+       *    phones. Below md (768px) we let the logo hug its real
+       *    width so notifications / settings / help / user menu fit. */}
+      {/* Plus: RTL sidebar shadow flip — PF6 v6 flips the sidebar's
+       *  transform for RTL but ships only a `--right` shadow token, so
+       *  the overlay drawer in RTL ends up with a right-edge shadow
+       *  (wrong — should face the main content on the left). Override
+       *  with the mirrored X offset. The base token value is
+       *  `10px 0 9px -8px rgba(41,41,41,0.15)`; we negate the X for RTL. */}
       <style
         dangerouslySetInnerHTML={{
           __html: [
@@ -177,11 +176,24 @@ export function Shell({
             `  overflow: hidden;`,
             `  transition: width 220ms cubic-bezier(0.4, 0, 0.2, 1);`,
             `}`,
+            `:dir(rtl) #${SHELL_ROOT_ID} .pf-v6-c-page__sidebar.pf-m-expanded {`,
+            `  box-shadow: -10px 0 9px -8px rgba(41, 41, 41, 0.15);`,
+            `}`,
+            `@media (max-width: 47.98rem) {`,
+            `  #${SHELL_ROOT_ID} .pf-v6-c-masthead {`,
+            `    --pf-v6-c-masthead__logo--Width: auto;`,
+            `  }`,
+            `}`,
           ].join("\n"),
         }}
       />
       <SkipToContent targetId={MAIN_ID} label={labels.skipToContent} />
-      <Page masthead={masthead} sidebar={sidebarEl}>
+      <Page
+        masthead={masthead}
+        sidebar={sidebarEl}
+        isManagedSidebar
+        defaultManagedSidebarIsOpen
+      >
         {/* PF6 <Page> already renders the <main> landmark. Wrap children in
          *  a focusable div so SkipToContent has a target without creating a
          *  duplicate main landmark. */}

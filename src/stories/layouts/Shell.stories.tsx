@@ -87,6 +87,14 @@ const userDropdownItems = (
 
 function MastheadActions() {
   const [userOpen, setUserOpen] = useState(false);
+  const [kebabOpen, setKebabOpen] = useState(false);
+  // Responsive split via ToolbarItem `visibility` — viewport-based
+  // media queries, which gives predictable behaviour regardless of
+  // available toolbar width (PF6's OverflowMenu measures its own
+  // container width, which inside a Toolbar ends up only ~40px wide
+  // and never trips above the md breakpoint). Below md the three
+  // icon buttons are hidden and a kebab dropdown takes their place;
+  // above md the kebab hides and the icons render inline.
   return (
     <Toolbar id="masthead-toolbar" isStatic>
       <ToolbarContent>
@@ -95,22 +103,51 @@ function MastheadActions() {
           align={{ default: "alignEnd" }}
           gap={{ default: "gapNone", md: "gapMd" }}
         >
-          <ToolbarItem>
+          {/* PF6 utility-class visibility — viewport media queries
+              rather than ToolbarItem's `visibility` prop, which depends
+              on the PageContext width tracker and isn't reliable here.
+              `display-none` hides at default; `display-flex-on-md`
+              restores at >= md. The kebab does the inverse. */}
+          <ToolbarItem className="pf-v6-u-display-none pf-v6-u-display-flex-on-md">
             <NotificationBadge
               aria-label="Notifications"
               variant={NotificationBadgeVariant.read}
               onClick={() => {}}
             />
           </ToolbarItem>
-          <ToolbarItem>
+          <ToolbarItem className="pf-v6-u-display-none pf-v6-u-display-flex-on-md">
             <Button aria-label="Settings" isSettings variant="plain" />
           </ToolbarItem>
-          <ToolbarItem>
+          <ToolbarItem className="pf-v6-u-display-none pf-v6-u-display-flex-on-md">
             <Button
               aria-label="Help"
               variant={ButtonVariant.plain}
               icon={<QuestionCircleIcon />}
             />
+          </ToolbarItem>
+          <ToolbarItem className="pf-v6-u-display-flex pf-v6-u-display-none-on-md">
+            <Dropdown
+              isOpen={kebabOpen}
+              onSelect={() => setKebabOpen(false)}
+              onOpenChange={setKebabOpen}
+              popperProps={{ position: "right" }}
+              toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                <MenuToggle
+                  ref={toggleRef}
+                  aria-label="Masthead actions"
+                  variant="plain"
+                  onClick={() => setKebabOpen((o) => !o)}
+                  isExpanded={kebabOpen}
+                  icon={<EllipsisVIcon />}
+                />
+              )}
+            >
+              <DropdownList>
+                <DropdownItem key="notifications">Notifications</DropdownItem>
+                <DropdownItem key="settings">Settings</DropdownItem>
+                <DropdownItem key="help">Help</DropdownItem>
+              </DropdownList>
+            </Dropdown>
           </ToolbarItem>
         </ToolbarGroup>
         <ToolbarItem>
@@ -122,11 +159,17 @@ function MastheadActions() {
             toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
               <MenuToggle
                 ref={toggleRef}
+                aria-label="Sam Carter"
                 onClick={() => setUserOpen((o) => !o)}
                 isExpanded={userOpen}
                 icon={<Avatar src={avatarSrc} alt="" size="sm" />}
               >
-                Sam Carter
+                {/* Hide the name below md so the toggle shrinks to
+                    avatar + caret; PF6 utility classes drive the
+                    breakpoint switch without extra CSS. */}
+                <span className="pf-v6-u-display-none pf-v6-u-display-inline-on-md">
+                  Sam Carter
+                </span>
               </MenuToggle>
             )}
           >

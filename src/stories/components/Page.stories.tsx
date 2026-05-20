@@ -576,13 +576,19 @@ function UnifiedSurfaceDemo() {
       border: none;
       box-shadow: none;
     }
-    /* Overlay (mobile / narrow): right-edge shadow on the sidebar so it
-       reads as a lifted floating surface above the unified body. */
+    /* Overlay (mobile / narrow): end-inline shadow on the sidebar so it
+       reads as a lifted floating surface above the unified body. In
+       LTR the shadow falls on the right edge; :dir(rtl) flips it to
+       the left edge to match where the drawer floats in. */
     @container (max-width: 767.98px) {
       .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__sidebar,
       .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__sidebar.pf-m-expanded {
         border: none;
         box-shadow: 4px 0 12px rgba(0, 0, 0, 0.18);
+      }
+      :dir(rtl) .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__sidebar,
+      :dir(rtl) .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__sidebar.pf-m-expanded {
+        box-shadow: -4px 0 12px rgba(0, 0, 0, 0.18);
       }
     }
     /* Push (desktop): sidebar flush with main — no border, no shadow. */
