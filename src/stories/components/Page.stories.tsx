@@ -153,7 +153,7 @@ function StickyHeaderDemo() {
   const anySticky = stickyBreadcrumb || stickyHeading || stickySubheading;
 
   const masthead = (
-    <Masthead id="sticky-demo-masthead">
+    <Masthead id="sticky-demo-masthead" display={{ default: "inline" }}>
       <MastheadMain>
         <MastheadToggle>
           <PageToggleButton
@@ -408,7 +408,7 @@ function StyledContentAreaDemo() {
       >
         <Page
           masthead={
-            <Masthead id="styled-demo-masthead">
+            <Masthead id="styled-demo-masthead" display={{ default: "inline" }}>
               <MastheadMain>
                 <MastheadBrand>
                   <MastheadLogo component="a" href="#">
@@ -600,7 +600,7 @@ function UnifiedSurfaceDemo() {
   `;
 
   const masthead = (
-    <Masthead id="unified-surface-masthead">
+    <Masthead id="unified-surface-masthead" display={{ default: "inline" }}>
       <MastheadMain>
         <MastheadToggle>
           <PageToggleButton
@@ -810,7 +810,7 @@ export const Overview: StoryObj = {
     // floats on top of content and tapping the scrim is the canonical
     // dismiss gesture.
     const masthead = (
-      <Masthead>
+      <Masthead display={{ default: "inline" }}>
         <MastheadMain>
           <MastheadToggle>
             {/* With isManagedSidebar on Page, PageToggleButton reads
@@ -857,7 +857,7 @@ export const Overview: StoryObj = {
 
     // Slot props demo — uses Page.breadcrumb + Page.banner directly
     const slotsMasthead = (
-      <Masthead>
+      <Masthead display={{ default: "inline" }}>
         <MastheadMain>
           <MastheadBrand>
             <MastheadLogo href="#" component="a">
@@ -977,7 +977,7 @@ const sidebar = (
               <DemoFrame height={300}>
                 <Page
                   masthead={
-                    <Masthead>
+                    <Masthead display={{ default: "inline" }}>
                       <MastheadMain>
                         <MastheadToggle>
                           <PageToggleButton
