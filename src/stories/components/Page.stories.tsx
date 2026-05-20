@@ -85,16 +85,38 @@ const brandLogo = <AcmeLogo />;
  * pin the breadcrumb too. The demo body scrolls inside a fixed-height frame
  * so the stick / unstick transition is visible without scrolling the page.
  */
+/**
+ * Rebuilt to mirror the Basic demo's sidenav pattern: PF6
+ * `isManagedSidebar` + `useBlockPushClickClose`, no custom
+ * `sidenavDrawerCss`. The fixed-height scroll viewport (DemoFrame's
+ * own `height` prop) lets the user scroll inside the demo to see the
+ * sticky group pin to the top; the hamburger drives the smooth push
+ * at desktop widths and overlay-with-off-click-close at mobile.
+ *
+ * Three checkboxes control which parts of the page header join the
+ * sticky PageGroup:
+ *   - Breadcrumb       → drives `groupProps.stickyOnBreakpoint`
+ *   - Page heading     → if true, the <h1> lives in
+ *                        `additionalGroupedContent` (sticky); if
+ *                        false, it goes in a regular body section.
+ *   - Page subheading  → same toggle for the lead paragraph.
+ */
 function StickyHeaderDemo() {
   const [stickyBreadcrumb, setStickyBreadcrumb] = useState(true);
   const [stickyHeading, setStickyHeading]       = useState(true);
   const [stickySubheading, setStickySubheading] = useState(false);
-  // Push-mode sidebar (sidenavDrawerCss pins it beside content), so no
-  // off-click close — the hamburger toggle is the only way to collapse.
-  const [sidenavOpen, setSidenavOpen]           = useState(true);
 
-  // Body sections show the parts that are NOT in the sticky group, in
-  // their normal scrolling position above the gallery.
+  // Sidenav-drawer behaviour: PF6 owns state via PageContext; this
+  // hook prevents PF6's main-click-close from firing while the sidebar
+  // is visually pinned in push mode (container ≥ md). Below md (mobile)
+  // the sidebar overlays and clicking outside closes — same as Basic.
+  useBlockPushClickClose({
+    pageContainerId: "ds-page-sticky-demo",
+    sidebarId: "ds-page-sticky-sidebar",
+  });
+
+  // Body sections render the parts NOT in the sticky group, in their
+  // normal scrolling position above the gallery.
   const bodyHeader: ReactNode[] = [];
   if (!stickyHeading) {
     bodyHeader.push(
@@ -130,9 +152,6 @@ function StickyHeaderDemo() {
 
   const anySticky = stickyBreadcrumb || stickyHeading || stickySubheading;
 
-  // Local masthead + sidebar — kept simple since the focus is the sticky
-  // demo, not the chrome. The grouped breadcrumb / additional content
-  // sit inside Page; everything else uses the standard plumbing.
   const masthead = (
     <Masthead id="sticky-demo-masthead">
       <MastheadMain>
@@ -140,8 +159,6 @@ function StickyHeaderDemo() {
           <PageToggleButton
             isHamburgerButton
             aria-label="Global navigation"
-            isSidebarOpen={sidenavOpen}
-            onSidebarToggle={() => setSidenavOpen((v) => !v)}
             id="ds-page-sticky-toggle"
           />
         </MastheadToggle>
@@ -166,7 +183,7 @@ function StickyHeaderDemo() {
   );
 
   const sidebar = (
-    <PageSidebar isSidebarOpen={sidenavOpen} id="ds-page-sticky-sidebar">
+    <PageSidebar id="ds-page-sticky-sidebar">
       <PageSidebarBody>
         <Nav aria-label="Sticky demo nav">
           <NavList>
@@ -221,40 +238,36 @@ function StickyHeaderDemo() {
           onChange={(_e, v) => setStickySubheading(v)}
         />
       </div>
-      <div
-        id="ds-page-sticky-demo"
-        style={{
-          height: 520,
-          overflow: "hidden",
-          border: "1px solid var(--gp-color-border-subtle)",
-          borderRadius: 6,
-        }}
-      >
-        <Page
-          masthead={masthead}
-          sidebar={sidebar}
-          breadcrumb={dashboardBreadcrumb}
-          mainContainerId="sticky-demo-main"
-          isBreadcrumbWidthLimited={false}
-          isBreadcrumbGrouped={anySticky}
-          additionalGroupedContent={groupedContent}
-          groupProps={
-            anySticky ? { stickyOnBreakpoint: { default: "top" } } : undefined
-          }
-        >
-          {bodyHeader}
-          <PageSection isFilled aria-label="Card gallery">
-            <Gallery hasGutter minWidths={{ default: "180px" }}>
-              {Array.from({ length: 30 }).map((_, i) => (
-                <GalleryItem key={i}>
-                  <Card isCompact>
-                    <CardBody>Card {i + 1}</CardBody>
-                  </Card>
-                </GalleryItem>
-              ))}
-            </Gallery>
-          </PageSection>
-        </Page>
+      <div id="ds-page-sticky-demo">
+        <DemoFrame height={520}>
+          <Page
+            masthead={masthead}
+            sidebar={sidebar}
+            breadcrumb={dashboardBreadcrumb}
+            mainContainerId="sticky-demo-main"
+            isBreadcrumbWidthLimited={false}
+            isBreadcrumbGrouped={anySticky}
+            additionalGroupedContent={groupedContent}
+            isManagedSidebar
+            defaultManagedSidebarIsOpen
+            groupProps={
+              anySticky ? { stickyOnBreakpoint: { default: "top" } } : undefined
+            }
+          >
+            {bodyHeader}
+            <PageSection isFilled aria-label="Card gallery">
+              <Gallery hasGutter minWidths={{ default: "180px" }}>
+                {Array.from({ length: 30 }).map((_, i) => (
+                  <GalleryItem key={i}>
+                    <Card isCompact>
+                      <CardBody>Card {i + 1}</CardBody>
+                    </Card>
+                  </GalleryItem>
+                ))}
+              </Gallery>
+            </PageSection>
+          </Page>
+        </DemoFrame>
       </div>
     </div>
   );
@@ -507,9 +520,14 @@ function StyledContentAreaDemo() {
  *    them disappears.
  */
 function UnifiedSurfaceDemo() {
-  // Push-mode sidebar (sidenavDrawerCss pins it beside content), so no
-  // off-click close — the hamburger toggle is the only way to collapse.
-  const [sidenavOpen, setSidenavOpen] = useState(true);
+  // Use PF6's isManagedSidebar (state via PageContext) + custom CSS for
+  // push at the container's md breakpoint. useBlockPushClickClose
+  // prevents PF6's main-click-close from firing while the sidebar is
+  // visually pinned in push mode.
+  useBlockPushClickClose({
+    pageContainerId: "unified-surface-demo",
+    sidebarId: "unified-surface-sidebar",
+  });
 
   // Masthead-chrome controls. These drive the only piece of visible chrome
   // on the unified-surface layout: the line + shadow that lifts the masthead
@@ -525,20 +543,27 @@ function UnifiedSurfaceDemo() {
   // grid template) and scrolls internally rather than the whole frame.
   const [fullHeight, setFullHeight] = useState(false);
 
-  // The CSS does three things (masthead is left at PF6 default tonality):
-  //   1. Force the sidebar background to match the main background so the
-  //      two columns read as one continuous surface.
-  //   2. Strip the subtle divider/border PF6 paints between sidebar and
-  //      main, and the box-shadow on the main-container.
-  //   3. Apply the masthead chrome (border + shadow) per the controls
+  // CSS, scoped to this demo via `:has(#unified-surface-main)`:
+  //   1. Unify sidebar + main + main-container backgrounds so the two
+  //      columns read as one continuous surface.
+  //   2. Strip the main-container's border / shadow (always).
+  //   3. Push mode (container ≥ md) — strip the sidebar's border /
+  //      shadow too; it sits flush with the unified body.
+  //   4. Overlay mode (container < md) — keep the sidebar borderless
+  //      but add a right-edge shadow so the floating drawer reads as a
+  //      lifted surface above the unified body, matching how the Basic
+  //      demo paints its overlay drawer.
+  //   5. Apply the masthead chrome (border + shadow) per the controls
   //      above — the only visible separator between header and panel.
-  // The shared sidenavDrawerCss is appended so the hamburger still drives
-  // a smooth, same-speed open/close (cubic-bezier transition).
+  // `container-type: inline-size` on the demo wrapper makes the
+  // container queries below resolve against the demo's own width.
+  // Hamburger / push / overlay still handled by PF6's isManagedSidebar.
   const mastheadBorder = hasBorder
     ? `${borderThickness}px solid ${borderColor}`
     : "none";
   const mastheadShadow = SHADOW_VALUES[shadow] ?? "none";
   const css = `
+    #unified-surface-demo { container-type: inline-size; }
     .pf-v6-c-page:has(#unified-surface-main) {
       --pf-v6-c-page--BackgroundColor: var(--gp-color-bg-primary-default);
     }
@@ -547,17 +572,31 @@ function UnifiedSurfaceDemo() {
     .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__main-container {
       background: var(--gp-color-bg-primary-default);
     }
-    .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__sidebar,
-    .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__sidebar.pf-m-expanded,
     .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__main-container {
       border: none;
       box-shadow: none;
+    }
+    /* Overlay (mobile / narrow): right-edge shadow on the sidebar so it
+       reads as a lifted floating surface above the unified body. */
+    @container (max-width: 767.98px) {
+      .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__sidebar,
+      .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__sidebar.pf-m-expanded {
+        border: none;
+        box-shadow: 4px 0 12px rgba(0, 0, 0, 0.18);
+      }
+    }
+    /* Push (desktop): sidebar flush with main — no border, no shadow. */
+    @container (min-width: 768px) {
+      .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__sidebar,
+      .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-page__sidebar.pf-m-expanded {
+        border: none;
+        box-shadow: none;
+      }
     }
     .pf-v6-c-page:has(#unified-surface-main) .pf-v6-c-masthead {
       border-bottom: ${mastheadBorder};
       box-shadow: ${mastheadShadow};
     }
-    ${sidenavDrawerCss("unified-surface-demo")}
   `;
 
   const masthead = (
@@ -567,8 +606,6 @@ function UnifiedSurfaceDemo() {
           <PageToggleButton
             isHamburgerButton
             aria-label="Global navigation"
-            isSidebarOpen={sidenavOpen}
-            onSidebarToggle={() => setSidenavOpen((v) => !v)}
             id="unified-surface-toggle"
           />
         </MastheadToggle>
@@ -591,7 +628,7 @@ function UnifiedSurfaceDemo() {
   );
 
   const sidebar = (
-    <PageSidebar isSidebarOpen={sidenavOpen} id="unified-surface-sidebar">
+    <PageSidebar id="unified-surface-sidebar">
       <PageSidebarBody>
         <Nav aria-label="Unified-surface demo nav">
           <NavList>
@@ -666,19 +703,14 @@ function UnifiedSurfaceDemo() {
           </FormSelect>
         </label>
       </div>
-      <div
-        style={{
-          height: 520,
-          overflow: "hidden",
-          border: "1px solid var(--gp-color-border-subtle)",
-          borderRadius: 6,
-        }}
-      >
+      <DemoFrame height={520}>
         <Page
           masthead={masthead}
           sidebar={sidebar}
           mainContainerId="unified-surface-main"
           isContentFilled={fullHeight}
+          isManagedSidebar
+          defaultManagedSidebarIsOpen
         >
           <PageSection aria-labelledby="unified-h1">
             <Content>
@@ -743,7 +775,7 @@ function UnifiedSurfaceDemo() {
             </Content>
           </PageSection>
         </Page>
-      </div>
+      </DemoFrame>
     </div>
   );
 }
@@ -858,17 +890,6 @@ export const Overview: StoryObj = {
           </>
         }
       >
-        <style
-          dangerouslySetInnerHTML={{
-            // Basic, Push, Slots, Centered now use PF6's native
-            // `isManagedSidebar` for push/overlay + main-click-close,
-            // matching the official Page sample. Sticky still uses our
-            // helper because its demo wraps Page in a fixed-height
-            // scroll viewport where the native CSS doesn't apply
-            // cleanly. See https://www.patternfly.org/components/page.
-            __html: sidenavDrawerCss("ds-page-sticky-demo"),
-          }}
-        />
         <Section
           title="Basic — masthead + sidebar + content"
           description="PageToggleButton + isSidebarOpen wires the hamburger toggle. PageSection slots stack vertically; isFilled stretches one to fill remaining height."
