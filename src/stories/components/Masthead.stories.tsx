@@ -26,7 +26,6 @@ import {
   DemoFrame,
   PropsTable,
   sidenavDrawerCss,
-  useSidenavOffClick,
 } from "../_demoKit.js";
 import { AcmeLogo } from "../_acmeLogo.js";
 
@@ -69,26 +68,14 @@ function DemoSidebarNav({ label }: { label: string }) {
 }
 
 function OverviewStory() {
-  // Basic demo: inline single-row masthead + sidenav drawer.
+  // Basic demo: inline single-row masthead + push-mode sidebar. No
+  // off-click close — push-mode sidebars only collapse from the
+  // hamburger toggle (overlay-mode sidebars are the ones where tapping
+  // the scrim dismisses; see Drawer → "Sidenav drawer (hamburger toggle)").
   const [basicOpen, setBasicOpen] = useState(true);
-  useSidenavOffClick({
-    open: basicOpen,
-    close: () => setBasicOpen(false),
-    containerId: "basic-masthead-demo",
-    sidebarId: "basic-masthead-sidebar",
-    toggleId: "basic-masthead-toggle",
-  });
 
-  // Display-variants demo: stacked two-row masthead at the default breakpoint
-  // + sidenav drawer.
+  // Display-variants demo: stacked two-row masthead, same push-mode rule.
   const [stackOpen, setStackOpen] = useState(true);
-  useSidenavOffClick({
-    open: stackOpen,
-    close: () => setStackOpen(false),
-    containerId: "stack-masthead-demo",
-    sidebarId: "stack-masthead-sidebar",
-    toggleId: "stack-masthead-toggle",
-  });
 
   return (
     <FoundationPage

@@ -45,10 +45,12 @@ export interface ShellProps {
    */
   mastheadDisplay?: MastheadDisplay;
   /**
-   * When true (default), clicking anywhere outside the sidebar / hamburger
-   * toggle closes the sidebar — the standard sidenav-drawer behaviour. Set
-   * `false` for shells that want the sidebar to stay open until the user
-   * presses the hamburger explicitly.
+   * When true, clicking outside the sidebar / hamburger toggle closes the
+   * sidebar — the overlay-mode sidenav-drawer dismiss gesture. Defaults
+   * to `false` because the Shell renders a pinned push-mode sidebar at
+   * desktop widths, where the off-click close is wrong (clicking into
+   * the main content shouldn't collapse a permanent rail). Opt in for
+   * overlay-only or mobile-first shells.
    */
   closeSidebarOnOutsideClick?: boolean;
   /** Page body. Wrapped in the `<main>` landmark targeted by SkipToContent. */
@@ -82,7 +84,7 @@ export function Shell({
   sidebar,
   mastheadActions,
   mastheadDisplay = DEFAULT_MASTHEAD_DISPLAY,
-  closeSidebarOnOutsideClick = true,
+  closeSidebarOnOutsideClick = false,
   children,
 }: ShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);

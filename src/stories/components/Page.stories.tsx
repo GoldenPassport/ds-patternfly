@@ -36,7 +36,7 @@ import {
   DemoFrame,
   PropsTable,
   sidenavDrawerCss,
-  useSidenavOffClick,
+  useBlockPushClickClose,
 } from "../_demoKit.js";
 import { AcmeLogo } from "../_acmeLogo.js";
 
@@ -89,14 +89,9 @@ function StickyHeaderDemo() {
   const [stickyBreadcrumb, setStickyBreadcrumb] = useState(true);
   const [stickyHeading, setStickyHeading]       = useState(true);
   const [stickySubheading, setStickySubheading] = useState(false);
+  // Push-mode sidebar (sidenavDrawerCss pins it beside content), so no
+  // off-click close — the hamburger toggle is the only way to collapse.
   const [sidenavOpen, setSidenavOpen]           = useState(true);
-  useSidenavOffClick({
-    open: sidenavOpen,
-    close: () => setSidenavOpen(false),
-    containerId: "ds-page-sticky-demo",
-    sidebarId: "ds-page-sticky-sidebar",
-    toggleId: "ds-page-sticky-toggle",
-  });
 
   // Body sections show the parts that are NOT in the sticky group, in
   // their normal scrolling position above the gallery.
@@ -512,14 +507,9 @@ function StyledContentAreaDemo() {
  *    them disappears.
  */
 function UnifiedSurfaceDemo() {
+  // Push-mode sidebar (sidenavDrawerCss pins it beside content), so no
+  // off-click close — the hamburger toggle is the only way to collapse.
   const [sidenavOpen, setSidenavOpen] = useState(true);
-  useSidenavOffClick({
-    open: sidenavOpen,
-    close: () => setSidenavOpen(false),
-    containerId: "unified-surface-demo",
-    sidebarId: "unified-surface-sidebar",
-    toggleId: "unified-surface-toggle",
-  });
 
   // Masthead-chrome controls. These drive the only piece of visible chrome
   // on the unified-surface layout: the line + shadow that lifts the masthead
@@ -760,33 +750,43 @@ function UnifiedSurfaceDemo() {
 
 export const Overview: StoryObj = {
   render: () => {
-    // Basic anatomy demo (controlled sidebar)
-    const [open, setOpen] = useState(true);
-    useSidenavOffClick({
-      open,
-      close: () => setOpen(false),
-      containerId: "ds-page-basic-demo",
+    // Basic + Push demos use PF6's `isManagedSidebar` — Page owns the
+    // open state, picks push vs overlay automatically based on its own
+    // width (PF6 threshold = xl / 1200px), and wires main-click-to-close
+    // on mobile via its built-in mousedown listener. This matches PF6's
+    // official Page sample at https://www.patternfly.org/components/page.
+    //
+    // Inside the DemoFrame the Page element is narrower than xl while
+    // the viewport is wider, so PF6's CSS paints push but its JS treats
+    // it as mobile and would close the sidebar on outside click — we
+    // block PF6's main-click handler in push mode via the
+    // `useBlockPushClickClose` capture-phase listener so the sidebar
+    // only collapses via the hamburger when visually pinned.
+    useBlockPushClickClose({
+      pageContainerId: "ds-page-basic-demo",
       sidebarId: "ds-page-sidebar",
-      toggleId: "ds-page-nav-toggle",
     });
-    // Sidebar-behaviour demo (push)
-    const [pushOpen, setPushOpen] = useState(true);
-    useSidenavOffClick({
-      open: pushOpen,
-      close: () => setPushOpen(false),
-      containerId: "ds-page-push-demo",
+    useBlockPushClickClose({
+      pageContainerId: "ds-page-push-demo",
       sidebarId: "ds-page-push-sidebar",
-      toggleId: "ds-page-push-toggle",
     });
+    // Sidebar-behaviour demo (push).
+    // No useSidenavOffClick here on purpose: in push mode the sidebar is
+    // pinned beside content (desktop pattern), so clicking the main area
+    // should NOT collapse it — only the hamburger toggle does. Off-click
+    // close is reserved for overlay-mode shells, where the sidebar
+    // floats on top of content and tapping the scrim is the canonical
+    // dismiss gesture.
     const masthead = (
       <Masthead>
         <MastheadMain>
           <MastheadToggle>
+            {/* With isManagedSidebar on Page, PageToggleButton reads
+                state from PageContext — no isSidebarOpen / onSidebarToggle
+                props needed. */}
             <PageToggleButton
               isHamburgerButton
               aria-label="Global navigation"
-              isSidebarOpen={open}
-              onSidebarToggle={() => setOpen((v) => !v)}
               id="ds-page-nav-toggle"
             />
           </MastheadToggle>
@@ -810,7 +810,7 @@ export const Overview: StoryObj = {
       </Masthead>
     );
     const sidebar = (
-      <PageSidebar isSidebarOpen={open} id="ds-page-sidebar">
+      <PageSidebar id="ds-page-sidebar">
         <PageSidebarBody>
           <Nav aria-label="Primary">
             <NavList>
@@ -860,17 +860,13 @@ export const Overview: StoryObj = {
       >
         <style
           dangerouslySetInnerHTML={{
-            // Shared sidenav-drawer styling — same animation/easing as the
-            // Drawer story's "Sidenav drawer (hamburger toggle)" demo so all
-            // hamburger toggles in the doc behave the same way (push mode,
-            // smooth same-speed open/close, no content-snap on open).
-            __html: [
-              sidenavDrawerCss("ds-page-basic-demo"),
-              sidenavDrawerCss("ds-page-push-demo"),
-              sidenavDrawerCss("ds-page-slots-demo"),
-              sidenavDrawerCss("ds-page-centered-demo"),
-              sidenavDrawerCss("ds-page-sticky-demo"),
-            ].join("\n"),
+            // Basic, Push, Slots, Centered now use PF6's native
+            // `isManagedSidebar` for push/overlay + main-click-close,
+            // matching the official Page sample. Sticky still uses our
+            // helper because its demo wraps Page in a fixed-height
+            // scroll viewport where the native CSS doesn't apply
+            // cleanly. See https://www.patternfly.org/components/page.
+            __html: sidenavDrawerCss("ds-page-sticky-demo"),
           }}
         />
         <Section
@@ -889,6 +885,8 @@ export const Overview: StoryObj = {
                   masthead={masthead}
                   sidebar={sidebar}
                   isContentFilled
+                  isManagedSidebar
+                  defaultManagedSidebarIsOpen
                 >
                   <PageSection aria-labelledby="ds-page-h1">
                     <Title headingLevel="h1" id="ds-page-h1">
@@ -964,8 +962,6 @@ const sidebar = (
                           <PageToggleButton
                             isHamburgerButton
                             aria-label="Global navigation"
-                            isSidebarOpen={pushOpen}
-                            onSidebarToggle={() => setPushOpen((v) => !v)}
                             id="ds-page-push-toggle"
                           />
                         </MastheadToggle>
@@ -978,10 +974,7 @@ const sidebar = (
                     </Masthead>
                   }
                   sidebar={
-                    <PageSidebar
-                      isSidebarOpen={pushOpen}
-                      id="ds-page-push-sidebar"
-                    >
+                    <PageSidebar id="ds-page-push-sidebar">
                       <PageSidebarBody>
                         <Nav aria-label="Push primary">
                           <NavList>
@@ -994,6 +987,8 @@ const sidebar = (
                     </PageSidebar>
                   }
                   isContentFilled
+                  isManagedSidebar
+                  defaultManagedSidebarIsOpen
                 >
                   <PageSection aria-label="Push main" isFilled>
                     <span style={{ color: "var(--gp-color-text-subtle)" }}>

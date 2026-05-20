@@ -11,29 +11,10 @@ import {
   DrawerPanelBody,
   DrawerPanelContent,
   DrawerPanelDescription,
-  Masthead,
-  MastheadBrand,
-  MastheadLogo,
-  MastheadMain,
-  MastheadToggle,
-  Nav,
-  NavItem,
-  NavList,
-  Page,
-  PageSection,
-  PageSidebar,
-  PageSidebarBody,
-  PageToggleButton,
   Title,
 } from "@patternfly/react-core";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
-import {
-  DemoFrame,
-  PropsTable,
-  sidenavDrawerCss,
-  useSidenavOffClick,
-} from "../_demoKit.js";
-import { AcmeLogo } from "../_acmeLogo.js";
+import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
   title: "Components/Drawer",
@@ -63,16 +44,6 @@ export const Overview: StoryObj = {
     // Resizable drawer
     const [resizeOpen, setResizeOpen] = useState(false);
     const resizeRef = useRef<HTMLSpanElement>(null);
-
-    // Sidenav drawer (hamburger-activated PageSidebar)
-    const [sidenavOpen, setSidenavOpen] = useState(true);
-    useSidenavOffClick({
-      open: sidenavOpen,
-      close: () => setSidenavOpen(false),
-      containerId: "sidenav-drawer-demo",
-      sidebarId: "sidenav-drawer-sidebar",
-      toggleId: "sidenav-drawer-toggle",
-    });
 
     // Focus-trap drawer
     const [trapOpen, setTrapOpen] = useState(false);
@@ -321,111 +292,6 @@ const panel = (
                   </Drawer>
                 </Fragment>
               </DemoFrame>
-            </div>
-          </Card>
-        </Section>
-
-        <Section
-          title="Sidenav drawer (hamburger toggle)"
-          description="The hamburger-activated nav drawer is NOT built on Drawer — it's the PF6 PageSidebar + PageToggleButton combo (lives inside Page, not Drawer). Listed here because that's where users intuitively look for it. This demo also wires an off-click close: clicking anywhere outside the sidebar (or pressing the hamburger again) collapses the drawer. See Components/Page for the full Page-shell story."
-        >
-          <Card>
-            <div style={{ padding: 24, display: "grid", gap: 16 }}>
-              {/* Force push mode at DemoFrame widths so the toggle visibly
-                  reflows the main column. PF6 only auto-switches to push
-                  at viewport >= xl, but the DemoFrame is narrower. */}
-              <style dangerouslySetInnerHTML={{ __html: sidenavDrawerCss("sidenav-drawer-demo") }} />
-              <div id="sidenav-drawer-demo">
-                <DemoFrame height={320}>
-                  <Page
-                    masthead={
-                      <Masthead id="sidenav-drawer-masthead">
-                        <MastheadMain>
-                          <MastheadToggle>
-                            <PageToggleButton
-                              isHamburgerButton
-                              aria-label="Global navigation"
-                              isSidebarOpen={sidenavOpen}
-                              onSidebarToggle={() => setSidenavOpen((v) => !v)}
-                              id="sidenav-drawer-toggle"
-                            />
-                          </MastheadToggle>
-                          <MastheadBrand>
-                            <MastheadLogo component="a" href="#">
-                              <AcmeLogo />
-                            </MastheadLogo>
-                          </MastheadBrand>
-                        </MastheadMain>
-                      </Masthead>
-                    }
-                    sidebar={
-                      <PageSidebar
-                        isSidebarOpen={sidenavOpen}
-                        id="sidenav-drawer-sidebar"
-                      >
-                        <PageSidebarBody>
-                          <Nav aria-label="Sidenav drawer demo">
-                            <NavList>
-                              <NavItem itemId={0} isActive>Dashboard</NavItem>
-                              <NavItem itemId={1}>Workflows</NavItem>
-                              <NavItem itemId={2}>Tasks</NavItem>
-                              <NavItem itemId={3}>Settings</NavItem>
-                            </NavList>
-                          </Nav>
-                        </PageSidebarBody>
-                      </PageSidebar>
-                    }
-                  >
-                    <PageSection aria-label="Sidenav demo body">
-                      <span style={{ color: "var(--gp-color-text-subtle)" }}>
-                        Click the hamburger — the sidebar collapses to 0 and
-                        the main column reclaims the freed width.
-                      </span>
-                    </PageSection>
-                  </Page>
-                </DemoFrame>
-              </div>
-              <CodeBlock>{`const [open, setOpen] = useState(true);
-
-// Off-click close — listen for clicks outside the sidebar / toggle.
-useEffect(() => {
-  if (!open) return;
-  const onDown = (e: MouseEvent) => {
-    const t = e.target as Element;
-    if (sidebarRef.current?.contains(t)) return;
-    if (toggleRef.current?.contains(t)) return;
-    setOpen(false);
-  };
-  document.addEventListener("mousedown", onDown, true);
-  return () => document.removeEventListener("mousedown", onDown, true);
-}, [open]);
-
-<Page
-  masthead={
-    <Masthead>
-      <MastheadMain>
-        <MastheadToggle>
-          <PageToggleButton
-            isHamburgerButton
-            aria-label="Global navigation"
-            isSidebarOpen={open}
-            onSidebarToggle={() => setOpen(v => !v)}
-          />
-        </MastheadToggle>
-        <MastheadBrand>{/* logo */}</MastheadBrand>
-      </MastheadMain>
-    </Masthead>
-  }
-  sidebar={
-    <PageSidebar isSidebarOpen={open}>
-      <PageSidebarBody>
-        <Nav aria-label="Primary">{/* nav items */}</Nav>
-      </PageSidebarBody>
-    </PageSidebar>
-  }
->
-  <PageSection>{/* page content */}</PageSection>
-</Page>`}</CodeBlock>
             </div>
           </Card>
         </Section>

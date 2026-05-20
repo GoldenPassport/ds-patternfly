@@ -2,42 +2,228 @@ import { useEffect } from "react";
 import type { CSSProperties, ReactNode } from "react";
 
 /**
- * CSS block that scopes the PF6 Page sidenav-drawer animation to a container
- * id. Provides:
- *   - push mode at DemoFrame widths (PF6 only auto-switches to push at viewport
- *     ≥ xl, but the docs render Pages inside a narrower DemoFrame),
- *   - smooth, same-speed open/close (cubic-bezier + width transition, with
- *     `overflow: hidden` held across BOTH states so content doesn't snap into
- *     view on the open transition).
- *
- * Pair with `useSidenavOffClick` to close the drawer when the user clicks
- * outside the sidebar / toggle.
+ * PF6 breakpoint widths (px). Matches `--pf-v6-c-page__sidebar--xl--Width`
+ * etc. tokens — used by `sidenavDrawerCss` to decide where push → overlay
+ * switches via a container query.
  */
-export function sidenavDrawerCss(containerId: string) {
+const PF6_BREAKPOINT_PX = {
+  sm: 576,
+  md: 768,
+  lg: 992,
+  xl: 1200,
+  "2xl": 1450,
+} as const;
+
+/**
+ * Mode for `sidenavDrawerCss.overlayBelow`:
+ *   - a breakpoint key (`"sm"`–`"2xl"`) — switch to overlay when the
+ *     demo container is narrower than that breakpoint (push above),
+ *   - `"always"` — overlay regardless of container width (canonical
+ *     drawer demo),
+ *   - `"never"` — push regardless of container width (canonical pinned
+ *     desktop sidebar).
+ */
+export type SidenavOverlayBreakpoint =
+  | keyof typeof PF6_BREAKPOINT_PX
+  | "always"
+  | "never";
+
+/**
+ * Scoped CSS for the PF6 Page sidenav-drawer pattern. Switches between
+ * push (sidebar pinned beside content) and overlay (sidebar floats over
+ * content with a backdrop) based on the demo container's own inline
+ * size — not the viewport — via a container query, so Storybook docs
+ * with multiple demos stacked at different widths behave correctly.
+ *
+ * Defaults to `overlayBelow: "md"` (overlay at <768px, push at ≥768px).
+ *
+ * - Push mode: smooth same-speed width transition, `overflow: hidden`
+ *   held across both states so content doesn't snap into view on the
+ *   open transition.
+ * - Overlay mode: absolute-positioned sidebar with z-index lift,
+ *   semi-transparent backdrop, slide-in via transform.
+ *
+ * Pair with `useSidenavOffClick`, which auto-detects the active mode
+ * via the sidebar's computed `position` and closes only in overlay.
+ */
+export function sidenavDrawerCss(
+  containerId: string,
+  { overlayBelow = "md" }: { overlayBelow?: SidenavOverlayBreakpoint } = {},
+) {
   const c = `#${containerId}`;
-  return [
+  // Overlay-mode rules. Apply at default (narrow) widths and below the
+  // breakpoint via a container query.
+  const overlayRules = [
     `${c} .pf-v6-c-page {`,
+    `  position: relative;`,
+    `}`,
+    `${c} .pf-v6-c-page__sidebar {`,
+    `  position: absolute;`,
+    `  inset-block-start: var(--pf-v6-c-masthead--Height, 4.5rem);`,
+    `  inset-block-end: 0;`,
+    `  inset-inline-start: 0;`,
+    `  width: var(--pf-v6-c-page__sidebar--xl--Width);`,
+    `  overflow: hidden;`,
+    `  z-index: 1000;`,
+    `  box-shadow: 0 0 24px rgba(0, 0, 0, 0.18);`,
+    `  transform: translateX(0);`,
+    `  transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1);`,
+    `}`,
+    `${c} .pf-v6-c-page__sidebar.pf-m-collapsed {`,
+    `  transform: translateX(-100%);`,
+    `}`,
+    `${c} .pf-v6-c-page:has(.pf-v6-c-page__sidebar.pf-m-expanded)::before {`,
+    `  content: "";`,
+    `  position: absolute;`,
+    `  inset: var(--pf-v6-c-masthead--Height, 4.5rem) 0 0 0;`,
+    `  background: rgba(0, 0, 0, 0.32);`,
+    `  z-index: 999;`,
+    `  pointer-events: none;`,
+    `}`,
+  ];
+  // Push-mode rules. Reset overlay-mode rules and pin the sidebar back
+  // into the page grid with a width transition.
+  const pushRules = [
+    `${c} .pf-v6-c-page {`,
+    `  position: static;`,
     `  grid-template-areas: "header header" "sidebar main";`,
     `  grid-template-columns: auto 1fr;`,
     `}`,
     `${c} .pf-v6-c-page__sidebar {`,
     `  position: static;`,
+    `  inset: auto;`,
     `  width: var(--pf-v6-c-page__sidebar--xl--Width);`,
     `  overflow: hidden;`,
+    `  z-index: auto;`,
+    `  box-shadow: none;`,
+    `  transform: none;`,
     `  transition: width 220ms cubic-bezier(0.4, 0, 0.2, 1);`,
     `}`,
     `${c} .pf-v6-c-page__sidebar.pf-m-collapsed {`,
     `  width: 0;`,
+    `  transform: none;`,
+    `}`,
+    `${c} .pf-v6-c-page:has(.pf-v6-c-page__sidebar.pf-m-expanded)::before {`,
+    `  content: none;`,
+    `}`,
+  ];
+  if (overlayBelow === "always") {
+    return overlayRules.join("\n");
+  }
+  if (overlayBelow === "never") {
+    return pushRules.join("\n");
+  }
+  const px = PF6_BREAKPOINT_PX[overlayBelow];
+  return [
+    // Container observed by the @container query lives at the wrapper id.
+    `${c} { container-type: inline-size; }`,
+    // Mobile-first: overlay at narrow widths.
+    ...overlayRules,
+    // Push when the container is at or above the breakpoint.
+    `@container (min-width: ${px}px) {`,
+    ...pushRules.map((line) => `  ${line}`),
     `}`,
   ].join("\n");
 }
 
 /**
+ * Block PF6's `isManagedSidebar` main-click-close handler when the sidebar
+ * is currently rendered in push mode (computed `position: static` or
+ * `relative`). Solves the PF6 threshold mismatch inside a Storybook
+ * DemoFrame: PF6 picks push vs overlay via CSS at `min-width: 75rem`
+ * against the VIEWPORT, but its JS picks push vs overlay via
+ * ResizeObserver against the PAGE element's width — they disagree
+ * whenever the iframe is wide (≥xl) but the DemoFrame caps the Page at
+ * a narrower width. In that mismatch the sidebar paints as push but
+ * still closes on outside click. This hook puts a capture-phase
+ * mousedown listener on the page main and `stopImmediatePropagation`s
+ * before PF6's bubble-phase listener fires, but only when push mode is
+ * active.
+ *
+ * Drop on any demo that uses `isManagedSidebar` AND a custom CSS that
+ * forces push at narrow widths (eg `sidenavDrawerCss`).
+ */
+export function useBlockPushClickClose({
+  pageContainerId,
+  sidebarId,
+  overlayBelow = "md",
+}: {
+  pageContainerId: string;
+  sidebarId: string;
+  /**
+   * The container width below which the sidebar should be treated as
+   * overlay (PF6's close-on-main-click runs). At or above the
+   * breakpoint, the sidebar is treated as push (PF6's handler is
+   * blocked — only the hamburger toggle controls open/close).
+   *
+   * Matches `sidenavDrawerCss`'s `overlayBelow` so the CSS-driven
+   * visual mode and the hook-driven click-close policy stay in sync.
+   * Defaults to `"md"` (768px) — same as `sidenavDrawerCss`.
+   */
+  overlayBelow?: SidenavOverlayBreakpoint;
+}) {
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const target = e.target as Element | null;
+      const ownerDoc = target?.ownerDocument;
+      if (!ownerDoc) return;
+      const sidebar = ownerDoc.getElementById(sidebarId);
+      const container = ownerDoc.getElementById(pageContainerId);
+      if (!sidebar || !container) return;
+      // "always" overlay: never block — always let PF6 close.
+      // "never" overlay: always block — push semantics regardless of width.
+      // Numeric breakpoint: measure the container's own inline size and
+      // compare. At ≥ breakpoint we're in push mode → block. Below →
+      // overlay → let PF6 close run normally.
+      if (overlayBelow === "always") return;
+      if (overlayBelow === "never") {
+        e.stopImmediatePropagation();
+        return;
+      }
+      const threshold = PF6_BREAKPOINT_PX[overlayBelow];
+      const containerWidth = container.getBoundingClientRect().width;
+      const isPush = containerWidth >= threshold;
+      if (isPush) {
+        e.stopImmediatePropagation();
+      }
+    };
+    const attach = () => {
+      const container = document.getElementById(pageContainerId);
+      const main = container?.querySelector(
+        ".pf-v6-c-page__main",
+      ) as HTMLElement | null;
+      if (!main) return null;
+      main.addEventListener("mousedown", handler, { capture: true });
+      main.addEventListener("touchstart", handler, { capture: true });
+      return main;
+    };
+    // PF6 attaches its listener in Page.componentDidMount; we wait one
+    // tick so the page main exists, then bind in capture phase to win.
+    let main = attach();
+    const retry = main ? null : setTimeout(() => { main = attach(); }, 0);
+    return () => {
+      if (retry) clearTimeout(retry);
+      main?.removeEventListener("mousedown", handler, { capture: true });
+      main?.removeEventListener("touchstart", handler, { capture: true });
+    };
+  }, [pageContainerId, sidebarId]);
+}
+
+/**
  * Off-click close for the PF6 PageSidebar / PageToggleButton sidenav-drawer
  * pattern. Listens for mousedown on the document (and the Storybook iframe
- * document, since clicks inside the demo originate there); closes the drawer
- * when the click falls outside the sidebar and toggle elements but inside the
- * demo container.
+ * document, since clicks inside the demo originate there).
+ *
+ * **Mode-aware**: only closes when the sidebar is in overlay mode (the
+ * mobile pattern, where the sidebar floats on top of content via
+ * `position: absolute`). When the sidebar is pinned beside the content in
+ * push mode (`position: static`/`relative` — the desktop pattern),
+ * off-click is a no-op — push-mode rails should only collapse from the
+ * hamburger toggle, never from a stray click into the main area.
+ *
+ * The mode check runs at click time against the sidebar's computed
+ * `position`, so the helper does the right thing regardless of viewport
+ * breakpoint or whether the demo force-pushes via `sidenavDrawerCss`.
  */
 export function useSidenavOffClick({
   open,
@@ -63,6 +249,12 @@ export function useSidenavOffClick({
       const sidebar = ownerDoc.getElementById(sidebarId);
       const toggle = ownerDoc.getElementById(toggleId);
       if (sidebar?.contains(target) || toggle?.contains(target)) return;
+      // Overlay-only: skip if the sidebar is currently pinned (push mode).
+      // PF6 picks push at viewport >= xl OR when sidenavDrawerCss forces it
+      // via `position: static`; we detect by computed style at click time.
+      const win = sidebar?.ownerDocument.defaultView ?? window;
+      const position = sidebar ? win.getComputedStyle(sidebar).position : "";
+      if (position !== "absolute" && position !== "fixed") return;
       close();
     };
     document.addEventListener("mousedown", handler, true);
