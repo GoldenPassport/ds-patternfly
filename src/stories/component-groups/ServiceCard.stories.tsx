@@ -28,12 +28,18 @@ export const Overview: StoryObj = {
         <Card>
           <div style={{ padding: 24, display: "grid", gap: 16 }}>
             <DemoFrame>
+              {/* isFullHeight on every card so a row of mixed-length
+                  cards (Settings is short, Access carries a subtitle +
+                  helper text) lines up at the same height. PF6's
+                  Gallery only stretches cells when its children opt in
+                  via isFullHeight. */}
               <Gallery hasGutter minWidths={{ default: "240px" }}>
                 <GalleryItem>
                   <ServiceCard
                     icon={<CogIcon />}
                     title="Settings"
                     description="Configure preferences, notifications, and integrations."
+                    isFullHeight
                     footer={<Button variant="link" isInline>Open</Button>}
                   />
                 </GalleryItem>
@@ -44,6 +50,7 @@ export const Overview: StoryObj = {
                     subtitle="Identity & roles"
                     description="Manage users, groups, and API keys for your workspace."
                     helperText="3 pending invitations"
+                    isFullHeight
                     footer={<Button variant="link" isInline>Open</Button>}
                   />
                 </GalleryItem>
