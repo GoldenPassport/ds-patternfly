@@ -436,6 +436,13 @@ export const WithSidebarAndPrimaryDetail: Story = {
     });
 
     await step("clicking a nav item updates the PageHeader title", async () => {
+      // PF6's isManagedSidebar starts the mobile sidebar collapsed
+      // AND aria-hidden, so the nav landmark inside isn't queryable
+      // by role until the user opens it. Click the hamburger first.
+      const toggle = canvas.getByRole("button", { name: shellEnLabels.toggleSidebar });
+      if (toggle.getAttribute("aria-expanded") !== "true") {
+        await userEvent.click(toggle);
+      }
       // PageHeader renders the title as an h1. Clicking a sidebar nav item
       // updates activeNav state, which drives the title text.
       // Disambiguate "Tasks" — it appears in both the nav AND the breadcrumb,
