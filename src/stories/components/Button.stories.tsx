@@ -1,5 +1,14 @@
+import { useState, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button } from "@patternfly/react-core";
+import { Button, FormSelect, FormSelectOption } from "@patternfly/react-core";
+import {
+  CogIcon,
+  EllipsisVIcon,
+  PencilAltIcon,
+  PlusIcon,
+  TimesIcon,
+  TrashIcon,
+} from "@patternfly/react-icons";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
@@ -10,6 +19,82 @@ const meta: Meta = {
 export default meta;
 
 const VARIANTS = ["primary", "secondary", "tertiary", "danger", "warning", "link", "plain"] as const;
+
+/**
+ * Border-radius presets used by the configurable demo below. PF6 ships
+ * no `shape` prop on Button, so the override lands as an inline style
+ * (the value applies to text + icon-only buttons alike).
+ */
+const RADIUS_PRESETS = {
+  square: { label: "Square (0)", value: "0" },
+  rounded: { label: "Rounded (default)", value: "var(--pf-v6-c-button--BorderRadius)" },
+  strong: { label: "Strong (12px)", value: "12px" },
+  pill: { label: "Pill (999px)", value: "999px" },
+} as const;
+type RadiusKey = keyof typeof RADIUS_PRESETS;
+
+function BorderRadiusDemo() {
+  const [shape, setShape] = useState<RadiusKey>("rounded");
+  const radius = RADIUS_PRESETS[shape].value;
+  const textStyle: CSSProperties = { borderRadius: radius };
+  // Icon-only buttons need a square aspect so the chosen radius reads
+  // as a true circle / pill instead of an ellipse.
+  const iconOnlyStyle: CSSProperties = {
+    borderRadius: radius,
+    aspectRatio: "1",
+    paddingInline: 0,
+  };
+  return (
+    <div style={{ display: "grid", gap: 12 }}>
+      <label style={{ display: "grid", gap: 4, fontSize: 13, maxWidth: 240 }}>
+        Shape
+        <FormSelect
+          id="btn-radius-shape"
+          value={shape}
+          onChange={(_e, v) => setShape(v as RadiusKey)}
+          aria-label="Border radius preset"
+        >
+          {(Object.keys(RADIUS_PRESETS) as RadiusKey[]).map((k) => (
+            <FormSelectOption key={k} value={k} label={RADIUS_PRESETS[k].label} />
+          ))}
+        </FormSelect>
+      </label>
+      <DemoFrame>
+        <div style={{ display: "grid", gap: 12 }}>
+          {/* Text buttons */}
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <Button variant="primary"   style={textStyle}>Primary</Button>
+            <Button variant="secondary" style={textStyle}>Secondary</Button>
+            <Button variant="tertiary"  style={textStyle}>Tertiary</Button>
+            <Button variant="danger"    style={textStyle}>Danger</Button>
+          </div>
+          {/* Icon + text */}
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <Button variant="primary" icon={<PlusIcon />}      style={textStyle}>Add</Button>
+            <Button variant="secondary" icon={<PencilAltIcon />} style={textStyle}>Edit</Button>
+            <Button variant="danger" icon={<TrashIcon />}     style={textStyle}>Delete</Button>
+          </div>
+          {/* Icon-only variants (square aspect, has background/border) */}
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <Button variant="primary"   aria-label="Add"      icon={<PlusIcon />}       style={iconOnlyStyle} />
+            <Button variant="secondary" aria-label="Edit"     icon={<PencilAltIcon />} style={iconOnlyStyle} />
+            <Button variant="tertiary"  aria-label="Settings" icon={<CogIcon />}       style={iconOnlyStyle} />
+            <Button variant="danger"    aria-label="Delete"   icon={<TrashIcon />}     style={iconOnlyStyle} />
+          </div>
+          {/* Icon-only plain — the radius shows on hover/focus
+              backgrounds (PF6 paints a hover halo behind the glyph). */}
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <Button variant="plain" aria-label="Edit"         icon={<PencilAltIcon />} style={iconOnlyStyle} />
+            <Button variant="plain" aria-label="Settings"     icon={<CogIcon />}       style={iconOnlyStyle} />
+            <Button variant="plain" aria-label="Delete"       icon={<TrashIcon />}     style={iconOnlyStyle} />
+            <Button variant="plain" aria-label="More actions" icon={<EllipsisVIcon />} style={iconOnlyStyle} />
+            <Button variant="plain" aria-label="Close"        icon={<TimesIcon />}     style={iconOnlyStyle} />
+          </div>
+        </div>
+      </DemoFrame>
+    </div>
+  );
+}
 
 export const Overview: StoryObj = {
   render: () => (
@@ -58,6 +143,106 @@ export const Overview: StoryObj = {
                 <Button isBlock>Block (full width)</Button>
               </div>
             </DemoFrame>
+          </div>
+        </Card>
+      </Section>
+
+      <Section
+        title="Icon buttons"
+        description="Icon-only buttons need an aria-label (the icon is decorative, the label is the announced name). Pair with `variant='plain'` for toolbar / table-row glyph buttons; keep a text variant for primary CTAs even when an icon's involved."
+      >
+        <Card>
+          <div style={{ padding: 24, display: "grid", gap: 16 }}>
+            <DemoFrame>
+              <div style={{ display: "grid", gap: 16 }}>
+                {/* Icon + text — the common CTA pattern. icon prop puts
+                    the glyph on the leading edge; pass `iconPosition`
+                    to swap it to the trailing edge. */}
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+                  <Button variant="primary" icon={<PlusIcon />}>
+                    Add resource
+                  </Button>
+                  <Button variant="secondary" icon={<PencilAltIcon />}>
+                    Edit
+                  </Button>
+                  <Button variant="danger" icon={<TrashIcon />}>
+                    Delete
+                  </Button>
+                </div>
+                {/* Icon-only with background / border, rendered circular.
+                    PF6 ships no `circular` variant on Button, so override
+                    inline: `border-radius: 50%`, `aspect-ratio: 1`, and
+                    zero inline padding so the icon centres in a square. */}
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                  {(() => {
+                    const round: CSSProperties = {
+                      borderRadius: "50%",
+                      aspectRatio: "1",
+                      paddingInline: 0,
+                    };
+                    return (
+                      <>
+                        <Button variant="primary"   aria-label="Add resource" icon={<PlusIcon />}       style={round} />
+                        <Button variant="secondary" aria-label="Edit"         icon={<PencilAltIcon />} style={round} />
+                        <Button variant="tertiary"  aria-label="Settings"     icon={<CogIcon />}       style={round} />
+                        <Button variant="danger"    aria-label="Delete"       icon={<TrashIcon />}     style={round} />
+                      </>
+                    );
+                  })()}
+                </div>
+                {/* Icon-only plain buttons — the canonical toolbar /
+                    table-row pattern. The icon goes in `icon`, NOT as
+                    children; that triggers PF6's icon-only sizing. */}
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                  <Button variant="plain" aria-label="Edit" icon={<PencilAltIcon />} />
+                  <Button variant="plain" aria-label="Settings" icon={<CogIcon />} />
+                  <Button variant="plain" aria-label="Delete" icon={<TrashIcon />} />
+                  <Button variant="plain" aria-label="More actions" icon={<EllipsisVIcon />} />
+                  <Button variant="plain" aria-label="Close" icon={<TimesIcon />} />
+                </div>
+                {/* PF6 `isSettings` shorthand bakes in the cog icon but
+                    does NOT inject an aria-label — still your job. */}
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                  <Button variant="plain" isSettings aria-label="Settings" />
+                </div>
+              </div>
+            </DemoFrame>
+            <CodeBlock>{`{/* Icon + text */}
+<Button variant="primary" icon={<PlusIcon />}>Add resource</Button>
+<Button variant="danger" icon={<TrashIcon />}>Delete</Button>
+
+{/* Icon-only — aria-label is required (icon is decorative). */}
+<Button variant="plain" aria-label="Edit" icon={<PencilAltIcon />} />
+<Button variant="plain" aria-label="More actions" icon={<EllipsisVIcon />} />
+
+{/* Shorthand variants — PF6 bakes in icon + aria-label. */}
+<Button variant="plain" isSettings />`}</CodeBlock>
+          </div>
+        </Card>
+      </Section>
+
+      <Section
+        title="Border radius"
+        description="PF6 ships no `shape` prop on Button — pick a radius preset (square / rounded / more rounded / pill) and the value lands on each demo button via inline style. Apply the same approach in your app via a per-brand override on the `--pf-v6-c-button--BorderRadius` token if you want a global shape change."
+      >
+        <Card>
+          <div style={{ padding: 24, display: "grid", gap: 16 }}>
+            <BorderRadiusDemo />
+            <CodeBlock>{`<Button variant="primary" style={{ borderRadius: 999 }}>Pill</Button>
+
+{/* Icon-only — pair with aspect-ratio: 1 + paddingInline: 0 so
+    the chosen radius reads as a true circle / pill. */}
+<Button
+  variant="primary"
+  aria-label="Add"
+  icon={<PlusIcon />}
+  style={{ borderRadius: "50%", aspectRatio: 1, paddingInline: 0 }}
+/>
+
+{/* Theme-wide via the PF6 token: */}
+:where([data-brand="rounded"]) {
+  --pf-v6-c-button--BorderRadius: 12px;
+}`}</CodeBlock>
           </div>
         </Card>
       </Section>
