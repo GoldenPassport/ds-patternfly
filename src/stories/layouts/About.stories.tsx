@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
 
 const meta: Meta = {
-  title: "Layouts/About layouts",
+  title: "Layouts",
   parameters: { layout: "padded" },
 };
 export default meta;

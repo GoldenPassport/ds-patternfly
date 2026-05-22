@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FoundationPage, Section, Card } from "../_storyKit.js";
 
 const meta: Meta = {
-  title: "Component groups/About component groups",
+  title: "Component groups",
   parameters: { layout: "padded" },
 };
 export default meta;
 
-export const About: StoryObj = {
+export const Overview: StoryObj = {
   render: () => (
     <FoundationPage
       title="About component groups"

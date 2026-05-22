@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FoundationPage, Section, Card } from "../_storyKit.js";
 
 const meta: Meta = {
-  title: "Accessibility/About accessibility",
+  title: "Accessibility",
   parameters: { layout: "padded" },
 };
 export default meta;

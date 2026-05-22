@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FoundationPage, Section, Card } from "../_storyKit.js";
 
 const meta: Meta = {
-  title: "Foundations/About design foundations",
+  title: "Foundations",
   parameters: { layout: "padded" },
 };
 export default meta;
