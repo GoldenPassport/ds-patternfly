@@ -225,6 +225,111 @@
 }
 
 /*
+ * Internal-stepper recipe — the focus ring should land at the boundary
+ * between the input and the stepper column (narrow padding from the
+ * carets' left edge). PF6 leaves a wider gap between TextInputGroupMain
+ * and TextInputGroupUtilities than we want; pull the utilities flush
+ * against the input so the input's bounding box (and therefore its
+ * focus outline) extends right up to the stepper.
+ *
+ * The stepper's own `margin-inline: 4px 3px` already gives a narrow
+ * visual breathing strip between the input edge / outline and the
+ * carets — preserving that as the "narrow padding" the user wants.
+ *
+ * `:has()` scopes the fix so vanilla TextInputGroups are untouched.
+ */
+.pf-v6-c-text-input-group:has(.gp-stepper-stack) {
+  /* Clip the square buttons to the wrapper's rounded corner so a
+     hover/active background tip doesn't stick out past the curve.
+     Matching border-radius on the wrapper is required for overflow
+     clipping to follow the rounded shape. */
+  overflow: hidden;
+  border-radius: var(--pf-v6-c-form-control--BorderRadius);
+  /* Match the DS form-control field height (2.25rem = 36px) so the
+     internal-stepper recipe sits on the same baseline as the rest of
+     the form fields on the page. */
+  block-size: 2.25rem;
+  min-block-size: 2.25rem;
+}
+/*
+ * NumberInput field + stepper sizing — pin the input column to the
+ * DS form-control min-height (2.25rem = 36px) and force the flanking
+ * +/- buttons to a square that matches. PF6 v6 ships the stepper
+ * buttons as `pf-m-control` Buttons whose intrinsic height tracks the
+ * input but whose width is content-based (≈ 2.5rem for a 1em icon +
+ * padding) — slightly wider than the field is tall, so the +/-/input
+ * trio looks unbalanced. Force inline-size = block-size = 2.25rem so
+ * each button is a clean square matching the input height.
+ */
+.pf-v6-c-number-input .pf-v6-c-form-control {
+  --pf-v6-c-form-control--MinHeight: 2.25rem;
+  block-size: 2.25rem;
+}
+/* PF6 also sets a baked-in min-block-size on the inner `<input>`
+ * itself (not via the FormControl token), so the token override
+ * above only shrinks the wrapper — the input stays 40px and overflows.
+ * Pin the input directly to match. */
+.pf-v6-c-number-input .pf-v6-c-form-control > input,
+.pf-v6-c-text-input-group:has(.gp-stepper-stack) input {
+  block-size: 2.25rem;
+  min-block-size: 2.25rem;
+}
+.pf-v6-c-number-input .pf-v6-c-button.pf-m-control {
+  block-size: 2.25rem;
+  inline-size: 2.25rem;
+  min-inline-size: 0;
+  padding: 0;                   /* drop PF6's inline padding so the
+                                   icon centers in the square, not
+                                   inside an off-center content box */
+  display: inline-flex;
+  align-items: center;          /* vertical center icon */
+  justify-content: center;      /* horizontal center icon */
+}
+/* Inner focus-ring mode — pull the outline inside the now-square
+ * button. Without an explicit inset, the default outline at 2px
+ * positive offset paints outside the 36×36 box and looks like the
+ * outer-ring mode. */
+.gp-focus-ring-inner .pf-v6-c-number-input .pf-v6-c-button.pf-m-control:focus-visible {
+  outline-offset: -4px;
+}
+
+/*
+ * `--gp-min-digits` recipe — set it as a CSS custom property on a
+ * TextInputGroup / FormControl wrapper and the input column is pinned
+ * to exactly that many digits worth of width. The wrapper then
+ * naturally sizes around it (input column + any stepper utilities),
+ * shrinking/growing as `--gp-min-digits` changes.
+ *
+ *   <TextInputGroup style={{ "--gp-min-digits": 4 }}>...</TextInputGroup>
+ *
+ * For TextInputGroup we pin the `__main` (the input's flex cell) so
+ * the trailing utilities/stepper column keeps its own size. For bare
+ * FormControl wrappers we pin the wrapper itself, since there's no
+ * separate utilities column.
+ *
+ * The 0.5rem slack just covers the input's own end-of-content padding
+ * so the last digit isn't flush against the right edge.
+ */
+.pf-v6-c-text-input-group[style*="--gp-min-digits"] .pf-v6-c-text-input-group__main {
+  flex: 0 0 auto;
+  inline-size: calc(var(--gp-min-digits, 4) * 1.25rem);
+}
+.pf-v6-c-text-input-group[style*="--gp-min-digits"] .pf-v6-c-text-input-group__text-input {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+.pf-v6-c-form-control[style*="--gp-min-digits"] {
+  inline-size: calc(var(--gp-min-digits, 4) * 1.25rem);
+}
+.pf-v6-c-text-input-group:has(.gp-stepper-stack) .pf-v6-c-text-input-group__utilities {
+  padding-inline-start: 0;
+  margin-inline-start: 0;
+}
+.pf-v6-c-text-input-group:has(.gp-stepper-stack) .pf-v6-c-text-input-group__main {
+  padding-inline-end: 0;
+}
+
+/*
  * Standalone CalendarMonth popup chrome — opt-in via `gp-calendar-popup`
  * on a wrapper around CalendarMonth when you're using it as a popup
  * WITHOUT PF6's Popover chrome (e.g. via the bare Popper positioner).
@@ -275,6 +380,211 @@
   --pf-v6-c-popover__arrow--BoxShadow:
     0 12px 32px rgba(0, 0, 0, 0.18),
     0 4px 8px rgba(0, 0, 0, 0.10);
+}
+
+/*
+ * Popover surface contrast — paint the popup body, arrow, and any
+ * inner CalendarMonth on `--gp-color-bg-secondary-hover`. The token
+ * name is borrowed for now (there's no dedicated "elevated popup"
+ * surface token in the brand palette yet); its values are direction-
+ * aware and give the popover a strong tonal contrast against any
+ * `bg-primary` / `bg-secondary` page surface:
+ *
+ *   - light mode: gray-200 (#e6dcc8) — 2 shades darker than the
+ *     cream page, still distinct from `bg-secondary-default`
+ *     (gray-100) so popups don't blend into cards / panels.
+ *   - dark mode:  gray-700 (#3e372f) — 2 shades lighter than the
+ *     near-black page, distinct from `bg-secondary-default`
+ *     (gray-800) for the same reason.
+ *
+ * Border radius — popover content keeps `--gp-radius-md` (16px), the
+ * universal elevated-surface radius shared with Card / Drawer /
+ * Modal. The doubled `.pf-v6-c-popover.pf-v6-c-popover` selector
+ * raises specificity to (0,2,0) so the override beats PF6's own
+ * `.pf-v6-c-popover { ... }` (0,1,0) regardless of CSS load order.
+ */
+.pf-v6-c-popover.pf-v6-c-popover {
+  --pf-v6-c-popover__content--BackgroundColor: var(--gp-color-bg-secondary-hover);
+  --pf-v6-c-popover__arrow--BackgroundColor: var(--gp-color-bg-secondary-hover);
+  --pf-v6-c-popover__content--BorderRadius: var(--gp-radius-md);
+}
+/* Clip the popover content to its border-radius. PF6 leaves
+ * `overflow: visible` so child fills (CalendarMonth, etc.) ignore
+ * the rounded corners and bleed into the square outer rectangle.
+ * The arrow is positioned outside __content via __arrow as a
+ * sibling, so this clip is safe. */
+.pf-v6-c-popover .pf-v6-c-popover__content {
+  overflow: hidden;
+}
+
+/*
+ * CalendarMonth chrome inside popovers — the header Month / Year
+ * fields are rendered borderless by PF6, which makes them invisible
+ * against the elevated popover surface. Add a 1px border one shade
+ * stronger than the popover bg so the inputs read as distinct form
+ * controls; mirror the colour on the divider line under the day-of-
+ * week row so the calendar header reads as a defined band.
+ *
+ * `--gp-color-border` equals the popover bg in this palette
+ * (gray-200 / gray-700), so we use gray-300 (light) / gray-600
+ * (dark) — direction-aware by toggling the value under the
+ * `.pf-v6-theme-dark` scope. Lives here rather than in the brand
+ * tokens because there's no dedicated "elevated-surface stroke"
+ * token in the palette yet.
+ */
+.pf-v6-c-popover {
+  --gp-popover-stroke: #cdbfa3;
+}
+:root:where(.pf-v6-theme-dark) .pf-v6-c-popover {
+  --gp-popover-stroke: #5a5147;
+}
+/*
+ * Month + Year controls inside the popover-hosted CalendarMonth header
+ * use different PF6 primitives — Month is a MenuToggle, Year is a
+ * FormControl <input>. Each ships its own intrinsic height (menu-
+ * toggle defaults taller than form-control), so without a pin the
+ * two controls render at 42px vs 40px and the header looks uneven.
+ * Lock both to the same field height so they sit on a shared
+ * baseline as if rendered by a single DS Input primitive.
+ */
+.pf-v6-c-popover .pf-v6-c-calendar-month__header-month .pf-v6-c-menu-toggle {
+  border: 1px solid var(--gp-popover-stroke);
+  --pf-v6-c-menu-toggle--MinHeight: 2.25rem;
+  block-size: 2.25rem;
+}
+.pf-v6-c-popover .pf-v6-c-calendar-month__header-year .pf-v6-c-form-control {
+  --pf-v6-c-form-control--MinHeight: 2.25rem;
+  block-size: 2.25rem;
+  /* Years are always 4 digits — reserve enough width via the
+     `--gp-min-digits` recipe so the value doesn't truncate when the
+     internal stepper claims its column. */
+  --gp-min-digits: 4;
+}
+.pf-v6-c-popover .pf-v6-c-calendar-month__header-year .pf-v6-c-form-control > input {
+  flex: 0 0 auto;
+  inline-size: calc(var(--gp-min-digits, 4) * 1.25rem);
+  min-inline-size: 0;
+}
+/*
+ * Internal stepper layout for the Year input — PF6 ships CalendarMonth
+ * year as a bare `<TextInput type="number">`. To match the lib's
+ * Internal-stepper recipe (NumberInput.stories), portal the
+ * gp-stepper-stack INTO the FormControl span — the equivalent of
+ * TextInputGroup's bordered frame — and make that span a flex row so
+ * the input takes the lead, the stack stretches alongside it, and
+ * focus + hover rings paint around BOTH pieces as one control.
+ *
+ * Hide the native browser spinner so only the lib-styled carets show.
+ */
+.pf-v6-c-popover .pf-v6-c-calendar-month__header-year .pf-v6-c-form-control {
+  display: inline-flex;
+  align-items: stretch;
+  /* Same clip trick as TextInputGroup recipe: clip the portaled
+     stepper's hover/active background to the form-control's rounded
+     corner so a tip doesn't paint past the curve. */
+  overflow: hidden;
+  border-radius: var(--pf-v6-c-form-control--BorderRadius);
+}
+.pf-v6-c-popover .pf-v6-c-calendar-month__header-year .pf-v6-c-form-control input[type="number"] {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.pf-v6-c-popover .pf-v6-c-calendar-month__header-year input[type="number"]::-webkit-inner-spin-button,
+.pf-v6-c-popover .pf-v6-c-calendar-month__header-year input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+/*
+ * Year input uses PF6's FormControl, which paints its visible border
+ * via a `::before` pseudo. A direct `border: 1px solid` would stack
+ * on top of that and visibly thicken the edge versus the Month menu-
+ * toggle. Pin the ::before pseudo's width to the same 1px we paint
+ * on Month so the two controls match exactly. Border color already
+ * inherits from the popover-scoped FormControl override above.
+ */
+.pf-v6-c-popover .pf-v6-c-calendar-month__header-year .pf-v6-c-form-control {
+  --pf-v6-c-form-control--before--BorderTopWidth: 1px;
+  --pf-v6-c-form-control--before--BorderInlineStartWidth: 1px;
+  --pf-v6-c-form-control--before--BorderInlineEndWidth: 1px;
+  --pf-v6-c-form-control--before--BorderBottomWidth: 1px;
+}
+.pf-v6-c-popover .pf-v6-c-calendar-month__days {
+  border-block-end: 1px solid var(--gp-popover-stroke);
+}
+/*
+ * Tighten the CalendarMonth chrome inside popovers. PF6's defaults
+ * (lg padding all around + md gap after the DoW row) leave a wide
+ * dead-space band above the Month/Year header and a chunky gap
+ * before the dates grid. Drop block-start to sm and the DoW row
+ * gap to xs so the calendar uses the popover's footprint
+ * efficiently. Inline padding stays at sm so the cells still have
+ * breathing room from the edges.
+ */
+.pf-v6-c-popover .pf-v6-c-calendar-month {
+  --pf-v6-c-calendar-month--PaddingBlockStart: var(--pf-t--global--spacer--xs);
+  --pf-v6-c-calendar-month--PaddingBlockEnd: 0;
+  --pf-v6-c-calendar-month--PaddingInlineStart: var(--pf-t--global--spacer--xs);
+  --pf-v6-c-calendar-month--PaddingInlineEnd: var(--pf-t--global--spacer--xs);
+  --pf-v6-c-calendar-month__day--PaddingBlockEnd: var(--pf-t--global--spacer--xs);
+  --pf-v6-c-calendar-month__dates-row--first-child__dates-cell--PaddingBlockStart: var(--pf-t--global--spacer--xs);
+}
+/* Tabs inside a popover use the popover stroke for their underline
+ * (and active-tab indicator) so the chrome reads against the
+ * elevated surface — PF6's default `--pf-t--global--border--color--
+ * default` blends into the cream/dark popover bg. */
+.pf-v6-c-popover .pf-v6-c-tabs {
+  --pf-v6-c-tabs--before--BorderColor: var(--gp-popover-stroke);
+}
+
+/*
+ * Form controls + control-variant buttons inside popovers re-paint
+ * their borders against the elevated surface, otherwise they blend
+ * in. PF6 renders the FormControl border via a `::before` pseudo
+ * (default state) + `::after` (hover/focus), and exposes both as
+ * tokens we can override here.
+ *
+ * Buttons in `pf-m-control` (NumberInput's ± buttons, the
+ * InputGroup trigger button, etc.) get the same stroke for their
+ * border and a subtle bg / hover-bg derived from the brand surfaces.
+ */
+.pf-v6-c-popover .pf-v6-c-form-control {
+  --pf-v6-c-form-control--before--BorderColor: var(--gp-popover-stroke);
+  --pf-v6-c-form-control--hover--after--BorderColor: var(--gp-color-text-subtle);
+}
+.pf-v6-c-popover .pf-v6-c-button.pf-m-control {
+  --pf-v6-c-button--m-control--BackgroundColor: var(--gp-color-bg-secondary-default);
+  --pf-v6-c-button--m-control--BorderColor: var(--gp-popover-stroke);
+  --pf-v6-c-button--m-control--hover--BackgroundColor: var(--gp-color-bg-secondary-hover);
+  --pf-v6-c-button--m-control--hover--BorderColor: var(--gp-color-text-subtle);
+}
+/*
+ * Pin the calendar to a 6-row min-height so the popover stays the
+ * same size as the user cycles months. Without this, months that fit
+ * in 5 weeks (Feb in a non-leap year starting Sunday, etc.) collapse
+ * the body by ~42px and PF6's Popper bumps the whole popup up to
+ * recompute placement. Scrolling inside a calendar is awful, so we
+ * reserve the worst-case row count statically.
+ *
+ * The min-height lives on `.pf-v6-c-calendar-month` (the parent
+ * <div>) rather than the inner <table>, so the table renders its
+ * rows at their natural height and the leftover space falls BELOW
+ * the table as a blank strip. Setting min-height on the <table> /
+ * <tbody> instead would distribute the extra height across rows,
+ * stretching 5-row months to fill (~48px / row vs 41px) and visibly
+ * shifting the day-number spacing — which the user explicitly
+ * doesn't want.
+ *
+ * 6 rows × 2.625rem cell height = 15.75rem dates body, plus ~6rem
+ * header + DoW + chrome, so 22rem covers the worst case.
+ */
+.pf-v6-c-popover .pf-v6-c-calendar-month {
+  min-block-size: 18rem;
+}
+.pf-v6-c-popover .pf-v6-c-calendar-month {
+  --pf-v6-c-calendar-month--BackgroundColor: var(--gp-color-bg-secondary-hover);
 }
 
 /*
@@ -355,35 +665,40 @@
   align-self: stretch;          /* override TextInputGroupUtilities align-items: center */
   display: flex;
   flex-direction: column;
-  /* Aspect-ratio 1:2 (width:height) on the stack — when the input is
-     40px tall the stack auto-derives a 20px width. Children fill the
-     stack and split its height 50/50 → automatic squares. Doing the
-     geometry on the stack avoids fighting flex's content-floor rules
-     on the buttons themselves. */
-  aspect-ratio: 1 / 2;
-  /* Inset from the wrapper border so hover/click chrome doesn't paint
-     over it. align-self: stretch would otherwise touch top/bottom; the
-     trailing margin pulls us off the right border. The leading margin
-     gives a small visual gap between the input text and the stepper
-     column so the two pieces don't read as one merged element. */
-  margin-block: 3px;
-  margin-inline: var(--gp-space-xs, 4px) 3px;
+  /* DON'T stretch children to the stack's content-width — that would
+     defeat aspect-ratio on the buttons (cross-axis stretch overrides
+     it). align-items: flex-end keeps the cross-axis auto-sized so
+     each button can derive its width from its own block-size +
+     aspect-ratio: 1. */
+  align-items: flex-end;
+  /* Pull off the wrapper's trailing edge by exactly the input's own
+     corner radius — that's the amount of curve the button background
+     would otherwise paint over. Sourcing from
+     `--pf-v6-c-form-control--BorderRadius` means the whole stepper
+     auto-rescales: change the field radius and the inset (plus the
+     button radius below) tracks it. */
+  margin: 0 var(--pf-v6-c-form-control--BorderRadius) 0 0;
 }
 
 .gp-stepper-btn {
-  flex: 1 1 0;                  /* each button = 50% of stack height */
+  /* Block-size = 50% of stack height (definite, not stretched, so
+     aspect-ratio resolves below). flex: 0 0 50% gives a concrete
+     basis without growing/shrinking. */
+  flex: 0 0 50%;
   min-block-size: 0;            /* break flex auto-min */
-  inline-size: 100%;            /* fill the stack's (aspect-derived) width */
+  /* Square: inline-size derived from the now-definite block-size via
+     aspect-ratio: 1. Stack's `align-items: flex-end` keeps cross-axis
+     auto, so this isn't stretched. */
+  aspect-ratio: 1;
+  inline-size: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0;
   border: 0;
-  /* Use a slightly tighter radius than --radius-sm — at the small size
-     of these buttons (~20px) the standard sm radius reads heavier than
-     intended. tiny (4px) keeps the corners crisp and prevents any
-     visual overflow against the wrapper's own rounded corners. */
-  border-radius: var(--gp-radius-tiny);
+  /* Match the input field's corner radius so the carets sit visually
+     contained inside the same rounded frame as the input. */
+  border-radius: var(--pf-v6-c-form-control--BorderRadius);
   background: transparent;
   color: var(--gp-color-text-subtle);
   cursor: pointer;

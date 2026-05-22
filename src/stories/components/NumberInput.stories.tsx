@@ -21,6 +21,7 @@ export const Overview: StoryObj = {
     const [n, setN] = useState<number | "">(3);
     const [withUnit, setWithUnit] = useState<number | "">(50);
     const [year, setYear] = useState<number>(2026);
+    const [minDigits, setMinDigits] = useState<number>(4);
 
     const clamp = (v: number, min = 0, max = 99) =>
       Math.max(min, Math.min(max, v));
@@ -167,10 +168,57 @@ export const Overview: StoryObj = {
                     Resize the canvas across the md breakpoint to see
                     them swap. */}
                 <div
-                  className="pf-v6-u-display-none pf-v6-u-display-inline-block-on-md"
-                  style={{ width: 180 }}
+                  className="pf-v6-u-display-none pf-v6-u-display-inline-flex-on-md"
+                  style={{
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    gap: 20,
+                  }}
                 >
-                  <TextInputGroup>
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      flexDirection: "column",
+                      gap: 6,
+                      fontSize: 13,
+                    }}
+                  >
+                    {/* Plain span — wrapping the NumberInput in a
+                        <label> caused clicks on its +/- buttons to
+                        bubble to the label and re-fire on the inner
+                        input, which the NumberInput then routed back
+                        to BOTH steppers. */}
+                    <span>Min digits (drives input min-width):</span>
+                    <NumberInput
+                      value={minDigits}
+                      min={1}
+                      max={12}
+                      onMinus={() => setMinDigits((d) => Math.max(1, d - 1))}
+                      onPlus={() => setMinDigits((d) => Math.min(12, d + 1))}
+                      onChange={(e) => {
+                        const v = Number((e.target as HTMLInputElement).value);
+                        if (!Number.isNaN(v)) setMinDigits(Math.max(1, Math.min(12, v)));
+                      }}
+                      inputAriaLabel="Min digits"
+                      minusBtnAriaLabel="Decrease min digits"
+                      plusBtnAriaLabel="Increase min digits"
+                      widthChars={4}
+                    />
+                  </div>
+                  {/* `--gp-min-digits` is a CSS custom property the
+                      lib reads to set the input's min-inline-size so
+                      `<minDigits>` characters never truncate. 4 fits
+                      a 4-digit year cleanly; bump to 10 for a phone
+                      number, etc. The wrapper's `inline-size:
+                      max-content` lets it shrink-wrap around the
+                      input's min-width — so when minDigits changes
+                      the whole demo auto-resizes. */}
+                  <TextInputGroup
+                    style={{
+                      ["--gp-min-digits" as string]: minDigits,
+                      inlineSize: "max-content",
+                    }}
+                  >
                     <TextInputGroupMain
                       type="text"
                       inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
