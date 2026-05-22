@@ -8,7 +8,7 @@ import {
   Popover,
 } from "@patternfly/react-core";
 import { OutlinedQuestionCircleIcon, ServerIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -249,6 +249,13 @@ export const Overview: StoryObj = {
           </ul>
         </Card>
       </Section>
+      <ThemingPointer
+        dials={[
+          ["--gp-text-default", "Description text."],
+          ["--gp-text-subtle", "Term label colour."],
+          ["--gp-gap-form", "Vertical rhythm between term/desc pairs."],
+        ]}
+      />
     </FoundationPage>
   ),
 };

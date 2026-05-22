@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Hint, HintBody, HintFooter, HintTitle } from "@patternfly/react-core";
 import { Hyperlink } from "../../components/Hyperlink.js";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -205,6 +205,14 @@ export const Overview: StoryObj = {
           </ul>
         </Card>
       </Section>
+      <ThemingPointer
+        dials={[
+          ["--gp-surface-card", "Hint background (PF Hint is a Card variant under the hood)."],
+          ["--gp-pad-card", "Inside padding."],
+          ["--gp-radius-card", "Corner radius."],
+          ["--gp-border-subtle", "Edge border."],
+        ]}
+      />
     </FoundationPage>
   ),
 };

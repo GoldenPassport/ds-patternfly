@@ -10,7 +10,7 @@ import {
   type MenuToggleElement,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -311,6 +311,14 @@ export const Overview: StoryObj = {
             </ul>
           </Card>
         </Section>
+        <ThemingPointer
+          dials={[
+            ["--gp-radius-control", "Toggle + popup corner radius."],
+            ["--gp-surface-elevated", "Open menu background."],
+            ["--gp-shadow-popover", "Menu drop shadow."],
+            ["--gp-focus-ring", "Focus-ring colour."],
+          ]}
+        />
       </FoundationPage>
     );
   },

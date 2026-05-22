@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionToggle,
 } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -228,6 +228,14 @@ const toggle = (id) => setExpanded(id === expanded ? "" : id);
             </ul>
           </Card>
         </Section>
+        <ThemingPointer
+          dials={[
+            ["--gp-border-subtle", "Row dividers between items."],
+            ["--gp-text-default", "Toggle text colour."],
+            ["--gp-motion-duration", "Expand / collapse duration."],
+            ["--gp-focus-ring", "Toggle focus-ring colour."],
+          ]}
+        />
       </FoundationPage>
     );
   },

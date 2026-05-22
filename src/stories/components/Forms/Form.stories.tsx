@@ -11,7 +11,7 @@ import {
   HelperTextItem,
   TextInput,
 } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../../_storyKit.js";
 import { DemoFrame, PropsTable } from "../../_demoKit.js";
 
 const meta: Meta = {
@@ -128,6 +128,15 @@ export const Overview: StoryObj = {
             </ul>
           </Card>
         </Section>
+
+        <ThemingPointer
+          dials={[
+            ["--gp-control-pad-y", "Vertical padding inside every form-control / menu-toggle / control button. Default 0.375rem → 36px field."],
+            ["--gp-radius-control", "Corner radius on inputs, selects, buttons."],
+            ["--gp-gap-form", "Vertical rhythm between FormGroup children."],
+            ["--gp-gap-label", "Gap between a label and its input."],
+          ]}
+        />
 
       </FoundationPage>
     );

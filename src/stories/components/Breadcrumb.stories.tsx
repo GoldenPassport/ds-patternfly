@@ -4,7 +4,7 @@ import {
   BreadcrumbHeading,
   BreadcrumbItem,
 } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -164,6 +164,13 @@ export const Overview: StoryObj = {
           </ul>
         </Card>
       </Section>
+      <ThemingPointer
+        dials={[
+          ["--gp-anchor-color", "Crumb link colour."],
+          ["--gp-text-subtle", "Separator + current-page text colour."],
+          ["--gp-font-body", "Font family."],
+        ]}
+      />
     </FoundationPage>
   ),
 };

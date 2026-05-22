@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@patternfly/react-core";
-import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card as DocCard, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -296,6 +296,14 @@ export const Overview: StoryObj = {
             </ul>
           </DocCard>
         </Section>
+        <ThemingPointer
+          dials={[
+            ["--gp-pad-card", "Inside padding (block + inline)."],
+            ["--gp-radius-card", "Corner radius (also covers Modal box)."],
+            ["--gp-shadow-card", "Resting elevation."],
+            ["--gp-surface-card", "Background colour (light + dark pair)."],
+          ]}
+        />
       </FoundationPage>
     );
   },

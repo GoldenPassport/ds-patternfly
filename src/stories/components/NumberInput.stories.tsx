@@ -7,7 +7,7 @@ import {
   TextInputGroupUtilities,
 } from "@patternfly/react-core";
 import { CaretDownIcon, CaretUpIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -370,6 +370,15 @@ import { CaretUpIcon, CaretDownIcon } from "@patternfly/react-icons";
             </ul>
           </Card>
         </Section>
+
+        <ThemingPointer
+          dials={[
+            ["--gp-control-pad-y", "Drives input + stepper-button height as a single square unit."],
+            ["--gp-radius-control", "Corner radius on the input + stepper buttons."],
+            ["--gp-border-default", "Resting border colour."],
+            ["--gp-focus-ring", "Focus-ring colour."],
+          ]}
+        />
 
       </FoundationPage>
     );

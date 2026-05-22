@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Hyperlink } from "../../components/Hyperlink.js";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -189,6 +189,14 @@ export const Overview: StoryObj = {
           </ul>
         </Card>
       </Section>
+      <ThemingPointer
+        dials={[
+          ["--gp-anchor-color", "Link text colour (light + dark pair)."],
+          ["--gp-anchor-decoration-hover", "Hover decoration (default underline)."],
+          ["--gp-font-body", "Font family — inherits from the body font dial."],
+          ["--gp-focus-ring", "Focus-ring colour."],
+        ]}
+      />
     </FoundationPage>
   ),
 };

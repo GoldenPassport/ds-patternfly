@@ -13,7 +13,7 @@ import {
   DrawerPanelDescription,
   Title,
 } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -381,6 +381,15 @@ const panel = (
             </ul>
           </Card>
         </Section>
+        <ThemingPointer
+          dials={[
+            ["--gp-surface-card", "Drawer panel background."],
+            ["--gp-pad-card", "Panel padding."],
+            ["--gp-border-subtle", "Edge divider colour."],
+            ["--gp-shadow-popover", "Edge shadow when the drawer overlays content."],
+            ["--gp-motion-duration", "Slide-in/out duration."],
+          ]}
+        />
       </FoundationPage>
     );
   },

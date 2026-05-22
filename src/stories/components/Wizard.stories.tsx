@@ -14,7 +14,7 @@ import {
   WizardStep,
   type WizardStepType,
 } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -345,6 +345,14 @@ export const Overview: StoryObj = {
             </ul>
           </Card>
         </Section>
+        <ThemingPointer
+          dials={[
+            ["--gp-surface-card", "Step-nav rail background."],
+            ["--gp-control-pad-y", "Footer button heights."],
+            ["--gp-radius-control", "Footer button radii."],
+            ["--gp-border-subtle", "Step-nav dividers."],
+          ]}
+        />
       </FoundationPage>
     );
   },

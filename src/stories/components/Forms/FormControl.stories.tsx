@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FoundationPage, Section, Card, CodeBlock } from "../../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../../_storyKit.js";
 import { DemoFrame } from "../../_demoKit.js";
 
 const meta: Meta = {
@@ -103,6 +103,16 @@ export const Overview: StoryObj = {
           </ul>
         </Card>
       </Section>
+
+      <ThemingPointer
+        dials={[
+          ["--gp-control-pad-y", "Vertical padding — drives field height (36px default)."],
+          ["--gp-control-pad-x", "Horizontal padding."],
+          ["--gp-radius-control", "Corner radius shared by every form-control variant."],
+          ["--gp-border-default", "Resting border colour."],
+          ["--gp-border-width", "Border thickness."],
+        ]}
+      />
 
     </FoundationPage>
   ),

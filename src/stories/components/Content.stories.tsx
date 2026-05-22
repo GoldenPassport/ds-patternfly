@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Content } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -116,6 +116,16 @@ export const Overview: StoryObj = {
           </ul>
         </Card>
       </Section>
+      <ThemingPointer
+        dials={[
+          ["--gp-font-body", "Body / paragraph font family."],
+          ["--gp-font-heading", "Heading font family."],
+          ["--gp-weight-heading", "Heading weight."],
+          ["--gp-anchor-color", "Inline link colour."],
+          ["--gp-gap-paragraph", "Margin-block on paragraphs and lists."],
+          ["--gp-gap-heading", "Margin-block on headings."],
+        ]}
+      />
     </FoundationPage>
   ),
 };

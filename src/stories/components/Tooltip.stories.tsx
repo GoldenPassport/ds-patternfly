@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button, Tooltip } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -163,6 +163,14 @@ export const Overview: StoryObj = {
           </ul>
         </Card>
       </Section>
+      <ThemingPointer
+        dials={[
+          ["--gp-surface-elevated", "Tooltip body + arrow background."],
+          ["--gp-radius-popover", "Corner radius."],
+          ["--gp-shadow-popover", "Drop shadow."],
+          ["--gp-motion-duration", "Show/hide fade duration."],
+        ]}
+      />
     </FoundationPage>
   ),
 };

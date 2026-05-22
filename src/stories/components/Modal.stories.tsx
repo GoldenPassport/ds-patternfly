@@ -14,7 +14,7 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import { BellIcon, HelpIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -731,6 +731,15 @@ export const Overview: StoryObj = {
             </ul>
           </Card>
         </Section>
+        <ThemingPointer
+          intro="Modal padding, radius, and elevation are brand-root dials. (PF6 names this component Modal; the rendered element carries role='dialog'.)"
+          dials={[
+            ["--gp-pad-modal", "Body padding (block + inline)."],
+            ["--gp-radius-card", "Corner radius (shared with Card)."],
+            ["--gp-shadow-modal", "Drop shadow."],
+            ["--gp-surface-elevated", "Modal box background."],
+          ]}
+        />
       </FoundationPage>
     );
   },

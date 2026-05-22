@@ -16,7 +16,7 @@ import {
   PlusIcon,
   SyncIcon,
 } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -304,6 +304,14 @@ export const Overview: StoryObj = {
             </ul>
           </Card>
         </Section>
+        <ThemingPointer
+          dials={[
+            ["--gp-control-pad-y", "Drives the embedded form-control + button heights."],
+            ["--gp-radius-control", "Embedded control radii."],
+            ["--gp-border-subtle", "Group dividers."],
+            ["--gp-surface-card", "Toolbar background when used inside a Card."],
+          ]}
+        />
       </FoundationPage>
     );
   },

@@ -13,7 +13,7 @@ import {
   DataListToggle,
 } from "@patternfly/react-core";
 import { CodeBranchIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -279,6 +279,13 @@ export const Overview: StoryObj = {
             </ul>
           </Card>
         </Section>
+        <ThemingPointer
+          dials={[
+            ["--gp-border-subtle", "Row dividers."],
+            ["--gp-surface-card", "Row background."],
+            ["--gp-focus-ring", "Selectable-row focus-ring."],
+          ]}
+        />
       </FoundationPage>
     );
   },

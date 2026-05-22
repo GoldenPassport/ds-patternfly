@@ -123,11 +123,16 @@ const listStyle = {
 } as const;
 
 const itemStyle = {
+  // Row padding stays on the spacer scale (list rows aren't form
+  // controls — `--gp-control-pad-*` would feel cramped here).
   padding: "var(--gp-space-md, 16px)",
-  borderBlockEnd: "1px solid var(--gp-color-border, #d2d2d2)",
+  // Subtle row divider — `--gp-border-subtle` is the canonical use,
+  // with `--gp-border-width` driving thickness.
+  borderBlockEnd:
+    "var(--gp-border-width, 1px) solid var(--gp-border-subtle, var(--gp-color-border, #d2d2d2))",
   cursor: "pointer",
-  color: "var(--gp-color-text, inherit)",
-  fontFamily: "var(--gp-font-family, inherit)",
+  color: "var(--gp-text-default, var(--gp-color-text, inherit))",
+  fontFamily: "var(--gp-font-body, var(--gp-font-family, inherit))",
 } as const;
 
 const selectedItemStyle = {

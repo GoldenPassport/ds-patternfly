@@ -17,7 +17,7 @@ import {
   ToolbarContent,
   Pagination,
 } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -469,6 +469,14 @@ export const Overview: StoryObj = {
             </ul>
           </Card>
         </Section>
+        <ThemingPointer
+          dials={[
+            ["--gp-border-subtle", "Row + header dividers."],
+            ["--gp-text-default", "Body cell text."],
+            ["--gp-text-subtle", "Header cell text."],
+            ["--gp-focus-ring", "Sort + selectable-row focus-ring."],
+          ]}
+        />
       </FoundationPage>
     );
   },

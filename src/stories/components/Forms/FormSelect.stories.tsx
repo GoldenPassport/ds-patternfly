@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FormGroup, FormSelect, FormSelectOption } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../../_storyKit.js";
 import { DemoFrame, PropsTable } from "../../_demoKit.js";
 
 const meta: Meta = {
@@ -109,6 +109,15 @@ export const Overview: StoryObj = {
             </ul>
           </Card>
         </Section>
+
+        <ThemingPointer
+          dials={[
+            ["--gp-control-pad-y", "Vertical padding — drives field height."],
+            ["--gp-radius-control", "Corner radius."],
+            ["--gp-border-default", "Resting border colour."],
+            ["--gp-focus-ring", "Focus-ring colour."],
+          ]}
+        />
 
       </FoundationPage>
     );

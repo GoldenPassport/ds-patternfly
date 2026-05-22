@@ -7,7 +7,7 @@ import {
   ProgressSize,
   ProgressVariant,
 } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -187,6 +187,13 @@ export const Overview: StoryObj = {
           </ul>
         </Card>
       </Section>
+      <ThemingPointer
+        dials={[
+          ["--gp-radius-pill", "Bar corner radius."],
+          ["--gp-motion-duration", "Bar-fill animation duration."],
+          ["--gp-text-subtle", "Helper text colour."],
+        ]}
+      />
     </FoundationPage>
   ),
 };

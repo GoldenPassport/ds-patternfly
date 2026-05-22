@@ -5,7 +5,7 @@ import {
   MenuToggleCheckbox,
 } from "@patternfly/react-core";
 import { CogIcon, EllipsisVIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -197,6 +197,13 @@ export const Overview: StoryObj = {
           </ul>
         </Card>
       </Section>
+      <ThemingPointer
+        dials={[
+          ["--gp-control-pad-y", "Vertical padding — drives toggle height in lockstep with form-control."],
+          ["--gp-radius-control", "Corner radius."],
+          ["--gp-focus-ring", "Focus-ring colour."],
+        ]}
+      />
     </FoundationPage>
   ),
 };

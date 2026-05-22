@@ -13,7 +13,7 @@ import {
   ExclamationTriangleIcon,
   SearchIcon,
 } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -265,6 +265,14 @@ export const Overview: StoryObj = {
           </ul>
         </Card>
       </Section>
+      <ThemingPointer
+        dials={[
+          ["--gp-text-default", "Title colour."],
+          ["--gp-text-subtle", "Body copy colour."],
+          ["--gp-pad-section", "Vertical padding around the centred block."],
+          ["--gp-gap-paragraph", "Gap between title, body, and actions."],
+        ]}
+      />
     </FoundationPage>
   ),
 };

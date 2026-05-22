@@ -60,6 +60,61 @@ export function FoundationPage({
   );
 }
 
+/**
+ * Theming pointer — drop-in `<Section>` for component stories that lists
+ * the brand-root dials this component reads from and links back to
+ * `Foundations / Theming / Overview`. Avoids copy-pasting the same
+ * section across ~25 component pages.
+ *
+ *   <ThemingPointer dials={[
+ *     ["--gp-control-pad-y", "Vertical padding (drives field height)."],
+ *     ["--gp-radius-control", "Corner radius for the input + buttons."],
+ *   ]} />
+ *
+ * Renders inside a `<FoundationPage>` like any other Section.
+ */
+export function ThemingPointer({
+  dials,
+  intro,
+}: {
+  dials: ReadonlyArray<readonly [string, string]>;
+  intro?: ReactNode;
+}) {
+  return (
+    <Section
+      title="Theming"
+      description={
+        intro ??
+        "Sizing, colour, radius, and elevation on this component are driven by brand-root dials. Edit a dial once, every instance updates."
+      }
+    >
+      <Card>
+        <ul
+          style={{
+            margin: 0,
+            padding: "16px 24px 16px 40px",
+            color: "var(--gp-color-text-regular)",
+            lineHeight: 1.8,
+          }}
+        >
+          {dials.map(([name, purpose]) => (
+            <li key={name}>
+              <strong>
+                <code>{name}</code>
+              </strong>{" "}
+              — {purpose}
+            </li>
+          ))}
+          <li>
+            See <strong>Foundations / Theming / Overview</strong> for the full
+            35-dial catalogue and copy-paste root block.
+          </li>
+        </ul>
+      </Card>
+    </Section>
+  );
+}
+
 export function Section({
   title,
   description,

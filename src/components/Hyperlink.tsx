@@ -43,7 +43,11 @@ export interface HyperlinkProps
 }
 
 const baseStyle: CSSProperties = {
-  color: "var(--gp-color-text-link, #0066cc)",
+  // Anchor colour now flows from the theme dial (`--gp-anchor-color`),
+  // which the brand root sets to the focus-ring colour by default.
+  // Fallback chain keeps any consumer that still defines the legacy
+  // `--gp-color-text-link` working.
+  color: "var(--gp-anchor-color, var(--gp-color-text-link, #0066cc))",
   // Underline at rest — link colour alone may not provide 3:1 contrast
   // against surrounding text in every brand. WCAG 1.4.1 / axe's
   // link-in-text-block rule passes either via colour contrast OR a
@@ -51,7 +55,7 @@ const baseStyle: CSSProperties = {
   // every brand without per-brand contrast tuning.
   textDecoration: "underline",
   textUnderlineOffset: "0.2em",
-  fontFamily: "var(--gp-font-family, inherit)",
+  fontFamily: "var(--gp-font-body, var(--gp-font-family, inherit))",
 };
 
 const underlineStyle: CSSProperties = {

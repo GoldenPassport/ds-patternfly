@@ -15,6 +15,148 @@
   --gp-transition-fast: 120ms ease-out;
 }
 
+/* =========================================================================
+ *  THEME DIALS — Phase 1
+ *  35 high-level brand tokens that cascade into PatternFly v6 internals.
+ *  Edit values here to rebrand the whole DS; per-component CSS should
+ *  never need touching for routine tweaks.
+ *
+ *  Layout: 11 categories. Each dial documents what it controls and which
+ *  PF6 token(s) it maps to. Dark-mode overrides at the bottom only flip
+ *  the 8 colour dials in category A — sizing / spacing / radius are
+ *  scheme-agnostic.
+ *
+ *  See Foundations / Theming / Overview for the visual story.
+ * ========================================================================= */
+
+[data-brand] {
+  /* --- A. Surface & colour (8) ------------------------------------------ */
+  --gp-surface-page:        var(--gp-color-bg-primary-default);
+  --gp-surface-card:        var(--gp-color-bg-secondary-default);
+  --gp-surface-elevated:    var(--gp-color-bg-secondary-hover);
+  --gp-text-default:        var(--gp-color-text-regular);
+  --gp-text-subtle:         var(--gp-color-text-subtle);
+  --gp-border-default:      var(--gp-color-border);
+  --gp-border-subtle:       var(--gp-color-border-subtle);
+  --gp-focus-ring:          var(--gp-color-focus-ring);
+
+  /* --- B. Control sizing (3) -------------------------------------------- */
+  /* `--gp-control-pad-y` is THE single dial that controls form-control,
+     menu-toggle, and pf-m-control button height (PF6 v6 has no MinHeight
+     token — height is computed from padding × line-height). 0.375rem here
+     yields 0.375 * 2 + 1rem * 1.5 = 2.25rem (36px) field height. */
+  --gp-control-pad-y:         0.375rem;
+  --gp-control-pad-x:         var(--pf-t--global--spacer--md, 1rem);
+  --gp-control-pad-y-compact: 0.25rem;
+
+  /* --- C. Container padding (4) ----------------------------------------- */
+  --gp-pad-card:    var(--pf-t--global--spacer--lg, 1.5rem);
+  --gp-pad-popover: var(--pf-t--global--spacer--md, 1rem);
+  --gp-pad-modal:   var(--pf-t--global--spacer--xl, 2rem);
+  --gp-pad-section: var(--pf-t--global--spacer--xl, 2rem);
+
+  /* --- D. Spacing rhythm (4) -------------------------------------------- */
+  --gp-gap-form:      var(--pf-t--global--spacer--md, 1rem);
+  --gp-gap-label:     var(--pf-t--global--spacer--xs, 0.25rem);
+  --gp-gap-heading:   var(--pf-t--global--spacer--md, 1rem);
+  --gp-gap-paragraph: var(--pf-t--global--spacer--sm, 0.5rem);
+
+  /* --- E. Corner radius (4) — reuses radius scale ---------------------- */
+  --gp-radius-control: var(--gp-radius-sm, 6px);
+  --gp-radius-card:    var(--gp-radius-md, 12px);
+  --gp-radius-popover: var(--gp-radius-md, 12px);
+  --gp-radius-pill:    var(--gp-radius-full, 999px);
+
+  /* --- F. Shadow + border (4) ------------------------------------------ */
+  --gp-shadow-card:    var(--pf-t--global--box-shadow--sm, 0 1px 2px rgba(0,0,0,0.08));
+  --gp-shadow-popover: 0 12px 32px rgba(0, 0, 0, 0.18), 0 4px 8px rgba(0, 0, 0, 0.10);
+  --gp-shadow-modal:   0 24px 48px rgba(0, 0, 0, 0.24), 0 8px 16px rgba(0, 0, 0, 0.14);
+  --gp-border-width:   1px;
+
+  /* --- G. Typography (4) ----------------------------------------------- */
+  --gp-type-scale:     1;                     /* multiplier — 1.067 = roomy */
+  --gp-font-body:      var(--pf-t--global--font--family--body, system-ui, sans-serif);
+  --gp-font-heading:   var(--gp-font-body);
+  --gp-weight-heading: 600;
+
+  /* --- H. Links (2) ---------------------------------------------------- */
+  --gp-anchor-color:              var(--gp-color-focus-ring);
+  --gp-anchor-decoration-hover:   underline;
+
+  /* --- I. Motion (1) --------------------------------------------------- */
+  --gp-motion-duration: 150ms;
+
+  /* --- J. State (1) ---------------------------------------------------- */
+  --gp-opacity-disabled: 0.45;
+
+  /* --- K. Z-index (1) -------------------------------------------------- */
+  --gp-z-overlay: 1300;
+}
+
+/*
+ * Dark-mode flips — only the 8 colour dials change. Everything else
+ * (sizing, spacing, radius, shadow, typography, motion) is scheme-
+ * agnostic and inherits from the light block above.
+ */
+:where(.pf-v6-theme-dark) {
+  --gp-surface-page:     var(--gp-color-bg-primary-default);
+  --gp-surface-card:     var(--gp-color-bg-secondary-default);
+  --gp-surface-elevated: var(--gp-color-bg-secondary-hover);
+  --gp-text-default:     var(--gp-color-text-regular);
+  --gp-text-subtle:      var(--gp-color-text-subtle);
+  --gp-border-default:   var(--gp-color-border);
+  --gp-border-subtle:    var(--gp-color-border-subtle);
+  --gp-focus-ring:       var(--gp-color-focus-ring);
+}
+
+/*
+ * Dial → PF6 wiring. Each dial above sets one or more PF6 internal
+ * tokens here so the cascade reaches every relevant component.
+ */
+[data-brand] {
+  /* B. Control sizing → form-control, menu-toggle, m-control Button */
+  --pf-t--global--spacer--control--vertical--default: var(--gp-control-pad-y);
+  --pf-t--global--spacer--control--vertical--compact: var(--gp-control-pad-y-compact);
+  --pf-t--global--spacer--control--horizontal--default: var(--gp-control-pad-x);
+
+  /* C. Container padding */
+  --pf-v6-c-card--PaddingBlock:    var(--gp-pad-card);
+  --pf-v6-c-card--PaddingInline:   var(--gp-pad-card);
+  --pf-v6-c-popover__content--PaddingBlock:  var(--gp-pad-popover);
+  --pf-v6-c-popover__content--PaddingInline: var(--gp-pad-popover);
+  --pf-v6-c-modal-box--PaddingBlock:  var(--gp-pad-modal);
+  --pf-v6-c-modal-box--PaddingInline: var(--gp-pad-modal);
+
+  /* E. Corner radius */
+  --pf-v6-c-form-control--BorderRadius:  var(--gp-radius-control);
+  --pf-v6-c-button--BorderRadius:        var(--gp-radius-control);
+  --pf-v6-c-menu-toggle--BorderRadius:   var(--gp-radius-control);
+  --pf-v6-c-card--BorderRadius:          var(--gp-radius-card);
+  --pf-v6-c-popover__content--BorderRadius: var(--gp-radius-popover);
+  --pf-v6-c-modal-box--BorderRadius:     var(--gp-radius-card);
+
+  /* F. Shadow + border */
+  --pf-v6-c-card--BoxShadow:    var(--gp-shadow-card);
+  --pf-v6-c-popover--BoxShadow: var(--gp-shadow-popover);
+  --pf-v6-c-modal-box--BoxShadow: var(--gp-shadow-modal);
+  --pf-t--global--border--width--default: var(--gp-border-width);
+
+  /* G. Typography */
+  --pf-t--global--font--family--body:    var(--gp-font-body);
+  --pf-t--global--font--family--heading: var(--gp-font-heading);
+  --pf-t--global--font--weight--heading: var(--gp-weight-heading);
+
+  /* I. Motion */
+  --pf-t--global--motion--duration--default: var(--gp-motion-duration);
+
+  /* J. State */
+  --pf-v6-global--disabled-color--100: var(--gp-opacity-disabled);
+}
+
+/* =========================================================================
+ *  END THEME DIALS
+ * ========================================================================= */
+
 /*
  * Universal focus-ring colour + width.
  *
@@ -241,15 +383,10 @@
 .pf-v6-c-text-input-group:has(.gp-stepper-stack) {
   /* Clip the square buttons to the wrapper's rounded corner so a
      hover/active background tip doesn't stick out past the curve.
-     Matching border-radius on the wrapper is required for overflow
-     clipping to follow the rounded shape. */
+     Field height flows from `--gp-control-pad-y` at the brand root,
+     same as bare TextInput / TextInputGroup. */
   overflow: hidden;
   border-radius: var(--pf-v6-c-form-control--BorderRadius);
-  /* Match the DS form-control field height (2.25rem = 36px) so the
-     internal-stepper recipe sits on the same baseline as the rest of
-     the form fields on the page. */
-  block-size: 2.25rem;
-  min-block-size: 2.25rem;
 }
 /*
  * NumberInput field + stepper sizing — pin the input column to the
@@ -261,29 +398,24 @@
  * trio looks unbalanced. Force inline-size = block-size = 2.25rem so
  * each button is a clean square matching the input height.
  */
-.pf-v6-c-number-input .pf-v6-c-form-control {
-  --pf-v6-c-form-control--MinHeight: 2.25rem;
-  block-size: 2.25rem;
-}
-/* PF6 also sets a baked-in min-block-size on the inner `<input>`
- * itself (not via the FormControl token), so the token override
- * above only shrinks the wrapper — the input stays 40px and overflows.
- * Pin the input directly to match. */
-.pf-v6-c-number-input .pf-v6-c-form-control > input,
-.pf-v6-c-text-input-group:has(.gp-stepper-stack) input {
-  block-size: 2.25rem;
-  min-block-size: 2.25rem;
-}
+/* Field height now flows from `--gp-control-pad-y` at the brand root
+ * (Phase 1 theme dials). Nothing to pin per-component for the input
+ * itself — PF6 derives form-control / menu-toggle / m-control Button
+ * height from the same vertical-spacer chain. We still need to force
+ * the stepper buttons to a square shape since PF6's content-based
+ * width makes them slightly wider than tall. */
 .pf-v6-c-number-input .pf-v6-c-button.pf-m-control {
-  block-size: 2.25rem;
-  inline-size: 2.25rem;
+  /* Force a square — width tracks the control height set by the
+     `--gp-control-pad-y` dial. No hardcoded pixels. */
+  aspect-ratio: 1;
+  inline-size: auto;
   min-inline-size: 0;
   padding: 0;                   /* drop PF6's inline padding so the
                                    icon centers in the square, not
                                    inside an off-center content box */
   display: inline-flex;
-  align-items: center;          /* vertical center icon */
-  justify-content: center;      /* horizontal center icon */
+  align-items: center;
+  justify-content: center;
 }
 /* Inner focus-ring mode — pull the outline inside the now-square
  * button. Without an explicit inset, the default outline at 2px
@@ -363,23 +495,17 @@
  * Popover-chromed and bare-popup popups read identically.
  */
 .pf-v6-c-popover {
-  --pf-v6-c-popover--BoxShadow:
-    0 12px 32px rgba(0, 0, 0, 0.18),
-    0 4px 8px rgba(0, 0, 0, 0.10);
+  /* Body shadow now flows from `--gp-shadow-popover` at the brand root
+     (Phase 1 theme dials). Arrow shadow still needs an explicit copy
+     because PF6 doesn't share a single token between body + arrow —
+     keep the arrow stack in sync with the dial so the two read as one
+     continuous surface. */
+  --pf-v6-c-popover__arrow--BoxShadow: var(--gp-shadow-popover);
   /* Subtle border to define the edge against light surfaces — purely
      defensive for cases where the shadow alone isn't enough (high-bg
      pages, low-contrast monitors, prefers-reduced-motion). */
   --pf-v6-c-popover--BorderColor: var(--gp-color-border-subtle);
   --pf-v6-c-popover--BorderWidth: 1px;
-  /* Pin content radius to brand md so the popover's rounded corners
-     match the rest of the elevated-surface system. */
-  --pf-v6-c-popover__content--BorderRadius: var(--gp-radius-md);
-  /* Arrow box-shadow needs to match the popover body's shadow scale or
-     the arrow looks like a separately-floating tile. Use the same
-     shadow stack so arrow + body read as one continuous surface. */
-  --pf-v6-c-popover__arrow--BoxShadow:
-    0 12px 32px rgba(0, 0, 0, 0.18),
-    0 4px 8px rgba(0, 0, 0, 0.10);
 }
 
 /*
@@ -406,7 +532,7 @@
 .pf-v6-c-popover.pf-v6-c-popover {
   --pf-v6-c-popover__content--BackgroundColor: var(--gp-color-bg-secondary-hover);
   --pf-v6-c-popover__arrow--BackgroundColor: var(--gp-color-bg-secondary-hover);
-  --pf-v6-c-popover__content--BorderRadius: var(--gp-radius-md);
+  /* Border-radius now flows from `--gp-radius-popover` dial. */
 }
 /* Clip the popover content to its border-radius. PF6 leaves
  * `overflow: visible` so child fills (CalendarMonth, etc.) ignore
@@ -449,13 +575,10 @@
  */
 .pf-v6-c-popover .pf-v6-c-calendar-month__header-month .pf-v6-c-menu-toggle {
   border: 1px solid var(--gp-popover-stroke);
-  --pf-v6-c-menu-toggle--MinHeight: 2.25rem;
-  block-size: 2.25rem;
 }
 .pf-v6-c-popover .pf-v6-c-calendar-month__header-year .pf-v6-c-form-control {
-  --pf-v6-c-form-control--MinHeight: 2.25rem;
-  block-size: 2.25rem;
-  /* Years are always 4 digits — reserve enough width via the
+  /* Field height now flows from `--gp-control-pad-y` at the brand root.
+     Years are always 4 digits — reserve enough width via the
      `--gp-min-digits` recipe so the value doesn't truncate when the
      internal stepper claims its column. */
   --gp-min-digits: 4;

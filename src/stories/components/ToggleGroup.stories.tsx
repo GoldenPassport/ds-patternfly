@@ -6,7 +6,7 @@ import {
   ListIcon,
   TableIcon,
 } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -221,6 +221,14 @@ export const Overview: StoryObj = {
             </ul>
           </Card>
         </Section>
+        <ThemingPointer
+          dials={[
+            ["--gp-control-pad-y", "Item vertical padding."],
+            ["--gp-control-pad-x", "Item horizontal padding."],
+            ["--gp-radius-control", "Outer group + end-item corner radius."],
+            ["--gp-border-default", "Group border colour."],
+          ]}
+        />
       </FoundationPage>
     );
   },

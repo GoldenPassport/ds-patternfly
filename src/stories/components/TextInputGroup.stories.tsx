@@ -17,7 +17,7 @@ import {
   SearchIcon,
   TimesIcon,
 } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -668,6 +668,15 @@ const state = validate(host);
             </ul>
           </Card>
         </Section>
+
+        <ThemingPointer
+          dials={[
+            ["--gp-control-pad-y", "Drives wrapper height (matches form-control)."],
+            ["--gp-radius-control", "Wrapper corner radius."],
+            ["--gp-border-default", "Resting border colour."],
+            ["--gp-focus-ring", "Focus-ring colour."],
+          ]}
+        />
 
       </FoundationPage>
     );

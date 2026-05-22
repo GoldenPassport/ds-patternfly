@@ -15,7 +15,7 @@ import {
   InfoCircleIcon,
   UsersIcon,
 } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -423,6 +423,15 @@ const ref1 = useRef<HTMLElement>(null);
             </ul>
           </Card>
         </Section>
+        <ThemingPointer
+          dials={[
+            ["--gp-border-default", "Tab strip underline colour."],
+            ["--gp-text-default", "Active tab text."],
+            ["--gp-text-subtle", "Inactive tab text."],
+            ["--gp-focus-ring", "Tab focus-ring colour."],
+            ["--gp-motion-duration", "Tab-switch transition."],
+          ]}
+        />
       </FoundationPage>
     );
   },

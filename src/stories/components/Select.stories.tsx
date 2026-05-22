@@ -9,7 +9,7 @@ import {
   SelectList,
   SelectOption,
 } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -302,6 +302,15 @@ const filtered = options.filter(o => o.children.toLowerCase().includes(inputValu
             </ul>
           </Card>
         </Section>
+        <ThemingPointer
+          dials={[
+            ["--gp-control-pad-y", "Trigger vertical padding — drives trigger height."],
+            ["--gp-radius-control", "Trigger + popup corner radius."],
+            ["--gp-surface-elevated", "Open menu background."],
+            ["--gp-shadow-popover", "Menu drop shadow."],
+            ["--gp-focus-ring", "Focus-ring colour."],
+          ]}
+        />
       </FoundationPage>
     );
   },

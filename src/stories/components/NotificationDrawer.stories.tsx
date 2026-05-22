@@ -14,7 +14,7 @@ import {
   NotificationDrawerListItemHeader,
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
@@ -287,6 +287,13 @@ const unread = useUnreadCount();
           </ul>
         </Card>
       </Section>
+      <ThemingPointer
+        dials={[
+          ["--gp-surface-card", "Drawer panel background."],
+          ["--gp-border-subtle", "Row dividers between notifications."],
+          ["--gp-pad-card", "Header + footer padding."],
+        ]}
+      />
     </FoundationPage>
   ),
 };
