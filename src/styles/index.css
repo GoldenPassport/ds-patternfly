@@ -404,24 +404,75 @@
  * height from the same vertical-spacer chain. We still need to force
  * the stepper buttons to a square shape since PF6's content-based
  * width makes them slightly wider than tall. */
-.pf-v6-c-number-input .pf-v6-c-button.pf-m-control {
-  /* Force a square — width tracks the control height set by the
-     `--gp-control-pad-y` dial. No hardcoded pixels. */
+/*
+ * Icon-only `pf-m-control` Buttons — force a square that tracks the
+ * field height set by the `--gp-control-pad-y` dial. PF6 ships these
+ * with content-based width (≈ 2.5rem for a 1em icon + padding) which
+ * makes the input + button trio look unbalanced. Scoped to icon-only
+ * uses so label-bearing control buttons (rare) keep their width.
+ *
+ * Selector covers NumberInput (± steppers), InputGroup (DatePicker's
+ * calendar trigger, password-reveal, etc.), and any standalone
+ * `pf-m-control` icon-button outside those wrappers via the
+ * `:has(svg):not(:has(.pf-v6-c-button__text))` pattern.
+ */
+/*
+ * Icon-only `pf-m-control` Buttons inside NumberInput / InputGroup —
+ * force a square that tracks the field height set by the
+ * `--gp-control-pad-y` dial. The `:has(.pf-v6-c-button__icon)` filter
+ * (PF6 only renders that span for icon-bearing buttons) restricts the
+ * override to the icon-only trigger case so label-bearing control
+ * buttons keep their natural width.
+ *
+ * Use a duplicated-class selector (`.pf-v6-c-button.pf-v6-c-button`)
+ * on the InputGroup branch to push specificity to (0,5,0) — higher
+ * than PF6's own `.pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control`
+ * which would otherwise override `border-radius` / `padding`.
+ */
+.pf-v6-c-number-input .pf-v6-c-button.pf-m-control,
+.pf-v6-c-input-group .pf-v6-c-button.pf-v6-c-button.pf-m-control:has(.pf-v6-c-button__icon) {
   aspect-ratio: 1;
   inline-size: auto;
   min-inline-size: 0;
-  padding: 0;                   /* drop PF6's inline padding so the
-                                   icon centers in the square, not
-                                   inside an off-center content box */
+  padding: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  /* Full rounded corners on all four sides — PF6 InputGroup zeroes
+     the inside-edge radius to fuse adjacent items into one frame; we
+     want a standalone icon-button look. */
+  border-radius: var(--gp-radius-control, var(--pf-v6-c-form-control--BorderRadius));
+}
+.pf-v6-c-number-input .pf-v6-c-button.pf-v6-c-button.pf-m-control,
+.pf-v6-c-input-group .pf-v6-c-button.pf-v6-c-button.pf-m-control:has(.pf-v6-c-button__icon) {
+  /* Standalone icon-button look — match the Secondary icon-only
+     variant in the Button story Border-radius row (cream bg, brand-
+     coloured 1px outline, brand-coloured glyph). PF6 ships
+     `pf-m-control` as a flat grey-fill chip — that bleeds against
+     cream pages, hence the explicit override here. Use the brand
+     text token (visible against every brand) instead of the subtle
+     border-default token which is intentionally near-invisible. */
+  background: transparent !important;
+  border: var(--gp-border-width, 1px) solid
+    var(--gp-color-text-regular, var(--pf-t--global--border--color--default)) !important;
+  color: var(--gp-color-text-regular, currentColor) !important;
+}
+.pf-v6-c-input-group .pf-v6-c-button.pf-v6-c-button.pf-m-control:has(.pf-v6-c-button__icon) {
+  /* Detach from the input — InputGroup-specific trim so the icon
+     trigger sits as a standalone control next to the field. */
+  margin-inline-start: var(--pf-t--global--spacer--xs, 4px);
+}
+.pf-v6-c-number-input .pf-v6-c-button.pf-v6-c-button.pf-m-control:hover,
+.pf-v6-c-input-group .pf-v6-c-button.pf-v6-c-button.pf-m-control:has(.pf-v6-c-button__icon):hover {
+  background: var(--gp-color-bg-secondary-default, var(--gp-surface-card)) !important;
+  border-color: var(--gp-color-text-regular, currentColor) !important;
 }
 /* Inner focus-ring mode — pull the outline inside the now-square
  * button. Without an explicit inset, the default outline at 2px
  * positive offset paints outside the 36×36 box and looks like the
  * outer-ring mode. */
-.gp-focus-ring-inner .pf-v6-c-number-input .pf-v6-c-button.pf-m-control:focus-visible {
+.gp-focus-ring-inner .pf-v6-c-number-input .pf-v6-c-button.pf-m-control:focus-visible,
+.gp-focus-ring-inner .pf-v6-c-input-group .pf-v6-c-button.pf-m-control:focus-visible {
   outline-offset: -4px;
 }
 
@@ -542,6 +593,16 @@
 .pf-v6-c-popover .pf-v6-c-popover__content {
   overflow: hidden;
 }
+/*
+ * DatePicker (and any other PF6 caller that passes `hasNoPadding`)
+ * strips the popover content padding via the `pf-m-no-padding`
+ * modifier — leaving the inline CalendarMonth flush against the
+ * popover edges. Restore the brand-root `--gp-pad-popover` dial when
+ * the popover hosts a calendar so the chrome reads consistently.
+ */
+.pf-v6-c-popover.pf-m-no-padding:has(.pf-v6-c-calendar-month) .pf-v6-c-popover__content {
+  padding: var(--gp-pad-popover);
+}
 
 /*
  * CalendarMonth chrome inside popovers — the header Month / Year
@@ -575,6 +636,196 @@
  */
 .pf-v6-c-popover .pf-v6-c-calendar-month__header-month .pf-v6-c-menu-toggle {
   border: 1px solid var(--gp-popover-stroke);
+  block-size: 2.25rem;
+  min-block-size: 2.25rem;
+}
+/*
+ * Bottom-anchored sheet — mobile alternative to a Popover for date /
+ * option pickers. Built on a native `<dialog>` so it picks up the
+ * browser's built-in focus trap, Escape-to-close, and inert background
+ * behaviour without a third-party library. The cosmetic chrome
+ * (rounded top corners, slide-up entrance, brand surface tokens)
+ * lives here.
+ */
+.gp-bottom-sheet {
+  position: fixed;
+  inset: auto 0 0 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: var(--gp-surface-elevated, var(--gp-color-bg-secondary-hover));
+  color: var(--gp-text-default, var(--gp-color-text-regular));
+  inline-size: 100vw;
+  max-inline-size: 100vw;
+  /* Cap height to 90vh so the sheet never covers the screen, but
+     `block-size: auto` lets the dialog grow to fit its content (the
+     full 6-row calendar). Without this auto-grow, browsers default
+     <dialog> to a much smaller intrinsic height. */
+  block-size: auto;
+  max-block-size: 90vh;
+  border-radius: var(--gp-radius-card, 12px) var(--gp-radius-card, 12px) 0 0;
+  box-shadow: var(--gp-shadow-modal);
+}
+.gp-bottom-sheet::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+/*
+ * Close button — top-right corner of the bottom sheet. Positioned
+ * absolute so it overlays the sheet body's padding instead of pushing
+ * the calendar down. 44×44 touch target (WCAG 2.5.5).
+ *
+ * Use both `right` and `inset-inline-end` to override any PF6 Button
+ * directional defaults; doubled-class specificity prevents
+ * `.pf-v6-c-button` from winning the cascade.
+ */
+.gp-bottom-sheet__close.gp-bottom-sheet__close {
+  position: absolute;
+  top: var(--pf-t--global--spacer--sm, 0.5rem);
+  right: var(--pf-t--global--spacer--sm, 0.5rem);
+  inset-block-start: var(--pf-t--global--spacer--sm, 0.5rem);
+  inset-inline-end: var(--pf-t--global--spacer--sm, 0.5rem);
+  inset-inline-start: auto;
+  inset-block-end: auto;
+  left: auto;
+  bottom: auto;
+  z-index: 2;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  min-inline-size: 0;
+  padding: 0;
+  /* Pill shape — circular hit area. */
+  border-radius: var(--gp-radius-pill, 999px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.gp-bottom-sheet__body {
+  /* Padding — uniform on the inline + bottom edges (matches the
+     popover content's `--gp-pad-popover` dial so the calendar reads
+     with identical chrome across hosts). Block-start is bumped to
+     4rem to reserve room above the calendar for the absolute close
+     button: close height (2.75rem) + its top offset (sm = 0.5rem) +
+     a small breathing gap. Use individual properties instead of the
+     `padding` shorthand so the block-start override sticks. */
+  padding-block-start: 4rem;
+  padding-block-end: var(--gp-pad-popover, 1rem);
+  padding-inline: var(--gp-pad-popover, 1rem);
+  box-sizing: border-box;
+  /* Vertically scroll if the calendar (or any other future content)
+     exceeds the max-block-size cap. */
+  overflow-y: auto;
+  max-block-size: 90vh;
+  /* Centre the calendar inside the sheet body. The calendar's
+     container-query sizing scales day cells to whatever width it
+     ends up at, so we let it stretch to the full sheet content
+     width (capped via .gp-bottom-sheet__body .gp-libcal). */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+/* Cap the inline-size of the embedded calendar when it lives inside a
+ * bottom sheet — keeps it from sprawling on wide tablets while still
+ * filling narrow phones. Override the .gp-libcal default 22rem max so
+ * the sheet's full width is used on phones. */
+.gp-bottom-sheet__body .gp-libcal {
+  max-inline-size: 100%;
+  inline-size: 100%;
+  margin-inline: auto;
+}
+
+/*
+ * Lib calendar (DatePicker) — when the custom `.gp-libcal` header
+ * wraps PF6 CalendarMonth, hide PF6's stock header (Month MenuToggle +
+ * Year input + prev/next month buttons). The lib header above renders
+ * the single "<Month Year>" Button + its own nav arrows. Without
+ * hiding, both headers would stack and the popover would double-up.
+ */
+.gp-libcal .pf-v6-c-calendar-month__header {
+  display: none;
+}
+/*
+ * Container-query-driven day cell sizing — the cell width is derived
+ * from the calendar wrapper's actual width (`cqi` = 1% of the
+ * container's inline-size), NOT the viewport. This handles every host
+ * uniformly: a wide popover on desktop, a narrow popover on tablet, a
+ * full-width bottom sheet on mobile, and Storybook's iframe-scaled
+ * previews where viewport units lie.
+ *
+ * Formula: container width minus the calendar's own inline padding
+ * (~8px each side via the xs spacer override), divided across 7 cells,
+ * clamped to a sane touch range (36px–48px).
+ */
+.gp-libcal {
+  container-type: inline-size;
+}
+/*
+ * PF6 CalendarMonth's <table> sizes to its natural content width
+ * (cells × 4ch), which leaves it left-aligned when the wrapper is
+ * wider (e.g. inside a bottom sheet). Force the table to fill the
+ * container so cells distribute evenly across the available width —
+ * and centre the calendar wrapper itself in case any ancestor leaves
+ * room. `table-layout: fixed` makes the 7-column grid honour the
+ * forced width regardless of per-cell content size.
+ */
+.gp-libcal .pf-v6-c-calendar-month {
+  margin-inline: auto;
+  /* Drop the popover-scoped calendar background tint — the lib
+     calendar sits on the popover / bottom-sheet's own elevated
+     surface, no second tint needed. */
+  --pf-v6-c-calendar-month--BackgroundColor: transparent;
+  background: transparent;
+  /* Drop the outer padding around the table — the host
+     (popover/sheet) already provides the chrome gutter, so this
+     inner padding was stacking on top and squashing the dates grid. */
+  --pf-v6-c-calendar-month--PaddingBlockStart: 0;
+  --pf-v6-c-calendar-month--PaddingBlockEnd: 0;
+  --pf-v6-c-calendar-month--PaddingInlineStart: 0;
+  --pf-v6-c-calendar-month--PaddingInlineEnd: 0;
+}
+.gp-libcal .pf-v6-c-calendar-month__calendar {
+  inline-size: 100%;
+  table-layout: fixed;
+  background: transparent;
+}
+/* Day cells: centre the button inside each table cell, fixed
+ * touch-friendly square. The button width no longer needs the
+ * container-query calc — the table cell handles horizontal
+ * distribution. */
+.gp-libcal .pf-v6-c-calendar-month__dates-cell {
+  text-align: center;
+}
+.gp-libcal .pf-v6-c-calendar-month__date {
+  inline-size: clamp(2rem, calc((100cqi - 1rem) / 7 - 0.25rem), 2.5rem);
+  block-size: clamp(1.75rem, calc((100cqi - 1rem) / 7 - 0.25rem), 2.5rem);
+  line-height: clamp(1.75rem, calc((100cqi - 1rem) / 7 - 0.25rem), 2.5rem);
+  margin-inline: auto;
+}
+.pf-v6-c-popover .pf-v6-c-calendar-month__header-year .pf-v6-c-form-control {
+  block-size: 2.25rem;
+  min-block-size: 2.25rem;
+}
+/*
+ * Calendar prev / next nav chevrons — PF6 renders these as plain
+ * Buttons (icon-only). Pin them to the same icon-button shape used
+ * elsewhere in the lib (Button story Border-radius preset, InputGroup
+ * control trigger): brand control radius, square aspect, zero inline
+ * padding so the chevron sits dead-centre in the field-height square.
+ */
+.pf-v6-c-popover .pf-v6-c-calendar-month__header-nav-control .pf-v6-c-button {
+  border-radius: var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius));
+  aspect-ratio: 1;
+  padding-inline: 0;
+  /* Explicit resting state — PF6 plain buttons sometimes paint a
+     hover-tinted background that reads as "active". Clear the bg at
+     rest so prev/next buttons look identical regardless of focus
+     history, and define hover/active explicitly. */
+  background: transparent;
+}
+.pf-v6-c-popover .pf-v6-c-calendar-month__header-nav-control .pf-v6-c-button:hover {
+  background: var(--gp-surface-card, var(--gp-color-bg-secondary-default));
+}
+.pf-v6-c-popover .pf-v6-c-calendar-month__header-nav-control .pf-v6-c-button:active {
+  background: var(--gp-color-bg-secondary-hover);
 }
 .pf-v6-c-popover .pf-v6-c-calendar-month__header-year .pf-v6-c-form-control {
   /* Field height now flows from `--gp-control-pad-y` at the brand root.
@@ -634,8 +885,49 @@
   --pf-v6-c-form-control--before--BorderInlineEndWidth: 1px;
   --pf-v6-c-form-control--before--BorderBottomWidth: 1px;
 }
-.pf-v6-c-popover .pf-v6-c-calendar-month__days {
-  border-block-end: 1px solid var(--gp-popover-stroke);
+/*
+ * Divider line under the calendar header (arrows + Month/Year label).
+ * Moved up here from below the day-of-week row so the chrome reads
+ * as "[header] | [body]" rather than burying the divider inside the
+ * body. Also suppress PF6's default DoW underline (it now lives
+ * above). Scoped to `.gp-libcal` only so standalone CalendarMonth
+ * usages keep their original layout.
+ */
+.gp-libcal > header {
+  border-block-end: var(--gp-border-width, 1px) solid
+    var(--gp-border-subtle, var(--gp-popover-stroke));
+}
+/*
+ * When the calendar hasn't received a real user selection yet (and the
+ * displayed month doesn't contain a parent-passed date), CalendarPanel
+ * still passes the first-of-month date to PF6 CalendarMonth so it
+ * renders — PF6 then marks day 1 as `pf-m-selected`. Strip the
+ * selected styling under `.gp-libcal--no-selection` so the user only
+ * sees today's `pf-m-current` highlight (when viewing today's month)
+ * and no "selected" circle on any other day.
+ */
+.gp-libcal--no-selection .pf-v6-c-calendar-month__dates-cell.pf-m-selected {
+  --pf-v6-c-calendar-month__dates-cell--m-selected__date--BackgroundColor: transparent;
+  --pf-v6-c-calendar-month__dates-cell--m-selected__date--hover--BackgroundColor: var(--gp-color-bg-secondary-default, transparent);
+  --pf-v6-c-calendar-month__dates-cell--m-selected__date--focus--BackgroundColor: var(--gp-color-bg-secondary-default, transparent);
+  /* Concrete colour — `inherit` in a custom property means "inherit
+     the parent's value of *this* custom property", which still
+     resolves to PF6's on-brand white. Use the brand text token
+     directly so day-1 (and any other phantom-selected cell) reads as
+     a regular weekday number. */
+  --pf-v6-c-calendar-month__dates-cell--m-selected__date--Color: var(--gp-color-text-regular, currentColor);
+}
+.gp-libcal .pf-v6-c-calendar-month__days {
+  --pf-v6-c-calendar-month__days--BorderBlockEndWidth: 0;
+  border-block-end: 0;
+}
+/* Day-of-week letters (S M T W T F S) — bold so the column headers
+ * read distinctly from the date numbers below. Doubled-class selector
+ * pushes specificity to (0,2,0) so this beats PF6's own
+ * `.pf-v6-c-calendar-month { ... }` block regardless of CSS load
+ * order. */
+.pf-v6-c-calendar-month.pf-v6-c-calendar-month {
+  --pf-v6-c-calendar-month__day--FontWeight: var(--pf-t--global--font--weight--heading, 600);
 }
 /*
  * Tighten the CalendarMonth chrome inside popovers. PF6's defaults
@@ -703,8 +995,16 @@
  * 6 rows × 2.625rem cell height = 15.75rem dates body, plus ~6rem
  * header + DoW + chrome, so 22rem covers the worst case.
  */
+/*
+ * Calendar dates body min-height — guarantees 6 rows fit regardless of
+ * host (popover or bottom sheet). 6 × 2.5rem max cell = 15rem grid +
+ * ~2rem DoW header + ~1rem trailing room → 18rem floor. Scope to
+ * `.gp-libcal` so it covers both shells without depending on the
+ * popover ancestor selector.
+ */
+.gp-libcal .pf-v6-c-calendar-month,
 .pf-v6-c-popover .pf-v6-c-calendar-month {
-  min-block-size: 18rem;
+  min-block-size: 20rem;
 }
 .pf-v6-c-popover .pf-v6-c-calendar-month {
   --pf-v6-c-calendar-month--BackgroundColor: var(--gp-color-bg-secondary-hover);

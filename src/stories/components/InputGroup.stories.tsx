@@ -14,7 +14,7 @@ import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_st
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
-  title: "Components/Input group",
+  title: "Components/Forms/Input group",
   parameters: { layout: "padded" },
 };
 export default meta;

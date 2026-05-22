@@ -15,7 +15,7 @@ const parseDDMMYYYY = (s: string): Date => {
 };
 
 const meta: Meta = {
-  title: "Components/Date and time/DateTimePicker",
+  title: "Components/Forms/Date and time/DateTimePicker",
   parameters: { layout: "padded" },
 };
 export default meta;

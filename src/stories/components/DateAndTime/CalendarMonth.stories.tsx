@@ -11,7 +11,7 @@ import { FoundationPage, Section, Card, CodeBlock } from "../../_storyKit.js";
 import { DemoFrame, PropsTable } from "../../_demoKit.js";
 
 const meta: Meta = {
-  title: "Components/Date and time/CalendarMonth",
+  title: "Components/Forms/Date and time/CalendarMonth",
   parameters: { layout: "padded" },
 };
 export default meta;

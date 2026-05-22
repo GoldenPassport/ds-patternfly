@@ -1,17 +1,28 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
+  Button,
+  ButtonVariant,
+  InputGroup,
+  InputGroupItem,
+  InputGroupText,
   NumberInput,
+  TextInput,
   TextInputGroup,
   TextInputGroupMain,
   TextInputGroupUtilities,
 } from "@patternfly/react-core";
-import { CaretDownIcon, CaretUpIcon } from "@patternfly/react-icons";
+import {
+  CaretDownIcon,
+  CaretUpIcon,
+  MinusIcon,
+  PlusIcon,
+} from "@patternfly/react-icons";
 import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
-  title: "Components/NumberInput",
+  title: "Components/Forms/NumberInput",
   parameters: { layout: "padded" },
 };
 export default meta;
@@ -38,64 +49,186 @@ export const Overview: StoryObj = {
           </>
         }
       >
-        <Section title="Basic">
+        <Section
+          title="Basic"
+          description="Built from primitives so the ± steppers use the lib's tertiary icon-button styling (matches the DatePicker calendar trigger + the Components/Button icon-only row) rather than PF6's stock grey-fill control chip."
+        >
           <Card>
             <div style={{ padding: 24, display: "grid", gap: 16 }}>
               <DemoFrame>
-                <NumberInput
-                  value={n}
-                  min={0}
-                  max={99}
-                  onChange={(e) => {
-                    const v = Number((e.target as HTMLInputElement).value);
-                    setN(Number.isNaN(v) ? "" : clamp(v));
-                  }}
-                  onMinus={() => setN(typeof n === "number" ? clamp(n - 1) : 0)}
-                  onPlus={() => setN(typeof n === "number" ? clamp(n + 1) : 1)}
-                  inputName="quantity"
-                  inputAriaLabel="Quantity"
-                  minusBtnAriaLabel="Decrease quantity"
-                  plusBtnAriaLabel="Increase quantity"
-                />
+                <InputGroup style={{ maxWidth: 180 }}>
+                  <InputGroupItem>
+                    <Button
+                      variant={ButtonVariant.tertiary}
+                      aria-label="Decrease quantity"
+                      icon={<MinusIcon />}
+                      isDisabled={typeof n === "number" && n <= 0}
+                      onClick={() =>
+                        setN(typeof n === "number" ? clamp(n - 1) : 0)
+                      }
+                      style={{
+                        borderRadius:
+                          "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+                        aspectRatio: "1",
+                        paddingInline: 0,
+                      }}
+                    />
+                  </InputGroupItem>
+                  <InputGroupItem isFill>
+                    <TextInput
+                      id="quantity"
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      value={n}
+                      onChange={(_e, value) => {
+                        if (value === "") {
+                          setN("");
+                          return;
+                        }
+                        const v = Number(value);
+                        if (!Number.isNaN(v)) setN(clamp(v));
+                      }}
+                      aria-label="Quantity"
+                      style={{ textAlign: "center" }}
+                    />
+                  </InputGroupItem>
+                  <InputGroupItem>
+                    <Button
+                      variant={ButtonVariant.tertiary}
+                      aria-label="Increase quantity"
+                      icon={<PlusIcon />}
+                      isDisabled={typeof n === "number" && n >= 99}
+                      onClick={() =>
+                        setN(typeof n === "number" ? clamp(n + 1) : 1)
+                      }
+                      style={{
+                        borderRadius:
+                          "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+                        aspectRatio: "1",
+                        paddingInline: 0,
+                      }}
+                    />
+                  </InputGroupItem>
+                </InputGroup>
               </DemoFrame>
-              <CodeBlock>{`<NumberInput
-  value={n}
-  min={0}
-  max={99}
-  onMinus={() => setN(n - 1)}
-  onPlus={() => setN(n + 1)}
-  onChange={(e) => setN(Number(e.target.value))}
-  inputAriaLabel="Quantity"
-  minusBtnAriaLabel="Decrease quantity"
-  plusBtnAriaLabel="Increase quantity"
-/>`}</CodeBlock>
+              <CodeBlock>{`// Lib-style ± stepper — Button (tertiary) + TextInput + Button
+// composed inside an InputGroup. The trigger Buttons pick up the
+// brand-dial control radius + the lib's icon-only outline styling.
+
+import {
+  Button, ButtonVariant, InputGroup, InputGroupItem, TextInput,
+} from "@patternfly/react-core";
+import { MinusIcon, PlusIcon } from "@patternfly/react-icons";
+
+<InputGroup>
+  <InputGroupItem>
+    <Button
+      variant={ButtonVariant.tertiary}
+      aria-label="Decrease quantity"
+      icon={<MinusIcon />}
+      isDisabled={value <= 0}
+      onClick={() => setValue(value - 1)}
+      style={{
+        borderRadius: "var(--gp-radius-control)",
+        aspectRatio: "1", paddingInline: 0,
+      }}
+    />
+  </InputGroupItem>
+  <InputGroupItem isFill>
+    {/* type="text" + inputMode="numeric" — hides the browser's
+       native ± spinner so only the lib ± Buttons drive the value. */}
+    <TextInput type="text" inputMode="numeric" pattern="[0-9]*"
+      value={value} onChange={(_, v) => setValue(Number(v))}
+      aria-label="Quantity" style={{ textAlign: "center" }} />
+  </InputGroupItem>
+  <InputGroupItem>
+    <Button variant={ButtonVariant.tertiary}
+      aria-label="Increase quantity" icon={<PlusIcon />}
+      isDisabled={value >= max}
+      onClick={() => setValue(value + 1)}
+      style={{
+        borderRadius: "var(--gp-radius-control)",
+        aspectRatio: "1", paddingInline: 0,
+      }}
+    />
+  </InputGroupItem>
+</InputGroup>`}</CodeBlock>
             </div>
           </Card>
         </Section>
 
-        <Section title="With unit">
+        <Section
+          title="With unit"
+          description="Same lib-style ± stepper as Basic, with an InputGroupText trailing the field to render the unit. Swap to a leading InputGroupText for prefixed units like '$'."
+        >
           <Card>
             <div style={{ padding: 24 }}>
               <DemoFrame>
-                <NumberInput
-                  value={withUnit}
-                  min={0}
-                  max={100}
-                  unit="%"
-                  unitPosition="after"
-                  inputAriaLabel="Threshold percent"
-                  minusBtnAriaLabel="Decrease threshold"
-                  plusBtnAriaLabel="Increase threshold"
-                  onChange={(e) =>
-                    setWithUnit(Number((e.target as HTMLInputElement).value) || 0)
-                  }
-                  onMinus={() =>
-                    setWithUnit(typeof withUnit === "number" ? clamp(withUnit - 1, 0, 100) : 0)
-                  }
-                  onPlus={() =>
-                    setWithUnit(typeof withUnit === "number" ? clamp(withUnit + 1, 0, 100) : 1)
-                  }
-                />
+                <InputGroup style={{ maxWidth: 220 }}>
+                  <InputGroupItem>
+                    <Button
+                      variant={ButtonVariant.tertiary}
+                      aria-label="Decrease threshold"
+                      icon={<MinusIcon />}
+                      isDisabled={typeof withUnit === "number" && withUnit <= 0}
+                      onClick={() =>
+                        setWithUnit(
+                          typeof withUnit === "number"
+                            ? clamp(withUnit - 1, 0, 100)
+                            : 0,
+                        )
+                      }
+                      style={{
+                        borderRadius:
+                          "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+                        aspectRatio: "1",
+                        paddingInline: 0,
+                      }}
+                    />
+                  </InputGroupItem>
+                  <InputGroupItem isFill>
+                    <TextInput
+                      id="threshold"
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      value={withUnit}
+                      onChange={(_e, value) => {
+                        if (value === "") {
+                          setWithUnit("");
+                          return;
+                        }
+                        const v = Number(value);
+                        if (!Number.isNaN(v)) setWithUnit(clamp(v, 0, 100));
+                      }}
+                      aria-label="Threshold percent"
+                      style={{ textAlign: "center" }}
+                    />
+                  </InputGroupItem>
+                  <InputGroupText>%</InputGroupText>
+                  <InputGroupItem>
+                    <Button
+                      variant={ButtonVariant.tertiary}
+                      aria-label="Increase threshold"
+                      icon={<PlusIcon />}
+                      isDisabled={typeof withUnit === "number" && withUnit >= 100}
+                      onClick={() =>
+                        setWithUnit(
+                          typeof withUnit === "number"
+                            ? clamp(withUnit + 1, 0, 100)
+                            : 1,
+                        )
+                      }
+                      style={{
+                        borderRadius:
+                          "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+                        aspectRatio: "1",
+                        paddingInline: 0,
+                      }}
+                    />
+                  </InputGroupItem>
+                </InputGroup>
               </DemoFrame>
             </div>
           </Card>
@@ -189,21 +322,55 @@ export const Overview: StoryObj = {
                         input, which the NumberInput then routed back
                         to BOTH steppers. */}
                     <span>Min digits (drives input min-width):</span>
-                    <NumberInput
-                      value={minDigits}
-                      min={1}
-                      max={12}
-                      onMinus={() => setMinDigits((d) => Math.max(1, d - 1))}
-                      onPlus={() => setMinDigits((d) => Math.min(12, d + 1))}
-                      onChange={(e) => {
-                        const v = Number((e.target as HTMLInputElement).value);
-                        if (!Number.isNaN(v)) setMinDigits(Math.max(1, Math.min(12, v)));
-                      }}
-                      inputAriaLabel="Min digits"
-                      minusBtnAriaLabel="Decrease min digits"
-                      plusBtnAriaLabel="Increase min digits"
-                      widthChars={4}
-                    />
+                    <InputGroup style={{ inlineSize: "max-content" }}>
+                      <InputGroupItem>
+                        <Button
+                          variant={ButtonVariant.tertiary}
+                          aria-label="Decrease min digits"
+                          icon={<MinusIcon />}
+                          isDisabled={minDigits <= 1}
+                          onClick={() => setMinDigits((d) => Math.max(1, d - 1))}
+                          style={{
+                            borderRadius:
+                              "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+                            aspectRatio: "1",
+                            paddingInline: 0,
+                          }}
+                        />
+                      </InputGroupItem>
+                      <InputGroupItem>
+                        <TextInput
+                          id="min-digits"
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          value={minDigits}
+                          onChange={(_e, value) => {
+                            if (value === "") return;
+                            const v = Number(value);
+                            if (!Number.isNaN(v))
+                              setMinDigits(Math.max(1, Math.min(12, v)));
+                          }}
+                          aria-label="Min digits"
+                          style={{ inlineSize: "5rem", textAlign: "center" }}
+                        />
+                      </InputGroupItem>
+                      <InputGroupItem>
+                        <Button
+                          variant={ButtonVariant.tertiary}
+                          aria-label="Increase min digits"
+                          icon={<PlusIcon />}
+                          isDisabled={minDigits >= 12}
+                          onClick={() => setMinDigits((d) => Math.min(12, d + 1))}
+                          style={{
+                            borderRadius:
+                              "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+                            aspectRatio: "1",
+                            paddingInline: 0,
+                          }}
+                        />
+                      </InputGroupItem>
+                    </InputGroup>
                   </div>
                   {/* `--gp-min-digits` is a CSS custom property the
                       lib reads to set the input's min-inline-size so
@@ -253,26 +420,60 @@ export const Overview: StoryObj = {
                     </TextInputGroupUtilities>
                   </TextInputGroup>
                 </div>
-                {/* Touch / mobile fallback — standard NumberInput with
-                    full-size flanking steppers. */}
+                {/* Touch / mobile fallback — same lib-style ± Buttons +
+                    TextInput InputGroup as the Basic section, swapped in
+                    below the md breakpoint where finger-sized hit areas
+                    matter more than column compactness. */}
                 <div
                   className="pf-v6-u-display-block pf-v6-u-display-none-on-md"
                   style={{ display: "inline-block" }}
                 >
-                  <NumberInput
-                    value={year}
-                    onChange={(e) =>
-                      setYear(
-                        Number((e.target as HTMLInputElement).value) || year,
-                      )
-                    }
-                    onMinus={() => setYear((y) => y - 1)}
-                    onPlus={() => setYear((y) => y + 1)}
-                    inputAriaLabel="Year"
-                    minusBtnAriaLabel="Decrease year"
-                    plusBtnAriaLabel="Increase year"
-                    widthChars={6}
-                  />
+                  <InputGroup style={{ inlineSize: "max-content" }}>
+                    <InputGroupItem>
+                      <Button
+                        variant={ButtonVariant.tertiary}
+                        aria-label="Decrease year"
+                        icon={<MinusIcon />}
+                        onClick={() => setYear((y) => y - 1)}
+                        style={{
+                          borderRadius:
+                            "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+                          aspectRatio: "1",
+                          paddingInline: 0,
+                        }}
+                      />
+                    </InputGroupItem>
+                    <InputGroupItem>
+                      <TextInput
+                        id="year-mobile"
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        value={year}
+                        onChange={(_e, value) => {
+                          if (value === "") return;
+                          const v = Number(value);
+                          if (!Number.isNaN(v)) setYear(v);
+                        }}
+                        aria-label="Year"
+                        style={{ inlineSize: "5rem", textAlign: "center" }}
+                      />
+                    </InputGroupItem>
+                    <InputGroupItem>
+                      <Button
+                        variant={ButtonVariant.tertiary}
+                        aria-label="Increase year"
+                        icon={<PlusIcon />}
+                        onClick={() => setYear((y) => y + 1)}
+                        style={{
+                          borderRadius:
+                            "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+                          aspectRatio: "1",
+                          paddingInline: 0,
+                        }}
+                      />
+                    </InputGroupItem>
+                  </InputGroup>
                 </div>
               </DemoFrame>
               <CodeBlock>{`// Render both variants and let CSS swap by viewport. Internal

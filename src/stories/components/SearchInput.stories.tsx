@@ -5,7 +5,7 @@ import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_st
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
-  title: "Components/SearchInput",
+  title: "Components/Forms/SearchInput",
   parameters: { layout: "padded" },
 };
 export default meta;

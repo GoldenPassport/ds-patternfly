@@ -23,7 +23,7 @@ import { FoundationPage, Section, Card, CodeBlock } from "../../_storyKit.js";
 import { DemoFrame, PropsTable } from "../../_demoKit.js";
 
 const meta: Meta = {
-  title: "Components/Date and time/Future Picker",
+  title: "Components/Forms/Date and time/Future Picker",
   parameters: { layout: "padded" },
 };
 export default meta;

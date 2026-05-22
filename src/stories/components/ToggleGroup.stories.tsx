@@ -10,7 +10,7 @@ import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_st
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
-  title: "Components/ToggleGroup",
+  title: "Components/Forms/ToggleGroup",
   parameters: { layout: "padded" },
 };
 export default meta;

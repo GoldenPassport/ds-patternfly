@@ -16,7 +16,7 @@ import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_st
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
-  title: "Components/Inline edit",
+  title: "Components/Forms/Inline edit",
   parameters: { layout: "padded" },
 };
 export default meta;

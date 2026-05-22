@@ -26,15 +26,16 @@ const VARIANTS = ["primary", "secondary", "tertiary", "danger", "warning", "link
  * (the value applies to text + icon-only buttons alike).
  */
 const RADIUS_PRESETS = {
-  square: { label: "Square (0)", value: "0" },
-  rounded: { label: "Rounded (default)", value: "var(--pf-v6-c-button--BorderRadius)" },
-  strong: { label: "Strong (12px)", value: "12px" },
-  pill: { label: "Pill (999px)", value: "999px" },
+  none:    { label: "None (0)",                value: "0" },
+  default: { label: "Default (brand dial)",    value: "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))" },
+  rounded: { label: "Rounded (8px)",           value: "8px" },
+  strong:  { label: "Strong (12px)",           value: "12px" },
+  pill:    { label: "Pill (999px)",            value: "999px" },
 } as const;
 type RadiusKey = keyof typeof RADIUS_PRESETS;
 
 function BorderRadiusDemo() {
-  const [shape, setShape] = useState<RadiusKey>("rounded");
+  const [shape, setShape] = useState<RadiusKey>("default");
   const radius = RADIUS_PRESETS[shape].value;
   const textStyle: CSSProperties = { borderRadius: radius };
   // Icon-only buttons need a square aspect so the chosen radius reads
@@ -223,7 +224,7 @@ export const Overview: StoryObj = {
 
       <Section
         title="Border radius"
-        description="PF6 ships no `shape` prop on Button — pick a radius preset (square / rounded / more rounded / pill) and the value lands on each demo button via inline style. Apply the same approach in your app via a per-brand override on the `--pf-v6-c-button--BorderRadius` token if you want a global shape change."
+        description="PF6 ships no `shape` prop on Button — pick a radius preset (none / default / rounded / strong / pill) and the value lands on each demo button via inline style. `Default` reads the brand-root `--gp-radius-control` dial so this preview matches the rest of the DS. Apply the same approach in your app via the dial for a global shape change."
       >
         <Card>
           <div style={{ padding: 24, display: "grid", gap: 16 }}>

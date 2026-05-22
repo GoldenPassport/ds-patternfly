@@ -1,21 +1,31 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Button,
+  ButtonVariant,
   CalendarMonth,
   DatePicker,
   FormGroup,
   HelperText,
   HelperTextItem,
+  InputGroup,
+  InputGroupItem,
   Popover,
   Popper,
+  TextInput,
 } from "@patternfly/react-core";
-import { CalendarAltIcon } from "@patternfly/react-icons";
+import {
+  AngleLeftIcon,
+  AngleRightIcon,
+  CalendarAltIcon,
+  TimesIcon,
+} from "@patternfly/react-icons";
 import { FoundationPage, Section, Card, CodeBlock } from "../../_storyKit.js";
 import { DemoFrame, PropsTable } from "../../_demoKit.js";
 
 const meta: Meta = {
-  title: "Components/Date and time/DatePicker",
+  title: "Components/Forms/Date and time/DatePicker",
   parameters: { layout: "padded" },
 };
 export default meta;
@@ -41,6 +51,11 @@ const parseMMDDYYYY = (s: string): Date => {
 };
 const fmtISO = (d: Date) =>
   `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseISO = (s: string): Date => {
+  const m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (!m) return new Date("invalid");
+  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+};
 
 // French month names — illustrates i18n month-list customization.
 const monthsFR = [
@@ -58,6 +73,702 @@ const monthsFR = [
   "décembre",
 ];
 
+/**
+ * Portal a `gp-stepper-stack` (internal-stepper recipe from
+ * Components/Forms/NumberInput) into the year FormControl rendered
+ * by PF6 CalendarMonth, so the year input gains compact ▲▼ carets
+ * inside the field — same UX the Forms/NumberInput story documents.
+ *
+ * PF6 CalendarMonth renders the year as a bare TextInput[type=number]
+ * with no render-prop / slot. We find the FormControl span at mount
+ * time, portal the stepper inside it, and dispatch a native `input`
+ * event with a 4-digit year on click so CalendarMonth's internal
+ * controlled state updates.
+ */
+function useYearInternalStepper(scope: React.RefObject<HTMLDivElement | null>) {
+  const [formControl, setFormControl] = useState<HTMLElement | null>(null);
+  const yearInputRef = useRef<HTMLInputElement | null>(null);
+
+  // rAF poll until found — matches the working FuturePicker hook.
+  // CalendarMonth renders synchronously at popover open, but state
+  // commitment of the ref attachment can lag by a tick under some
+  // React + Popper interleaving, so we re-try until the DOM resolves.
+  useLayoutEffect(() => {
+    if (!scope.current) return;
+    let rafId = 0;
+    const find = () => {
+      const root = scope.current;
+      if (!root) return;
+      const fc = root.querySelector<HTMLElement>(
+        ".pf-v6-c-calendar-month__header-year .pf-v6-c-form-control",
+      );
+      const input =
+        fc?.querySelector<HTMLInputElement>('input[type="number"]') ?? null;
+      if (fc && input) {
+        yearInputRef.current = input;
+        setFormControl(fc);
+      } else {
+        rafId = requestAnimationFrame(find);
+      }
+    };
+    rafId = requestAnimationFrame(find);
+    return () => cancelAnimationFrame(rafId);
+  }, [scope]);
+
+  // Cleanup state when the FormControl detaches (popover close).
+  // Without this, a stale ref would block the next open's portal.
+  useEffect(() => {
+    if (!formControl) return;
+    const obs = new MutationObserver(() => {
+      if (!document.body.contains(formControl)) {
+        setFormControl(null);
+        yearInputRef.current = null;
+      }
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+    return () => obs.disconnect();
+  }, [formControl]);
+
+  const step = (delta: number) => {
+    const yearInput = yearInputRef.current;
+    if (!yearInput) return;
+    const current = Number(yearInput.value) || new Date().getFullYear();
+    const next = String(current + delta).padStart(4, "0");
+    const setter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      "value",
+    )?.set;
+    setter?.call(yearInput, next);
+    yearInput.dispatchEvent(new Event("input", { bubbles: true }));
+  };
+
+  return { formControl, step };
+}
+
+/**
+ * Tracks a `(max-width: …)` match. Re-evaluates on resize so the lib
+ * date picker flips between Popover (desktop) and bottom-sheet
+ * (mobile) when the viewport crosses the breakpoint mid-session.
+ */
+function useMobileViewport(maxWidth = "47.98rem"): boolean {
+  const [match, setMatch] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${maxWidth})`);
+    setMatch(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setMatch(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [maxWidth]);
+  return match;
+}
+
+/**
+ * Bottom-anchored sheet for mobile date / option pickers. Renders via
+ * portal into `<body>` using the native `<dialog>` element so we get
+ * focus trap, Escape-to-close, and inert background for free without
+ * pulling in a focus-trap library.
+ *
+ * Closes on: Escape key (native), backdrop click, programmatic
+ * `onClose` from the consumer (e.g. after selecting a date).
+ */
+function BottomSheet({
+  open,
+  onClose,
+  ariaLabel,
+  children,
+}: {
+  open: boolean;
+  onClose: () => void;
+  ariaLabel: string;
+  children: React.ReactNode;
+}) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const el = dialogRef.current;
+    if (!el) return;
+    if (open && !el.open) el.showModal();
+    if (!open && el.open) el.close();
+  }, [open]);
+
+  // Lock the host page from scrolling while the sheet is open. Native
+  // `<dialog>` makes its background inert but doesn't actually freeze
+  // scroll on the underlying body — without this lock, swipe gestures
+  // (or wheel-scroll on desktop) still drift the page behind. Restore
+  // the previous overflow on close so we don't leak state if the page
+  // already had a custom overflow setting.
+  useEffect(() => {
+    if (!open) return;
+    const docEl = document.documentElement;
+    const body = document.body;
+    const prevHtmlOverflow = docEl.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    docEl.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    return () => {
+      docEl.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+    };
+  }, [open]);
+
+  // Backdrop click — native <dialog> backdrops fire as a click on the
+  // dialog itself when outside the content. Compare bounding rect.
+  const onClick = (e: React.MouseEvent<HTMLDialogElement>) => {
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX;
+    const y = e.clientY;
+    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+      onClose();
+    }
+  };
+
+  if (!open && typeof window === "undefined") return null;
+
+  return createPortal(
+    <dialog
+      ref={dialogRef}
+      className="gp-bottom-sheet"
+      aria-label={ariaLabel}
+      onClose={onClose}
+      onCancel={onClose}
+      onClick={onClick}
+    >
+      <Button
+        variant={ButtonVariant.plain}
+        aria-label="Close"
+        icon={<TimesIcon />}
+        onClick={onClose}
+        className="gp-bottom-sheet__close"
+      />
+      <div className="gp-bottom-sheet__body">{children}</div>
+    </dialog>,
+    document.body,
+  );
+}
+
+/**
+ * Default-section date picker — adapts between Popover (md+ desktop)
+ * and a bottom-anchored Sheet (below md, mobile/touch). Same
+ * CalendarPanel runs in both shells.
+ */
+function DefaultDatePicker({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (next: string) => void;
+}) {
+  const isMobile = useMobileViewport();
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const parsed = parseDDMMYYYY(value);
+  const valid = !Number.isNaN(parsed.getTime());
+
+  const calendar = (
+    <CalendarPanel
+      {...(valid ? { date: parsed } : {})}
+      onChange={(d) => {
+        onChange(fmtDDMMYYYY(d));
+        if (isMobile) setSheetOpen(false);
+      }}
+    />
+  );
+
+  const triggerStyle = {
+    borderRadius:
+      "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+    aspectRatio: "1",
+    paddingInline: 0,
+  } as const;
+
+  return (
+    <>
+      <InputGroup style={{ maxWidth: 240 }}>
+        <InputGroupItem isFill>
+          <TextInput
+            id="due"
+            value={value}
+            onChange={(_e, v) => onChange(v)}
+            placeholder="DD/MM/YYYY"
+            aria-label="Due date"
+          />
+        </InputGroupItem>
+        <InputGroupItem>
+          {isMobile ? (
+            <Button
+              variant={ButtonVariant.tertiary}
+              aria-label="Open date picker"
+              icon={<CalendarAltIcon />}
+              onClick={() => setSheetOpen(true)}
+              style={triggerStyle}
+            />
+          ) : (
+            <Popover
+              headerContent="Pick a date"
+              bodyContent={calendar}
+              hasAutoWidth
+              showClose={false}
+              position="bottom-end"
+              flipBehavior={["bottom-end", "bottom", "top-end", "top"]}
+              appendTo={() => document.body}
+              elementToFocus=".pf-v6-c-calendar-month__date.pf-m-selected, .pf-v6-c-calendar-month__date.pf-m-current"
+            >
+              <Button
+                variant={ButtonVariant.tertiary}
+                aria-label="Open date picker"
+                icon={<CalendarAltIcon />}
+                style={triggerStyle}
+              />
+            </Popover>
+          )}
+        </InputGroupItem>
+      </InputGroup>
+      {isMobile && (
+        <BottomSheet
+          open={sheetOpen}
+          onClose={() => setSheetOpen(false)}
+          ariaLabel="Pick a date"
+        >
+          {calendar}
+        </BottomSheet>
+      )}
+    </>
+  );
+}
+
+/**
+ * Custom calendar panel that replaces PF6 CalendarMonth's stock header
+ * (Month MenuToggle + Year input + month nav buttons) with a single
+ * "label" Button + adaptive arrows. Three views the header toggles
+ * between (matches the iOS/Android native picker pattern):
+ *
+ *   - **days**   — PF6 CalendarMonth (with its own header hidden via
+ *                  CSS); arrows step *month*; label shows "May 2026".
+ *                  Click label → months view.
+ *   - **months** — 3×4 grid of month tiles; arrows step *year*; label
+ *                  shows "2026". Picking a tile sets the month + flips
+ *                  back to days. Click label → years view.
+ *   - **years**  — 3×4 grid of years (decade + 2 outliers); arrows
+ *                  step the *decade* (±10); label shows "2020 – 2029".
+ *                  Picking a year sets it + flips back to months.
+ *                  Click label → back to months.
+ *
+ * `internalDate` drives PF6 CalendarMonth's `date` prop so we control
+ * which month it renders without touching its hidden header.
+ */
+function CalendarPanel({
+  date,
+  validators,
+  rangeStart,
+  monthFormat,
+  locale,
+  onChange,
+}: {
+  date?: Date;
+  validators?: Array<(d: Date) => boolean>;
+  rangeStart?: Date;
+  monthFormat?: (d: Date) => string;
+  locale?: string;
+  onChange: (d: Date) => void;
+}) {
+  // Track the displayed month (year + month, day always 1) separately
+  // from the *selected* value. Decoupling these means the user can
+  // navigate to August / September / etc. without the calendar
+  // pretending each month has day 22 selected just because today is
+  // the 22nd. Today's "pf-m-current" indicator (computed internally
+  // by PF6 against `new Date()`) still highlights today only when
+  // the current month is displayed.
+  const [displayedMonth, setDisplayedMonth] = useState<Date>(() => {
+    const seed = date ?? new Date();
+    return new Date(seed.getFullYear(), seed.getMonth(), 1);
+  });
+  const [view, setView] = useState<"days" | "months" | "years">("days");
+
+  // Re-sync displayed month when the parent updates its `date` prop
+  // (e.g. user types a date manually into the TextInput).
+  useEffect(() => {
+    if (date)
+      setDisplayedMonth(new Date(date.getFullYear(), date.getMonth(), 1));
+  }, [date]);
+
+  // What gets passed to PF6 CalendarMonth's `date` prop. If the user
+  // has a real selection AND it falls in the displayed month, pass
+  // that selection (PF6 marks it pf-m-selected). Otherwise pass the
+  // displayed month's day 1 — but suppress the resulting day-1
+  // selection styling via the `gp-libcal--no-selection` class below.
+  const selectionInDisplayedMonth =
+    date &&
+    date.getMonth() === displayedMonth.getMonth() &&
+    date.getFullYear() === displayedMonth.getFullYear()
+      ? date
+      : null;
+  const calendarDate = selectionInDisplayedMonth ?? displayedMonth;
+  const showSelection = selectionInDisplayedMonth !== null;
+  // Anchor used by header labels + the months/years grids. Mirrors the
+  // displayed month except `decadeStart` math etc.
+  const internalDate = displayedMonth;
+
+  const longMonth = (d: Date) =>
+    monthFormat?.(d) ??
+    d.toLocaleString(locale ?? undefined, { month: "long" });
+  const shortMonth = (d: Date) =>
+    monthFormat?.(d) ??
+    d.toLocaleString(locale ?? undefined, { month: "short" });
+
+  // Header label adapts per view.
+  const decadeStart = Math.floor(internalDate.getFullYear() / 10) * 10;
+  const headerLabel =
+    view === "days"
+      ? `${longMonth(internalDate)} ${internalDate.getFullYear()}`
+      : view === "months"
+        ? String(internalDate.getFullYear())
+        : `${decadeStart} – ${decadeStart + 9}`;
+
+  // Arrows step: month / year / decade per view. Always normalises to
+  // day = 1 so the navigation anchor never carries a "selected" day
+  // into months where the user hasn't actually picked anything.
+  const step = (delta: number) => {
+    setDisplayedMonth((prev) => {
+      const next = new Date(prev.getFullYear(), prev.getMonth(), 1);
+      if (view === "days") next.setMonth(next.getMonth() + delta);
+      else if (view === "months") next.setFullYear(next.getFullYear() + delta);
+      else next.setFullYear(next.getFullYear() + delta * 10);
+      return next;
+    });
+  };
+
+  // Label toggle: days → months → years → months → days.
+  const onLabelClick = () => {
+    setView((v) =>
+      v === "days" ? "months" : v === "months" ? "years" : "months",
+    );
+  };
+
+  const monthsForYear = Array.from({ length: 12 }, (_, m) => {
+    const d = new Date(internalDate.getFullYear(), m, 1);
+    return { idx: m, label: shortMonth(d) };
+  });
+
+  // 12 years: previous-decade tail, current decade (10), next-decade head.
+  // The outliers ({Start-1, Start+10}) sit dimmed but stay clickable so
+  // users can drift across decade boundaries without using the arrows.
+  const yearsInGrid = Array.from({ length: 12 }, (_, i) => decadeStart - 1 + i);
+
+  // Touch-friendly nav arrow — pill (fully rounded), 44×44 hit area
+  // for WCAG 2.5.5. The pill radius matches the close button on the
+  // bottom sheet so the chrome reads as a single consistent system.
+  const navBtnStyle = {
+    borderRadius: "var(--gp-radius-pill, 999px)",
+    aspectRatio: "1",
+    blockSize: "auto",
+    minBlockSize: "2.75rem",
+    minInlineSize: "2.75rem",
+    padding: 0,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+  } as const;
+
+  // Shared tile style for months + years grids — pill / circular
+  // (pill radius on a square tile = circle), 44×44+ touch target
+  // (WCAG 2.5.5), centred label, day-cell-matched font size so
+  // type weight reads identical across views.
+  const gridTileStyle = {
+    borderRadius: "var(--gp-radius-pill, 999px)",
+    aspectRatio: "1",
+    blockSize: "auto",
+    minBlockSize: "3rem",
+    paddingInline: 0,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    fontSize: "var(--pf-t--global--font--size--sm)",
+  } as const;
+
+  return (
+    <div
+      className={`gp-libcal${showSelection ? "" : " gp-libcal--no-selection"}`}
+      // Fill the parent (popover content / bottom-sheet body) and cap
+      // at 22rem on desktop. Using `100%` instead of an explicit
+      // viewport width means the calendar can never overflow its
+      // container — the host's own padding/sizing is respected.
+      style={{
+        inlineSize: "100%",
+        maxInlineSize: "22rem",
+        boxSizing: "border-box",
+      }}
+    >
+      <header
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 8,
+          // Inset the horizontal divider below the header content via
+          // padding-block-end. Without this, `border-block-end` sits
+          // flush against the arrows + label baseline; a small gap
+          // (sm spacer = 8px) lets the divider breathe.
+          paddingBlockEnd: "var(--pf-t--global--spacer--sm, 0.5rem)",
+          // Space below the divider so the calendar grid below it
+          // doesn't crowd the line.
+          marginBlockEnd: "var(--pf-t--global--spacer--md, 1rem)",
+          // Lock the row baseline so a long label ("September 2026")
+          // doesn't push the arrows out of vertical centre on narrow
+          // popovers. The arrows + label themselves still sit at
+          // 2.75rem; padding pushes the bottom border below that.
+          minBlockSize: "2.75rem",
+        }}
+      >
+        <Button
+          variant={ButtonVariant.plain}
+          aria-label={
+            view === "days"
+              ? "Previous month"
+              : view === "months"
+                ? "Previous year"
+                : "Previous decade"
+          }
+          icon={<AngleLeftIcon />}
+          onClick={() => step(-1)}
+          style={navBtnStyle}
+        />
+        <Button
+          variant={ButtonVariant.tertiary}
+          aria-label={
+            view === "days"
+              ? `Switch to month picker (currently ${headerLabel})`
+              : view === "months"
+                ? `Switch to year picker (currently ${headerLabel})`
+                : `Back to month picker (currently ${headerLabel})`
+          }
+          onClick={onLabelClick}
+          style={{
+            flex: 1,
+            // Touch-friendly height — matches the nav arrows above so
+            // the header row reads as one consistent strip on mobile.
+            minBlockSize: "2.75rem",
+            // Keep the label on a single line so it doesn't push the
+            // header taller than the arrows.
+            whiteSpace: "nowrap",
+            // Centre the label glyph inside the touch-target — PF6
+            // Button auto-centres but the flex:1 stretch can push the
+            // text to start without these locks.
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius:
+              "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+          }}
+        >
+          {headerLabel}
+        </Button>
+        <Button
+          variant={ButtonVariant.plain}
+          aria-label={
+            view === "days"
+              ? "Next month"
+              : view === "months"
+                ? "Next year"
+                : "Next decade"
+          }
+          icon={<AngleRightIcon />}
+          onClick={() => step(+1)}
+          style={navBtnStyle}
+        />
+      </header>
+
+      {view === "days" ? (
+        <CalendarMonth
+          date={calendarDate}
+          {...(validators ? { validators } : {})}
+          {...(rangeStart ? { rangeStart } : {})}
+          {...(monthFormat ? { monthFormat } : {})}
+          {...(locale ? { locale } : {})}
+          onChange={(_e, d) => {
+            // Selecting a day: pin the displayed month to it and
+            // bubble the date up. The parent's `date` prop coming
+            // back makes `showSelection` go true → pf-m-selected
+            // styling unmasks for the clicked day.
+            setDisplayedMonth(new Date(d.getFullYear(), d.getMonth(), 1));
+            onChange(d);
+          }}
+          onMonthChange={(_e, newDate) => {
+            if (newDate)
+              setDisplayedMonth(
+                new Date(newDate.getFullYear(), newDate.getMonth(), 1),
+              );
+          }}
+        />
+      ) : view === "months" ? (
+        // Flex-wrap chips — each pill sizes to its label width (no
+        // grid stretch) so the corners stay semicircular. Centred in
+        // the host so 12 months distribute evenly. minBlockSize keeps
+        // the popover the same height as the days grid.
+        <div
+          role="grid"
+          aria-label="Pick a month"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: 8,
+            padding: 8,
+            alignContent: "flex-start",
+            minBlockSize: "20rem",
+          }}
+        >
+          {monthsForYear.map(({ idx, label }) => (
+            <Button
+              key={idx}
+              variant={
+                idx === internalDate.getMonth()
+                  ? ButtonVariant.primary
+                  : ButtonVariant.tertiary
+              }
+              onClick={() => {
+                setDisplayedMonth(new Date(internalDate.getFullYear(), idx, 1));
+                setView("days");
+              }}
+              style={gridTileStyle}
+            >
+              {label}
+            </Button>
+          ))}
+        </div>
+      ) : (
+        // Flex-wrap year pills — matches the months chip layout.
+        // 10 in-decade pills sit at content width with semicircular
+        // ends; the previous-decade tail + next-decade head are kept
+        // at 45% opacity so users can drift across decade boundaries
+        // without using the arrows.
+        <div
+          role="grid"
+          aria-label="Pick a year"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: 8,
+            padding: 8,
+            alignContent: "flex-start",
+            minBlockSize: "20rem",
+          }}
+        >
+          {yearsInGrid.map((y) => {
+            const inDecade = y >= decadeStart && y <= decadeStart + 9;
+            return (
+              <Button
+                key={y}
+                variant={
+                  y === internalDate.getFullYear()
+                    ? ButtonVariant.primary
+                    : ButtonVariant.tertiary
+                }
+                onClick={() => {
+                  setDisplayedMonth(new Date(y, internalDate.getMonth(), 1));
+                  setView("months");
+                }}
+                style={{
+                  ...gridTileStyle,
+                  opacity: inDecade ? 1 : 0.45,
+                }}
+              >
+                {y}
+              </Button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Lib-style date picker — TextInput + InputGroup + a tertiary icon
+ * Button that opens an inline CalendarMonth in a Popover. Used by the
+ * Default, Min/Max, Excluded, Date range, and i18n sections so each
+ * shares the same trigger Button styling (matches the Button story's
+ * tertiary icon-only row with the brand-dial control radius).
+ *
+ * Validators here follow PF6 CalendarMonth's signature:
+ * `(date: Date) => boolean` — return `false` to disable a cell.
+ */
+function LibDatePicker({
+  value,
+  onChange,
+  validators,
+  rangeStart,
+  monthFormat,
+  locale,
+  ariaLabel,
+  buttonAriaLabel,
+  placeholder = "DD/MM/YYYY",
+  id,
+  dateFormat = fmtDDMMYYYY,
+  dateParse = parseDDMMYYYY,
+}: {
+  value: string;
+  onChange: (next: string) => void;
+  validators?: Array<(d: Date) => boolean>;
+  rangeStart?: Date;
+  monthFormat?: (d: Date) => string;
+  locale?: string;
+  ariaLabel: string;
+  buttonAriaLabel: string;
+  placeholder?: string;
+  id?: string;
+  /** Format a Date to the input's string form. Defaults to DD/MM/YYYY. */
+  dateFormat?: (d: Date) => string;
+  /** Parse the input's string form back to a Date. Defaults to DD/MM/YYYY. */
+  dateParse?: (s: string) => Date;
+}) {
+  const parsed = dateParse(value);
+  const valid = !Number.isNaN(parsed.getTime());
+  return (
+    <InputGroup style={{ maxWidth: 240 }}>
+      <InputGroupItem isFill>
+        <TextInput
+          {...(id ? { id } : {})}
+          value={value}
+          onChange={(_e, v) => onChange(v)}
+          placeholder={placeholder}
+          aria-label={ariaLabel}
+        />
+      </InputGroupItem>
+      <InputGroupItem>
+        <Popover
+          headerContent="Pick a date"
+          bodyContent={
+            <CalendarPanel
+              {...(valid ? { date: parsed } : {})}
+              {...(validators ? { validators } : {})}
+              {...(rangeStart ? { rangeStart } : {})}
+              {...(monthFormat ? { monthFormat } : {})}
+              {...(locale ? { locale } : {})}
+              onChange={(d) => onChange(dateFormat(d))}
+            />
+          }
+          hasAutoWidth
+          showClose={false}
+          position="bottom-end"
+          appendTo={() => document.body}
+        >
+          <Button
+            variant={ButtonVariant.tertiary}
+            aria-label={buttonAriaLabel}
+            icon={<CalendarAltIcon />}
+            style={{
+              borderRadius:
+                "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+              aspectRatio: "1",
+              paddingInline: 0,
+            }}
+          />
+        </Popover>
+      </InputGroupItem>
+    </InputGroup>
+  );
+}
+
 export const Overview: StoryObj = {
   render: () => {
     const today = new Date();
@@ -67,6 +778,7 @@ export const Overview: StoryObj = {
     const [rangeStart, setRangeStart] = useState("");
     const [rangeEnd, setRangeEnd] = useState("");
     const [usDate, setUsDate] = useState("");
+    const [isoDate, setIsoDate] = useState("");
     // Custom-trigger recipe state
     const [primaryDate, setPrimaryDate] = useState<Date>(new Date());
     const [secondaryDate, setSecondaryDate] = useState<Date>(new Date());
@@ -117,37 +829,56 @@ export const Overview: StoryObj = {
       >
         <Section
           title="Default — DD/MM/YYYY"
-          description="Lib default. Pass dateFormat / dateParse to switch (see Formats below). Click the calendar icon to open the popover — year and month navigation use PF6's stock controls."
+          description="Lib default. Built from a TextInput + a lib `Button` trigger (matches the icon-button styling from Components/Button) + a Popover containing an inline CalendarMonth. Click the calendar icon to open."
         >
           <Card>
             <div style={{ padding: 24, display: "grid", gap: 16 }}>
               <DemoFrame>
                 <FormGroup label="Due date" fieldId="due" isRequired>
-                  <DatePicker
-                    value={v}
-                    onChange={(_, value) => setV(value)}
-                    placeholder="DD/MM/YYYY"
-                    dateFormat={fmtDDMMYYYY}
-                    dateParse={parseDDMMYYYY}
-                    aria-label="Due date"
-                    buttonAriaLabel="Open date picker"
-                                      appendTo={() => document.body}
-/>
+                  <DefaultDatePicker value={v} onChange={setV} />
                 </FormGroup>
               </DemoFrame>
-              <CodeBlock>{`const fmt = (d: Date) =>
-  \`\${pad(d.getDate())}/\${pad(d.getMonth() + 1)}/\${d.getFullYear()}\`;
-const parse = (s: string): Date => {
-  const m = s.match(/^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})$/);
-  return m ? new Date(+m[3], +m[2] - 1, +m[1]) : new Date("invalid");
-};
+              <CodeBlock>{`// Built from primitives so the trigger Button can be any variant
+// (here: tertiary, matches the Components/Button icon-only row).
+// The Popover hosts an inline CalendarMonth; selecting a day
+// writes the formatted string back into the TextInput.
 
-<DatePicker
-  value={value} onChange={(_, v) => setValue(v)}
-  dateFormat={fmt} dateParse={parse}
-  placeholder="DD/MM/YYYY"
-  aria-label="Due date" buttonAriaLabel="Open date picker"
-/>`}</CodeBlock>
+import {
+  Button, ButtonVariant, CalendarMonth, InputGroup,
+  InputGroupItem, Popover, TextInput,
+} from "@patternfly/react-core";
+import { CalendarAltIcon } from "@patternfly/react-icons";
+
+<InputGroup>
+  <InputGroupItem isFill>
+    <TextInput value={value} onChange={(_, v) => setValue(v)}
+      placeholder="DD/MM/YYYY" aria-label="Due date" />
+  </InputGroupItem>
+  <InputGroupItem>
+    <Popover
+      headerContent="Pick a date"
+      bodyContent={
+        <CalendarMonth
+          date={parse(value)}
+          onChange={(_, d) => setValue(fmt(d))}
+        />
+      }
+      hasAutoWidth showClose={false}
+      position="bottom-end" appendTo={() => document.body}
+    >
+      <Button
+        variant={ButtonVariant.tertiary}
+        aria-label="Open date picker"
+        icon={<CalendarAltIcon />}
+        style={{
+          borderRadius: "var(--gp-radius-control)",
+          aspectRatio: "1",
+          paddingInline: 0,
+        }}
+      />
+    </Popover>
+  </InputGroupItem>
+</InputGroup>`}</CodeBlock>
               <p
                 style={{
                   margin: 0,
@@ -155,13 +886,16 @@ const parse = (s: string): Date => {
                   fontSize: 14,
                 }}
               >
-                <strong>Year navigation in the popover:</strong> PF6&apos;s
-                calendar uses a native <code>&lt;input type=&quot;number&quot;&gt;</code>{" "}
-                for the year — browser-default up/down spinners. To use the
-                lib&apos;s compact stepper UX for year navigation,
-                see the CalendarMonth page&apos;s &quot;Inline calendar&quot;
-                demo, which builds a custom header above an inline
-                calendar.
+                <strong>Why not just <code>&lt;DatePicker&gt;</code>?</strong>{" "}
+                PF6&apos;s built-in <code>DatePicker</code> hard-codes the
+                trigger to a <code>variant=&quot;control&quot;</code> button.
+                Composing from primitives lets the trigger be{" "}
+                <em>any</em> variant (tertiary here, but primary / secondary
+                / plain are all valid) so the calendar opener picks up the
+                lib&apos;s standard icon-button styling — same as the rest
+                of the form row. PF6&apos;s native <code>&lt;DatePicker&gt;</code>{" "}
+                is still demoed in the sections below for cases where you
+                want its bundled keyboard / typing validation.
               </p>
             </div>
           </Card>
@@ -390,6 +1124,7 @@ useEffect(() => {
   triggerRef={triggerRef}
   isVisible={open}
   appendTo={() => document.body}
+                    popoverProps={{ position: "bottom-end" }}
   popper={
     <div ref={popupRef} className="gp-calendar-popup"
       role="dialog" aria-label="Pick a date">
@@ -426,25 +1161,28 @@ useEffect(() => {
               <DemoFrame>
                 <div style={{ display: "grid", gap: 12 }}>
                   <FormGroup label="US — MM/DD/YYYY" fieldId="us">
-                    <DatePicker
+                    <LibDatePicker
+                      id="us"
                       value={usDate}
-                      onChange={(_, value) => setUsDate(value)}
+                      onChange={setUsDate}
                       dateFormat={fmtMMDDYYYY}
                       dateParse={parseMMDDYYYY}
                       placeholder="MM/DD/YYYY"
-                      aria-label="US format date"
+                      ariaLabel="US format date"
                       buttonAriaLabel="Open date picker"
-                                          appendTo={() => document.body}
-/>
+                    />
                   </FormGroup>
                   <FormGroup label="ISO — YYYY-MM-DD" fieldId="iso">
-                    <DatePicker
+                    <LibDatePicker
+                      id="iso"
+                      value={isoDate}
+                      onChange={setIsoDate}
                       dateFormat={fmtISO}
+                      dateParse={parseISO}
                       placeholder="YYYY-MM-DD"
-                      aria-label="ISO format date"
+                      ariaLabel="ISO format date"
                       buttonAriaLabel="Open date picker"
-                                          appendTo={() => document.body}
-/>
+                    />
                   </FormGroup>
                 </div>
               </DemoFrame>
@@ -464,23 +1202,19 @@ useEffect(() => {
                   fieldId="booking"
                   isRequired
                 >
-                  <DatePicker
-                    dateFormat={fmtDDMMYYYY}
-                    dateParse={parseDDMMYYYY}
-                    placeholder="DD/MM/YYYY"
-                    aria-label="Booking date"
+                  <LibDatePicker
+                    id="booking"
+                    value={v}
+                    onChange={setV}
+                    ariaLabel="Booking date"
                     buttonAriaLabel="Open date picker"
                     validators={[
                       (date) =>
-                        date < today
-                          ? "Date is in the past"
-                          : date.getTime() >
-                              today.getTime() + 30 * 24 * 60 * 60 * 1000
-                            ? "Date is more than 30 days out"
-                            : "",
+                        date >= today &&
+                        date.getTime() <=
+                          today.getTime() + 30 * 24 * 60 * 60 * 1000,
                     ]}
-                                      appendTo={() => document.body}
-/>
+                  />
                 </FormGroup>
               </DemoFrame>
               <CodeBlock>{`const today = new Date();
@@ -524,17 +1258,16 @@ const maxDate = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
                   fieldId="excluded"
                   isRequired
                 >
-                  <DatePicker
-                    dateFormat={fmtDDMMYYYY}
-                    dateParse={parseDDMMYYYY}
-                    placeholder="DD/MM/YYYY"
-                    aria-label="Booking date (excluded list)"
+                  <LibDatePicker
+                    id="excluded"
+                    value={v}
+                    onChange={setV}
+                    ariaLabel="Booking date (excluded list)"
                     buttonAriaLabel="Open date picker"
-                    appendTo={() => document.body}
                     validators={[
                       // Set-membership check on YYYY-MM-DD strings — O(1)
-                      // per cell, fast on large lists. Add as many entries
-                      // as needed for holidays, blackout days, OOO ranges.
+                      // per cell, fast on large lists. Returning `false`
+                      // disables the cell in the calendar.
                       (date) => {
                         const excluded = new Set([
                           "2026-01-01", // New Year's Day
@@ -547,7 +1280,7 @@ const maxDate = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
                         const iso = `${date.getFullYear()}-${pad(
                           date.getMonth() + 1,
                         )}-${pad(date.getDate())}`;
-                        return excluded.has(iso) ? "Unavailable" : "";
+                        return !excluded.has(iso);
                       },
                     ]}
                   />
@@ -610,16 +1343,13 @@ const isExcluded = (date: Date): boolean => {
                       flexWrap: "wrap",
                     }}
                   >
-                    <DatePicker
+                    <LibDatePicker
                       value={rangeStart}
-                      onChange={(_, value) => setRangeStart(value)}
-                      dateFormat={fmtDDMMYYYY}
-                      dateParse={parseDDMMYYYY}
+                      onChange={setRangeStart}
                       placeholder="From"
-                      aria-label="Trip start date"
+                      ariaLabel="Trip start date"
                       buttonAriaLabel="Open start date picker"
-                                          appendTo={() => document.body}
-/>
+                    />
                     <span
                       style={{
                         color: "var(--gp-color-text-subtle)",
@@ -628,30 +1358,27 @@ const isExcluded = (date: Date): boolean => {
                     >
                       to
                     </span>
-                    <DatePicker
+                    <LibDatePicker
                       value={rangeEnd}
-                      onChange={(_, value) => setRangeEnd(value)}
-                      dateFormat={fmtDDMMYYYY}
-                      dateParse={parseDDMMYYYY}
+                      onChange={setRangeEnd}
                       placeholder="To"
-                      aria-label="Trip end date"
+                      ariaLabel="Trip end date"
                       buttonAriaLabel="Open end date picker"
                       validators={[
                         (date) => {
-                          if (!rangeStart) return "";
+                          if (!rangeStart) return true;
                           const start = parseDDMMYYYY(rangeStart);
-                          if (Number.isNaN(start.getTime())) return "";
-                          return date < start ? "End must be after start" : "";
+                          if (Number.isNaN(start.getTime())) return true;
+                          return date >= start;
                         },
                       ]}
-                      // Pass the start as `rangeStart` so PF6 highlights
-                      // the calendar span between start and the cell
+                      // Highlight the span between start and the cell
                       // hovered/selected on the end picker.
-                      {...(rangeStart && !Number.isNaN(parseDDMMYYYY(rangeStart).getTime())
+                      {...(rangeStart &&
+                      !Number.isNaN(parseDDMMYYYY(rangeStart).getTime())
                         ? { rangeStart: parseDDMMYYYY(rangeStart) }
                         : {})}
-                                          appendTo={() => document.body}
-/>
+                    />
                   </div>
                 </FormGroup>
               </DemoFrame>
@@ -688,16 +1415,15 @@ const isExcluded = (date: Date): boolean => {
                       defaults in place; consumers needing fully-translated
                       arrows should build a custom Button + Popover +
                       CalendarMonth (see the "Custom trigger" recipe). */}
-                  <DatePicker
-                    dateFormat={fmtDDMMYYYY}
-                    dateParse={parseDDMMYYYY}
+                  <LibDatePicker
+                    id="fr"
+                    value={v}
+                    onChange={setV}
                     placeholder="JJ/MM/AAAA"
-                    aria-label="Date (français)"
+                    ariaLabel="Date (français)"
                     buttonAriaLabel="Ouvrir le sélecteur de date"
                     monthFormat={(d) => monthsFR[d.getMonth()] ?? ""}
                     locale="fr-FR"
-                    invalidFormatText="Format invalide. Utiliser JJ/MM/AAAA."
-                    appendTo={() => document.body}
                   />
                 </FormGroup>
               </DemoFrame>
@@ -725,18 +1451,18 @@ const isExcluded = (date: Date): boolean => {
             <div style={{ padding: 24, display: "grid", gap: 16 }}>
               <DemoFrame>
                 <FormGroup label="Date — popover escapes the card" fieldId="escape">
-                  <DatePicker
-                    dateFormat={fmtDDMMYYYY}
-                    dateParse={parseDDMMYYYY}
-                    placeholder="DD/MM/YYYY"
-                    aria-label="Escape demo"
+                  <LibDatePicker
+                    id="escape"
+                    value={v}
+                    onChange={setV}
+                    ariaLabel="Escape demo"
                     buttonAriaLabel="Open date picker"
-                    appendTo={() => document.body}
                   />
                 </FormGroup>
               </DemoFrame>
               <CodeBlock>{`<DatePicker
-  appendTo={() => document.body}    // popover renders at body
+  appendTo={() => document.body}      // popover renders at body
+  popoverProps={{ position: "bottom-end" }}
   ...
 />`}</CodeBlock>
               <p
@@ -766,20 +1492,14 @@ const isExcluded = (date: Date): boolean => {
             <div style={{ padding: 24 }}>
               <DemoFrame>
                 <FormGroup label="Future date only" fieldId="future">
-                  <DatePicker
+                  <LibDatePicker
+                    id="future"
                     value={v}
-                    onChange={(_, value) => setV(value)}
-                    dateFormat={fmtDDMMYYYY}
-                    dateParse={parseDDMMYYYY}
-                    placeholder="DD/MM/YYYY"
-                    validators={[
-                      (date) =>
-                        date < today ? "Must be in the future" : "",
-                    ]}
-                    aria-label="Future date"
+                    onChange={setV}
+                    ariaLabel="Future date"
                     buttonAriaLabel="Open date picker"
-                                      appendTo={() => document.body}
-/>
+                    validators={[(date) => date >= today]}
+                  />
                   <HelperText>
                     <HelperTextItem>
                       Past dates are disabled in the calendar and rejected
