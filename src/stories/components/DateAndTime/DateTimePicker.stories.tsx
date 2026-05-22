@@ -1,18 +1,9 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { DatePicker, FormGroup, TimePicker } from "@patternfly/react-core";
+import { FormGroup, TimePicker } from "@patternfly/react-core";
 import { FoundationPage, Section, Card, CodeBlock } from "../../_storyKit.js";
 import { DemoFrame, PropsTable } from "../../_demoKit.js";
-
-// DD/MM/YYYY parse + format — same convention as the DatePicker page.
-const pad = (n: number) => String(n).padStart(2, "0");
-const fmtDDMMYYYY = (d: Date) =>
-  `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
-const parseDDMMYYYY = (s: string): Date => {
-  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (!m) return new Date("invalid");
-  return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
-};
+import { LibDatePicker } from "./_libcal.js";
 
 const meta: Meta = {
   title: "Components/Forms/Date and time/DateTimePicker",
@@ -47,15 +38,12 @@ export const Overview: StoryObj = {
               <DemoFrame>
                 <FormGroup label="Schedule for" isRequired fieldId="schedule">
                   <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                    <DatePicker
+                    <LibDatePicker
+                      id="schedule"
                       value={date}
-                      onChange={(_, v) => setDate(v)}
-                      dateFormat={fmtDDMMYYYY}
-                      dateParse={parseDDMMYYYY}
-                      placeholder="DD/MM/YYYY"
-                      aria-label="Schedule date"
+                      onChange={setDate}
+                      ariaLabel="Schedule date"
                       buttonAriaLabel="Open date picker"
-                      appendTo={() => document.body}
                     />
                     <TimePicker
                       time={time}
@@ -68,11 +56,9 @@ export const Overview: StoryObj = {
               </DemoFrame>
               <CodeBlock>{`<FormGroup label="Schedule for" fieldId="schedule">
   <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-    <DatePicker
-      value={date} onChange={(_, v) => setDate(v)}
-      dateFormat={fmtDDMMYYYY} dateParse={parseDDMMYYYY}
-      aria-label="Schedule date" buttonAriaLabel="Open date picker"
-      appendTo={() => document.body}    // popover escapes any parent overflow
+    <LibDatePicker
+      value={date} onChange={setDate}
+      ariaLabel="Schedule date" buttonAriaLabel="Open date picker"
     />
     <TimePicker
       time={time} onChange={(_, v) => setTime(v)}

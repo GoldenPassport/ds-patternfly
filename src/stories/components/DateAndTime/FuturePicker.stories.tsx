@@ -1,15 +1,10 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { useMemo, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Button,
   ButtonVariant,
-  CalendarMonth,
-  HelperText,
-  HelperTextItem,
   InputGroup,
   InputGroupItem,
-  NumberInput,
   Popover,
   Tab,
   TabContent,
@@ -18,9 +13,18 @@ import {
   Tabs,
   TextInput,
 } from "@patternfly/react-core";
-import { CalendarAltIcon, CaretDownIcon, CaretUpIcon } from "@patternfly/react-icons";
+import {
+  CalendarAltIcon,
+  MinusIcon,
+  PlusIcon,
+} from "@patternfly/react-icons";
 import { FoundationPage, Section, Card, CodeBlock } from "../../_storyKit.js";
 import { DemoFrame, PropsTable } from "../../_demoKit.js";
+import {
+  BottomSheet,
+  CalendarPanel,
+  useMobileViewport,
+} from "./_libcal.js";
 
 const meta: Meta = {
   title: "Components/Forms/Date and time/Future Picker",
@@ -36,22 +40,27 @@ export default meta;
 // output is always a valid ISO duration.
 //
 // Examples:
-//   { days: 0, hours: 2, minutes: 30 } → "PT2H30M"
-//   { days: 1, hours: 0, minutes: 0  } → "P1D"
-//   { days: 1, hours: 4, minutes: 0  } → "P1DT4H"
+//   { days: 0, hours: 2, minutes: 30, seconds: 0  } → "PT2H30M"
+//   { days: 0, hours: 0, minutes: 0,  seconds: 15 } → "PT15S"
+//   { days: 1, hours: 0, minutes: 0,  seconds: 0  } → "P1D"
+//   { days: 1, hours: 4, minutes: 0,  seconds: 0  } → "P1DT4H"
 function formatIsoDuration({
   days,
   hours,
   minutes,
+  seconds,
 }: {
   days: number;
   hours: number;
   minutes: number;
+  seconds: number;
 }): string {
-  if (!days && !hours && !minutes) return "PT0M";
+  if (!days && !hours && !minutes && !seconds) return "PT0S";
   const datePart = days > 0 ? `${days}D` : "";
   const timeParts =
-    (hours > 0 ? `${hours}H` : "") + (minutes > 0 ? `${minutes}M` : "");
+    (hours > 0 ? `${hours}H` : "") +
+    (minutes > 0 ? `${minutes}M` : "") +
+    (seconds > 0 ? `${seconds}S` : "");
   return `P${datePart}${timeParts ? `T${timeParts}` : ""}`;
 }
 
@@ -71,75 +80,6 @@ function isAtLeastTomorrow(date: Date): boolean {
   tomorrow.setHours(0, 0, 0, 0);
   tomorrow.setDate(tomorrow.getDate() + 1);
   return date.getTime() >= tomorrow.getTime();
-}
-
-/**
- * PF6 CalendarMonth renders the year as a bare `<TextInput type="number">`
- * (no render-prop, no slot). To switch the year selector to the
- * internal-stepper layout from NumberInput.stories (the
- * `gp-stepper-stack` / `gp-stepper-btn` recipe) we:
- *
- *   1. Find the year wrapper after CalendarMonth mounts.
- *   2. Portal a stack of two caret buttons into that wrapper.
- *   3. On click, mutate the input value via the native value-setter
- *      and dispatch an `input` event so CalendarMonth's controlled
- *      state updates. PF6 only commits the change once the string
- *      length is 4 digits, so we always write a 4-digit year.
- */
-function useYearInternalStepper(scope: React.RefObject<HTMLDivElement | null>) {
-  // Portal target is the FormControl span — the bordered frame around
-  // the year input, equivalent to the recipe's TextInputGroup. Mounting
-  // the stack inside that frame lets PF6's focus/hover ring (painted
-  // via ::before / ::after on the span) wrap both controls as one.
-  const [formControl, setFormControl] = useState<HTMLElement | null>(null);
-  const [yearInput, setYearInput] = useState<HTMLInputElement | null>(null);
-
-  useLayoutEffect(() => {
-    if (!scope.current) return;
-    let rafId = 0;
-    const find = () => {
-      const root = scope.current;
-      if (!root) return;
-      const fc = root.querySelector<HTMLElement>(
-        ".pf-v6-c-calendar-month__header-year .pf-v6-c-form-control",
-      );
-      const input = fc?.querySelector<HTMLInputElement>('input[type="number"]') ?? null;
-      if (fc && input) {
-        setFormControl(fc);
-        setYearInput(input);
-      } else {
-        rafId = requestAnimationFrame(find);
-      }
-    };
-    rafId = requestAnimationFrame(find);
-    return () => cancelAnimationFrame(rafId);
-  }, [scope]);
-
-  useEffect(() => {
-    if (!formControl) return;
-    const obs = new MutationObserver(() => {
-      if (!document.body.contains(formControl)) {
-        setFormControl(null);
-        setYearInput(null);
-      }
-    });
-    obs.observe(document.body, { childList: true, subtree: true });
-    return () => obs.disconnect();
-  }, [formControl]);
-
-  const step = (delta: number) => {
-    if (!yearInput) return;
-    const current = Number(yearInput.value) || new Date().getFullYear();
-    const next = String(current + delta).padStart(4, "0");
-    const setter = Object.getOwnPropertyDescriptor(
-      window.HTMLInputElement.prototype,
-      "value",
-    )?.set;
-    setter?.call(yearInput, next);
-    yearInput.dispatchEvent(new Event("input", { bubbles: true }));
-  };
-
-  return { formControl, step };
 }
 
 interface FuturePickerValue {
@@ -162,6 +102,99 @@ interface FuturePickerProps {
 }
 
 /**
+ * Lib-style number stepper — InputGroup + TextInput + tertiary ± icon
+ * Buttons. Replaces PF6 `<NumberInput>` so the ± buttons inherit the
+ * lib icon-button styling (matches the DatePicker calendar trigger +
+ * the Forms/NumberInput recipe). The TextInput uses
+ * `inputMode="numeric"` to keep mobile keyboards numeric while
+ * suppressing the browser-native ± spinner so only our buttons drive
+ * the value.
+ */
+function StepperInput({
+  value,
+  onChange,
+  min = 0,
+  max = 99,
+  label,
+  ariaLabel,
+}: {
+  value: number;
+  onChange: (next: number) => void;
+  min?: number;
+  max?: number;
+  label: string;
+  ariaLabel: string;
+}) {
+  const clamp = (v: number) => Math.max(min, Math.min(max, v));
+  const btnStyle = {
+    borderRadius:
+      "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+    aspectRatio: "1",
+    paddingInline: 0,
+    // Pin to the DS field height (36px = 2.25rem, the value derived
+    // from `--gp-control-pad-y`). PF6 v6 `pf-m-secondary` doesn't
+    // align with the form-control field height by default, so we set
+    // it explicitly — the chips end up the same height as the
+    // TextInput between them.
+    blockSize: "2.25rem",
+    minBlockSize: "2.25rem",
+    // Match the TextInput border that sits between the ± chips. PF6
+    // v6 ships `pf-m-secondary` borderless in this brand, but we
+    // want the trio (− input +) to read as one unified row, so the
+    // chips pick up the same `--gp-popover-stroke` line the input
+    // paints via its `::before` pseudo.
+    border:
+      "var(--gp-border-width, 1px) solid var(--gp-popover-stroke)",
+  } as const;
+  return (
+    // Plain `<div>` + `<span>` instead of a `<label>` wrapping the
+    // InputGroup — a label re-fires click events on its labeled
+    // input, which here would trigger the +/- buttons in a cascading
+    // chain (clicking + also fired - and vice versa).
+    <div style={{ display: "grid", gap: 4, fontSize: 13 }}>
+      <span>{label}</span>
+      <InputGroup>
+        <InputGroupItem>
+          <Button
+            variant={ButtonVariant.tertiary}
+            aria-label={`Decrease ${label.toLowerCase()}`}
+            icon={<MinusIcon />}
+            isDisabled={value <= min}
+            onClick={() => onChange(clamp(value - 1))}
+            style={btnStyle}
+          />
+        </InputGroupItem>
+        <InputGroupItem isFill>
+          <TextInput
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={value}
+            onChange={(_e, v) => {
+              if (v === "") return;
+              const n = Number(v);
+              if (!Number.isNaN(n)) onChange(clamp(n));
+            }}
+            aria-label={ariaLabel}
+            style={{ textAlign: "center" }}
+          />
+        </InputGroupItem>
+        <InputGroupItem>
+          <Button
+            variant={ButtonVariant.tertiary}
+            aria-label={`Increase ${label.toLowerCase()}`}
+            icon={<PlusIcon />}
+            isDisabled={value >= max}
+            onClick={() => onChange(clamp(value + 1))}
+            style={btnStyle}
+          />
+        </InputGroupItem>
+      </InputGroup>
+    </div>
+  );
+}
+
+/**
  * Render the picker body — used as the Popover content. Pulled out
  * from `FuturePicker` so the trigger (InputGroup + calendar button)
  * can compose this alongside its own popover open state.
@@ -180,20 +213,24 @@ function FuturePickerPanel({ onChange }: FuturePickerProps) {
   const [days, setDays] = useState(0);
   const [hours, setHours] = useState(2);
   const [minutes, setMinutes] = useState(30);
+  const [seconds, setSeconds] = useState(0);
   const [date, setDate] = useState<Date | undefined>();
-  const dateTabRef = useRef<HTMLDivElement>(null);
-  const { formControl, step } = useYearInternalStepper(dateTabRef);
 
   const duration = useMemo(
-    () => formatIsoDuration({ days, hours, minutes }),
-    [days, hours, minutes],
+    () => formatIsoDuration({ days, hours, minutes, seconds }),
+    [days, hours, minutes, seconds],
   );
 
   // Push value upstream on every change in the active tab.
   const emit = (next: FuturePickerValue) => onChange?.(next);
 
+  // Fills the host (popover / bottom sheet) — the inner Tabs strip
+  // spans 100% so the user's tap targets are full-width on every
+  // screen. Inner content (CalendarPanel at 22rem, the centred
+  // StepperInput column at 14rem) keeps its own width inside the
+  // wider tab body.
   return (
-    <div style={{ display: "grid", gap: 12, maxWidth: 420 }}>
+    <div style={{ display: "grid", gap: 12, inlineSize: "100%" }}>
       <Tabs
         activeKey={tab}
         onSelect={(_e, key) => {
@@ -221,100 +258,120 @@ function FuturePickerPanel({ onChange }: FuturePickerProps) {
         hidden={tab !== "wait"}
       >
         <TabContentBody hasPadding>
-          {/* Stack the Days / Hours / Minutes NumberInputs vertically
-              so each unit sits on its own row with its label above. The
-              earlier 3-column layout cramped the input + ± buttons at
-              popover widths. */}
+          {/* Centre the Days / Hours / Minutes column inside the tab so
+              the inputs read as a focused stack rather than start-
+              aligned content. */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 12,
+            }}
+          >
+          <p
+            style={{
+              margin: 0,
+              // Span the full tab width (the centring flex parent
+              // doesn't constrain children unless we cap them); the
+              // paragraph reads at the same column the Tabs strip
+              // above occupies.
+              inlineSize: "100%",
+              fontSize: 13,
+              lineHeight: 1.5,
+              color: "var(--gp-color-text-subtle)",
+              textAlign: "center",
+            }}
+          >
+            Fire this task after a relative wait. If working hours or
+            holidays are configured, the wait skips closed periods.
+          </p>
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "minmax(0, 1fr)",
               gap: 12,
+              inlineSize: "14rem",
             }}
           >
-            <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
-              Days
-              <NumberInput
-                value={days}
-                min={0}
-                onMinus={() => {
-                  const v = Math.max(0, days - 1);
-                  setDays(v);
-                  emit({ mode: "wait", duration: formatIsoDuration({ days: v, hours, minutes }) });
-                }}
-                onPlus={() => {
-                  const v = days + 1;
-                  setDays(v);
-                  emit({ mode: "wait", duration: formatIsoDuration({ days: v, hours, minutes }) });
-                }}
-                onChange={(e) => {
-                  const v = Math.max(0, Number((e.target as HTMLInputElement).value) || 0);
-                  setDays(v);
-                  emit({ mode: "wait", duration: formatIsoDuration({ days: v, hours, minutes }) });
-                }}
-                inputAriaLabel="Days to wait"
-                minusBtnAriaLabel="Decrease days"
-                plusBtnAriaLabel="Increase days"
-              />
-            </label>
-            <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
-              Hours
-              <NumberInput
-                value={hours}
-                min={0}
-                max={23}
-                onMinus={() => {
-                  const v = Math.max(0, hours - 1);
-                  setHours(v);
-                  emit({ mode: "wait", duration: formatIsoDuration({ days, hours: v, minutes }) });
-                }}
-                onPlus={() => {
-                  const v = Math.min(23, hours + 1);
-                  setHours(v);
-                  emit({ mode: "wait", duration: formatIsoDuration({ days, hours: v, minutes }) });
-                }}
-                onChange={(e) => {
-                  const v = Math.max(0, Math.min(23, Number((e.target as HTMLInputElement).value) || 0));
-                  setHours(v);
-                  emit({ mode: "wait", duration: formatIsoDuration({ days, hours: v, minutes }) });
-                }}
-                inputAriaLabel="Hours to wait"
-                minusBtnAriaLabel="Decrease hours"
-                plusBtnAriaLabel="Increase hours"
-              />
-            </label>
-            <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
-              Minutes
-              <NumberInput
-                value={minutes}
-                min={0}
-                max={59}
-                onMinus={() => {
-                  const v = Math.max(0, minutes - 1);
-                  setMinutes(v);
-                  emit({ mode: "wait", duration: formatIsoDuration({ days, hours, minutes: v }) });
-                }}
-                onPlus={() => {
-                  const v = Math.min(59, minutes + 1);
-                  setMinutes(v);
-                  emit({ mode: "wait", duration: formatIsoDuration({ days, hours, minutes: v }) });
-                }}
-                onChange={(e) => {
-                  const v = Math.max(0, Math.min(59, Number((e.target as HTMLInputElement).value) || 0));
-                  setMinutes(v);
-                  emit({ mode: "wait", duration: formatIsoDuration({ days, hours, minutes: v }) });
-                }}
-                inputAriaLabel="Minutes to wait"
-                minusBtnAriaLabel="Decrease minutes"
-                plusBtnAriaLabel="Increase minutes"
-              />
-            </label>
+            <StepperInput
+              label="Days"
+              ariaLabel="Days to wait"
+              value={days}
+              min={0}
+              max={365}
+              onChange={(v) => {
+                setDays(v);
+                emit({
+                  mode: "wait",
+                  duration: formatIsoDuration({
+                    days: v,
+                    hours,
+                    minutes,
+                    seconds,
+                  }),
+                });
+              }}
+            />
+            <StepperInput
+              label="Hours"
+              ariaLabel="Hours to wait"
+              value={hours}
+              min={0}
+              max={23}
+              onChange={(v) => {
+                setHours(v);
+                emit({
+                  mode: "wait",
+                  duration: formatIsoDuration({
+                    days,
+                    hours: v,
+                    minutes,
+                    seconds,
+                  }),
+                });
+              }}
+            />
+            <StepperInput
+              label="Minutes"
+              ariaLabel="Minutes to wait"
+              value={minutes}
+              min={0}
+              max={59}
+              onChange={(v) => {
+                setMinutes(v);
+                emit({
+                  mode: "wait",
+                  duration: formatIsoDuration({
+                    days,
+                    hours,
+                    minutes: v,
+                    seconds,
+                  }),
+                });
+              }}
+            />
+            <StepperInput
+              label="Seconds"
+              ariaLabel="Seconds to wait"
+              value={seconds}
+              min={0}
+              max={59}
+              onChange={(v) => {
+                setSeconds(v);
+                emit({
+                  mode: "wait",
+                  duration: formatIsoDuration({
+                    days,
+                    hours,
+                    minutes,
+                    seconds: v,
+                  }),
+                });
+              }}
+            />
           </div>
-          <HelperText>
-            <HelperTextItem>
-              ISO-8601 duration: <code>{duration}</code>
-            </HelperTextItem>
-          </HelperText>
+          </div>
         </TabContentBody>
       </TabContent>
 
@@ -325,37 +382,19 @@ function FuturePickerPanel({ onChange }: FuturePickerProps) {
         hidden={tab !== "date"}
       >
         <TabContentBody hasPadding>
-          <div ref={dateTabRef}>
-            <CalendarMonth
+          {/* Centre the calendar inside the tab so it doesn't sit
+              start-aligned against the popover edge. */}
+          <div
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <CalendarPanel
               {...(date ? { date } : {})}
               validators={[isAtLeastTomorrow]}
-              onChange={(_e, d) => {
+              onChange={(d) => {
                 setDate(d);
                 emit({ mode: "date", date: fmtISODate(d) });
               }}
             />
-            {formControl &&
-              createPortal(
-                <div className="gp-stepper-stack gp-year-stepper">
-                  <button
-                    type="button"
-                    aria-label="Next year"
-                    className="gp-stepper-btn"
-                    onClick={() => step(+1)}
-                  >
-                    <CaretUpIcon />
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Previous year"
-                    className="gp-stepper-btn"
-                    onClick={() => step(-1)}
-                  >
-                    <CaretDownIcon />
-                  </button>
-                </div>,
-                formControl,
-              )}
           </div>
         </TabContentBody>
       </TabContent>
@@ -383,50 +422,125 @@ function describe(value: FuturePickerValue | null): string {
 // auto-pick it up as a second story alongside Overview.
 function FuturePicker({ onChange }: FuturePickerProps) {
   const [value, setValue] = useState<FuturePickerValue | null>(null);
+  const isMobile = useMobileViewport();
+  const [sheetOpen, setSheetOpen] = useState(false);
   const handlePanelChange = (next: FuturePickerValue) => {
     setValue(next);
     onChange?.(next);
   };
 
-  // Lock the popover panel to the size of its tallest tab (Specific
-  // date, dominated by the 6-row min-height CalendarMonth). Without
-  // this, switching from Wait → Specific date jumps the popover up by
-  // ~250px as PF6 Popper recomputes placement, and switching back
-  // shrinks it just as abruptly. The smaller Wait tab now renders
-  // with trailing blank space instead of resizing the popover.
-  const panel = (
-    <div style={{ minInlineSize: 320, minBlockSize: 360 }}>
+  // Desktop panel — locked-size box so the popover doesn't resize
+  // when the user flips between Wait and Specific date tabs. Fixed
+  // block-size (not just min) so the shorter tab can't render at a
+  // different height than the taller one.
+  const desktopPanel = (
+    <div
+      style={{
+        inlineSize: "24rem",
+        maxInlineSize: "24rem",
+        blockSize: "28rem",
+        minBlockSize: "28rem",
+      }}
+    >
       <FuturePickerPanel onChange={handlePanelChange} />
     </div>
   );
 
+  // Mobile panel — fills the bottom-sheet body and pulls the Tabs
+  // strip UP into the same row as the close button so the user sees
+  // their tab choices immediately at sheet open (without the 4rem of
+  // breathing room the calendar sheet body reserves for its day
+  // grid). Negative margin counter-acts the body's padding-block-start
+  // so the Tabs sit right under the sheet's top edge, beside the
+  // pill close button. Inline-end margin keeps the Tabs clear of the
+  // close button's 44px hit area.
+  const mobilePanel = (
+    <div
+      style={{
+        inlineSize: "100%",
+        marginBlockStart: "calc(var(--gp-pad-popover, 1rem) * -1.5)",
+        marginInlineEnd: "3.5rem",
+        // Fixed block-size (NOT just `min-block-size`) so both tabs
+        // share the exact same dialog height — `min` would only floor
+        // and let the taller tab inflate the dialog while the other
+        // tab leaves it shorter. 38rem comfortably exceeds the natural
+        // heights of both Wait (steppers + paragraph) and Specific
+        // date (CalendarPanel) at mobile container-query cell sizes.
+        blockSize: "30rem",
+        minBlockSize: "30rem",
+      }}
+    >
+      <FuturePickerPanel onChange={handlePanelChange} />
+    </div>
+  );
+
+  const triggerStyle = {
+    borderRadius:
+      "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+    aspectRatio: "1",
+    paddingInline: 0,
+  } as const;
+
   return (
-    <InputGroup style={{ maxWidth: 320 }}>
-      <InputGroupItem isFill>
-        <TextInput
-          id="future-picker-input"
-          value={describe(value)}
-          aria-label="Selected future schedule"
-          placeholder="Pick a wait or date"
-          readOnlyVariant="plain"
-        />
-      </InputGroupItem>
-      <InputGroupItem>
-        <Popover
-          headerContent="Schedule"
-          bodyContent={panel}
-          hasAutoWidth
-          showClose={false}
-          position="bottom"
-        >
-          <Button
-            variant={ButtonVariant.control}
-            aria-label="Open future picker"
-            icon={<CalendarAltIcon />}
+    <>
+      <InputGroup style={{ maxWidth: 320 }}>
+        <InputGroupItem isFill>
+          <TextInput
+            id="future-picker-input"
+            value={describe(value)}
+            onChange={() => undefined}
+            aria-label="Selected future schedule"
+            placeholder="Pick a wait or date"
+            readOnly
           />
-        </Popover>
-      </InputGroupItem>
-    </InputGroup>
+        </InputGroupItem>
+        <InputGroupItem>
+          {isMobile ? (
+            <Button
+              variant={ButtonVariant.tertiary}
+              aria-label="Open future picker"
+              icon={<CalendarAltIcon />}
+              onClick={() => setSheetOpen(true)}
+              style={triggerStyle}
+            />
+          ) : (
+            <Popover
+              headerContent="Schedule"
+              bodyContent={desktopPanel}
+              hasAutoWidth
+              showClose={false}
+              position="bottom-end"
+              flipBehavior={[
+                "bottom-end",
+                "bottom",
+                "bottom-start",
+                "top-end",
+                "top",
+                "top-start",
+              ]}
+              distance={8}
+              appendTo={() => document.body}
+            >
+              <Button
+                variant={ButtonVariant.tertiary}
+                aria-label="Open future picker"
+                icon={<CalendarAltIcon />}
+                style={triggerStyle}
+              />
+            </Popover>
+          )}
+        </InputGroupItem>
+      </InputGroup>
+      {isMobile && (
+        <BottomSheet
+          open={sheetOpen}
+          onClose={() => setSheetOpen(false)}
+          ariaLabel="Schedule"
+        >
+          {mobilePanel}
+        </BottomSheet>
+      )}
+    </>
   );
 }
 

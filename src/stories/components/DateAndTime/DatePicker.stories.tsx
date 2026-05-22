@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
@@ -12,7 +12,6 @@ import {
   InputGroup,
   InputGroupItem,
   Popover,
-  Popper,
   TextInput,
 } from "@patternfly/react-core";
 import {
@@ -187,27 +186,47 @@ function BottomSheet({
   useEffect(() => {
     const el = dialogRef.current;
     if (!el) return;
+    // Open / close the native dialog — the slide-up entrance + slide-
+    // down exit are pure CSS (translate transition + `@starting-style`
+    // for the entry-from state + `transition-behavior: allow-discrete`
+    // on overlay/display so the discrete-property changes during
+    // show/close animate).
     if (open && !el.open) el.showModal();
     if (!open && el.open) el.close();
   }, [open]);
 
-  // Lock the host page from scrolling while the sheet is open. Native
-  // `<dialog>` makes its background inert but doesn't actually freeze
-  // scroll on the underlying body — without this lock, swipe gestures
-  // (or wheel-scroll on desktop) still drift the page behind. Restore
-  // the previous overflow on close so we don't leak state if the page
-  // already had a custom overflow setting.
+  // Lock the host page from scrolling while the sheet is open AND
+  // preserve the user's scroll position. `overflow: hidden` alone
+  // doesn't always preserve scroll on mobile — Safari in particular
+  // can reset to 0 when the body becomes non-scrollable, leaving the
+  // user at the top of the page when they close the sheet. The
+  // position-fixed-with-negative-top trick pins the body in place at
+  // its current visual position and restores scrollY on close, so
+  // the user lands back at the trigger button they tapped.
   useEffect(() => {
     if (!open) return;
-    const docEl = document.documentElement;
     const body = document.body;
-    const prevHtmlOverflow = docEl.style.overflow;
-    const prevBodyOverflow = body.style.overflow;
-    docEl.style.overflow = "hidden";
+    const docEl = document.documentElement;
+    const scrollY = window.scrollY || docEl.scrollTop;
+    const prev = {
+      bodyPosition: body.style.position,
+      bodyTop: body.style.top,
+      bodyInlineSize: body.style.width,
+      bodyOverflow: body.style.overflow,
+      htmlOverflow: docEl.style.overflow,
+    };
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
     body.style.overflow = "hidden";
+    docEl.style.overflow = "hidden";
     return () => {
-      docEl.style.overflow = prevHtmlOverflow;
-      body.style.overflow = prevBodyOverflow;
+      body.style.position = prev.bodyPosition;
+      body.style.top = prev.bodyTop;
+      body.style.width = prev.bodyInlineSize;
+      body.style.overflow = prev.bodyOverflow;
+      docEl.style.overflow = prev.htmlOverflow;
+      window.scrollTo(0, scrollY);
     };
   }, [open]);
 
@@ -244,6 +263,93 @@ function BottomSheet({
       <div className="gp-bottom-sheet__body">{children}</div>
     </dialog>,
     document.body,
+  );
+}
+
+/**
+ * Reusable wrapper that hosts a CalendarPanel inside the lib's
+ * responsive shell — Popover on desktop, bottom-anchored Sheet on
+ * mobile — around any trigger element passed as children. Used by
+ * both the Default-section date picker (with an InputGroup TextInput
+ * trigger) and the Custom CTA section (with primary / secondary /
+ * link Button triggers).
+ */
+function CalendarPopout({
+  date,
+  validators,
+  rangeStart,
+  monthFormat,
+  locale,
+  onChange,
+  children,
+}: {
+  date?: Date;
+  validators?: Array<(d: Date) => boolean>;
+  rangeStart?: Date;
+  monthFormat?: (d: Date) => string;
+  locale?: string;
+  onChange: (next: Date) => void;
+  children: React.ReactElement<{ onClick?: () => void }>;
+}) {
+  const isMobile = useMobileViewport();
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const calendar = (
+    <CalendarPanel
+      {...(date ? { date } : {})}
+      {...(validators ? { validators } : {})}
+      {...(rangeStart ? { rangeStart } : {})}
+      {...(monthFormat ? { monthFormat } : {})}
+      {...(locale ? { locale } : {})}
+      onChange={(d) => {
+        onChange(d);
+        if (isMobile) setSheetOpen(false);
+      }}
+    />
+  );
+
+  if (isMobile) {
+    // Touch path — clone the trigger with our onClick so the Button
+    // opens the bottom sheet instead of a popover. Trigger Buttons
+    // already carry their own props (variant, icon, label); we only
+    // overlay click behaviour.
+    const triggerWithClick = React.cloneElement(children, {
+      onClick: () => setSheetOpen(true),
+    });
+    return (
+      <>
+        {triggerWithClick}
+        <BottomSheet
+          open={sheetOpen}
+          onClose={() => setSheetOpen(false)}
+          ariaLabel="Pick a date"
+        >
+          {calendar}
+        </BottomSheet>
+      </>
+    );
+  }
+
+  return (
+    <Popover
+      headerContent="Pick a date"
+      bodyContent={calendar}
+      hasAutoWidth
+      showClose={false}
+      position="bottom-end"
+      flipBehavior={[
+        "bottom-end",
+        "bottom",
+        "bottom-start",
+        "top-end",
+        "top",
+        "top-start",
+      ]}
+      distance={8}
+      appendTo={() => document.body}
+      elementToFocus=".pf-v6-c-calendar-month__date.pf-m-selected, .pf-v6-c-calendar-month__date.pf-m-current"
+    >
+      {children}
+    </Popover>
   );
 }
 
@@ -308,8 +414,26 @@ function DefaultDatePicker({
               bodyContent={calendar}
               hasAutoWidth
               showClose={false}
+              // Preferred position is bottom-end (popover right edge
+              // aligned with the trigger so the caret sits under the
+              // calendar button). `flipBehavior` lists every fallback
+              // Popper should try when the preferred edge runs out of
+              // viewport room — both block-axis (top/bottom) and
+              // inline-axis (-start/-end) variants. Popper picks the
+              // first that fits.
               position="bottom-end"
-              flipBehavior={["bottom-end", "bottom", "top-end", "top"]}
+              flipBehavior={[
+                "bottom-end",
+                "bottom",
+                "bottom-start",
+                "top-end",
+                "top",
+                "top-start",
+              ]}
+              // Keep at least 8px clear of every viewport edge as the
+              // popover slides toward a corner. Default would let the
+              // popover hug the edge.
+              distance={8}
               appendTo={() => document.body}
               elementToFocus=".pf-v6-c-calendar-month__date.pf-m-selected, .pf-v6-c-calendar-month__date.pf-m-current"
             >
@@ -437,6 +561,48 @@ function CalendarPanel({
     });
   };
 
+  // Validator helpers — disable arrows + tiles when the target span
+  // contains no valid date. Cheap because we short-circuit on the
+  // first valid day. Always returns true when no validators are
+  // configured.
+  const anyDayValid = (rangeStart: Date, rangeEnd: Date): boolean => {
+    if (!validators?.length) return true;
+    const cursor = new Date(rangeStart);
+    while (cursor.getTime() <= rangeEnd.getTime()) {
+      if (validators.every((v) => v(cursor))) return true;
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    return false;
+  };
+  const monthRange = (year: number, month: number): [Date, Date] => [
+    new Date(year, month, 1),
+    new Date(year, month + 1, 0),
+  ];
+  const yearRange = (year: number): [Date, Date] => [
+    new Date(year, 0, 1),
+    new Date(year, 11, 31),
+  ];
+  // Is there ANY valid day in the result of stepping by `delta` from
+  // the currently displayed month/year/decade? Used to disable arrows.
+  const canStep = (delta: number): boolean => {
+    if (!validators?.length) return true;
+    if (view === "days") {
+      const m = displayedMonth.getMonth() + delta;
+      const y = displayedMonth.getFullYear();
+      const next = new Date(y, m, 1);
+      return anyDayValid(...monthRange(next.getFullYear(), next.getMonth()));
+    }
+    if (view === "months") {
+      const y = displayedMonth.getFullYear() + delta;
+      return anyDayValid(...yearRange(y));
+    }
+    // years view — step a decade
+    const start = decadeStart + delta * 10;
+    return anyDayValid(new Date(start, 0, 1), new Date(start + 9, 11, 31));
+  };
+  const canBack = canStep(-1);
+  const canForward = canStep(+1);
+
   // Label toggle: days → months → years → months → days.
   const onLabelClick = () => {
     setView((v) =>
@@ -489,12 +655,14 @@ function CalendarPanel({
   return (
     <div
       className={`gp-libcal${showSelection ? "" : " gp-libcal--no-selection"}`}
-      // Fill the parent (popover content / bottom-sheet body) and cap
-      // at 22rem on desktop. Using `100%` instead of an explicit
-      // viewport width means the calendar can never overflow its
-      // container — the host's own padding/sizing is respected.
+      // Default sizing: shrink-wrap to the calendar's natural width
+      // (so the popover via `hasAutoWidth` lands at ~22rem on desktop),
+      // capped at 22rem so a wide host can't sprawl it. The
+      // `.gp-bottom-sheet__body .gp-libcal` override switches this
+      // to `inline-size: 100%` for the mobile sheet so the calendar
+      // fills the sheet width edge-to-edge.
       style={{
-        inlineSize: "100%",
+        inlineSize: "22rem",
         maxInlineSize: "22rem",
         boxSizing: "border-box",
       }}
@@ -530,6 +698,7 @@ function CalendarPanel({
                 : "Previous decade"
           }
           icon={<AngleLeftIcon />}
+          isDisabled={!canBack}
           onClick={() => step(-1)}
           style={navBtnStyle}
         />
@@ -573,6 +742,7 @@ function CalendarPanel({
                 : "Next decade"
           }
           icon={<AngleRightIcon />}
+          isDisabled={!canForward}
           onClick={() => step(+1)}
           style={navBtnStyle}
         />
@@ -617,23 +787,29 @@ function CalendarPanel({
             minBlockSize: "20rem",
           }}
         >
-          {monthsForYear.map(({ idx, label }) => (
-            <Button
-              key={idx}
-              variant={
-                idx === internalDate.getMonth()
-                  ? ButtonVariant.primary
-                  : ButtonVariant.tertiary
-              }
-              onClick={() => {
-                setDisplayedMonth(new Date(internalDate.getFullYear(), idx, 1));
-                setView("days");
-              }}
-              style={gridTileStyle}
-            >
-              {label}
-            </Button>
-          ))}
+          {monthsForYear.map(({ idx, label }) => {
+            const enabled = anyDayValid(
+              ...monthRange(internalDate.getFullYear(), idx),
+            );
+            return (
+              <Button
+                key={idx}
+                variant={
+                  idx === internalDate.getMonth()
+                    ? ButtonVariant.primary
+                    : ButtonVariant.tertiary
+                }
+                isDisabled={!enabled}
+                onClick={() => {
+                  setDisplayedMonth(new Date(internalDate.getFullYear(), idx, 1));
+                  setView("days");
+                }}
+                style={gridTileStyle}
+              >
+                {label}
+              </Button>
+            );
+          })}
         </div>
       ) : (
         // Flex-wrap year pills — matches the months chip layout.
@@ -655,6 +831,7 @@ function CalendarPanel({
         >
           {yearsInGrid.map((y) => {
             const inDecade = y >= decadeStart && y <= decadeStart + 9;
+            const enabled = anyDayValid(...yearRange(y));
             return (
               <Button
                 key={y}
@@ -663,6 +840,7 @@ function CalendarPanel({
                     ? ButtonVariant.primary
                     : ButtonVariant.tertiary
                 }
+                isDisabled={!enabled}
                 onClick={() => {
                   setDisplayedMonth(new Date(y, internalDate.getMonth(), 1));
                   setView("months");
@@ -735,22 +913,17 @@ function LibDatePicker({
         />
       </InputGroupItem>
       <InputGroupItem>
-        <Popover
-          headerContent="Pick a date"
-          bodyContent={
-            <CalendarPanel
-              {...(valid ? { date: parsed } : {})}
-              {...(validators ? { validators } : {})}
-              {...(rangeStart ? { rangeStart } : {})}
-              {...(monthFormat ? { monthFormat } : {})}
-              {...(locale ? { locale } : {})}
-              onChange={(d) => onChange(dateFormat(d))}
-            />
-          }
-          hasAutoWidth
-          showClose={false}
-          position="bottom-end"
-          appendTo={() => document.body}
+        {/* CalendarPopout = the responsive shell (Popover desktop /
+            bottom Sheet mobile) + the three-view CalendarPanel.
+            Section-specific props (validators / rangeStart / monthFormat
+            / locale) flow through to CalendarPanel. */}
+        <CalendarPopout
+          {...(valid ? { date: parsed } : {})}
+          {...(validators ? { validators } : {})}
+          {...(rangeStart ? { rangeStart } : {})}
+          {...(monthFormat ? { monthFormat } : {})}
+          {...(locale ? { locale } : {})}
+          onChange={(d) => onChange(dateFormat(d))}
         >
           <Button
             variant={ButtonVariant.tertiary}
@@ -763,7 +936,7 @@ function LibDatePicker({
               paddingInline: 0,
             }}
           />
-        </Popover>
+        </CalendarPopout>
       </InputGroupItem>
     </InputGroup>
   );
@@ -783,35 +956,6 @@ export const Overview: StoryObj = {
     const [primaryDate, setPrimaryDate] = useState<Date>(new Date());
     const [secondaryDate, setSecondaryDate] = useState<Date>(new Date());
     const [linkDate, setLinkDate] = useState<Date>(new Date());
-    // Bare-popper recipe state
-    const [bareDate, setBareDate] = useState<Date>(new Date());
-    const [bareOpen, setBareOpen] = useState(false);
-    const bareTriggerRef = useRef<HTMLButtonElement>(null);
-    const barePopupRef = useRef<HTMLDivElement>(null);
-
-    // Outside-click + Escape close the bare popup. Popover handles this
-    // for free; with bare Popper we wire it ourselves.
-    useEffect(() => {
-      if (!bareOpen) return;
-      const onMouseDown = (e: MouseEvent) => {
-        const t = e.target as Node;
-        if (
-          !barePopupRef.current?.contains(t) &&
-          !bareTriggerRef.current?.contains(t)
-        ) {
-          setBareOpen(false);
-        }
-      };
-      const onKey = (e: KeyboardEvent) => {
-        if (e.key === "Escape") setBareOpen(false);
-      };
-      document.addEventListener("mousedown", onMouseDown);
-      document.addEventListener("keydown", onKey);
-      return () => {
-        document.removeEventListener("mousedown", onMouseDown);
-        document.removeEventListener("keydown", onKey);
-      };
-    }, [bareOpen]);
 
     return (
       <FoundationPage
@@ -916,24 +1060,18 @@ import { CalendarAltIcon } from "@patternfly/react-icons";
                     alignItems: "center",
                   }}
                 >
-                  {/* Primary — strongest CTA. hasAutoWidth lets the Popover
-                      shrink-wrap the calendar's natural width. */}
+                  {/* Primary — strongest CTA. CalendarPopout handles
+                      the responsive shell (Popover on desktop, bottom
+                      Sheet on mobile) + the three-view CalendarPanel. */}
                   <div>
-                    <Popover
-                      headerContent="Pick a date"
-                      bodyContent={
-                        <CalendarMonth
-                          date={primaryDate}
-                          onChange={(_, d) => setPrimaryDate(d)}
-                        />
-                      }
-                      hasAutoWidth
-                      appendTo={() => document.body}
+                    <CalendarPopout
+                      date={primaryDate}
+                      onChange={setPrimaryDate}
                     >
                       <Button variant="primary" icon={<CalendarAltIcon />}>
                         Schedule
                       </Button>
-                    </Popover>
+                    </CalendarPopout>
                     <div
                       style={{
                         marginTop: 8,
@@ -945,22 +1083,16 @@ import { CalendarAltIcon } from "@patternfly/react-icons";
                     </div>
                   </div>
 
-                  {/* Secondary / outline. Drop headerContent for slimmer chrome. */}
+                  {/* Secondary / outline. */}
                   <div>
-                    <Popover
-                      bodyContent={
-                        <CalendarMonth
-                          date={secondaryDate}
-                          onChange={(_, d) => setSecondaryDate(d)}
-                        />
-                      }
-                      hasAutoWidth
-                      appendTo={() => document.body}
+                    <CalendarPopout
+                      date={secondaryDate}
+                      onChange={setSecondaryDate}
                     >
                       <Button variant="secondary" icon={<CalendarAltIcon />}>
                         Choose date
                       </Button>
-                    </Popover>
+                    </CalendarPopout>
                     <div
                       style={{
                         marginTop: 8,
@@ -974,20 +1106,14 @@ import { CalendarAltIcon } from "@patternfly/react-icons";
 
                   {/* Link / inline. */}
                   <div>
-                    <Popover
-                      bodyContent={
-                        <CalendarMonth
-                          date={linkDate}
-                          onChange={(_, d) => setLinkDate(d)}
-                        />
-                      }
-                      hasAutoWidth
-                      appendTo={() => document.body}
+                    <CalendarPopout
+                      date={linkDate}
+                      onChange={setLinkDate}
                     >
                       <Button variant="link" icon={<CalendarAltIcon />}>
                         Set deadline
                       </Button>
-                    </Popover>
+                    </CalendarPopout>
                     <div
                       style={{
                         marginTop: 8,
@@ -1000,21 +1126,19 @@ import { CalendarAltIcon } from "@patternfly/react-icons";
                   </div>
                 </div>
               </DemoFrame>
-              <CodeBlock>{`// With Popover chrome — any Button variant + Popover + CalendarMonth.
-// hasAutoWidth tells the Popover to shrink-wrap the calendar's
-// natural width (without it, the popover's default minWidth clamps
-// the content and the calendar can overflow).
+              <CodeBlock>{`// Lib recipe — CalendarPopout wraps any Button trigger in the
+// responsive shell (Popover on desktop, bottom-anchored Sheet on
+// mobile) + the three-view CalendarPanel (days / months / years).
+// The trigger Button keeps its own variant, label, and icon — pick
+// any you want.
 
-import { Button, CalendarMonth, Popover } from "@patternfly/react-core";
-import { CalendarAltIcon } from "@patternfly/react-icons";
-
-<Popover
-  bodyContent={<CalendarMonth date={date} onChange={(_, d) => setDate(d)} />}
-  hasAutoWidth                       // ← shrink-wrap to the calendar
-  appendTo={() => document.body}     // escape any parent overflow
->
+<CalendarPopout date={date} onChange={setDate}>
   <Button variant="primary" icon={<CalendarAltIcon />}>Schedule</Button>
-</Popover>`}</CodeBlock>
+</CalendarPopout>
+
+<CalendarPopout date={date} onChange={setDate}>
+  <Button variant="link" icon={<CalendarAltIcon />}>Set deadline</Button>
+</CalendarPopout>`}</CodeBlock>
               <p
                 style={{
                   margin: 0,
@@ -1022,131 +1146,14 @@ import { CalendarAltIcon } from "@patternfly/react-icons";
                   fontSize: 14,
                 }}
               >
-                <strong>Two configuration knobs:</strong>{" "}
-                <code>hasAutoWidth</code> shrink-wraps the popover to its
-                content (without it, PF6&apos;s default <code>minWidth</code>{" "}
-                can clip the calendar);{" "}
-                <code>hasNoPadding</code> drops the popover&apos;s inner
-                padding for a tighter fit when the content already has its
-                own padding. Drop <code>headerContent</code> entirely for
-                a slimmer chrome.
-              </p>
-            </div>
-          </Card>
-        </Section>
-
-        <Section
-          title="Custom CTA — bare popup (no Popover chrome)"
-          description='When the calendar should appear as a self-contained popup with no extra chrome above, use PF6&apos;s low-level Popper positioner instead of Popover. The lib ships a `gp-calendar-popup` class that adds brand-themed border / radius / shadow / bg so the bare CalendarMonth still reads as a contained surface.'
-        >
-          <Card>
-            <div style={{ padding: 24, display: "grid", gap: 16 }}>
-              <DemoFrame>
-                <div>
-                  <Button
-                    ref={bareTriggerRef}
-                    variant="primary"
-                    icon={<CalendarAltIcon />}
-                    onClick={() => setBareOpen((o) => !o)}
-                    aria-expanded={bareOpen}
-                    aria-haspopup="dialog"
-                  >
-                    Pick a date
-                  </Button>
-                  <Popper
-                    trigger={null}
-                    triggerRef={bareTriggerRef}
-                    isVisible={bareOpen}
-                    appendTo={() => document.body}
-                    popper={
-                      <div
-                        ref={barePopupRef}
-                        className="gp-calendar-popup"
-                        role="dialog"
-                        aria-label="Pick a date"
-                      >
-                        <CalendarMonth
-                          date={bareDate}
-                          onChange={(_, d) => {
-                            setBareDate(d);
-                            setBareOpen(false);
-                          }}
-                        />
-                      </div>
-                    }
-                  />
-                  <div
-                    style={{
-                      marginTop: 8,
-                      fontSize: 14,
-                      color: "var(--gp-color-text-subtle)",
-                    }}
-                  >
-                    {bareDate.toLocaleDateString()}
-                  </div>
-                </div>
-              </DemoFrame>
-              <CodeBlock>{`// Without Popover chrome — bare Popper + CalendarMonth wrapped
-// in the lib's gp-calendar-popup class for surface treatment
-// (border, radius, shadow, brand-elevated bg). Outside-click +
-// Escape closing wired manually since we're not using Popover.
-
-import { Button, CalendarMonth, Popper } from "@patternfly/react-core";
-
-const [open, setOpen] = useState(false);
-const triggerRef = useRef<HTMLButtonElement>(null);
-const popupRef = useRef<HTMLDivElement>(null);
-
-useEffect(() => {
-  if (!open) return;
-  const onMouseDown = (e: MouseEvent) => {
-    const t = e.target as Node;
-    if (!popupRef.current?.contains(t) && !triggerRef.current?.contains(t)) {
-      setOpen(false);
-    }
-  };
-  const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
-  document.addEventListener("mousedown", onMouseDown);
-  document.addEventListener("keydown", onKey);
-  return () => {
-    document.removeEventListener("mousedown", onMouseDown);
-    document.removeEventListener("keydown", onKey);
-  };
-}, [open]);
-
-<Button ref={triggerRef} variant="primary"
-  onClick={() => setOpen(o => !o)}
-  aria-expanded={open} aria-haspopup="dialog">
-  Pick a date
-</Button>
-<Popper
-  trigger={null}
-  triggerRef={triggerRef}
-  isVisible={open}
-  appendTo={() => document.body}
-                    popoverProps={{ position: "bottom-end" }}
-  popper={
-    <div ref={popupRef} className="gp-calendar-popup"
-      role="dialog" aria-label="Pick a date">
-      <CalendarMonth date={date} onChange={(_, d) => { setDate(d); setOpen(false); }} />
-    </div>
-  }
-/>`}</CodeBlock>
-              <p
-                style={{
-                  margin: 0,
-                  color: "var(--gp-color-text-subtle)",
-                  fontSize: 14,
-                }}
-              >
-                <strong>Trade-off vs the chromed Popover:</strong> bare
-                popup gives you full control over surface styling (the lib
-                provides <code>gp-calendar-popup</code> as a sensible
-                default — override or replace). Cost: outside-click +
-                Escape close behaviour you wire manually. Use this for
-                hero schedulers / dashboard date pickers where the
-                Popover&apos;s arrow + close-button chrome would feel
-                redundant.
+                <strong>What CalendarPopout handles for you:</strong> the
+                desktop popover with auto-flip near viewport edges + caret
+                under the trigger; the mobile bottom-sheet with focus
+                trap, Escape close, body-scroll lock + 44px tap-targets;
+                the three-view CalendarPanel (days / months / years) with
+                adaptive arrows and a single Month-Year label that cycles
+                between views. Bring your own trigger Button — variant,
+                icon, and label are all yours to set.
               </p>
             </div>
           </Card>

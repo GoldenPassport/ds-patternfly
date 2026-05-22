@@ -665,6 +665,31 @@
   max-block-size: 90vh;
   border-radius: var(--gp-radius-card, 12px) var(--gp-radius-card, 12px) 0 0;
   box-shadow: var(--gp-shadow-modal);
+  /* Slide-up entrance — `@starting-style` defines the state the
+     dialog renders FROM when it transitions from display:none to
+     display:block (the moment `showModal()` fires). Without it the
+     browser would paint the dialog instantly at its target state.
+     Pair with `transition-behavior: allow-discrete` on display +
+     overlay so the discrete-property changes during show/close are
+     animatable. */
+  translate: 0 0;
+  transition:
+    translate var(--gp-motion-duration, 180ms) cubic-bezier(0.16, 1, 0.3, 1),
+    overlay var(--gp-motion-duration, 180ms) allow-discrete,
+    display var(--gp-motion-duration, 180ms) allow-discrete;
+}
+@starting-style {
+  .gp-bottom-sheet[open] {
+    translate: 0 100%;
+  }
+}
+.gp-bottom-sheet:not([open]) {
+  translate: 0 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gp-bottom-sheet {
+    transition: none;
+  }
 }
 .gp-bottom-sheet::backdrop {
   background: rgba(0, 0, 0, 0.4);
@@ -755,6 +780,15 @@
  * (~8px each side via the xs spacer override), divided across 7 cells,
  * clamped to a sane touch range (36px–48px).
  */
+/* Make every CalendarMonth a container-query host so day-cell sizing
+ * adapts to the calendar's own width, regardless of host. Without
+ * this, standalone CalendarMonth instances (the bare PF6 component,
+ * no lib wrapper) get table cells stretched to fill the table while
+ * day-buttons stay 4ch wide — uneven horizontal vs vertical spacing.
+ */
+.pf-v6-c-calendar-month {
+  container-type: inline-size;
+}
 .gp-libcal {
   container-type: inline-size;
 }
@@ -769,6 +803,12 @@
  */
 .gp-libcal .pf-v6-c-calendar-month {
   margin-inline: auto;
+  /* PF6's CalendarMonth is display: inline-flex so it sizes to content
+   * by default. The lib's .gp-libcal wrapper has an explicit width, so
+   * force the calendar to fill it — otherwise the inner table's
+   * `inline-size: 100%` resolves against a 0-width parent. */
+  inline-size: 100%;
+  display: flex;
   /* Drop the popover-scoped calendar background tint — the lib
      calendar sits on the popover / bottom-sheet's own elevated
      surface, no second tint needed. */
@@ -787,17 +827,25 @@
   table-layout: fixed;
   background: transparent;
 }
+/* Apply the same fixed-layout / full-width rule globally so standalone
+ * CalendarMonth (no .gp-libcal wrapper) distributes cells evenly when
+ * the host stretches it wider than the natural 7×4ch table width. */
+.pf-v6-c-calendar-month__calendar {
+  inline-size: 100%;
+  table-layout: fixed;
+}
 /* Day cells: centre the button inside each table cell, fixed
  * touch-friendly square. The button width no longer needs the
  * container-query calc — the table cell handles horizontal
- * distribution. */
-.gp-libcal .pf-v6-c-calendar-month__dates-cell {
+ * distribution. Applied globally (not just inside .gp-libcal) so
+ * standalone CalendarMonth instances also get even square cells
+ * when the host stretches the table wider than its natural width. */
+.pf-v6-c-calendar-month__dates-cell {
   text-align: center;
 }
-.gp-libcal .pf-v6-c-calendar-month__date {
-  inline-size: clamp(2rem, calc((100cqi - 1rem) / 7 - 0.25rem), 2.5rem);
-  block-size: clamp(1.75rem, calc((100cqi - 1rem) / 7 - 0.25rem), 2.5rem);
-  line-height: clamp(1.75rem, calc((100cqi - 1rem) / 7 - 0.25rem), 2.5rem);
+.pf-v6-c-calendar-month__date {
+  --pf-v6-c-calendar-month__date--Width: clamp(1.75rem, calc((100cqi - 0.5rem) / 7 - 0.125rem), 2.5rem);
+  --pf-v6-c-calendar-month__date--Height: clamp(1.75rem, calc((100cqi - 0.5rem) / 7 - 0.125rem), 2.5rem);
   margin-inline: auto;
 }
 .pf-v6-c-popover .pf-v6-c-calendar-month__header-year .pf-v6-c-form-control {
@@ -946,12 +994,31 @@
   --pf-v6-c-calendar-month__day--PaddingBlockEnd: var(--pf-t--global--spacer--xs);
   --pf-v6-c-calendar-month__dates-row--first-child__dates-cell--PaddingBlockStart: var(--pf-t--global--spacer--xs);
 }
-/* Tabs inside a popover use the popover stroke for their underline
- * (and active-tab indicator) so the chrome reads against the
- * elevated surface — PF6's default `--pf-t--global--border--color--
- * default` blends into the cream/dark popover bg. */
-.pf-v6-c-popover .pf-v6-c-tabs {
-  --pf-v6-c-tabs--before--BorderColor: var(--gp-popover-stroke);
+/* Tabs inside an elevated surface (popover / bottom-sheet) use the
+ * popover stroke for their underline so the chrome reads against the
+ * elevated bg — PF6's default `--pf-t--global--border--color--default`
+ * blends into the cream/dark surface. Scoped to both shells so the
+ * mobile FuturePicker sheet gets the same visible divider as the
+ * desktop popover. `--gp-popover-stroke` cascades from `.pf-v6-c-popover`
+ * — the bottom sheet doesn't inherit it (different DOM subtree once
+ * portaled), so set it locally there too. */
+.gp-bottom-sheet {
+  --gp-popover-stroke: #cdbfa3;
+}
+:root:where(.pf-v6-theme-dark) .gp-bottom-sheet {
+  --gp-popover-stroke: #5a5147;
+}
+.pf-v6-c-popover .pf-v6-c-tabs,
+.gp-bottom-sheet .pf-v6-c-tabs {
+  /* Lighter than `--gp-popover-stroke` (which is used for input
+     borders inside the same surface) so the tabs strip reads as the
+     quieter divider in the hierarchy. Sits between the elevated bg
+     (#e6dcc8) and the stroke (#cdbfa3). */
+  --pf-v6-c-tabs--before--BorderColor: #dccdb0;
+}
+:root:where(.pf-v6-theme-dark) .pf-v6-c-popover .pf-v6-c-tabs,
+:root:where(.pf-v6-theme-dark) .gp-bottom-sheet .pf-v6-c-tabs {
+  --pf-v6-c-tabs--before--BorderColor: #4a423a;
 }
 
 /*
@@ -965,11 +1032,13 @@
  * InputGroup trigger button, etc.) get the same stroke for their
  * border and a subtle bg / hover-bg derived from the brand surfaces.
  */
-.pf-v6-c-popover .pf-v6-c-form-control {
+.pf-v6-c-popover .pf-v6-c-form-control,
+.gp-bottom-sheet .pf-v6-c-form-control {
   --pf-v6-c-form-control--before--BorderColor: var(--gp-popover-stroke);
   --pf-v6-c-form-control--hover--after--BorderColor: var(--gp-color-text-subtle);
 }
-.pf-v6-c-popover .pf-v6-c-button.pf-m-control {
+.pf-v6-c-popover .pf-v6-c-button.pf-m-control,
+.gp-bottom-sheet .pf-v6-c-button.pf-m-control {
   --pf-v6-c-button--m-control--BackgroundColor: var(--gp-color-bg-secondary-default);
   --pf-v6-c-button--m-control--BorderColor: var(--gp-popover-stroke);
   --pf-v6-c-button--m-control--hover--BackgroundColor: var(--gp-color-bg-secondary-hover);
@@ -1043,15 +1112,20 @@
    Set the underlying tokens AND pin the rendered values directly so
    neither focus state nor the inner-focus-ring outline-offset trick
    overrides today's info treatment. */
+/* Today: border + bold color only — no fill. The fill made weekday today
+   cells read like the weekend tint; the border alone identifies it without
+   competing with the weekend column treatment. Weekend cells that are
+   also today keep their weekend tint (the rule below excludes pf-m-current
+   for non-today weekends; today itself sits on top with the ring). */
 .pf-v6-c-calendar-month__dates-cell.pf-m-current:not(.pf-m-selected) {
-  --pf-v6-c-calendar-month__dates-cell--m-current__date--BackgroundColor: var(--gp-color-status-info-bg);
+  --pf-v6-c-calendar-month__dates-cell--m-current__date--BackgroundColor: transparent;
   --pf-v6-c-calendar-month__dates-cell--m-current__date--BorderColor: var(--gp-color-status-info-text);
   /* PF6's today border width comes from `--border--width--high-contrast--regular`
      which resolves to 0px in the standard theme (it's a high-contrast-mode
      opt-in). Force a real width so the info-text border actually renders. */
   --pf-v6-c-calendar-month__dates-cell--m-current__date--BorderWidth: 2px;
   --pf-v6-c-calendar-month__date--focus--after--BorderColor: var(--gp-color-status-info-text);
-  --pf-v6-c-calendar-month__date--BackgroundColor: var(--gp-color-status-info-bg);
+  --pf-v6-c-calendar-month__date--BackgroundColor: transparent;
   --pf-v6-c-calendar-month__date--BorderColor: var(--gp-color-status-info-text);
   --pf-v6-c-calendar-month__date--BorderWidth: 2px;
 }
@@ -1059,17 +1133,20 @@
   color: var(--gp-color-status-info-text);
   font-weight: 600;
 }
-/* Hover on today shouldn't lose the info treatment. */
+/* Hover on today picks up the standard hover bg from the base rule —
+   no override needed. Keep the info-text color so the bold treatment
+   doesn't fight the hover. */
 .pf-v6-c-calendar-month__dates-cell.pf-m-current:not(.pf-m-selected) .pf-v6-c-calendar-month__date:hover {
-  --pf-v6-c-calendar-month__date--BackgroundColor: var(--gp-color-status-info-bg);
   color: var(--gp-color-status-info-text);
 }
 
 /* Weekend cells (Sat / Sun for PF's default weekStart=0). Excluded for
-   selected, disabled, and today — those have stronger styling that
-   should win. */
-.pf-v6-c-calendar-month__dates-row .pf-v6-c-calendar-month__dates-cell:first-child:not(.pf-m-selected):not(.pf-m-disabled):not(.pf-m-current),
-.pf-v6-c-calendar-month__dates-row .pf-v6-c-calendar-month__dates-cell:last-child:not(.pf-m-selected):not(.pf-m-disabled):not(.pf-m-current) {
+   selected and disabled — those have stronger styling that should win.
+   Today is *not* excluded: when today falls on a weekend, the weekend
+   tint reads correctly alongside the today ring; on weekdays today is
+   transparent so the calendar doesn't pick up a spurious blue fill. */
+.pf-v6-c-calendar-month__dates-row .pf-v6-c-calendar-month__dates-cell:first-child:not(.pf-m-selected):not(.pf-m-disabled),
+.pf-v6-c-calendar-month__dates-row .pf-v6-c-calendar-month__dates-cell:last-child:not(.pf-m-selected):not(.pf-m-disabled) {
   --pf-v6-c-calendar-month__date--BackgroundColor: var(--gp-color-status-info-bg);
 }
 
