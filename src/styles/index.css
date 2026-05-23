@@ -1045,6 +1045,19 @@
   --pf-v6-c-button--m-control--hover--BorderColor: var(--gp-color-text-subtle);
 }
 /*
+ * Icon-only control buttons inside an InputGroup: force a 1:1 square so the
+ * footprint reads as an icon button, not a wide control. Height is already
+ * dial-driven (--gp-control-pad-y → 2.25rem). aspect-ratio + zero inline
+ * padding pin the width to match. Detected by :has() — a control button
+ * whose only direct child is an icon (PF6's <Button icon> renders the SVG
+ * wrapped in a span; we match either shape).
+ */
+.pf-v6-c-input-group .pf-v6-c-button.pf-m-control:has(> svg:only-child),
+.pf-v6-c-input-group .pf-v6-c-button.pf-m-control:has(> span:only-child > svg:only-child) {
+  aspect-ratio: 1;
+  padding-inline: 0;
+}
+/*
  * Pin the calendar to a 6-row min-height so the popover stays the
  * same size as the user cycles months. Without this, months that fit
  * in 5 weeks (Feb in a non-leap year starting Sunday, etc.) collapse
