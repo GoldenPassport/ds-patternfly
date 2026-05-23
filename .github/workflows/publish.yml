@@ -9,9 +9,99 @@ permissions:
   id-token: write  # Required for OIDC / npm provenance
   contents: read
 
+# Mirrors ci.yml's gates inside this workflow so a tag push can't publish
+# unless the CI checks pass on the tagged commit. ci.yml still runs on
+# push-to-main / PRs for fast feedback during development; this workflow
+# re-runs the same gates against the exact tagged SHA before publish.
 jobs:
-  publish:
+  typecheck:
+    name: TypeScript check
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+
+  build:
+    name: Library build (tsup)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+
+  storybook-build:
+    name: Storybook build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build-storybook
+
+  storybook-tests:
+    name: Storybook interaction + a11y tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v5
+        id: pw-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Playwright Chromium + OS deps
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Install Chromium OS deps only (cache hit)
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps chromium
+
+      - run: pnpm test
+
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    # Gate publish on all four CI checks passing. If any fail, the tag
+    # is still in git but nothing ships to npm — you can fix forward
+    # and re-tag without an unwanted partial release sitting on the
+    # registry.
+    needs: [typecheck, build, storybook-build, storybook-tests]
     steps:
       - uses: actions/checkout@v6
 
