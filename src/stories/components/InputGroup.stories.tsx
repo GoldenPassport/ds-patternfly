@@ -5,6 +5,7 @@ import {
   InputGroup,
   InputGroupItem,
   InputGroupText,
+  NumberInput,
   TextInput,
   FormSelect,
   FormSelectOption,
@@ -26,7 +27,7 @@ export const Overview: StoryObj = {
     const [showPwd, setShowPwd] = useState(false);
     const [search, setSearch] = useState("");
     const [scope, setScope] = useState("repos");
-    const [amount, setAmount] = useState("100");
+    const [amount, setAmount] = useState<number>(100);
 
     return (
       <FoundationPage
@@ -150,7 +151,7 @@ export const Overview: StoryObj = {
 
         <Section
           title="Number with unit + copy"
-          description="Combine prefix label, numeric input, and a trailing copy button. InputGroupText doubles as a unit indicator."
+          description="NumberInput (with native − / + steppers) bracketed by a currency-symbol prefix and a unit-suffix label, plus a trailing copy button. NumberInput is the right primitive whenever the value is numeric — the steppers give touch users a no-typing path, and screen readers announce the value via the inputAriaLabel."
         >
           <Card>
             <div style={{ padding: 24 }}>
@@ -158,12 +159,20 @@ export const Overview: StoryObj = {
                 <InputGroup>
                   <InputGroupText>$</InputGroupText>
                   <InputGroupItem isFill>
-                    <TextInput
-                      id="ig-amount"
-                      type="number"
-                      aria-label="Amount"
+                    <NumberInput
                       value={amount}
-                      onChange={(_e, v) => setAmount(v)}
+                      onMinus={() => setAmount((a) => Math.max(0, a - 1))}
+                      onPlus={() => setAmount((a) => a + 1)}
+                      onChange={(e) => {
+                        const v = Number(
+                          (e.target as HTMLInputElement).value,
+                        );
+                        if (!Number.isNaN(v)) setAmount(v);
+                      }}
+                      min={0}
+                      inputAriaLabel="Amount"
+                      minusBtnAriaLabel="Decrease amount"
+                      plusBtnAriaLabel="Increase amount"
                     />
                   </InputGroupItem>
                   <InputGroupText>USD</InputGroupText>
@@ -171,7 +180,9 @@ export const Overview: StoryObj = {
                     <Button
                       variant="control"
                       aria-label="Copy value"
-                      onClick={() => navigator.clipboard?.writeText(amount)}
+                      onClick={() =>
+                        navigator.clipboard?.writeText(String(amount))
+                      }
                     >
                       <CopyIcon />
                     </Button>

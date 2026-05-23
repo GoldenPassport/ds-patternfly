@@ -1057,6 +1057,28 @@
   aspect-ratio: 1;
   padding-inline: 0;
 }
+
+/*
+ * Flanked-stepper InputGroup (NumberInput pattern: tertiary ± button +
+ * input + tertiary ± button) — give the input visible left/right gap to
+ * its flanking buttons. Required when the outer focus ring is active:
+ * the input's outline extends `OutlineOffset (2px) + outline-width (2px)
+ * = 4px` beyond its border, and would otherwise smudge against the
+ * adjacent button on focus.
+ *
+ * Conditional on `.gp-focus-ring-outer` (set by ThemeProvider when
+ * focusRing="outer"). Inner-ring mode keeps the chained look that PF6
+ * ships — its inset outline never crosses the input border so no gap is
+ * needed.
+ *
+ * Detection via :has(.pf-m-tertiary) — the lib's flanked stepper uses
+ * tertiary buttons, distinguishing it from regular InputGroup chains
+ * which use `pf-m-control` (e.g. icon-only search / copy buttons that
+ * should stay seamlessly attached).
+ */
+.gp-focus-ring-outer .pf-v6-c-input-group:has(.pf-v6-c-button.pf-m-tertiary) {
+  gap: var(--gp-gap-inline, 0.5rem);
+}
 /*
  * Pin the calendar to a 6-row min-height so the popover stays the
  * same size as the user cycles months. Without this, months that fit
