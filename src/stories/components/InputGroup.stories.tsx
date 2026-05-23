@@ -15,7 +15,7 @@ import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_st
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 
 const meta: Meta = {
-  title: "Components/Forms/Input group",
+  title: "Components/Forms/InputGroup",
   parameters: { layout: "padded" },
 };
 export default meta;
@@ -31,7 +31,7 @@ export const Overview: StoryObj = {
 
     return (
       <FoundationPage
-        title="Input group"
+        title="InputGroup"
         intro={
           <>
             A horizontal cluster of inputs and add-ons that read as a single

@@ -71,7 +71,12 @@
   --gp-shadow-card:    var(--pf-t--global--box-shadow--sm, 0 1px 2px rgba(0,0,0,0.08));
   --gp-shadow-popover: 0 12px 32px rgba(0, 0, 0, 0.18), 0 4px 8px rgba(0, 0, 0, 0.10);
   --gp-shadow-modal:   0 24px 48px rgba(0, 0, 0, 0.24), 0 8px 16px rgba(0, 0, 0, 0.14);
-  --gp-border-width:   1px;
+  --gp-border-width:        1px;
+  /* Stronger stroke for emphasised states — hover, focus, active.
+     One step thicker than the resting border so the input "blooms"
+     into focus without changing layout (PF6 v6 paints the hover
+     border on a ::after pseudo so the width swap doesn't reflow). */
+  --gp-border-width-strong: 2px;
 
   /* --- G. Typography (4) ----------------------------------------------- */
   --gp-type-scale:     1;                     /* multiplier — 1.067 = roomy */
@@ -140,6 +145,14 @@
   --pf-v6-c-popover--BoxShadow: var(--gp-shadow-popover);
   --pf-v6-c-modal-box--BoxShadow: var(--gp-shadow-modal);
   --pf-t--global--border--width--default: var(--gp-border-width);
+  /* Control-state border widths — resting / hover / clicked. Form
+     controls, menu toggles, and stepper buttons all read these to
+     paint their ::after hover/focus pseudos. Mapping them to the
+     lib's "strong" dial gives a consistent +1px band on every
+     emphasised state in the system. */
+  --pf-t--global--border--width--control--default: var(--gp-border-width);
+  --pf-t--global--border--width--control--hover:   var(--gp-border-width-strong);
+  --pf-t--global--border--width--control--clicked: var(--gp-border-width-strong);
 
   /* G. Typography */
   --pf-t--global--font--family--body:    var(--gp-font-body);
@@ -517,7 +530,11 @@
   --pf-v6-c-button--m-control--BackgroundColor:          var(--pf-v6-c-button--m-tertiary--BackgroundColor, transparent);
   --pf-v6-c-button--m-control--BorderColor:              var(--pf-v6-c-button--m-tertiary--BorderColor, currentColor);
   --pf-v6-c-button--m-control--Color:                    var(--pf-v6-c-button--m-tertiary--Color, currentColor);
-  --pf-v6-c-button--m-control--BorderWidth:              var(--pf-v6-c-button--m-tertiary--BorderWidth, var(--gp-border-width, 1px));
+  /* Dial-first — the lib's --gp-border-width owns control stroke
+     thickness. Bumping the dial to 2px thickens every stepper border
+     in the system; PF6's m-tertiary BorderWidth only kicks in if the
+     dial is somehow unset. */
+  --pf-v6-c-button--m-control--BorderWidth:              var(--gp-border-width, var(--pf-v6-c-button--m-tertiary--BorderWidth, 1px));
   --pf-v6-c-button--m-control--hover--BackgroundColor:   var(--pf-v6-c-button--m-tertiary--hover--BackgroundColor, var(--gp-color-bg-secondary-default));
   --pf-v6-c-button--m-control--hover--BorderColor:       var(--pf-v6-c-button--m-tertiary--hover--BorderColor, currentColor);
   --pf-v6-c-button--m-control--hover--Color:             var(--pf-v6-c-button--m-tertiary--hover--Color, currentColor);
@@ -530,6 +547,44 @@
   --pf-v6-c-button--m-control--disabled--BackgroundColor: var(--pf-v6-c-button--m-tertiary--disabled--BackgroundColor, transparent);
   --pf-v6-c-button--m-control--disabled--BorderColor:    var(--pf-v6-c-button--m-tertiary--disabled--BorderColor, var(--gp-color-border-subtle));
   --pf-v6-c-button--m-control--disabled--Color:          var(--pf-v6-c-button--m-tertiary--disabled--Color, var(--gp-color-text-subtle));
+}
+/*
+ * Disabled stepper / icon-trigger — restore a muted border. PF6 hides
+ * the disabled button border globally via
+ * `.pf-v6-c-button:disabled::after { border-color: transparent }`,
+ * which is fine for solid filled variants (primary, secondary) but
+ * makes our outline-style stepper buttons disappear when disabled.
+ * Re-paint the ::after border with the disabled brand stroke so they
+ * still read as buttons, just quieter.
+ */
+.pf-v6-c-number-input .pf-v6-c-button.pf-m-control:disabled::after,
+.pf-v6-c-number-input .pf-v6-c-button.pf-m-control.pf-m-disabled::after,
+.pf-v6-c-number-input .pf-v6-c-button.pf-m-control.pf-m-aria-disabled::after,
+.pf-v6-c-input-group .pf-v6-c-button.pf-m-control:has(.pf-v6-c-button__icon):disabled::after,
+.pf-v6-c-input-group .pf-v6-c-button.pf-m-control:has(.pf-v6-c-button__icon).pf-m-disabled::after,
+.pf-v6-c-input-group .pf-v6-c-button.pf-m-control:has(.pf-v6-c-button__icon).pf-m-aria-disabled::after,
+/* Same treatment for explicit tertiary stepper buttons used in custom
+   composed steppers (FuturePicker Wait, NumberInput recipe) — PF6's
+   global disabled rule transparents the ::after border, which would
+   make the disabled ± buttons look borderless against the brand
+   surface.
+
+   Border colour follows the same surface-aware mix as the enabled
+   ones (--gp-popover-stroke = 50/50 surface ↔ text-subtle), but
+   blended further with the surface to give a quieter "disabled"
+   weight — final ratio ≈ 75% surface, 25% text-subtle. This way
+   disabled buttons read as a quieter sibling of their enabled
+   counterpart, without losing their identity against the brand
+   surface (which the previous --gp-color-border-subtle fallback
+   did on warm brands). */
+.pf-v6-c-input-group .pf-v6-c-button.pf-m-tertiary:disabled::after,
+.pf-v6-c-input-group .pf-v6-c-button.pf-m-tertiary.pf-m-disabled::after,
+.pf-v6-c-input-group .pf-v6-c-button.pf-m-tertiary.pf-m-aria-disabled::after {
+  border-color: color-mix(
+    in srgb,
+    var(--gp-color-bg-secondary-default, var(--gp-color-bg-elevated, #ffffff)) 50%,
+    var(--gp-popover-stroke, var(--gp-color-border, currentColor)) 50%
+  );
 }
 .pf-v6-c-input-group .pf-v6-c-button.pf-v6-c-button.pf-m-control:has(.pf-v6-c-button__icon) {
   /* Detach from the input — InputGroup-specific trim so the icon
@@ -689,10 +744,23 @@
  * token in the palette yet.
  */
 .pf-v6-c-popover {
-  --gp-popover-stroke: #cdbfa3;
-}
-:root:where(.pf-v6-theme-dark) .pf-v6-c-popover {
-  --gp-popover-stroke: #5a5147;
+  /* Brand-aware stroke that always reads against the popover surface.
+     Mix the popover bg (--gp-color-bg-secondary-default — the "card /
+     popover" tier in the brand object) with text-subtle at 50/50 so
+     the border lands roughly halfway between the surface and the text
+     colour — always visible regardless of how warm/cool/dark the
+     brand's elevated surface is.
+
+     Previously this was `var(--gp-color-border)` which on the
+     golden-passport brand resolves to `#e6dcc8` — almost identical to
+     the popover bg `#f3ede1`, making the input border invisible. The
+     mix approach gives the same self-balancing behaviour as the tabs
+     underline above (which uses 70/30 for a quieter divider). */
+  --gp-popover-stroke: color-mix(
+    in srgb,
+    var(--gp-color-bg-secondary-default, var(--gp-color-bg-elevated, #ffffff)) 50%,
+    var(--gp-color-text-subtle, currentColor) 50%
+  );
 }
 /*
  * Month + Year controls inside the popover-hosted CalendarMonth header
@@ -913,8 +981,15 @@
   text-align: center;
 }
 .pf-v6-c-calendar-month__date {
-  --pf-v6-c-calendar-month__date--Width: clamp(1.75rem, calc((100cqi - 0.5rem) / 7 - 0.125rem), 2.5rem);
-  --pf-v6-c-calendar-month__date--Height: clamp(1.75rem, calc((100cqi - 0.5rem) / 7 - 0.125rem), 2.5rem);
+  /* Day cells track the DS field height (2.25rem = 36px from
+     --gp-control-pad-y) so they read at the same scale as every
+     other clickable target in the lib (form-control / button /
+     menu-toggle). On narrow containers the clamp shrinks gracefully
+     down to 1.75rem (28px) so the grid still fits 7 columns on a
+     375px viewport. Max was previously 2.5rem (40px) which made day
+     cells feel oversized next to the now-36px header. */
+  --pf-v6-c-calendar-month__date--Width: clamp(1.75rem, calc((100cqi - 0.5rem) / 7 - 0.125rem), 2.25rem);
+  --pf-v6-c-calendar-month__date--Height: clamp(1.75rem, calc((100cqi - 0.5rem) / 7 - 0.125rem), 2.25rem);
   margin-inline: auto;
 }
 .pf-v6-c-popover .pf-v6-c-calendar-month__header-year .pf-v6-c-form-control {
@@ -1011,8 +1086,10 @@
  * usages keep their original layout.
  */
 .gp-libcal > header {
-  border-block-end: var(--gp-border-width, 1px) solid
-    var(--gp-border-subtle, var(--gp-popover-stroke));
+  /* Divider removed — the header's margin-block-end already separates
+     it from the day grid visually; the explicit line read as extra
+     chrome and crowded the popover. PF6's stock day-of-week underline
+     stays suppressed (see rule below). */
 }
 /*
  * When the calendar hasn't received a real user selection yet (and the
@@ -1072,23 +1149,56 @@
  * — the bottom sheet doesn't inherit it (different DOM subtree once
  * portaled), so set it locally there too. */
 .gp-bottom-sheet {
-  --gp-popover-stroke: #cdbfa3;
+  /* Mirror the popover stroke — same 50/50 mix so input borders read
+     consistently against the sheet's elevated surface regardless of
+     brand. */
+  --gp-popover-stroke: color-mix(
+    in srgb,
+    var(--gp-color-bg-secondary-default, var(--gp-color-bg-elevated, #ffffff)) 50%,
+    var(--gp-color-text-subtle, currentColor) 50%
+  );
 }
-:root:where(.pf-v6-theme-dark) .gp-bottom-sheet {
-  --gp-popover-stroke: #5a5147;
-}
-.pf-v6-c-popover .pf-v6-c-tabs,
-.gp-bottom-sheet .pf-v6-c-tabs {
-  /* Lighter than `--gp-popover-stroke` (which is used for input
-     borders inside the same surface) so the tabs strip reads as the
-     quieter divider in the hierarchy. Sits between the elevated bg
-     (#e6dcc8) and the stroke (#cdbfa3). */
-  --pf-v6-c-tabs--before--BorderColor: #dccdb0;
+/*
+ * Typography on elevated surfaces — soften the dominant text colour
+ * with a small dose of the surface so it doesn't paint as harshly
+ * against the tinted popover / sheet / calendar bg. The mix is
+ * direction-agnostic:
+ *   - light mode: dark text + cream surface → slightly cream-tinted
+ *     dark, still high contrast.
+ *   - dark mode:  light text + dark-grey surface → slightly grey-tinted
+ *     light, still high contrast.
+ * 10% surface keeps the contrast well above WCAG AA on every brand
+ * we ship; bump the percentage if a future brand needs more softening.
+ * The subtle text token (--gp-color-text-subtle) deliberately keeps
+ * its brand value — it already plays the muted role and shouldn't be
+ * further softened.
+ */
+.pf-v6-c-popover,
+.gp-bottom-sheet,
+.gp-libcal {
+  color: color-mix(
+    in srgb,
+    var(--gp-color-bg-secondary-default, var(--gp-color-bg-elevated, #ffffff)) 10%,
+    var(--gp-color-text-regular, currentColor) 90%
+  );
 }
 
-:root:where(.pf-v6-theme-dark) .pf-v6-c-popover .pf-v6-c-tabs,
-:root:where(.pf-v6-theme-dark) .gp-bottom-sheet .pf-v6-c-tabs {
-  --pf-v6-c-tabs--before--BorderColor: #4a423a;
+.pf-v6-c-popover .pf-v6-c-tabs,
+.gp-bottom-sheet .pf-v6-c-tabs {
+  /* Brand-aware divider that adapts to the popover / sheet surface
+     and the brand's text colour. Mix the surface bg the popover is
+     actually painted on (--gp-color-bg-secondary-default, the "card
+     / popover" tier in the brand object) with text-subtle so the
+     line is always one consistent step darker than the surface —
+     warm beige on golden-passport, neutral grey on default. The
+     previous mix used --gp-color-bg-elevated which is white on most
+     brands, producing a desaturated tone that read as grey on the
+     warm-beige golden-passport popover. */
+  --pf-v6-c-tabs--before--BorderColor: color-mix(
+    in srgb,
+    var(--gp-color-bg-secondary-default, var(--gp-color-bg-elevated, #ffffff)) 70%,
+    var(--gp-color-text-subtle, currentColor) 30%
+  );
 }
 
 /*
@@ -1115,6 +1225,22 @@
   --pf-v6-c-button--m-control--hover--BorderColor: var(--gp-color-text-subtle);
 }
 /*
+ * Tertiary stepper buttons inside popovers / bottom sheets — match
+ * the input border (--gp-popover-stroke, the same surface-aware mix).
+ * Without this the buttons pull PF6's brand `--m-tertiary--BorderColor`
+ * which on warm-surface brands resolves to a colour almost identical
+ * to the popover bg — invisible. Mirrors the m-control re-paint above
+ * so the FuturePicker Wait stepper, custom InputGroup-composed
+ * steppers, and DatePicker calendar trigger all share one border tone
+ * on elevated surfaces.
+ */
+.pf-v6-c-popover .pf-v6-c-button.pf-m-tertiary,
+.gp-bottom-sheet .pf-v6-c-button.pf-m-tertiary {
+  --pf-v6-c-button--m-tertiary--BorderColor: var(--gp-popover-stroke);
+  --pf-v6-c-button--m-tertiary--hover--BorderColor: var(--gp-color-text-subtle);
+  --pf-v6-c-button--m-tertiary--focus--BorderColor: var(--gp-color-text-subtle);
+}
+/*
  * Icon-only control buttons inside an InputGroup: force a 1:1 square so the
  * footprint reads as an icon button, not a wide control. Height is already
  * dial-driven (--gp-control-pad-y → 2.25rem). aspect-ratio + zero inline
@@ -1129,22 +1255,17 @@
 }
 
 /*
- * InputGroup with focusable controls + outer focus ring — give the
- * input visible left/right gap to its flanking siblings. Required when
- * the outer ring is active: the input's outline extends `OutlineOffset
- * (2px) + outline-width (2px) = 4px` beyond its border, and would
- * otherwise smudge against the adjacent button or attached label on
- * focus.
+ * InputGroup with focusable controls — give the input visible left /
+ * right gap to its flanking buttons so the +1px hover/focus band on
+ * the input edge (and on each tertiary button) has room to bloom
+ * without smudging against the neighbour. Pure label-only InputGroups
+ * (e.g. @-prefix + input + .com-suffix) keep PF6's tight chain
+ * because :has(.pf-v6-c-button) excludes them.
  *
- * Conditional on `.gp-focus-ring-outer` (set by ThemeProvider when
- * focusRing="outer"). Inner-ring mode keeps PF6's stock chained look —
- * its inset outline never crosses the input border so no gap is needed.
- *
- * Detection via :has(.pf-v6-c-button) — covers both the flanked-stepper
- * pattern (tertiary ± buttons in NumberInput) and the chained add-on
- * pattern (control buttons in InputGroup: search, copy, eye). Pure
- * label-only InputGroups (e.g. @-prefix + input + .com-suffix) keep
- * PF6's tight chain — no button = no outline clash.
+ * Scoped to `.gp-focus-ring-outer` — ThemeProvider mirrors the class
+ * onto <html> so the rule reaches portaled popovers / sheets. Inner
+ * ring mode keeps PF6's stock tight chain (inset outline never
+ * crosses the input border, no neighbour clearance needed).
  */
 .gp-focus-ring-outer .pf-v6-c-input-group:has(.pf-v6-c-button) {
   gap: var(--gp-gap-inline, 0.5rem);
@@ -1178,7 +1299,11 @@
  */
 .gp-libcal .pf-v6-c-calendar-month,
 .pf-v6-c-popover .pf-v6-c-calendar-month {
-  min-block-size: 20rem;
+  /* 6 rows × 2.25rem day cell = 13.5rem grid + ~2rem DoW header +
+     ~1rem trailing room → 16.5rem worst case. Day cells were trimmed
+     from 2.5rem → 2.25rem to match the field height dial, so the
+     min-height drops 3rem here (was 20rem). */
+  min-block-size: 17rem;
 }
 .pf-v6-c-popover .pf-v6-c-calendar-month {
   --pf-v6-c-calendar-month--BackgroundColor: var(--gp-color-bg-secondary-hover);

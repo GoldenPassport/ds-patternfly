@@ -153,17 +153,19 @@ const preview: Preview = {
               "Checkbox",
               "Date and time",
               [
+                // Overview (group-root story title "Components/Forms/Date and time")
+                // anchors at the top; the rest stays alphabetical.
                 "CalendarMonth",
                 "DatePicker",
                 "DateTimePicker",
-                "Future Picker",
+                "FuturePicker",
                 "TimePicker",
               ],
               "Form",
               "FormSelect",
               "HelperText",
               "Inline edit",
-              "Input group",
+              "InputGroup",
               "NumberInput",
               "Radio",
               "SearchInput",

@@ -120,6 +120,27 @@ export function ThemeProvider({
     };
   }, [brand.name, mode]);
 
+  // Mirror the focus-ring class onto <html> for the same reason as
+  // brand/mode above — portaled popovers / menus / modals live
+  // outside the wrapper, so any focus-ring-conditional rule scoped
+  // to `.gp-focus-ring-outer` / `.gp-focus-ring-inner` (e.g. the
+  // InputGroup gap, the form-control outline-offset) wouldn't apply
+  // inside them. Setting on <html> makes the class reachable from
+  // every node in the document.
+  useIsomorphicLayoutEffect(() => {
+    const root = document.documentElement;
+    const next = `gp-focus-ring-${focusRing}`;
+    const other = `gp-focus-ring-${focusRing === "outer" ? "inner" : "outer"}`;
+    const hadNext = root.classList.contains(next);
+    const hadOther = root.classList.contains(other);
+    root.classList.remove(other);
+    root.classList.add(next);
+    return () => {
+      if (!hadNext) root.classList.remove(next);
+      if (hadOther) root.classList.add(other);
+    };
+  }, [focusRing]);
+
   const value = useMemo<ThemeContextValue>(
     () => ({ brand, mode, dir, focusRing }),
     [brand, mode, dir, focusRing],

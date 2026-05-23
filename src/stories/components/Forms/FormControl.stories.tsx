@@ -108,7 +108,7 @@ export const Overview: StoryObj = {
             <li><strong>DateTimePicker</strong> — date + time in one composed control.</li>
             <li><strong>TimePicker</strong> — hours / minutes with optional 12-hour AM/PM.</li>
             <li><strong>CalendarMonth</strong> — the raw inline calendar primitive (PF6).</li>
-            <li><strong>Future Picker</strong> — schedule-style chooser: relative wait (ISO duration) or absolute future date.</li>
+            <li><strong>FuturePicker</strong> — schedule-style chooser: relative wait (ISO duration) or absolute future date.</li>
           </ul>
         </Card>
       </Section>

@@ -231,6 +231,110 @@ export const Overview: StoryObj = {
           </Card>
         </Section>
 
+        <Section
+          title="Surface tinting — the cascading effect"
+          description="An important detail about how this lib handles the popover surface, and why several other tokens have to bend in lock-step with it."
+        >
+          <Card>
+            <div style={{ padding: 24, display: "grid", gap: 16 }}>
+              <ul
+                style={{
+                  margin: 0,
+                  padding: "16px 24px 16px 40px",
+                  color: "var(--gp-color-text-regular)",
+                  lineHeight: 1.8,
+                }}
+              >
+                <li>
+                  <strong>Light mode — popover surface is tinted darker
+                  than the page.</strong> Pure white popovers on a
+                  light page disappear against the backdrop and lose
+                  the &quot;floating&quot; quality. The lib paints the
+                  popover with{" "}
+                  <code>--gp-color-bg-secondary-default</code> (one
+                  step darker than the page bg) so the surface always
+                  reads as elevated.
+                </li>
+                <li>
+                  <strong>Everything inside the popover then cascades
+                  darker too.</strong> A border colour that was
+                  perfectly visible on the page bg becomes near-invisible
+                  on the now-darker popover surface. The lib uses{" "}
+                  <code>color-mix()</code> to derive popover-scoped
+                  strokes that are always one consistent step darker
+                  than the popover bg:
+                  <ul>
+                    <li>
+                      Input + button borders → 50/50 mix of popover bg
+                      and <code>--gp-color-text-subtle</code> (visible
+                      stroke).
+                    </li>
+                    <li>
+                      Tab dividers → 70/30 mix (quieter, sits below the
+                      input border in the hierarchy).
+                    </li>
+                    <li>
+                      Brand-coloured accents (e.g. focus rings) read
+                      stronger automatically since they were chosen
+                      against the page surface; on the darker popover
+                      they gain contrast for free.
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Text may need to lighten to keep
+                  contrast.</strong> The same body text colour that
+                  reads at AA on the page may slip below threshold on
+                  a darker popover. Apps that customise text colour
+                  inside popovers should test both contrast against
+                  the elevated surface, or rely on the lib&apos;s{" "}
+                  <code>--gp-color-text-regular</code> /{" "}
+                  <code>--gp-color-text-subtle</code> pair which are
+                  brand-tuned for the elevated surface.
+                </li>
+                <li>
+                  <strong>Dark mode flips the relationship.</strong> On
+                  a dark page, the popover surface is{" "}
+                  <em>lighter</em> than the page (still elevated, just
+                  in the opposite direction). The same{" "}
+                  <code>color-mix()</code> recipes still work — they
+                  blend popover bg with text-subtle, and in dark mode
+                  both ends invert: lighter surface + lighter text
+                  produces a slightly darker stroke that reads against
+                  the lighter elevated bg. Text colour follows the same
+                  light/dark pair from the brand object, so it lightens
+                  automatically against the darker page and remains
+                  legible on the lighter popover.
+                </li>
+                <li>
+                  <strong>Practical consequence — don&apos;t reach for
+                  the global border / text tokens inside a popover.</strong>{" "}
+                  Use{" "}
+                  <code>--gp-popover-stroke</code> (the lib&apos;s
+                  surface-aware mix) for any border you draw inside
+                  popover / bottom-sheet content, and let{" "}
+                  <code>--gp-color-text-*</code> drive text. The page
+                  tokens (<code>--gp-color-border</code>,{" "}
+                  <code>--gp-color-border-subtle</code>) are tuned
+                  against the page bg and look wrong on the elevated
+                  surface — same problem as raw{" "}
+                  <code>#e6dcc8</code> on a <code>#f3ede1</code> bg.
+                </li>
+                <li>
+                  <strong>Why a mix rather than just an extra
+                  token?</strong> A static popover-stroke value would
+                  need to be re-tuned per brand. A{" "}
+                  <code>color-mix()</code> of surface ↔ text-subtle
+                  re-derives itself from the two tokens that already
+                  ship per-brand, per-mode. One recipe, every brand
+                  and every mode produce a balanced stroke without
+                  manual values.
+                </li>
+              </ul>
+            </div>
+          </Card>
+        </Section>
+
         <Section title="Accessibility">
           <Card>
             <ul style={{ margin: 0, padding: "16px 24px 16px 40px", color: "var(--gp-color-text-regular)", lineHeight: 1.8 }}>

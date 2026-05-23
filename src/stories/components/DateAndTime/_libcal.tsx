@@ -308,12 +308,20 @@ export function CalendarPanel({
   });
   const yearsInGrid = Array.from({ length: 12 }, (_, i) => decadeStart - 1 + i);
 
+  // Header nav arrows + center label match the DS field height
+  // (2.25rem = 36px from --gp-control-pad-y) — same scale as every
+  // other icon-only button in the lib (DatePicker trigger, NumberInput
+  // steppers, FuturePicker trigger). The header previously used
+  // 2.75rem (44px), which was inherited from a WCAG 2.5.5 touch-target
+  // target but read as oversized next to every other 36px control on
+  // the page. Touch sizing flows from the dial — bump `--gp-control-
+  // pad-y` to enlarge every control system-wide.
   const navBtnStyle = {
     borderRadius: "var(--gp-radius-pill, 999px)",
     aspectRatio: "1",
-    blockSize: "auto",
-    minBlockSize: "2.75rem",
-    minInlineSize: "2.75rem",
+    blockSize: "2.25rem",
+    minBlockSize: "2.25rem",
+    minInlineSize: "2.25rem",
     padding: 0,
     display: "inline-flex",
     alignItems: "center",
@@ -337,7 +345,14 @@ export function CalendarPanel({
     <div
       className={`gp-libcal${showSelection ? "" : " gp-libcal--no-selection"}`}
       style={{
-        inlineSize: "100%",
+        // Fixed 22rem on desktop popover / modal contexts. PF6's
+        // `Popover hasAutoWidth` sizes its content box to whatever
+        // the calendar reports; a fluid `100%` would resolve to 0
+        // and collapse the grid. The bottom-sheet override in
+        // index.css (`.gp-bottom-sheet__body .gp-libcal`) flips this
+        // back to 100% so the sheet's own width drives the calendar
+        // on mobile.
+        inlineSize: "22rem",
         maxInlineSize: "22rem",
         boxSizing: "border-box",
       }}
@@ -350,7 +365,9 @@ export function CalendarPanel({
           gap: 8,
           paddingBlockEnd: "var(--pf-t--global--spacer--sm, 0.5rem)",
           marginBlockEnd: "var(--pf-t--global--spacer--md, 1rem)",
-          minBlockSize: "2.75rem",
+          // Header row height matches the DS field height (2.25rem)
+          // so the nav controls line up with the rest of the lib.
+          minBlockSize: "2.25rem",
         }}
       >
         <Button
@@ -379,7 +396,8 @@ export function CalendarPanel({
           onClick={onLabelClick}
           style={{
             flex: 1,
-            minBlockSize: "2.75rem",
+            blockSize: "2.25rem",
+            minBlockSize: "2.25rem",
             whiteSpace: "nowrap",
             display: "inline-flex",
             alignItems: "center",

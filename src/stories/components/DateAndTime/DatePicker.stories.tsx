@@ -623,12 +623,17 @@ function CalendarPanel({
   // Touch-friendly nav arrow — pill (fully rounded), 44×44 hit area
   // for WCAG 2.5.5. The pill radius matches the close button on the
   // bottom sheet so the chrome reads as a single consistent system.
+  // Header nav buttons match the DS field height (2.25rem = 36px from
+  // --gp-control-pad-y), same as every other icon-only button in the
+  // lib (NumberInput steppers, DatePicker calendar trigger, etc.).
+  // Touch friendliness flows from the dial — bumping --gp-control-pad-y
+  // enlarges every control system-wide.
   const navBtnStyle = {
     borderRadius: "var(--gp-radius-pill, 999px)",
     aspectRatio: "1",
-    blockSize: "auto",
-    minBlockSize: "2.75rem",
-    minInlineSize: "2.75rem",
+    blockSize: "2.25rem",
+    minBlockSize: "2.25rem",
+    minInlineSize: "2.25rem",
     padding: 0,
     display: "inline-flex",
     alignItems: "center",
@@ -673,19 +678,11 @@ function CalendarPanel({
           alignItems: "center",
           justifyContent: "space-between",
           gap: 8,
-          // Inset the horizontal divider below the header content via
-          // padding-block-end. Without this, `border-block-end` sits
-          // flush against the arrows + label baseline; a small gap
-          // (sm spacer = 8px) lets the divider breathe.
           paddingBlockEnd: "var(--pf-t--global--spacer--sm, 0.5rem)",
-          // Space below the divider so the calendar grid below it
-          // doesn't crowd the line.
           marginBlockEnd: "var(--pf-t--global--spacer--md, 1rem)",
-          // Lock the row baseline so a long label ("September 2026")
-          // doesn't push the arrows out of vertical centre on narrow
-          // popovers. The arrows + label themselves still sit at
-          // 2.75rem; padding pushes the bottom border below that.
-          minBlockSize: "2.75rem",
+          // Header row height matches the DS field height (2.25rem)
+          // so the nav controls line up with the rest of the lib.
+          minBlockSize: "2.25rem",
         }}
       >
         <Button
@@ -714,15 +711,11 @@ function CalendarPanel({
           onClick={onLabelClick}
           style={{
             flex: 1,
-            // Touch-friendly height — matches the nav arrows above so
-            // the header row reads as one consistent strip on mobile.
-            minBlockSize: "2.75rem",
-            // Keep the label on a single line so it doesn't push the
-            // header taller than the arrows.
+            // Match the nav arrows' 2.25rem so the header row sits at
+            // one consistent height (same as every other lib control).
+            blockSize: "2.25rem",
+            minBlockSize: "2.25rem",
             whiteSpace: "nowrap",
-            // Centre the label glyph inside the touch-target — PF6
-            // Button auto-centres but the flex:1 stretch can push the
-            // text to start without these locks.
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
@@ -1515,6 +1508,33 @@ const isExcluded = (date: Date): boolean => {
                   </HelperText>
                 </FormGroup>
               </DemoFrame>
+            </div>
+          </Card>
+        </Section>
+
+        <Section
+          title="Mobile behaviour"
+          description={
+            <>
+              Below the <code>md</code> breakpoint, LibDatePicker swaps
+              its popover for a bottom sheet. The mechanics are the
+              same for every popover-shaped picker in this section —
+              see <strong>Date and time → Overview → Mobile behaviour</strong>{" "}
+              for the full write-up.
+            </>
+          }
+        >
+          <Card>
+            <div
+              style={{
+                padding: 24,
+                color: "var(--gp-color-text-subtle)",
+                fontSize: 14,
+              }}
+            >
+              Resize the canvas below the md breakpoint (the Storybook
+              viewport picker has a <em>mobile</em> preset) and re-open
+              any LibDatePicker on the page to see the sheet in action.
             </div>
           </Card>
         </Section>

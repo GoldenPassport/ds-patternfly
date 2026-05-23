@@ -1,10 +1,15 @@
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Button,
   ButtonVariant,
   InputGroup,
   InputGroupItem,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  ModalVariant,
   Popover,
   Tab,
   TabContent,
@@ -27,7 +32,7 @@ import {
 } from "./_libcal.js";
 
 const meta: Meta = {
-  title: "Components/Forms/Date and time/Future Picker",
+  title: "Components/Forms/Date and time/FuturePicker",
   parameters: { layout: "padded" },
 };
 export default meta;
@@ -71,7 +76,7 @@ const fmtISODate = (d: Date) =>
 
 /**
  * Disable any day strictly before tomorrow (so the inline calendar
- * matches a "Future Picker" intent — today + earlier are off-limits).
+ * matches the FuturePicker intent — today + earlier are off-limits).
  * PF6's CalendarMonth `validators` receive a candidate Date and return
  * false to disable.
  */
@@ -101,98 +106,6 @@ interface FuturePickerProps {
   onChange?: (value: FuturePickerValue) => void;
 }
 
-/**
- * Lib-style number stepper — InputGroup + TextInput + tertiary ± icon
- * Buttons. Replaces PF6 `<NumberInput>` so the ± buttons inherit the
- * lib icon-button styling (matches the DatePicker calendar trigger +
- * the Forms/NumberInput recipe). The TextInput uses
- * `inputMode="numeric"` to keep mobile keyboards numeric while
- * suppressing the browser-native ± spinner so only our buttons drive
- * the value.
- */
-function StepperInput({
-  value,
-  onChange,
-  min = 0,
-  max = 99,
-  label,
-  ariaLabel,
-}: {
-  value: number;
-  onChange: (next: number) => void;
-  min?: number;
-  max?: number;
-  label: string;
-  ariaLabel: string;
-}) {
-  const clamp = (v: number) => Math.max(min, Math.min(max, v));
-  const btnStyle = {
-    borderRadius:
-      "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
-    aspectRatio: "1",
-    paddingInline: 0,
-    // Pin to the DS field height (36px = 2.25rem, the value derived
-    // from `--gp-control-pad-y`). PF6 v6 `pf-m-secondary` doesn't
-    // align with the form-control field height by default, so we set
-    // it explicitly — the chips end up the same height as the
-    // TextInput between them.
-    blockSize: "2.25rem",
-    minBlockSize: "2.25rem",
-    // Match the TextInput border that sits between the ± chips. PF6
-    // v6 ships `pf-m-secondary` borderless in this brand, but we
-    // want the trio (− input +) to read as one unified row, so the
-    // chips pick up the same `--gp-popover-stroke` line the input
-    // paints via its `::before` pseudo.
-    border:
-      "var(--gp-border-width, 1px) solid var(--gp-popover-stroke)",
-  } as const;
-  return (
-    // Plain `<div>` + `<span>` instead of a `<label>` wrapping the
-    // InputGroup — a label re-fires click events on its labeled
-    // input, which here would trigger the +/- buttons in a cascading
-    // chain (clicking + also fired - and vice versa).
-    <div style={{ display: "grid", gap: 4, fontSize: 13 }}>
-      <span>{label}</span>
-      <InputGroup>
-        <InputGroupItem>
-          <Button
-            variant={ButtonVariant.tertiary}
-            aria-label={`Decrease ${label.toLowerCase()}`}
-            icon={<MinusIcon />}
-            isDisabled={value <= min}
-            onClick={() => onChange(clamp(value - 1))}
-            style={btnStyle}
-          />
-        </InputGroupItem>
-        <InputGroupItem isFill>
-          <TextInput
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            value={value}
-            onChange={(_e, v) => {
-              if (v === "") return;
-              const n = Number(v);
-              if (!Number.isNaN(n)) onChange(clamp(n));
-            }}
-            aria-label={ariaLabel}
-            style={{ textAlign: "center" }}
-          />
-        </InputGroupItem>
-        <InputGroupItem>
-          <Button
-            variant={ButtonVariant.tertiary}
-            aria-label={`Increase ${label.toLowerCase()}`}
-            icon={<PlusIcon />}
-            isDisabled={value >= max}
-            onClick={() => onChange(clamp(value + 1))}
-            style={btnStyle}
-          />
-        </InputGroupItem>
-      </InputGroup>
-    </div>
-  );
-}
 
 /**
  * Render the picker body — used as the Popover content. Pulled out
@@ -286,91 +199,128 @@ function FuturePickerPanel({ onChange }: FuturePickerProps) {
             Fire this task after a relative wait. If working hours or
             holidays are configured, the wait skips closed periods.
           </p>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 1fr)",
-              gap: 12,
-              inlineSize: "14rem",
-            }}
-          >
-            <StepperInput
-              label="Days"
-              ariaLabel="Days to wait"
-              value={days}
-              min={0}
-              max={365}
-              onChange={(v) => {
-                setDays(v);
-                emit({
-                  mode: "wait",
-                  duration: formatIsoDuration({
-                    days: v,
-                    hours,
-                    minutes,
-                    seconds,
-                  }),
-                });
-              }}
-            />
-            <StepperInput
-              label="Hours"
-              ariaLabel="Hours to wait"
-              value={hours}
-              min={0}
-              max={23}
-              onChange={(v) => {
-                setHours(v);
-                emit({
-                  mode: "wait",
-                  duration: formatIsoDuration({
-                    days,
-                    hours: v,
-                    minutes,
-                    seconds,
-                  }),
-                });
-              }}
-            />
-            <StepperInput
-              label="Minutes"
-              ariaLabel="Minutes to wait"
-              value={minutes}
-              min={0}
-              max={59}
-              onChange={(v) => {
-                setMinutes(v);
-                emit({
-                  mode: "wait",
-                  duration: formatIsoDuration({
-                    days,
-                    hours,
-                    minutes: v,
-                    seconds,
-                  }),
-                });
-              }}
-            />
-            <StepperInput
-              label="Seconds"
-              ariaLabel="Seconds to wait"
-              value={seconds}
-              min={0}
-              max={59}
-              onChange={(v) => {
-                setSeconds(v);
-                emit({
-                  mode: "wait",
-                  duration: formatIsoDuration({
-                    days,
-                    hours,
-                    minutes,
-                    seconds: v,
-                  }),
-                });
-              }}
-            />
-          </div>
+          {/* Four labelled stepper rows — explicit InputGroup
+              composition (Button tertiary + TextInput + Button
+              tertiary). The tertiary variant + the lib's global CSS
+              gives a transparent-bg, brand-stroke outline that stays
+              consistent across resting, hover, focus, and disabled
+              states without PF6's NumberInput hiding borders on
+              disabled (which the previous NumberInput-based variant
+              suffered from). */}
+          {(() => {
+            const clamp = (v: number, lo: number, hi: number) =>
+              Math.max(lo, Math.min(hi, v));
+            const emitWait = (next: {
+              d?: number;
+              h?: number;
+              m?: number;
+              s?: number;
+            }) =>
+              emit({
+                mode: "wait",
+                duration: formatIsoDuration({
+                  days: next.d ?? days,
+                  hours: next.h ?? hours,
+                  minutes: next.m ?? minutes,
+                  seconds: next.s ?? seconds,
+                }),
+              });
+            const triggerStyle = {
+              borderRadius:
+                "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+              aspectRatio: "1",
+              paddingInline: 0,
+            } as const;
+            const fields: Array<{
+              key: string;
+              label: string;
+              ariaLabel: string;
+              value: number;
+              min: number;
+              max: number;
+              set: (n: number) => void;
+              emitKey: "d" | "h" | "m" | "s";
+            }> = [
+              { key: "days", label: "Days", ariaLabel: "Days to wait", value: days, min: 0, max: 365, set: setDays, emitKey: "d" },
+              { key: "hours", label: "Hours", ariaLabel: "Hours to wait", value: hours, min: 0, max: 23, set: setHours, emitKey: "h" },
+              { key: "minutes", label: "Minutes", ariaLabel: "Minutes to wait", value: minutes, min: 0, max: 59, set: setMinutes, emitKey: "m" },
+              { key: "seconds", label: "Seconds", ariaLabel: "Seconds to wait", value: seconds, min: 0, max: 59, set: setSeconds, emitKey: "s" },
+            ];
+            return (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "minmax(0, 1fr)",
+                  gap: 12,
+                  inlineSize: "14rem",
+                }}
+              >
+                {fields.map((f) => (
+                  // Plain span (not <label>) — a <label> wrapping the
+                  // InputGroup would re-fire click events on its
+                  // labelled input, which here would chain into the
+                  // ± buttons (click + also fires -).
+                  <div
+                    key={f.key}
+                    style={{ display: "grid", gap: 4, fontSize: 13 }}
+                  >
+                    <span>{f.label}</span>
+                    <InputGroup>
+                      <InputGroupItem>
+                        <Button
+                          variant={ButtonVariant.tertiary}
+                          aria-label={`Decrease ${f.label.toLowerCase()}`}
+                          icon={<MinusIcon />}
+                          isDisabled={f.value <= f.min}
+                          onClick={() => {
+                            const next = clamp(f.value - 1, f.min, f.max);
+                            f.set(next);
+                            emitWait({ [f.emitKey]: next });
+                          }}
+                          style={triggerStyle}
+                        />
+                      </InputGroupItem>
+                      <InputGroupItem isFill>
+                        {/* type="text" + inputMode="numeric" — hides
+                            the browser's native ± spinner so only the
+                            lib ± Buttons drive the value. */}
+                        <TextInput
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          value={f.value}
+                          onChange={(_e, v) => {
+                            if (v === "") return;
+                            const n = Number(v);
+                            if (Number.isNaN(n)) return;
+                            const next = clamp(n, f.min, f.max);
+                            f.set(next);
+                            emitWait({ [f.emitKey]: next });
+                          }}
+                          aria-label={f.ariaLabel}
+                          style={{ textAlign: "center" }}
+                        />
+                      </InputGroupItem>
+                      <InputGroupItem>
+                        <Button
+                          variant={ButtonVariant.tertiary}
+                          aria-label={`Increase ${f.label.toLowerCase()}`}
+                          icon={<PlusIcon />}
+                          isDisabled={f.value >= f.max}
+                          onClick={() => {
+                            const next = clamp(f.value + 1, f.min, f.max);
+                            f.set(next);
+                            emitWait({ [f.emitKey]: next });
+                          }}
+                          style={triggerStyle}
+                        />
+                      </InputGroupItem>
+                    </InputGroup>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
           </div>
         </TabContentBody>
       </TabContent>
@@ -381,11 +331,21 @@ function FuturePickerPanel({ onChange }: FuturePickerProps) {
         activeKey={tab}
         hidden={tab !== "date"}
       >
-        <TabContentBody hasPadding>
-          {/* Centre the calendar inside the tab so it doesn't sit
-              start-aligned against the popover edge. */}
+        {/* Drop the TabContentBody's `hasPadding` here — PF6's
+            built-in 16px inline padding expands the tab body to
+            352 + 32 = 384 px to fit the calendar, which overflows
+            the ModalBody's content area on the right and reads as
+            an off-centre calendar. The CalendarPanel already
+            includes its own internal gutters (header + DoW row),
+            so it doesn't need extra padding from the tab body.
+            Centre via flex on a sibling wrapper. */}
+        <TabContentBody>
           <div
-            style={{ display: "flex", justifyContent: "center" }}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              paddingBlockStart: "var(--pf-t--global--spacer--sm, 0.5rem)",
+            }}
           >
             <CalendarPanel
               {...(date ? { date } : {})}
@@ -549,9 +509,23 @@ function FuturePicker({ onChange }: FuturePickerProps) {
 export const Overview: StoryObj = {
   render: () => {
     const [last, setLast] = useState<FuturePickerValue | null>(null);
+
+    // Modal demo — same FuturePickerPanel hosted inside a PF6 Modal
+    // with an explicit Apply / Cancel commit step. Draft state lives
+    // inside the modal until Apply commits it upstream; Cancel
+    // discards.
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [modalValue, setModalValue] =
+      useState<FuturePickerValue | null>(null);
+    const [draft, setDraft] = useState<FuturePickerValue | null>(null);
+    const openModal = () => {
+      setDraft(modalValue);
+      setModalOpen(true);
+    };
+
     return (
       <FoundationPage
-        title="Future Picker"
+        title="FuturePicker"
         intro={
           <>
             Two-tab control for scheduling future work. <strong>Wait</strong>{" "}
@@ -606,6 +580,125 @@ export const Overview: StoryObj = {
      */
   );
 }`}</CodeBlock>
+            </div>
+          </Card>
+        </Section>
+
+        <Section
+          title="Modal version"
+          description="The same FuturePickerPanel hosted inside a PF6 Modal — useful for confirm-style flows where 'pick when this fires' is a deliberate decision rather than a quick inline edit. Apply commits the draft upstream; Cancel discards. The trigger label summarises the committed value, same as the popover trigger above."
+        >
+          <Card>
+            <div style={{ padding: 24, display: "grid", gap: 16 }}>
+              <DemoFrame>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: 12 }}
+                >
+                  <Button variant="secondary" onClick={openModal}>
+                    {modalValue
+                      ? `Schedule: ${describe(modalValue)}`
+                      : "Schedule…"}
+                  </Button>
+                  {modalValue ? (
+                    <Button
+                      variant="link"
+                      onClick={() => setModalValue(null)}
+                    >
+                      Clear
+                    </Button>
+                  ) : null}
+                </div>
+
+                <Modal
+                  variant={ModalVariant.small}
+                  isOpen={modalOpen}
+                  onClose={() => setModalOpen(false)}
+                  aria-labelledby="fp-modal-title"
+                  aria-describedby="fp-modal-body"
+                  // Tighten the modal so the FuturePickerPanel sits
+                  // snugly without a wide gutter on either side. The
+                  // panel is internally capped at 24rem; 26rem covers
+                  // it plus the dialog inline padding.
+                  style={
+                    {
+                      "--pf-v6-c-modal-box--Width": "26rem",
+                    } as React.CSSProperties
+                  }
+                >
+                  <ModalHeader title="Schedule" labelId="fp-modal-title" />
+                  {/* Lock the body to a fixed height so flipping
+                      between Wait (4 stepper rows) and Specific date
+                      (calendar grid) doesn't reflow the modal. The
+                      calendar view is the tallest of the two — pin
+                      the body to 23.5rem so both tabs settle on the
+                      same dialog height and the Apply / Cancel footer
+                      stays put. */}
+                  <ModalBody
+                    id="fp-modal-body"
+                    style={{ minBlockSize: "28.5rem" }}
+                  >
+                    <FuturePickerPanel onChange={setDraft} />
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button
+                      variant="primary"
+                      isDisabled={!draft}
+                      onClick={() => {
+                        if (draft) setModalValue(draft);
+                        setModalOpen(false);
+                      }}
+                    >
+                      Apply
+                    </Button>
+                    <Button
+                      variant="link"
+                      onClick={() => setModalOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </ModalFooter>
+                </Modal>
+              </DemoFrame>
+              <CodeBlock>{`import {
+  Button, Modal, ModalBody, ModalFooter, ModalHeader, ModalVariant,
+} from "@patternfly/react-core";
+
+const [open, setOpen]     = useState(false);
+const [value, setValue]   = useState<FuturePickerValue | null>(null);
+const [draft, setDraft]   = useState<FuturePickerValue | null>(null);
+
+<Button variant="secondary" onClick={() => { setDraft(value); setOpen(true); }}>
+  {value ? \`Schedule: \${describe(value)}\` : "Schedule…"}
+</Button>
+
+<Modal variant={ModalVariant.small} isOpen={open} onClose={() => setOpen(false)}
+       aria-labelledby="fp-modal-title">
+  <ModalHeader title="Schedule" labelId="fp-modal-title" />
+  <ModalBody>
+    <FuturePickerPanel onChange={setDraft} />
+  </ModalBody>
+  <ModalFooter>
+    <Button variant="primary" isDisabled={!draft}
+            onClick={() => { if (draft) setValue(draft); setOpen(false); }}>
+      Apply
+    </Button>
+    <Button variant="link" onClick={() => setOpen(false)}>Cancel</Button>
+  </ModalFooter>
+</Modal>`}</CodeBlock>
+              <p
+                style={{
+                  margin: 0,
+                  color: "var(--gp-color-text-subtle)",
+                  fontSize: 14,
+                }}
+              >
+                <strong>Why modal vs popover:</strong> Modal forces an
+                explicit commit step and dims the page, focusing the
+                user on the schedule decision. Best for wizard steps
+                or confirmation flows. The popover above (Live demo)
+                is better for inline editing in forms where the
+                schedule is one of many fields.
+              </p>
             </div>
           </Card>
         </Section>
