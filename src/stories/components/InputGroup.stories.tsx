@@ -151,13 +151,17 @@ export const Overview: StoryObj = {
 
         <Section
           title="Number with unit + copy"
-          description="NumberInput (with native − / + steppers) bracketed by a currency-symbol prefix and a unit-suffix label, plus a trailing copy button. NumberInput is the right primitive whenever the value is numeric — the steppers give touch users a no-typing path, and screen readers announce the value via the inputAriaLabel."
+          description="NumberInput (with native − / + steppers) led by a combined currency prefix ('US$' — locale + symbol in one chip) and trailed by a copy button. NumberInput is the right primitive whenever the value is numeric — the steppers give touch users a no-typing path, and screen readers announce the value via the inputAriaLabel."
         >
           <Card>
             <div style={{ padding: 24 }}>
               <DemoFrame>
                 <InputGroup>
-                  <InputGroupText>$</InputGroupText>
+                  {/* Merged locale + symbol — "US$" reads as a single
+                      currency token, clearer than two separate chips
+                      (e.g. "$ … USD") which can disagree (CA$ vs USD)
+                      and crowd the field. */}
+                  <InputGroupText>US$</InputGroupText>
                   <InputGroupItem isFill>
                     <NumberInput
                       value={amount}
@@ -175,7 +179,6 @@ export const Overview: StoryObj = {
                       plusBtnAriaLabel="Increase amount"
                     />
                   </InputGroupItem>
-                  <InputGroupText>USD</InputGroupText>
                   <InputGroupItem>
                     <Button
                       variant="control"

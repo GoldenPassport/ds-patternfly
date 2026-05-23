@@ -420,32 +420,103 @@ import { MinusIcon, PlusIcon } from "@patternfly/react-icons";
                     </TextInputGroupUtilities>
                   </TextInputGroup>
                 </div>
-                {/* Touch / mobile fallback — same lib-style ± Buttons +
-                    TextInput InputGroup as the Basic section, swapped in
-                    below the md breakpoint where finger-sized hit areas
-                    matter more than column compactness. */}
+                {/* Touch / mobile fallbacks — render BOTH options
+                    side-by-side under md, each labelled, so consumers
+                    can compare and choose. At md+ the internal-stepper
+                    above takes over and these hide. */}
                 <div
                   className="pf-v6-u-display-block pf-v6-u-display-none-on-md"
-                  style={{ display: "inline-block" }}
+                  style={{ display: "grid", gap: 24 }}
                 >
-                  <InputGroup style={{ inlineSize: "max-content" }}>
-                    <InputGroupItem>
-                      <Button
-                        variant={ButtonVariant.tertiary}
-                        aria-label="Decrease year"
-                        icon={<MinusIcon />}
-                        onClick={() => setYear((y) => y - 1)}
-                        style={{
-                          borderRadius:
-                            "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
-                          aspectRatio: "1",
-                          paddingInline: 0,
-                        }}
-                      />
-                    </InputGroupItem>
-                    <InputGroupItem>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 6,
+                      fontSize: 13,
+                    }}
+                  >
+                    <span>
+                      <strong>mobileFallback=&quot;stepper&quot;</strong>{" "}
+                      <span style={{ color: "var(--gp-color-text-subtle)" }}>
+                        — finger-sized ± buttons (default, WCAG 2.5.5).
+                      </span>
+                    </span>
+                    <InputGroup style={{ inlineSize: "max-content" }}>
+                      <InputGroupItem>
+                        <Button
+                          variant={ButtonVariant.tertiary}
+                          aria-label="Decrease year (stepper)"
+                          icon={<MinusIcon />}
+                          onClick={() => setYear((y) => y - 1)}
+                          style={{
+                            borderRadius:
+                              "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+                            aspectRatio: "1",
+                            paddingInline: 0,
+                          }}
+                        />
+                      </InputGroupItem>
+                      <InputGroupItem>
+                        <TextInput
+                          id="year-mobile-stepper"
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          value={year}
+                          onChange={(_e, value) => {
+                            if (value === "") return;
+                            const v = Number(value);
+                            if (!Number.isNaN(v)) setYear(v);
+                          }}
+                          aria-label="Year (stepper fallback)"
+                          style={{ inlineSize: "5rem", textAlign: "center" }}
+                        />
+                      </InputGroupItem>
+                      <InputGroupItem>
+                        <Button
+                          variant={ButtonVariant.tertiary}
+                          aria-label="Increase year (stepper)"
+                          icon={<PlusIcon />}
+                          onClick={() => setYear((y) => y + 1)}
+                          style={{
+                            borderRadius:
+                              "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
+                            aspectRatio: "1",
+                            paddingInline: 0,
+                          }}
+                        />
+                      </InputGroupItem>
+                    </InputGroup>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 6,
+                      fontSize: 13,
+                    }}
+                  >
+                    <span>
+                      <strong>mobileFallback=&quot;input-only&quot;</strong>{" "}
+                      <span style={{ color: "var(--gp-color-text-subtle)" }}>
+                        — bare numeric input; device keyboard does the work.
+                      </span>
+                    </span>
+                    {/* input-only — wider field (7rem) than the
+                        stepper's sister input (5rem) since this is the
+                        sole entry surface. Wrapper has an explicit
+                        inline-size that the form-control span inside
+                        inherits, so the focus ring tracks the visible
+                        input edge. PF6's TextInput only forwards
+                        `style` to the inner <input>, NOT the
+                        form-control wrapper — without this constraint
+                        the wrapper stretches to the parent flex column
+                        and the ring draws on the wrong box. */}
+                    <div style={{ inlineSize: "7rem", paddingBlock: "0.375rem" }}>
                       <TextInput
-                        id="year-mobile"
+                        id="year-mobile-input-only"
                         type="text"
                         inputMode="numeric"
                         pattern="[0-9]*"
@@ -455,37 +526,19 @@ import { MinusIcon, PlusIcon } from "@patternfly/react-icons";
                           const v = Number(value);
                           if (!Number.isNaN(v)) setYear(v);
                         }}
-                        aria-label="Year"
-                        style={{ inlineSize: "5rem", textAlign: "center" }}
+                        aria-label="Year (input-only fallback)"
+                        style={{ textAlign: "center" }}
                       />
-                    </InputGroupItem>
-                    <InputGroupItem>
-                      <Button
-                        variant={ButtonVariant.tertiary}
-                        aria-label="Increase year"
-                        icon={<PlusIcon />}
-                        onClick={() => setYear((y) => y + 1)}
-                        style={{
-                          borderRadius:
-                            "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
-                          aspectRatio: "1",
-                          paddingInline: 0,
-                        }}
-                      />
-                    </InputGroupItem>
-                  </InputGroup>
+                    </div>
+                  </div>
                 </div>
               </DemoFrame>
               <CodeBlock>{`// Render both variants and let CSS swap by viewport. Internal
-// stepper at md+ (mouse), standard NumberInput below md (touch).
+// stepper at md+ (mouse); below md the recipe takes a 'mobileFallback'
+// prop — 'stepper' (default, ± Buttons + TextInput, WCAG 2.5.5
+// compliant) or 'input-only' (bare numeric TextInput, device keyboard).
 
-import {
-  NumberInput,
-  TextInputGroup,
-  TextInputGroupMain,
-  TextInputGroupUtilities,
-} from "@patternfly/react-core";
-import { CaretUpIcon, CaretDownIcon } from "@patternfly/react-icons";
+type MobileFallback = "stepper" | "input-only";
 
 {/* Internal stepper — md+ (≥ 768px), mouse-friendly. */}
 <div className="pf-v6-u-display-none pf-v6-u-display-inline-block-on-md">
@@ -512,17 +565,36 @@ import { CaretUpIcon, CaretDownIcon } from "@patternfly/react-icons";
   </TextInputGroup>
 </div>
 
-{/* Touch / small screens — standard NumberInput. WCAG 2.5.5 target size. */}
+{/* Touch / mobile — pick a fallback based on use-case. */}
 <div className="pf-v6-u-display-block pf-v6-u-display-none-on-md">
-  <NumberInput
-    value={year}
-    onMinus={() => setYear(y => y - 1)}
-    onPlus={() => setYear(y => y + 1)}
-    onChange={(e) => setYear(Number(e.target.value) || year)}
-    inputAriaLabel="Year"
-    minusBtnAriaLabel="Decrease year"
-    plusBtnAriaLabel="Increase year"
-  />
+  {mobileFallback === "stepper" ? (
+    // Default — finger-sized ± Buttons flanking the input. WCAG 2.5.5.
+    <InputGroup>
+      <InputGroupItem>
+        <Button variant={ButtonVariant.tertiary} icon={<MinusIcon />}
+          aria-label="Decrease year"
+          onClick={() => setYear(y => y - 1)}
+          style={{ aspectRatio: "1", paddingInline: 0 }} />
+      </InputGroupItem>
+      <InputGroupItem>
+        <TextInput type="text" inputMode="numeric" pattern="[0-9]*"
+          value={year} onChange={(_, v) => setYear(Number(v))}
+          aria-label="Year" />
+      </InputGroupItem>
+      <InputGroupItem>
+        <Button variant={ButtonVariant.tertiary} icon={<PlusIcon />}
+          aria-label="Increase year"
+          onClick={() => setYear(y => y + 1)}
+          style={{ aspectRatio: "1", paddingInline: 0 }} />
+      </InputGroupItem>
+    </InputGroup>
+  ) : (
+    // input-only — drop the steppers. Use when the range is wide
+    // (years, serials) or the form is dense and ± would crowd it.
+    <TextInput type="text" inputMode="numeric" pattern="[0-9]*"
+      value={year} onChange={(_, v) => setYear(Number(v))}
+      aria-label="Year" />
+  )}
 </div>`}</CodeBlock>
               <p
                 style={{

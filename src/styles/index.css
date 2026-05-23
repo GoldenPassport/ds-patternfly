@@ -314,6 +314,32 @@
   --pf-v6-c-form-control--OutlineOffset: 2px;
 }
 
+/*
+ * OUTER mode — paint the ring on the WRAPPER, not the inner <input>.
+ *
+ * In outer mode the focus ring is meant to read as a single rectangle
+ * around the *full* control. PF6 paints the ring on the inner <input>
+ * by default, which:
+ *   - For a bare TextInput, hugs the input edge — fine.
+ *   - For a TextInputGroup (input + steppers/icons in one frame), the
+ *     ring only wraps the text-input portion and stops at the boundary
+ *     with the utilities column. Visually the ring looks chopped.
+ *
+ * Fix: when the wrapper takes focus-within, draw the outline on the
+ * wrapper itself so the ring goes around the entire visual control,
+ * and suppress the inner outline so it doesn't double-draw inside.
+ */
+.gp-focus-ring-outer .pf-v6-c-form-control:focus-within,
+.gp-focus-ring-outer .pf-v6-c-text-input-group:focus-within {
+  outline: 2px solid var(--gp-color-focus-ring, currentColor);
+  outline-offset: 2px;
+  border-radius: var(--pf-v6-c-form-control--BorderRadius);
+}
+.gp-focus-ring-outer .pf-v6-c-form-control:focus-within > :is(input, textarea, select),
+.gp-focus-ring-outer .pf-v6-c-text-input-group:focus-within .pf-v6-c-text-input-group__text-input {
+  outline: none;
+}
+
 /* OUTER mode — TextArea content padding: PF6 derives the textarea's
    interior padding from `OutlineOffset` (specifically `calc(-1 *
    OutlineOffset)`). That works only while the offset is negative. When
@@ -381,13 +407,27 @@
  * `:has()` scopes the fix so vanilla TextInputGroups are untouched.
  */
 .pf-v6-c-text-input-group:has(.gp-stepper-stack) {
-  /* Clip the square buttons to the wrapper's rounded corner so a
-     hover/active background tip doesn't stick out past the curve.
-     Field height flows from `--gp-control-pad-y` at the brand root,
-     same as bare TextInput / TextInputGroup. */
-  overflow: hidden;
+  /* Round the wrapper to match the form-control corner. Field height
+     flows from `--gp-control-pad-y` at the brand root, same as bare
+     TextInput / TextInputGroup. */
   border-radius: var(--pf-v6-c-form-control--BorderRadius);
 }
+/*
+ * Inner-ring mode only — clip the square stepper-buttons to the
+ * wrapper's rounded corner so a hover/active bg tip doesn't poke past
+ * the curve. In OUTER ring mode the inner input's focus outline draws
+ * BEYOND the wrapper border, and `overflow: hidden` would chop it
+ * off — so we apply the clip only when the ring is inset.
+ */
+.gp-focus-ring-inner .pf-v6-c-text-input-group:has(.gp-stepper-stack) {
+  overflow: hidden;
+}
+/*
+ * Outer-ring mode — keep the corner clipping intent without breaking
+ * the input's focus ring. The carets and their hover bg are clipped
+ * via the buttons' own border-radius rather than the wrapper's
+ * overflow. See `.gp-stepper-btn` below.
+ */
 /*
  * NumberInput field + stepper sizing — pin the input column to the
  * DS form-control min-height (2.25rem = 36px) and force the flanking
@@ -429,11 +469,32 @@
  * than PF6's own `.pf-v6-c-input-group__item .pf-v6-c-button.pf-m-control`
  * which would otherwise override `border-radius` / `padding`.
  */
+/*
+ * NumberInput value alignment — numeric values read more naturally
+ * centred in their field (less ragged when steppers nudge the value
+ * up/down by orders of magnitude — "9 → 10 → 100" all stay visually
+ * anchored). PF6 left-aligns by default; the lib's convention is
+ * centred so numbers feel like the focal point of the control.
+ */
+/* Duplicated class for specificity — PF6 ships
+   `.pf-v6-c-number-input input.pf-v6-c-form-control__input { text-align: end }`,
+   so we need (0,4,1) to beat it cleanly. */
+.pf-v6-c-number-input.pf-v6-c-number-input input.pf-v6-c-form-control__input,
+.pf-v6-c-number-input.pf-v6-c-number-input .pf-v6-c-form-control input {
+  text-align: center;
+}
+
 .pf-v6-c-number-input .pf-v6-c-button.pf-m-control,
 .pf-v6-c-input-group .pf-v6-c-button.pf-v6-c-button.pf-m-control:has(.pf-v6-c-button__icon) {
-  aspect-ratio: 1;
-  inline-size: auto;
-  min-inline-size: 0;
+  /* Pin to a dial-derived square that matches the field height. The
+     maths mirror --gp-control-pad-y × 2 + 1.5rem line-height = 2.25rem
+     (PF6 form-control / button height path). Hard-coded inline-size +
+     block-size so PF6's NumberInput-internal sizing can't shrink the
+     ± buttons (it sets a 14px-ish intrinsic width otherwise). */
+  inline-size: calc(var(--gp-control-pad-y) * 2 + 1.5rem);
+  block-size: calc(var(--gp-control-pad-y) * 2 + 1.5rem);
+  min-inline-size: calc(var(--gp-control-pad-y) * 2 + 1.5rem);
+  min-block-size: calc(var(--gp-control-pad-y) * 2 + 1.5rem);
   padding: 0;
   display: inline-flex;
   align-items: center;
@@ -445,27 +506,35 @@
 }
 .pf-v6-c-number-input .pf-v6-c-button.pf-v6-c-button.pf-m-control,
 .pf-v6-c-input-group .pf-v6-c-button.pf-v6-c-button.pf-m-control:has(.pf-v6-c-button__icon) {
-  /* Standalone icon-button look — match the Secondary icon-only
-     variant in the Button story Border-radius row (cream bg, brand-
-     coloured 1px outline, brand-coloured glyph). PF6 ships
-     `pf-m-control` as a flat grey-fill chip — that bleeds against
-     cream pages, hence the explicit override here. Use the brand
-     text token (visible against every brand) instead of the subtle
-     border-default token which is intentionally near-invisible. */
-  background: transparent !important;
-  border: var(--gp-border-width, 1px) solid
-    var(--gp-color-text-regular, var(--pf-t--global--border--color--default)) !important;
-  color: var(--gp-color-text-regular, currentColor) !important;
+  /* Re-paint the stepper / icon-trigger as the lib's tertiary variant
+     by aliasing every `m-control--*` paint token to its `m-tertiary--*`
+     equivalent. PF6 then renders the button through the tertiary visual
+     pipeline natively — hover, focus, active, disabled, and dark-mode
+     all roll through without per-state overrides.
+     `pf-m-control` defaults to a flat grey-fill chip; tertiary is the
+     transparent-bg, brand-stroke outline used by DatePicker / FuturePicker
+     / NumberInput steppers across the system. */
+  --pf-v6-c-button--m-control--BackgroundColor:          var(--pf-v6-c-button--m-tertiary--BackgroundColor, transparent);
+  --pf-v6-c-button--m-control--BorderColor:              var(--pf-v6-c-button--m-tertiary--BorderColor, currentColor);
+  --pf-v6-c-button--m-control--Color:                    var(--pf-v6-c-button--m-tertiary--Color, currentColor);
+  --pf-v6-c-button--m-control--BorderWidth:              var(--pf-v6-c-button--m-tertiary--BorderWidth, var(--gp-border-width, 1px));
+  --pf-v6-c-button--m-control--hover--BackgroundColor:   var(--pf-v6-c-button--m-tertiary--hover--BackgroundColor, var(--gp-color-bg-secondary-default));
+  --pf-v6-c-button--m-control--hover--BorderColor:       var(--pf-v6-c-button--m-tertiary--hover--BorderColor, currentColor);
+  --pf-v6-c-button--m-control--hover--Color:             var(--pf-v6-c-button--m-tertiary--hover--Color, currentColor);
+  --pf-v6-c-button--m-control--focus--BackgroundColor:   var(--pf-v6-c-button--m-tertiary--focus--BackgroundColor, transparent);
+  --pf-v6-c-button--m-control--focus--BorderColor:       var(--pf-v6-c-button--m-tertiary--focus--BorderColor, currentColor);
+  --pf-v6-c-button--m-control--focus--Color:             var(--pf-v6-c-button--m-tertiary--focus--Color, currentColor);
+  --pf-v6-c-button--m-control--active--BackgroundColor:  var(--pf-v6-c-button--m-tertiary--active--BackgroundColor, var(--gp-color-bg-secondary-hover));
+  --pf-v6-c-button--m-control--active--BorderColor:      var(--pf-v6-c-button--m-tertiary--active--BorderColor, currentColor);
+  --pf-v6-c-button--m-control--active--Color:            var(--pf-v6-c-button--m-tertiary--active--Color, currentColor);
+  --pf-v6-c-button--m-control--disabled--BackgroundColor: var(--pf-v6-c-button--m-tertiary--disabled--BackgroundColor, transparent);
+  --pf-v6-c-button--m-control--disabled--BorderColor:    var(--pf-v6-c-button--m-tertiary--disabled--BorderColor, var(--gp-color-border-subtle));
+  --pf-v6-c-button--m-control--disabled--Color:          var(--pf-v6-c-button--m-tertiary--disabled--Color, var(--gp-color-text-subtle));
 }
 .pf-v6-c-input-group .pf-v6-c-button.pf-v6-c-button.pf-m-control:has(.pf-v6-c-button__icon) {
   /* Detach from the input — InputGroup-specific trim so the icon
      trigger sits as a standalone control next to the field. */
   margin-inline-start: var(--pf-t--global--spacer--xs, 4px);
-}
-.pf-v6-c-number-input .pf-v6-c-button.pf-v6-c-button.pf-m-control:hover,
-.pf-v6-c-input-group .pf-v6-c-button.pf-v6-c-button.pf-m-control:has(.pf-v6-c-button__icon):hover {
-  background: var(--gp-color-bg-secondary-default, var(--gp-surface-card)) !important;
-  border-color: var(--gp-color-text-regular, currentColor) !important;
 }
 /* Inner focus-ring mode — pull the outline inside the now-square
  * button. Without an explicit inset, the default outline at 2px
@@ -1016,6 +1085,7 @@
      (#e6dcc8) and the stroke (#cdbfa3). */
   --pf-v6-c-tabs--before--BorderColor: #dccdb0;
 }
+
 :root:where(.pf-v6-theme-dark) .pf-v6-c-popover .pf-v6-c-tabs,
 :root:where(.pf-v6-theme-dark) .gp-bottom-sheet .pf-v6-c-tabs {
   --pf-v6-c-tabs--before--BorderColor: #4a423a;
@@ -1059,24 +1129,24 @@
 }
 
 /*
- * Flanked-stepper InputGroup (NumberInput pattern: tertiary ± button +
- * input + tertiary ± button) — give the input visible left/right gap to
- * its flanking buttons. Required when the outer focus ring is active:
- * the input's outline extends `OutlineOffset (2px) + outline-width (2px)
- * = 4px` beyond its border, and would otherwise smudge against the
- * adjacent button on focus.
+ * InputGroup with focusable controls + outer focus ring — give the
+ * input visible left/right gap to its flanking siblings. Required when
+ * the outer ring is active: the input's outline extends `OutlineOffset
+ * (2px) + outline-width (2px) = 4px` beyond its border, and would
+ * otherwise smudge against the adjacent button or attached label on
+ * focus.
  *
  * Conditional on `.gp-focus-ring-outer` (set by ThemeProvider when
- * focusRing="outer"). Inner-ring mode keeps the chained look that PF6
- * ships — its inset outline never crosses the input border so no gap is
- * needed.
+ * focusRing="outer"). Inner-ring mode keeps PF6's stock chained look —
+ * its inset outline never crosses the input border so no gap is needed.
  *
- * Detection via :has(.pf-m-tertiary) — the lib's flanked stepper uses
- * tertiary buttons, distinguishing it from regular InputGroup chains
- * which use `pf-m-control` (e.g. icon-only search / copy buttons that
- * should stay seamlessly attached).
+ * Detection via :has(.pf-v6-c-button) — covers both the flanked-stepper
+ * pattern (tertiary ± buttons in NumberInput) and the chained add-on
+ * pattern (control buttons in InputGroup: search, copy, eye). Pure
+ * label-only InputGroups (e.g. @-prefix + input + .com-suffix) keep
+ * PF6's tight chain — no button = no outline clash.
  */
-.gp-focus-ring-outer .pf-v6-c-input-group:has(.pf-v6-c-button.pf-m-tertiary) {
+.gp-focus-ring-outer .pf-v6-c-input-group:has(.pf-v6-c-button) {
   gap: var(--gp-gap-inline, 0.5rem);
 }
 /*
