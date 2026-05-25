@@ -1745,6 +1745,22 @@
   --pf-v6-c-tabs--m-box__link--hover--BackgroundColor: transparent;
   --pf-v6-c-tabs--m-box--m-secondary__link--BackgroundColor: transparent;
   --pf-v6-c-tabs--m-box--m-secondary__link--hover--BackgroundColor: transparent;
+
+}
+
+/* Active-tab indicator (the bar under the selected tab) — paint with
+ * the brand primary so it reads the same as primary buttons and links
+ * across the system. Duplicated class for specificity so we win
+ * against PF6's stock `.pf-v6-c-tabs` rule which loads later and
+ * resolves the same token to `--pf-t--global--border--color--clicked`
+ * (a darker hover variant). */
+.pf-v6-c-tabs.pf-v6-c-tabs {
+  --pf-v6-c-tabs__item--m-current__link--after--BorderColor:
+    var(--gp-color-brand-default, currentColor);
+  --pf-v6-c-tabs--m-box__item--m-current__link--after--BorderColor:
+    var(--gp-color-brand-default, currentColor);
+  --pf-v6-c-tabs--m-box--m-secondary__item--m-current__link--after--BorderColor:
+    var(--gp-color-brand-default, currentColor);
 }
 
 /* ---------------------------------------------------------------

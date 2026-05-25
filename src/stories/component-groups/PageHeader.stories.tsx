@@ -159,19 +159,17 @@ export const Overview: StoryObj = {
                     title="3scale-control-fccb6ddb9-phyqv9"
                     label={<Label color="green">Running</Label>}
                   />
-                  {/* Full-width Tabs strip — negative inline margins
-                      stretch the Tabs container to the DemoFrame
-                      edges so PF6's underline (drawn on the Tabs
-                      ::before pseudo, inset: 44px 0 0) spans
-                      edge-to-edge. The inner __list keeps PF6's own
-                      padding so the tab labels stay aligned with the
-                      breadcrumb / body column.
+                  {/* Standard Tabs strip — renders with PF6's stock
+                      padding so it looks identical to the standalone
+                      Tabs story (Components/Tabs). The host card sets
+                      its own inline padding, so the tab labels
+                      naturally sit at the same column as the
+                      breadcrumb and body content above/below.
 
                       Block rhythm:
                         - PageHeader → Tabs: 0 (mirrors the natural
                           breadcrumb → title spacing inside PageHeader)
-                        - Tabs → TabContent: --gp-pad-section
-                      DemoFrame padding = 16px (see _demoKit). */}
+                        - Tabs → TabContent: --gp-pad-section */}
                   <Tabs
                     activeKey={activeTabKey}
                     onSelect={(_, k) => setActiveTabKey(k)}
@@ -182,26 +180,13 @@ export const Overview: StoryObj = {
                     component="nav"
                     aria-label="Pod navigation tabs"
                     style={{
-                      // Bleed the Tabs container to the card edges so
-                      // PF6's underline (::before with inset 44px 0 0)
-                      // spans full width.
-                      //   - marginInline pulls out by the host card's
-                      //     inline padding — referenced via the brand
-                      //     dial so changing --gp-pad-popover at the
-                      //     brand level moves card AND tabs together.
-                      //   - paddingInlineStart re-indents the first
-                      //     tab label by the SAME amount, putting it
-                      //     8px past the breadcrumb / body column for
-                      //     a deliberate tab-strip inset.
-                      //   - paddingInlineEnd uses the sm spacer (half
-                      //     the card padding by convention) so the
-                      //     last tab has breathing room before the
-                      //     line ends. Same brand source so if a
-                      //     brand resizes the global spacer scale
-                      //     everything tracks together.
-                      marginInline: "calc(-1 * var(--gp-pad-popover, 1rem))",
-                      paddingInlineStart: "var(--gp-pad-popover, 1rem)",
-                      paddingInlineEnd: "var(--pf-t--global--spacer--sm, 0.5rem)",
+                      // Section rhythm to the body content below.
+                      // No marginInline / paddingInline overrides —
+                      // the tabs render with PF6's stock padding so
+                      // they look identical to the standalone Tabs
+                      // story (Components/Tabs). The host card sets
+                      // its own padding so the tab strip naturally
+                      // aligns within the content column.
                       marginBlockEnd: "var(--gp-pad-section, 2rem)",
                     }}
                   >
@@ -316,11 +301,10 @@ export const Overview: StoryObj = {
               </DemoFrame>
               <CodeBlock>{`const [activeTabKey, setActiveTabKey] = useState(0);
 
-// Negative margin on the Tabs strip bleeds the underline to the
-// card edges (matches a real OpenShift / Konflux detail page where
-// the tabs sit in PageSection type="tabs"). paddingInline on the
-// strip keeps the tab labels aligned with the breadcrumb / body
-// column. marginBlockEnd provides the section rhythm to the body.
+// Tabs render at PF6 defaults — they pick up the host card's
+// inline padding so labels align with the breadcrumb / body
+// column. The only inline style is the section-rhythm gap to
+// the content below.
 <div style={{ display: "flex", flexDirection: "column" }}>
   <PageHeader
     breadcrumbs={<Breadcrumb aria-label="Pod breadcrumb">…</Breadcrumb>}
@@ -331,11 +315,7 @@ export const Overview: StoryObj = {
 
   <Tabs activeKey={activeTabKey} onSelect={(_, k) => setActiveTabKey(k)}
         id="pod-tabs" component="nav" aria-label="Pod navigation tabs"
-        style={{
-          marginInline: "calc(-1 * var(--card-inline-padding, 16px))",
-          paddingInline: "8px",
-          marginBlockEnd: "var(--gp-pad-section, 2rem)",
-        }}>
+        style={{ marginBlockEnd: "var(--gp-pad-section, 2rem)" }}>
     <Tab eventKey={0} title={<TabTitleText>Details</TabTitleText>}
          tabContentId="pod-tab-0" />
     <Tab eventKey={1} title={<TabTitleText>YAML</TabTitleText>}
@@ -356,18 +336,19 @@ export const Overview: StoryObj = {
                   fontSize: 14,
                 }}
               >
-                Flex column with{" "}
-                <code>gap: var(--gp-pad-section)</code> gives the
-                header → tabs → content trio the brand&apos;s standard
-                section rhythm without wrapping each element in its
-                own <code>PageSection</code> (which would re-set its
-                own padding and crowd the header). Tabs use{" "}
-                <code>usePageInsets</code> so the strip aligns with
-                the title above; <code>tabContentId</code> wires
-                each Tab to its panel for screen readers; only the
-                active panel renders via the <code>hidden</code> prop.
-                Bump <code>--gp-pad-section</code> at the brand level
-                to enlarge the vertical rhythm system-wide.
+                Flex column stacks header → tabs → content. The Tabs
+                render at PF6&apos;s default padding (same as the
+                standalone <strong>Components / Tabs</strong> story)
+                — they inherit the host card&apos;s inline padding,
+                so the labels naturally align with the breadcrumb /
+                body column. Only one inline style on the Tabs:{" "}
+                <code>marginBlockEnd: var(--gp-pad-section)</code>{" "}
+                for the rhythm to the body content below. Tabs render
+                as <code>&lt;nav&gt;</code> via <code>component=&quot;nav&quot;</code>{" "}
+                so the <code>aria-label</code> is a valid landmark.
+                <code>tabContentId</code> wires each Tab to its panel
+                for screen readers; only the active panel renders
+                via the <code>hidden</code> prop.
               </p>
             </div>
           </Card>
