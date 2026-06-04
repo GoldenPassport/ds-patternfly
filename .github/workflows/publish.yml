@@ -114,4 +114,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+      # cd into the lib's package directory so npm publish picks up
+      # that package.json (not the workspace-root one, which is
+      # private and would refuse to publish anyway).
       - run: npm publish --access public --provenance
+        working-directory: packages/ds-patternfly

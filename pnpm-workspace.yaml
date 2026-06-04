@@ -1,0 +1,4 @@
+# Monorepo layout: every publishable package lives under packages/.
+# Root package.json is private workspace coordination only — no lib code.
+packages:
+  - "packages/*"

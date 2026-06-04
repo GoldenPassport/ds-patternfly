@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: dist-${{ github.sha }}
-          path: dist/
+          path: packages/ds-patternfly/dist/
           retention-days: 7
 
   # ── 3. Storybook build ───────────────────────────────────────────────────────

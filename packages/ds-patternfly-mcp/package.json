@@ -1,0 +1,55 @@
+{
+  "name": "@golden-passport/ds-patternfly-mcp",
+  "version": "0.1.0",
+  "description": "Model Context Protocol server for @golden-passport/ds-patternfly — exposes brand dials, component recipes, and Storybook story URLs to AI coding agents so they can author against the DS without hallucinating tokens or APIs.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "gp-ds-mcp": "dist/cli.js",
+    "gpdsmcp": "dist/cli.js"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "pnpm gen && tsup",
+    "dev": "pnpm gen && tsx watch src/cli.ts",
+    "start": "node dist/cli.js",
+    "typecheck": "tsc --noEmit",
+    "gen": "node scripts/build-catalog.mjs"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "golden-passport",
+    "design-system",
+    "patternfly",
+    "documentation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GoldenPassport/ds-patternfly.git",
+    "directory": "mcp"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsup": "^8.5.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

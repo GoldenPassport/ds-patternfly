@@ -1,0 +1,85 @@
+name: Publish MCP
+
+# Tagged separately from the lib (mcp-v*) so the two packages publish
+# on independent cadences. The MCP can re-publish to refresh its
+# catalog without bumping the lib version, and vice versa.
+on:
+  push:
+    tags:
+      - 'mcp-v*'
+
+permissions:
+  id-token: write  # OIDC for npm provenance
+  contents: read
+
+jobs:
+  # Same four gates as the lib's publish workflow — the MCP depends
+  # on the lib's stories being parseable, so any lib regression
+  # would also break catalog generation.
+  typecheck:
+    name: TypeScript check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+
+  build:
+    name: Workspace build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+
+  mcp-smoke:
+    name: MCP smoke (initialize + list tools)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @golden-passport/ds-patternfly-mcp build
+      # Pipe a minimal JSON-RPC sequence through stdio and assert both
+      # tools register. Catches catalog-generator regressions that would
+      # ship a broken bin (zero entries, malformed JSON, etc).
+      - name: JSON-RPC handshake + tools/list
+        run: |
+          OUTPUT=$(printf '%s\n' \
+            '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"ci","version":"0"}}}' \
+            '{"jsonrpc":"2.0","method":"notifications/initialized"}' \
+            '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
+            | node packages/ds-patternfly-mcp/dist/cli.js 2>/dev/null)
+          echo "$OUTPUT" | grep -q '"name":"searchGpDocs"' || { echo "searchGpDocs tool missing"; exit 1; }
+          echo "$OUTPUT" | grep -q '"name":"useGpDocs"' || { echo "useGpDocs tool missing"; exit 1; }
+          echo "MCP smoke OK"
+
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    needs: [typecheck, build, mcp-smoke]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @golden-passport/ds-patternfly-mcp build
+      - run: npm publish --access public --provenance
+        working-directory: packages/ds-patternfly-mcp

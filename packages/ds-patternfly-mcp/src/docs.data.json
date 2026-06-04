@@ -1,0 +1,3241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1",
+  "generatedAt": "2026-06-04",
+  "library": {
+    "name": "@golden-passport/ds-patternfly",
+    "version": "0.2.4",
+    "storybook": "https://storybook.goldenpassport.com",
+    "github": "https://github.com/GoldenPassport/ds-patternfly"
+  },
+  "items": [
+    {
+      "id": "accessibility",
+      "kind": "guideline",
+      "title": "Accessibility",
+      "breadcrumb": "Accessibility",
+      "summary": "Accessibility is a contract this design system makes with every user — keyboard-only, screen-reader, low-vision, motor-impaired, or cognitively-loaded. The lib is built so that an app can ship accessibly by default; degrading that requires effort, not the other way around.",
+      "tags": [
+        "accessibility",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "about"
+      ],
+      "storybookUrl": "/?path=/story/accessibility--overview"
+    },
+    {
+      "id": "accessibility-accessibility-scorecard",
+      "kind": "guideline",
+      "title": "Accessibility scorecard",
+      "breadcrumb": "Accessibility/Accessibility scorecard",
+      "summary": "Per-component accessibility status. Updated as components ship. Pass means the property is verified by tests, prop contracts, or PatternFly's own a11y guarantees. Partial calls out a known gap with a path to close.",
+      "tags": [
+        "accessibility",
+        "scorecard",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/accessibility-accessibility-scorecard--overview"
+    },
+    {
+      "id": "accessibility-design-for-accessibility",
+      "kind": "guideline",
+      "title": "Design for accessibility",
+      "breadcrumb": "Accessibility/Design for accessibility",
+      "summary": "Most accessibility wins or fails happen at design time. Following these rules when defining brands, choosing colors, and laying out screens makes a11y the default, not a remediation step.",
+      "tags": [
+        "accessibility",
+        "design",
+        "for",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/accessibility-design-for-accessibility--overview"
+    },
+    {
+      "id": "accessibility-develop-for-accessibility",
+      "kind": "guideline",
+      "title": "Develop for accessibility",
+      "breadcrumb": "Accessibility/Develop for accessibility",
+      "summary": "Code patterns and prop contracts that make a11y the default in apps built on this system. Most rules are enforced by TypeScript or PatternFly internals — the rest are quick disciplines.",
+      "tags": [
+        "accessibility",
+        "develop",
+        "for",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/accessibility-develop-for-accessibility--overview"
+    },
+    {
+      "id": "accessibility-patternfly-s-accessibility",
+      "kind": "guideline",
+      "title": "PatternFly's accessibility",
+      "breadcrumb": "Accessibility/PatternFly's accessibility",
+      "summary": "This system is built on PatternFly 6 , which has its own multi-year a11y program. Most components used in this lib are either thin wrappers around PF components or compositions of them — so what PF guarantees, we inherit. This page is an honest map of what comes from where.",
+      "tags": [
+        "accessibility",
+        "patternfly's",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "patternflya11y"
+      ],
+      "storybookUrl": "/?path=/story/accessibility-patternfly-s-accessibility--overview"
+    },
+    {
+      "id": "accessibility-testing-your-accessibility",
+      "kind": "guideline",
+      "title": "Testing your accessibility",
+      "breadcrumb": "Accessibility/Testing your accessibility",
+      "summary": "Automated tests catch the regressions; manual testing catches the subtle stuff. A real a11y workflow uses both. The repo ships some of this for you; the rest is on the consuming app.",
+      "tags": [
+        "accessibility",
+        "testing",
+        "your",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/accessibility-testing-your-accessibility--overview"
+    },
+    {
+      "id": "ai-mcp",
+      "kind": "component",
+      "title": "MCP",
+      "breadcrumb": "AI/MCP",
+      "summary": "The lib ships an MCP server — @golden-passport/ds-patternfly-mcp — that exposes the docs catalog (every Storybook story, plus foundations, recipes, and guidelines) to AI coding agents. Point your agent at the server and it can search the catalog, pull summaries, and link directly to Storybook instead of hallucinating c",
+      "tags": [
+        "mcp",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/ai-mcp--overview"
+    },
+    {
+      "id": "charts",
+      "kind": "component",
+      "title": "Charts",
+      "breadcrumb": "Charts",
+      "summary": "PatternFly Charts is a thin wrapper around Victory (Formidable's composable React chart library) — same API, PF6 theming, sensible defaults, and accessibility hooks baked in. From @patternfly/react-charts . Use it for dashboards, monitoring screens, and any product visualisation.",
+      "tags": [
+        "charts",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "about"
+      ],
+      "storybookUrl": "/?path=/story/charts--overview"
+    },
+    {
+      "id": "charts-area-chart",
+      "kind": "component",
+      "title": "Area chart",
+      "breadcrumb": "Charts/Area chart",
+      "summary": "A filled line — emphasises cumulative volume over time. Use for a single series' total (run volume, request count); stack variants compare contribution across categories. For pure trend, prefer Line.",
+      "tags": [
+        "charts",
+        "area",
+        "chart",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "areachart"
+      ],
+      "storybookUrl": "/?path=/story/charts-area-chart--overview"
+    },
+    {
+      "id": "charts-bar-chart",
+      "kind": "component",
+      "title": "Bar chart",
+      "breadcrumb": "Charts/Bar chart",
+      "summary": "Discrete categorical comparison — counts per status, totals per region. Use vertical bars for short labels; switch to horizontal when labels are long or there are &gt; 6 categories.",
+      "tags": [
+        "charts",
+        "bar",
+        "chart",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "barchart"
+      ],
+      "storybookUrl": "/?path=/story/charts-bar-chart--overview"
+    },
+    {
+      "id": "charts-box-plot-chart",
+      "kind": "component",
+      "title": "Box plot chart",
+      "breadcrumb": "Charts/Box plot chart",
+      "summary": "A statistical distribution chart — min, Q1, median, Q3, max per category. Use for latency distributions, error-rate spread, performance regression detection. PF6 doesn't ship a dedicated ChartBoxPlot wrapper, so compose Victory's VictoryBoxPlot directly inside a PF6 themed Chart .",
+      "tags": [
+        "charts",
+        "box",
+        "plot",
+        "chart",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "boxplotchart"
+      ],
+      "storybookUrl": "/?path=/story/charts-box-plot-chart--overview"
+    },
+    {
+      "id": "charts-bullet-chart",
+      "kind": "component",
+      "title": "Bullet chart",
+      "breadcrumb": "Charts/Bullet chart",
+      "summary": "A single-metric performance chart — actual value, target, qualitative bands (poor / acceptable / good). Compact: fits in a card or table cell. Use for SLA dashboards, budget vs actual, capacity usage with thresholds.",
+      "tags": [
+        "charts",
+        "bullet",
+        "chart",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "bulletchart"
+      ],
+      "storybookUrl": "/?path=/story/charts-bullet-chart--overview"
+    },
+    {
+      "id": "charts-colors-for-charts",
+      "kind": "component",
+      "title": "Colors for charts",
+      "breadcrumb": "Charts/Colors for charts",
+      "summary": "PF6 ships ten named theme colours. Pass themeColor on any Chart wrapper to switch palettes — categorical (multi), monochrome (blue / green / etc), or semantic (status colours wired through Themes). Keep palettes consistent within a dashboard so users don't re-learn which series is which on each chart.",
+      "tags": [
+        "charts",
+        "colors",
+        "for",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/charts-colors-for-charts--overview"
+    },
+    {
+      "id": "charts-donut-chart",
+      "kind": "component",
+      "title": "Donut chart",
+      "breadcrumb": "Charts/Donut chart",
+      "summary": "A pie with a hole for centre text — &ldquo;163 workflows&rdquo; big number + slice breakdown. Cap at ~6 slices; beyond that it's legible as a Bar but unreadable as a donut. The hole is the killer feature: it puts the topline number front and centre.",
+      "tags": [
+        "charts",
+        "donut",
+        "chart",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "donutchart"
+      ],
+      "storybookUrl": "/?path=/story/charts-donut-chart--overview"
+    },
+    {
+      "id": "charts-donut-utilization-chart",
+      "kind": "component",
+      "title": "Donut utilization chart",
+      "breadcrumb": "Charts/Donut utilization chart",
+      "summary": "The single-metric variant of Donut — a percentage filled arc with a centred count. Use for &ldquo;78% of disk used&rdquo;, &ldquo;62% of seats provisioned&rdquo;. Pair with thresholds for at-a-glance warning / danger banding.",
+      "tags": [
+        "charts",
+        "donut",
+        "utilization",
+        "chart",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "donututilizationchart"
+      ],
+      "storybookUrl": "/?path=/story/charts-donut-utilization-chart--overview"
+    },
+    {
+      "id": "charts-legends",
+      "kind": "component",
+      "title": "Legends",
+      "breadcrumb": "Charts/Legends",
+      "summary": "The colour-to-series key. Drop a ChartLegend inside a chart, or pass legendData + legendPosition on the Chart wrapper and PF6 places it for you. Always include a legend when there's more than one series.",
+      "tags": [
+        "charts",
+        "legends",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/charts-legends--overview"
+    },
+    {
+      "id": "charts-line-chart",
+      "kind": "component",
+      "title": "Line chart",
+      "breadcrumb": "Charts/Line chart",
+      "summary": "The classic trend visualization — values over time. Use Line when emphasis is the rate of change; switch to Area when the cumulative total matters. Multiple series read cleanly in Line (cross-overs visible); Area stacks better for compositional totals.",
+      "tags": [
+        "charts",
+        "line",
+        "chart",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "linechart"
+      ],
+      "storybookUrl": "/?path=/story/charts-line-chart--overview"
+    },
+    {
+      "id": "charts-patterns",
+      "kind": "component",
+      "title": "Patterns",
+      "breadcrumb": "Charts/Patterns",
+      "summary": "SVG fill patterns (diagonal stripes, dots, crosshatch) as a second signal alongside colour. Use them when colour-blind accessibility matters, when printing in monochrome, or when the chart will be screen-shot to slides where reader colour fidelity isn't guaranteed.",
+      "tags": [
+        "charts",
+        "patterns",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/charts-patterns--overview"
+    },
+    {
+      "id": "charts-pie-chart",
+      "kind": "component",
+      "title": "Pie chart",
+      "breadcrumb": "Charts/Pie chart",
+      "summary": "Composition of a whole — slices that sum to 100%. Prefer Donut over Pie when you have a meaningful centre value to surface; Pie is right when slice comparison itself is the point.",
+      "tags": [
+        "charts",
+        "pie",
+        "chart",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "piechart"
+      ],
+      "storybookUrl": "/?path=/story/charts-pie-chart--overview"
+    },
+    {
+      "id": "charts-resize-observer",
+      "kind": "component",
+      "title": "Resize observer",
+      "breadcrumb": "Charts/Resize observer",
+      "summary": "Charts default to a fixed width + height in pixels. To make a chart fluid (fill its container, resize as the window changes), wrap it in a sized parent and let PF6's built-in containerComponent watch for resize via ResizeObserver . Pass height only; let width come from the container.",
+      "tags": [
+        "charts",
+        "resize",
+        "observer",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "resizeobserver"
+      ],
+      "storybookUrl": "/?path=/story/charts-resize-observer--overview"
+    },
+    {
+      "id": "charts-sankey-chart",
+      "kind": "component",
+      "title": "Sankey chart",
+      "breadcrumb": "Charts/Sankey chart",
+      "summary": "Beta Flow visualization — values moving from one bucket to another. Use for funnel analysis (signups → active → paying), traffic routing (region → service → endpoint), and budget allocation. PF6's Sankey API is still beta; current best practice is to compose d3-sankey inside a PF6-themed SVG until the wrapper stabilise",
+      "tags": [
+        "charts",
+        "sankey",
+        "chart",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "sankeychart"
+      ],
+      "storybookUrl": "/?path=/story/charts-sankey-chart--overview"
+    },
+    {
+      "id": "charts-scatter-chart",
+      "kind": "component",
+      "title": "Scatter chart",
+      "breadcrumb": "Charts/Scatter chart",
+      "summary": "Points on an X/Y plane — for distributions, correlations, and outlier detection. Use when each point is a discrete record and you want users to spot clusters or anomalies. Size / colour can encode a third dimension.",
+      "tags": [
+        "charts",
+        "scatter",
+        "chart",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "scatterchart"
+      ],
+      "storybookUrl": "/?path=/story/charts-scatter-chart--overview"
+    },
+    {
+      "id": "charts-skeletons",
+      "kind": "component",
+      "title": "Skeletons",
+      "breadcrumb": "Charts/Skeletons",
+      "summary": "The loading state for a chart — a placeholder that occupies the same footprint as the real chart so the page doesn't jump when data arrives. PF6 doesn't ship a chart-specific skeleton; compose with Skeleton shapes that mimic the eventual chart silhouette.",
+      "tags": [
+        "charts",
+        "skeletons",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/charts-skeletons--overview"
+    },
+    {
+      "id": "charts-sparkline-chart",
+      "kind": "component",
+      "title": "Sparkline chart",
+      "breadcrumb": "Charts/Sparkline chart",
+      "summary": "A miniature, axis-less Line / Area — sits inside a table cell or KPI tile to show recent trend at a glance. The point is shape, not values. PF6 doesn't ship a dedicated ChartSparkline ; compose with Chart + ChartArea and zero out the padding.",
+      "tags": [
+        "charts",
+        "sparkline",
+        "chart",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "sparklinechart"
+      ],
+      "storybookUrl": "/?path=/story/charts-sparkline-chart--overview"
+    },
+    {
+      "id": "charts-stack-chart",
+      "kind": "component",
+      "title": "Stack chart",
+      "breadcrumb": "Charts/Stack chart",
+      "summary": "Cumulative composition over a categorical or time axis — useful when you care about the total and the contribution of each segment. Works with both ChartBar and ChartArea children. Avoid when comparing segments to each other matters more than totals — use grouped Bar instead.",
+      "tags": [
+        "charts",
+        "stack",
+        "chart",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "stackchart"
+      ],
+      "storybookUrl": "/?path=/story/charts-stack-chart--overview"
+    },
+    {
+      "id": "charts-themes",
+      "kind": "component",
+      "title": "Themes",
+      "breadcrumb": "Charts/Themes",
+      "summary": "PF6 charts ship a default theme that maps to PF6 design tokens. Set themeColor to switch palettes (blue, green, multi, etc); use getCustomTheme to override specific style props (stroke width, label fonts, padding). Define custom themes once at module scope — passing a fresh object each render trashes Victory's diffing.",
+      "tags": [
+        "charts",
+        "themes",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/charts-themes--overview"
+    },
+    {
+      "id": "charts-threshold-chart",
+      "kind": "component",
+      "title": "Threshold chart",
+      "breadcrumb": "Charts/Threshold chart",
+      "summary": "A line chart with horizontal threshold overlays — warning, danger, SLA targets. Renders the metric and the alert thresholds in the same view so users see breaches in context. Use for latency-vs-SLA, error-rate-vs-budget, any &ldquo;we set a target; did we hit it?&rdquo; chart.",
+      "tags": [
+        "charts",
+        "threshold",
+        "chart",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "thresholdchart"
+      ],
+      "storybookUrl": "/?path=/story/charts-threshold-chart--overview"
+    },
+    {
+      "id": "charts-tooltips",
+      "kind": "component",
+      "title": "Tooltips",
+      "breadcrumb": "Charts/Tooltips",
+      "summary": "Hover affordances that surface exact values. The two most-used patterns are ChartVoronoiContainer (hover anywhere in the plot area; nearest point wins) and createContainer(\"voronoi\", \"cursor\") (voronoi + crosshair line for time-series). Bare per-point hover targets are pixel-thin and frustrating — avoid them.",
+      "tags": [
+        "charts",
+        "tooltips",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/charts-tooltips--overview"
+    },
+    {
+      "id": "component-groups",
+      "kind": "component",
+      "title": "Component groups",
+      "breadcrumb": "Component groups",
+      "summary": "Component groups are pre-built compositions of PatternFly primitives that solve a specific UI problem out of the box — error pages, bulk-select dropdowns, page headers, skeleton tables. They sit one level above the core component library: less flexible than primitives, but faster to ship when you need a standard patter",
+      "tags": [
+        "component",
+        "groups",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "component-groups",
+        "about"
+      ],
+      "storybookUrl": "/?path=/story/component-groups--overview"
+    },
+    {
+      "id": "component-groups-content-containers-multi-content-card",
+      "kind": "component",
+      "title": "Multi-content card",
+      "breadcrumb": "Component groups/Content containers/Multi-content card",
+      "summary": "A card that hosts multiple equally-weighted Card children in a row, optionally separated by dividers and toggled via an expandable footer. Use it for dashboard summary tiles where 2–4 sub-cards belong together (e.g. status / counts / health) without introducing a separate Grid.",
+      "tags": [
+        "component",
+        "groups",
+        "content",
+        "containers",
+        "multi",
+        "card",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-content-containers-multi-content-card--overview"
+    },
+    {
+      "id": "component-groups-content-containers-page-header",
+      "kind": "component",
+      "title": "Page header",
+      "breadcrumb": "Component groups/Content containers/Page header",
+      "summary": "A standard top-of-page header — title, subtitle, optional breadcrumbs, an action menu, an icon, and a status label slot. Use it as the first child of every PageSection so titles render consistently across the app. For app-shell chrome (logo, nav), use Masthead instead.",
+      "tags": [
+        "component",
+        "groups",
+        "content",
+        "containers",
+        "page",
+        "header",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-content-containers-page-header--overview"
+    },
+    {
+      "id": "component-groups-content-containers-service-card",
+      "kind": "component",
+      "title": "Service card",
+      "breadcrumb": "Component groups/Content containers/Service card",
+      "summary": "A standardized tile for a service / capability — icon, title, description, optional helper text and footer. Use it on landing pages and product hubs where users pick a service to enter. Always pair with Gallery for the responsive grid.",
+      "tags": [
+        "component",
+        "groups",
+        "content",
+        "containers",
+        "service",
+        "card",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-content-containers-service-card--overview"
+    },
+    {
+      "id": "component-groups-controls-bulk-select",
+      "kind": "component",
+      "title": "Bulk select",
+      "breadcrumb": "Component groups/Controls/Bulk select",
+      "summary": "A toolbar dropdown for selecting all items, none, or just the current page — wraps a Dropdown + a checkbox toggle and emits the user's choice as a typed value. Use it above any selectable list / table that paginates.",
+      "tags": [
+        "component",
+        "groups",
+        "controls",
+        "bulk",
+        "select",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-controls-bulk-select--overview"
+    },
+    {
+      "id": "component-groups-controls-close-button",
+      "kind": "component",
+      "title": "Close button",
+      "breadcrumb": "Component groups/Controls/Close button",
+      "summary": "A standardized X button — same icon, same hit-target, same aria-label across every dismissable surface. Use it on drawers, panels, toasts, and any custom dismissable widget where Modal's built-in close isn't available.",
+      "tags": [
+        "component",
+        "groups",
+        "controls",
+        "close",
+        "button",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-controls-close-button--overview"
+    },
+    {
+      "id": "component-groups-controls-external-link-button",
+      "kind": "component",
+      "title": "External link button",
+      "breadcrumb": "Component groups/Controls/External link button",
+      "summary": "A Button preset for outbound links — sets component=\"a\" , target=\"_blank\" , rel=\"noopener noreferrer\" , and renders a trailing external-link glyph. Use it whenever the link leaves your app — docs, runbooks, vendor portals.",
+      "tags": [
+        "component",
+        "groups",
+        "controls",
+        "external",
+        "link",
+        "button",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-controls-external-link-button--overview"
+    },
+    {
+      "id": "component-groups-controls-responsive-actions",
+      "kind": "component",
+      "title": "Responsive actions",
+      "breadcrumb": "Component groups/Controls/Responsive actions",
+      "summary": "A toolbar action set that collapses into a kebab dropdown below a configurable breakpoint. Wraps PF6's OverflowMenu with a per-action persistence flag so primary actions stay visible and secondary ones move into the kebab on narrow viewports.",
+      "tags": [
+        "component",
+        "groups",
+        "controls",
+        "responsive",
+        "actions",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-controls-responsive-actions--overview"
+    },
+    {
+      "id": "component-groups-error-communication-error-boundary",
+      "kind": "component",
+      "title": "Error boundary",
+      "breadcrumb": "Component groups/Error communication/Error boundary",
+      "summary": "React error boundary with a built-in error page UI. Wrap routes, top-level layouts, or risky widgets — when a child throws, the boundary catches it and renders a friendly error page instead of unmounting the whole app.",
+      "tags": [
+        "component",
+        "groups",
+        "error",
+        "communication",
+        "boundary",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-error-communication-error-boundary--overview"
+    },
+    {
+      "id": "component-groups-error-communication-error-state",
+      "kind": "component",
+      "title": "Error state",
+      "breadcrumb": "Component groups/Error communication/Error state",
+      "summary": "A pre-built EmptyState variant for &ldquo;something failed&rdquo; screens — load failures, save failures, partial-render failures. Use it in place of an EmptyState when the screen represents an error rather than absence of data.",
+      "tags": [
+        "component",
+        "groups",
+        "error",
+        "communication",
+        "state",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-error-communication-error-state--overview"
+    },
+    {
+      "id": "component-groups-error-communication-maintenance",
+      "kind": "component",
+      "title": "Maintenance",
+      "breadcrumb": "Component groups/Error communication/Maintenance",
+      "summary": "A scheduled-downtime page — title, body, start / end times, time zone, and an optional information link. Use it when a service is intentionally unavailable so the user understands it's planned, not broken.",
+      "tags": [
+        "component",
+        "groups",
+        "error",
+        "communication",
+        "maintenance",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-error-communication-maintenance--overview"
+    },
+    {
+      "id": "component-groups-error-communication-missing-page",
+      "kind": "component",
+      "title": "Missing page",
+      "breadcrumb": "Component groups/Error communication/Missing page",
+      "summary": "A standard 404 page — title, body, and a link back home. Wire this up as the catch-all route in your router.",
+      "tags": [
+        "component",
+        "groups",
+        "error",
+        "communication",
+        "missing",
+        "page",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-error-communication-missing-page--overview"
+    },
+    {
+      "id": "component-groups-error-communication-unauthorized-access",
+      "kind": "component",
+      "title": "Unauthorized access",
+      "breadcrumb": "Component groups/Error communication/Unauthorized access",
+      "summary": "A 403 / no-permission page — title, body, return-to-previous and go-to-landing actions. Use it whenever a logged-in user lands on a screen they don't have access to.",
+      "tags": [
+        "component",
+        "groups",
+        "error",
+        "communication",
+        "unauthorized",
+        "access",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-error-communication-unauthorized-access--overview"
+    },
+    {
+      "id": "component-groups-error-communication-unavailable-content",
+      "kind": "component",
+      "title": "Unavailable content",
+      "breadcrumb": "Component groups/Error communication/Unavailable content",
+      "summary": "A &ldquo;something on our side is down&rdquo; page — a 5xx-style message with a status-page link. Use it for backend outages and dependency failures where retry inside the app won't help.",
+      "tags": [
+        "component",
+        "groups",
+        "error",
+        "communication",
+        "unavailable",
+        "content",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-error-communication-unavailable-content--overview"
+    },
+    {
+      "id": "component-groups-error-communication-warning-modal",
+      "kind": "component",
+      "title": "Warning modal",
+      "breadcrumb": "Component groups/Error communication/Warning modal",
+      "summary": "A pre-built confirmation modal for destructive or dangerous actions — delete, disable, force-restart. Wraps Modal with sensible defaults (warning icon, danger CTA) and offers a checkbox-gate or type-to-confirm guard for high-risk operations.",
+      "tags": [
+        "component",
+        "groups",
+        "error",
+        "communication",
+        "warning",
+        "modal",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-error-communication-warning-modal--overview"
+    },
+    {
+      "id": "component-groups-helpers-column-management-modal",
+      "kind": "component",
+      "title": "Column management modal",
+      "breadcrumb": "Component groups/Helpers/Column management modal",
+      "summary": "A pre-built modal for showing / hiding table columns — checkbox list, optional drag-and-drop reorder, untoggleable &ldquo;always-on&rdquo; columns. Wire it up to a kebab item in your table's toolbar.",
+      "tags": [
+        "component",
+        "groups",
+        "helpers",
+        "column",
+        "management",
+        "modal",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-helpers-column-management-modal--overview"
+    },
+    {
+      "id": "component-groups-helpers-field-builder",
+      "kind": "component",
+      "title": "Field Builder",
+      "breadcrumb": "Component groups/Helpers/Field Builder",
+      "summary": "A two-column repeater for dynamic form rows — env vars, tags, key/value pairs, conditions. Manages the add / remove / focus-management chrome; you supply the inputs via a render prop.",
+      "tags": [
+        "component",
+        "groups",
+        "helpers",
+        "field",
+        "builder",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-helpers-field-builder--overview"
+    },
+    {
+      "id": "component-groups-helpers-log-snippet",
+      "kind": "component",
+      "title": "Log snippet",
+      "breadcrumb": "Component groups/Helpers/Log snippet",
+      "summary": "A small, alert-coloured block for inline error logs and stack traces. Use it inside detail panels, error states, or notification drawers when you want to surface a snippet of machine output without launching a full log viewer.",
+      "tags": [
+        "component",
+        "groups",
+        "helpers",
+        "log",
+        "snippet",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-helpers-log-snippet--overview"
+    },
+    {
+      "id": "component-groups-helpers-shortcut-grid",
+      "kind": "component",
+      "title": "Shortcut grid",
+      "breadcrumb": "Component groups/Helpers/Shortcut grid",
+      "summary": "A grid of keyboard-shortcut hints — &ldquo;Cmd+K to search&rdquo;, &ldquo;G then I for inbox&rdquo;. Use it inside a help panel or a &ldquo;Press ? for shortcuts&rdquo; modal so power users can discover and learn the keymap.",
+      "tags": [
+        "component",
+        "groups",
+        "helpers",
+        "shortcut",
+        "grid",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-helpers-shortcut-grid--overview"
+    },
+    {
+      "id": "component-groups-status-and-state-indicators-beta",
+      "kind": "component",
+      "title": "Beta",
+      "breadcrumb": "Component groups/Status and state indicators/Beta",
+      "summary": "A small &ldquo;Beta&rdquo; / &ldquo;Preview&rdquo; / &ldquo;Tech preview&rdquo; tag for features that aren't generally available. Not a separate PF component — the convention is a Label with a consistent colour and copy. The recipe below is what we use across the design system.",
+      "tags": [
+        "component",
+        "groups",
+        "status",
+        "and",
+        "state",
+        "indicators",
+        "beta",
+        "packages"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-status-and-state-indicators-beta--overview"
+    },
+    {
+      "id": "component-groups-status-and-state-indicators-severity",
+      "kind": "component",
+      "title": "Severity",
+      "breadcrumb": "Component groups/Status and state indicators/Severity",
+      "summary": "A standardized severity indicator — critical / important / moderate / minor / none / undefined. Use it in security dashboards, vulnerability scanners, alert triage UIs where severity needs to read consistently across screens.",
+      "tags": [
+        "component",
+        "groups",
+        "status",
+        "and",
+        "state",
+        "indicators",
+        "severity",
+        "packages"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-status-and-state-indicators-severity--overview"
+    },
+    {
+      "id": "component-groups-status-and-state-indicators-skeleton-table",
+      "kind": "component",
+      "title": "Skeleton table",
+      "breadcrumb": "Component groups/Status and state indicators/Skeleton table",
+      "summary": "A pre-built skeleton placeholder for tables — same structure as your real Table , with shimmering bars instead of data. Use it during initial load so the layout doesn't shift when rows arrive.",
+      "tags": [
+        "component",
+        "groups",
+        "status",
+        "and",
+        "state",
+        "indicators",
+        "skeleton",
+        "table"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-status-and-state-indicators-skeleton-table--overview"
+    },
+    {
+      "id": "component-groups-status-and-state-indicators-stale-data-warning",
+      "kind": "component",
+      "title": "Stale data warning",
+      "breadcrumb": "Component groups/Status and state indicators/Stale data warning",
+      "summary": "A tooltip-icon for objects that are nearing or past a freshness threshold — old check-in data, abandoned workflows, unupdated host inventory. Use it next to row titles in inventory tables so users see freshness at a glance.",
+      "tags": [
+        "component",
+        "groups",
+        "status",
+        "and",
+        "state",
+        "indicators",
+        "stale",
+        "data"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-status-and-state-indicators-stale-data-warning--overview"
+    },
+    {
+      "id": "component-groups-status-and-state-indicators-status",
+      "kind": "component",
+      "title": "Status",
+      "breadcrumb": "Component groups/Status and state indicators/Status",
+      "summary": "A standardized icon + label pair for object state — Healthy / Degraded / Failed / Unknown. Pair with a popover or link variant when the state has explanatory detail (failure reasons, runbooks).",
+      "tags": [
+        "component",
+        "groups",
+        "status",
+        "and",
+        "state",
+        "indicators",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-status-and-state-indicators-status--overview"
+    },
+    {
+      "id": "component-groups-status-and-state-indicators-tag-count",
+      "kind": "component",
+      "title": "Tag count",
+      "breadcrumb": "Component groups/Status and state indicators/Tag count",
+      "summary": "A small clickable tag indicator with a count — &ldquo;3 tags&rdquo;. Use it in tables and lists where each row has tags but rendering them all inline would clutter the row. Click opens a popover / drawer with the full list.",
+      "tags": [
+        "component",
+        "groups",
+        "status",
+        "and",
+        "state",
+        "indicators",
+        "tag",
+        "count"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-status-and-state-indicators-tag-count--overview"
+    },
+    {
+      "id": "components-accordion",
+      "kind": "component",
+      "title": "Accordion",
+      "breadcrumb": "Components/Accordion",
+      "summary": "Vertically stacked, expandable sections. Use for FAQs, settings groups, and any list where each row can carry a body of detail the user opens on demand. Pick single-expand when sections are mutually exclusive (only one open at a time); pick multiple-expand when users want to compare sections side-by-side.",
+      "tags": [
+        "components",
+        "accordion",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-accordion--overview"
+    },
+    {
+      "id": "components-alert",
+      "kind": "component",
+      "title": "Alert",
+      "breadcrumb": "Components/Alert",
+      "summary": "Inline status messages that report the outcome of a user action or a system event. Five severities — info / success / warning / danger (plus the unstyled custom ). Use isInline for in-content alerts; use AlertGroup + isToast for transient notifications anchored to the viewport.",
+      "tags": [
+        "components",
+        "alert",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-alert--overview"
+    },
+    {
+      "id": "components-avatar",
+      "kind": "component",
+      "title": "Avatar",
+      "breadcrumb": "Components/Avatar",
+      "summary": "A user's photo or initials, typically rendered in a masthead, comment thread, or member list. Always carries an alt describing the person.",
+      "tags": [
+        "components",
+        "avatar",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-avatar--overview"
+    },
+    {
+      "id": "components-back-to-top",
+      "kind": "component",
+      "title": "Back to top",
+      "breadcrumb": "Components/Back to top",
+      "summary": "A floating button that appears after the user scrolls past a threshold and returns them to the top on click. Use on long documentation pages, infinite-scroll lists, or any view where scrolling back manually is tedious.",
+      "tags": [
+        "components",
+        "back",
+        "top",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "backtotop"
+      ],
+      "storybookUrl": "/?path=/story/components-back-to-top--overview"
+    },
+    {
+      "id": "components-backdrop",
+      "kind": "component",
+      "title": "Backdrop",
+      "breadcrumb": "Components/Backdrop",
+      "summary": "A semi-transparent overlay that dims the page behind a focused surface. Modal , Wizard , and AboutModal include their own backdrop — you rarely render this directly. Use it to build custom blocking overlays (full-page loaders, custom dialogs).",
+      "tags": [
+        "components",
+        "backdrop",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-backdrop--overview"
+    },
+    {
+      "id": "components-badge",
+      "kind": "component",
+      "title": "Badge",
+      "breadcrumb": "Components/Badge",
+      "summary": "A small numeric or short-text indicator typically attached to another element — a tab title, a nav item, a button — to show a count or unread state. For status pills, use Label instead.",
+      "tags": [
+        "components",
+        "badge",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-badge--overview"
+    },
+    {
+      "id": "components-banner",
+      "kind": "component",
+      "title": "Banner",
+      "breadcrumb": "Components/Banner",
+      "summary": "A page- or app-level status strip that sits flush with the top of the viewport (or directly under the masthead). Use for system maintenance windows, environment markers (&ldquo;You're on staging&rdquo;), beta tags, and degraded-service notices — information that applies to the entire app, not just the current screen. F",
+      "tags": [
+        "components",
+        "banner",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-banner--overview"
+    },
+    {
+      "id": "components-brand",
+      "kind": "component",
+      "title": "Brand",
+      "breadcrumb": "Components/Brand",
+      "summary": "A logo image with PatternFly's sizing conventions and built-in responsive width support. Typically rendered inside a Masthead; the Shell shipped by this lib accepts it via the brandLogo prop. For multi-resolution / art-directed logos — where you want a different image (e.g. the icon-only mark) at narrow widths — pass &",
+      "tags": [
+        "components",
+        "brand",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-brand--overview"
+    },
+    {
+      "id": "components-breadcrumb",
+      "kind": "component",
+      "title": "Breadcrumb",
+      "breadcrumb": "Components/Breadcrumb",
+      "summary": "A trail of links showing the user's place in the hierarchy. Renders as &lt;nav aria-label=\"breadcrumb\"&gt; ; the last item is the current page and is not a link. Use it on pages nested three or more levels deep — shallower trees don't need it.",
+      "tags": [
+        "components",
+        "breadcrumb",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-breadcrumb--overview"
+    },
+    {
+      "id": "components-button",
+      "kind": "component",
+      "title": "Button",
+      "breadcrumb": "Components/Button",
+      "summary": "The action primitive. Triggers a discrete operation when clicked or activated by Space/Enter. Use a button for actions; use a link (anchor) for navigation. The two are not interchangeable, even when they look the same.",
+      "tags": [
+        "components",
+        "button",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-button--overview"
+    },
+    {
+      "id": "components-card",
+      "kind": "component",
+      "title": "Card",
+      "breadcrumb": "Components/Card",
+      "summary": "The workhorse content tile — header, body, footer, optional actions / selection / expansion. Use cards for at-a-glance summary tiles (dashboards, gallery views), grouped settings panels, and anywhere a piece of content needs its own surface.",
+      "tags": [
+        "components",
+        "card",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-card--overview"
+    },
+    {
+      "id": "components-clipboardcopy",
+      "kind": "component",
+      "title": "ClipboardCopy",
+      "breadcrumb": "Components/ClipboardCopy",
+      "summary": "Single-line input with a copy button — the canonical &ldquo;here's a value, click to copy&rdquo; control. Use for credentials, ids, version strings, share URLs, install commands, and any value the user needs to paste somewhere else verbatim. For multi-line code snippets, use CodeBlock with ClipboardCopyButton instead.",
+      "tags": [
+        "components",
+        "clipboardcopy",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-clipboardcopy--overview"
+    },
+    {
+      "id": "components-codeblock",
+      "kind": "component",
+      "title": "CodeBlock",
+      "breadcrumb": "Components/CodeBlock",
+      "summary": "A fenced code surface for snippets, configuration, and CLI output. Pair the body with optional CodeBlockAction buttons (copy, run, share) and an expandable section when the full snippet would dominate the page. Use for any content consumers will copy verbatim — YAML manifests, command lines, workflow expressions, JSON ",
+      "tags": [
+        "components",
+        "codeblock",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-codeblock--overview"
+    },
+    {
+      "id": "components-content",
+      "kind": "component",
+      "title": "Content",
+      "breadcrumb": "Components/Content",
+      "summary": "Wraps prose-style content with PatternFly's typographic defaults — paragraphs, lists, blockquotes, links. Use it around any block of long-form text so spacing, line height, and link styling stay consistent without per-element tweaks.",
+      "tags": [
+        "components",
+        "content",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-content--overview"
+    },
+    {
+      "id": "components-datalist",
+      "kind": "component",
+      "title": "DataList",
+      "breadcrumb": "Components/DataList",
+      "summary": "A row-based list with structured cells, optional checkboxes, actions, and per-row expandable detail. Use it as the pre-Table workhorse — when each row is more than a few cells of tabular data but doesn't need a sortable / filterable column header chrome. For dense tabular data, use Table from @patternfly/react-table in",
+      "tags": [
+        "components",
+        "datalist",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-datalist--overview"
+    },
+    {
+      "id": "components-descriptionlist",
+      "kind": "component",
+      "title": "DescriptionList",
+      "breadcrumb": "Components/DescriptionList",
+      "summary": "Term / definition pairs — the canonical &ldquo;key facts&rdquo; renderer. Use on detail screens, settings panels, and anywhere a fixed set of attributes need stacked or columnar presentation. Renders as a &lt;dl&gt; for proper screen-reader semantics.",
+      "tags": [
+        "components",
+        "descriptionlist",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-descriptionlist--overview"
+    },
+    {
+      "id": "components-divider",
+      "kind": "component",
+      "title": "Divider",
+      "breadcrumb": "Components/Divider",
+      "summary": "A horizontal or vertical rule used to separate blocks of content. Renders as a semantic &lt;hr&gt; by default — screen readers announce it as a separator, sighted users see a line.",
+      "tags": [
+        "components",
+        "divider",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-divider--overview"
+    },
+    {
+      "id": "components-drawer",
+      "kind": "component",
+      "title": "Drawer",
+      "breadcrumb": "Components/Drawer",
+      "summary": "A side panel that slides in to reveal contextual content — detail views, edit forms, activity logs. Pushes the main content rather than overlaying it (use Modal for true overlays). Detail-on-list patterns and primary-detail layouts use this.",
+      "tags": [
+        "components",
+        "drawer",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-drawer--overview"
+    },
+    {
+      "id": "components-duallistselector",
+      "kind": "component",
+      "title": "DualListSelector",
+      "breadcrumb": "Components/DualListSelector",
+      "summary": "Two side-by-side lists with controls for moving items between them — Available on the left, Chosen on the right (or whatever roles you assign). Use for permission pickers, role assignment, membership management — anywhere the user needs to curate a set from a larger pool.",
+      "tags": [
+        "components",
+        "duallistselector",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-duallistselector--overview"
+    },
+    {
+      "id": "components-emptystate",
+      "kind": "component",
+      "title": "EmptyState",
+      "breadcrumb": "Components/EmptyState",
+      "summary": "The placeholder a list / table / view shows when it has no content yet. Three jobs: orient the user (icon + title), explain the state (body), and offer a way out (action). Use it for empty collections, no-results-after-filter, error states, and loading states.",
+      "tags": [
+        "components",
+        "emptystate",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-emptystate--overview"
+    },
+    {
+      "id": "components-expandablesection",
+      "kind": "component",
+      "title": "ExpandableSection",
+      "breadcrumb": "Components/ExpandableSection",
+      "summary": "A single &ldquo;Show more&rdquo; block — a collapsible region with a labelled toggle. Use for progressive disclosure within flat content: optional advanced settings, expanded detail in a list row, supporting context that doesn't need to be visible by default. For multiple stacked sections, use Accordion .",
+      "tags": [
+        "components",
+        "expandablesection",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-expandablesection--overview"
+    },
+    {
+      "id": "components-file-upload-fileupload",
+      "kind": "component",
+      "title": "FileUpload",
+      "breadcrumb": "Components/File upload/FileUpload",
+      "summary": "A single-file upload control. Supports browse-to-select, drag-and-drop, and inline content editing for text-formatted files (YAML, JSON, scripts). Use it for one-at-a-time uploads; for bulk uploads use MultipleFileUpload.",
+      "tags": [
+        "components",
+        "file",
+        "upload",
+        "fileupload",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-file-upload-fileupload--overview"
+    },
+    {
+      "id": "components-file-upload-multiplefileupload",
+      "kind": "component",
+      "title": "MultipleFileUpload",
+      "breadcrumb": "Components/File upload/MultipleFileUpload",
+      "summary": "A drop zone for many files at once with per-file progress tracking. Use it for batch uploads — assets, document collections, log bundles. For single-file flows use FileUpload.",
+      "tags": [
+        "components",
+        "file",
+        "upload",
+        "multiplefileupload",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "fileupload"
+      ],
+      "storybookUrl": "/?path=/story/components-file-upload-multiplefileupload--overview"
+    },
+    {
+      "id": "components-footer",
+      "kind": "component",
+      "title": "Footer",
+      "breadcrumb": "Components/Footer",
+      "summary": "PatternFly 6 doesn't ship a dedicated PageFooter component. The canonical pattern is a final &lt;PageSection component=\"footer\"&gt; at the bottom of the page, rendered as a &lt;footer&gt; landmark for assistive tech.",
+      "tags": [
+        "components",
+        "footer",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-footer--overview"
+    },
+    {
+      "id": "components-forms",
+      "kind": "component",
+      "title": "Forms",
+      "breadcrumb": "Components/Forms",
+      "summary": "The Forms section collects every input control in the lib — text primitives , choice + toggle controls , grouped / composed inputs , and the date & time pickers . They all sit on the same DS field height ( 36px ) and share radius, focus, and motion dials, so a Form composed from any mix of them reads as one cohesive su",
+      "tags": [
+        "components",
+        "forms",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "formcontrol"
+      ],
+      "storybookUrl": "/?path=/story/components-forms--overview"
+    },
+    {
+      "id": "components-forms-checkbox",
+      "kind": "component",
+      "title": "Checkbox",
+      "breadcrumb": "Components/Forms/Checkbox",
+      "summary": "A two- or three-state boolean control. Use checkboxes for independent on/off choices, multi-select lists, and indeterminate parent-of-children selections (e.g. \"select all\").",
+      "tags": [
+        "components",
+        "forms",
+        "checkbox",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-checkbox--overview"
+    },
+    {
+      "id": "components-forms-date-and-time",
+      "kind": "component",
+      "title": "Date and time",
+      "breadcrumb": "Components/Forms/Date and time",
+      "summary": "The Date and time section collects every control for picking a moment — single dates, paired date + time, ranges, time-only, and relative waits. They all share the same lib calendar primitives in _libcal.tsx (CalendarPanel, CalendarPopout, BottomSheet, useMobileViewport, year stepper helpers) so the look, navigation, v",
+      "tags": [
+        "components",
+        "forms",
+        "date",
+        "and",
+        "time",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-date-and-time--overview"
+    },
+    {
+      "id": "components-forms-date-and-time-calendarmonth",
+      "kind": "component",
+      "title": "CalendarMonth",
+      "breadcrumb": "Components/Forms/Date and time/CalendarMonth",
+      "summary": "A standalone month-view calendar — the picker grid that DatePicker uses internally. Render it directly when you need a date selection inline (a scheduling sidebar, a date-range view) without the popover/text-input surface DatePicker adds.",
+      "tags": [
+        "components",
+        "forms",
+        "date",
+        "and",
+        "time",
+        "calendarmonth",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-date-and-time-calendarmonth--overview"
+    },
+    {
+      "id": "components-forms-date-and-time-datepicker",
+      "kind": "component",
+      "title": "DatePicker",
+      "breadcrumb": "Components/Forms/Date and time/DatePicker",
+      "summary": "A text input paired with a popover calendar. Users can type a date directly or pick from the calendar — both inputs stay in sync. Use it inside forms where a date is one of several fields. The lib defaults the display format to DD/MM/YYYY (rest-of-world convention); US-style and other formats are a one-prop swap.",
+      "tags": [
+        "components",
+        "forms",
+        "date",
+        "and",
+        "time",
+        "datepicker",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-date-and-time-datepicker--overview"
+    },
+    {
+      "id": "components-forms-date-and-time-datetimepicker",
+      "kind": "component",
+      "title": "DateTimePicker",
+      "breadcrumb": "Components/Forms/Date and time/DateTimePicker",
+      "summary": "PatternFly 6 doesn't ship a single \"date and time\" component — the recommended pattern is two paired controls: DatePicker for the day and TimePicker for the time, side-by-side under one FormGroup. This page shows the recipe.",
+      "tags": [
+        "components",
+        "forms",
+        "date",
+        "and",
+        "time",
+        "datetimepicker",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-date-and-time-datetimepicker--overview"
+    },
+    {
+      "id": "components-forms-date-and-time-futurepicker",
+      "kind": "component",
+      "title": "FuturePicker",
+      "breadcrumb": "Components/Forms/Date and time/FuturePicker",
+      "summary": "Two-tab control for scheduling future work. Wait collects a relative offset (days / hours / minutes) and emits an ISO-8601 duration like PT2H30M or P1DT4H . Specific date uses an inline PF6 CalendarMonth validated to disable today + any past day. Each tab keeps its own state so flipping back and forth doesn't lose work",
+      "tags": [
+        "components",
+        "forms",
+        "date",
+        "and",
+        "time",
+        "futurepicker",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-date-and-time-futurepicker--overview"
+    },
+    {
+      "id": "components-forms-date-and-time-timepicker",
+      "kind": "component",
+      "title": "TimePicker",
+      "breadcrumb": "Components/Forms/Date and time/TimePicker",
+      "summary": "A text input for time-of-day selection with a popover suggesting common times in the configured step. Supports 12-hour and 24-hour modes; pick the one that matches your locale's convention.",
+      "tags": [
+        "components",
+        "forms",
+        "date",
+        "and",
+        "time",
+        "timepicker",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-date-and-time-timepicker--overview"
+    },
+    {
+      "id": "components-forms-form",
+      "kind": "component",
+      "title": "Form",
+      "breadcrumb": "Components/Forms/Form",
+      "summary": "The container that organizes form fields with consistent spacing, label/helper-text positioning, and submit-button alignment. Compose with FormGroup , FormSection , FormHelperText , and ActionGroup rather than building any of those from scratch.",
+      "tags": [
+        "components",
+        "forms",
+        "form",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-form--overview"
+    },
+    {
+      "id": "components-forms-formselect",
+      "kind": "component",
+      "title": "FormSelect",
+      "breadcrumb": "Components/Forms/FormSelect",
+      "summary": "A native HTML &lt;select&gt; with PatternFly styling. Use it for 5–20 known options where users don't need search. For longer or unfamiliar lists, use the typeahead-capable Select (Components/Menus/Select).",
+      "tags": [
+        "components",
+        "forms",
+        "formselect",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-formselect--overview"
+    },
+    {
+      "id": "components-forms-helpertext",
+      "kind": "component",
+      "title": "HelperText",
+      "breadcrumb": "Components/Forms/HelperText",
+      "summary": "Short, supplemental text — typically beneath a form field — to describe expected input, validation rules, or current validation status. Pair with form fields via aria-describedby so screen readers announce the guidance.",
+      "tags": [
+        "components",
+        "forms",
+        "helpertext",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-helpertext--overview"
+    },
+    {
+      "id": "components-forms-inline-edit",
+      "kind": "component",
+      "title": "Inline edit",
+      "breadcrumb": "Components/Forms/Inline edit",
+      "summary": "A read-by-default field that switches to edit mode on demand — pencil to start, check to save, X to cancel. Use it for single-field metadata edits where opening a modal would be heavy: titles, owners, descriptions, tags. PatternFly ships this as a composed pattern in 6.4.3 (no dedicated component), so the recipe below ",
+      "tags": [
+        "components",
+        "forms",
+        "inline",
+        "edit",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "inlineedit"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-inline-edit--overview"
+    },
+    {
+      "id": "components-forms-inputgroup",
+      "kind": "component",
+      "title": "InputGroup",
+      "breadcrumb": "Components/Forms/InputGroup",
+      "summary": "A horizontal cluster of inputs and add-ons that read as a single control — username with @-prefix, search with scope picker, URL with copy button. Use it whenever a field needs an adjacent label, unit, action, or related control. For multi-row layouts, use Form instead.",
+      "tags": [
+        "components",
+        "forms",
+        "inputgroup",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-inputgroup--overview"
+    },
+    {
+      "id": "components-forms-numberinput",
+      "kind": "component",
+      "title": "NumberInput",
+      "breadcrumb": "Components/Forms/NumberInput",
+      "summary": "A numeric text input with built-in stepper buttons. Best for small-range values where users may want to nudge by one — quantity pickers, replica counts, retry counts. For values driven by feel rather than precision, use Slider.",
+      "tags": [
+        "components",
+        "forms",
+        "numberinput",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-numberinput--overview"
+    },
+    {
+      "id": "components-forms-radio",
+      "kind": "component",
+      "title": "Radio",
+      "breadcrumb": "Components/Forms/Radio",
+      "summary": "One selection from a small fixed list. Use radios when the user needs to see all options at once; for longer lists prefer FormSelect or Select.",
+      "tags": [
+        "components",
+        "forms",
+        "radio",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-radio--overview"
+    },
+    {
+      "id": "components-forms-searchinput",
+      "kind": "component",
+      "title": "SearchInput",
+      "breadcrumb": "Components/Forms/SearchInput",
+      "summary": "A text input pre-styled for queries — built-in search icon, clear button, and submit handling. Reach for SearchInput whenever the user is filtering or searching a list, not just typing free-form text.",
+      "tags": [
+        "components",
+        "forms",
+        "searchinput",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-searchinput--overview"
+    },
+    {
+      "id": "components-forms-slider",
+      "kind": "component",
+      "title": "Slider",
+      "breadcrumb": "Components/Forms/Slider",
+      "summary": "A bounded numeric input where the visual position itself communicates the value. Use it for \"by feel\" numbers — volume, opacity, contrast threshold — where exact precision matters less than relative position. For exact numeric entry, use NumberInput.",
+      "tags": [
+        "components",
+        "forms",
+        "slider",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-slider--overview"
+    },
+    {
+      "id": "components-forms-switch",
+      "kind": "component",
+      "title": "Switch",
+      "breadcrumb": "Components/Forms/Switch",
+      "summary": "A boolean toggle that applies its change immediately — no submit button needed. Use a Switch when flipping the control should instantly take effect (notifications on/off, dark mode, feature flag). For boolean choices that wait for form submission, use a Checkbox.",
+      "tags": [
+        "components",
+        "forms",
+        "switch",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-switch--overview"
+    },
+    {
+      "id": "components-forms-textarea",
+      "kind": "component",
+      "title": "TextArea",
+      "breadcrumb": "Components/Forms/TextArea",
+      "summary": "Multi-line text input. Use it for descriptions, comments, messages — anywhere users may write more than a single line. For a known-short single-line field, use TextInput.",
+      "tags": [
+        "components",
+        "forms",
+        "textarea",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-textarea--overview"
+    },
+    {
+      "id": "components-forms-textinput",
+      "kind": "component",
+      "title": "TextInput",
+      "breadcrumb": "Components/Forms/TextInput",
+      "summary": "Single-line text input. The most common form field — wrap in a FormGroup to get the label, helper text, and validation indicator wired up correctly.",
+      "tags": [
+        "components",
+        "forms",
+        "textinput",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-textinput--overview"
+    },
+    {
+      "id": "components-forms-textinputgroup",
+      "kind": "component",
+      "title": "TextInputGroup",
+      "breadcrumb": "Components/Forms/TextInputGroup",
+      "summary": "A composition primitive for text inputs that need additional UI inside the input frame — leading icons, trailing utility buttons, inline chips, status indicators, validation icons. Reach for it when a plain TextInput can't fit what you need into the same visual control. The group owns shared state (disabled, validated)",
+      "tags": [
+        "components",
+        "forms",
+        "textinputgroup",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-textinputgroup--overview"
+    },
+    {
+      "id": "components-forms-togglegroup",
+      "kind": "component",
+      "title": "ToggleGroup",
+      "breadcrumb": "Components/Forms/ToggleGroup",
+      "summary": "A pill-shaped row of mutually-exclusive (or independently toggleable) options — the canonical view-switcher / inline radio. Use for view-mode toggles (list / grid / table), filter modes, and small sets of related boolean settings.",
+      "tags": [
+        "components",
+        "forms",
+        "togglegroup",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-forms-togglegroup--overview"
+    },
+    {
+      "id": "components-hint",
+      "kind": "component",
+      "title": "Hint",
+      "breadcrumb": "Components/Hint",
+      "summary": "A small contextual callout — typically introducing a new feature, explaining a workflow, or pointing users to documentation. Less urgent than an Alert; more substantial than HelperText.",
+      "tags": [
+        "components",
+        "hint",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-hint--overview"
+    },
+    {
+      "id": "components-hyperlink",
+      "kind": "component",
+      "title": "Hyperlink",
+      "breadcrumb": "Components/Hyperlink",
+      "summary": "A real &lt;a&gt; styled with the brand's blue link tokens. Use it for navigation — changing URL, jumping between views, opening external sites. For actions that don't change URL (open dialog, save, delete), use Button with variant=\"link\" .",
+      "tags": [
+        "components",
+        "hyperlink",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-hyperlink--overview"
+    },
+    {
+      "id": "components-icon",
+      "kind": "component",
+      "title": "Icon",
+      "breadcrumb": "Components/Icon",
+      "summary": "A wrapper that applies sizing and semantic color to an SVG icon. The icon glyphs themselves come from @patternfly/react-icons — Icon supplies the consistent sizing scale and brand-aware status tinting.",
+      "tags": [
+        "components",
+        "icon",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-icon--overview"
+    },
+    {
+      "id": "components-jump-links",
+      "kind": "component",
+      "title": "Jump links",
+      "breadcrumb": "Components/Jump links",
+      "summary": "A list of in-page anchors that scroll to specific sections — a table of contents for long pages. The active link tracks the currently-visible section as the user scrolls. Use on settings pages, long-form documentation, or any view broken into named sections.",
+      "tags": [
+        "components",
+        "jump",
+        "links",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "jumplinks"
+      ],
+      "storybookUrl": "/?path=/story/components-jump-links--overview"
+    },
+    {
+      "id": "components-label",
+      "kind": "component",
+      "title": "Label",
+      "breadcrumb": "Components/Label",
+      "summary": "A small inline tag for status, category, or metadata. Replaces the deprecated Chip component for tag-like uses. Default to status=\"info\" for generic informational tags (\"Beta\", \"Draft\", \"New\"); reach for the color palette only when distinct user-assigned categories matter.",
+      "tags": [
+        "components",
+        "label",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-label--overview"
+    },
+    {
+      "id": "components-list",
+      "kind": "component",
+      "title": "List",
+      "breadcrumb": "Components/List",
+      "summary": "A semantic &lt;ul&gt; / &lt;ol&gt; with PF6 styling. Use for prose-flow lists (in body content, FAQ answers, instructional steps) and as a building block for icon-led item lists. For interactive selection lists, use SimpleList ; for tabular data, use DataList / Table .",
+      "tags": [
+        "components",
+        "list",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-list--overview"
+    },
+    {
+      "id": "components-loginpage",
+      "kind": "component",
+      "title": "LoginPage",
+      "breadcrumb": "Components/LoginPage",
+      "summary": "The full-page sign-in shell — brand panel on the left, form panel on the right (or stacked on small viewports), with built- in slots for social-login icons, sign-up link, forgot-password link, and footer policy links. Pair with LoginForm for the credential fields. Use as the entry shell of an app before the user has au",
+      "tags": [
+        "components",
+        "loginpage",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-loginpage--overview"
+    },
+    {
+      "id": "components-masthead",
+      "kind": "component",
+      "title": "Masthead",
+      "breadcrumb": "Components/Masthead",
+      "summary": "The top bar of an app. Three slots: a left brand region (logo + optional sidebar toggle), a centre region (often empty or holding a search), and a right region for global actions / user menu / notifications. Renders as &lt;header&gt; for proper landmark semantics.",
+      "tags": [
+        "components",
+        "masthead",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-masthead--overview"
+    },
+    {
+      "id": "components-menu-application-launcher",
+      "kind": "component",
+      "title": "Application launcher",
+      "breadcrumb": "Components/Menu/Application launcher",
+      "summary": "A grid-style menu of applications — the typical &ldquo;9-dot&rdquo; launcher in a masthead. PF6 ships this as a Dropdown composition: a kebab/dot trigger + a DropdownGroup of icon items. Use to give users a quick switcher between sibling apps in a suite.",
+      "tags": [
+        "components",
+        "menu",
+        "application",
+        "launcher",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "menu-demos"
+      ],
+      "storybookUrl": "/?path=/story/components-menu-application-launcher--overview"
+    },
+    {
+      "id": "components-menu-context-selector",
+      "kind": "component",
+      "title": "Context selector",
+      "breadcrumb": "Components/Menu/Context selector",
+      "summary": "A scoped switcher — change the active workspace / project / organisation without leaving the current view. Built on Select + a search input above the list, with the current selection reflected in the trigger label.",
+      "tags": [
+        "components",
+        "menu",
+        "context",
+        "selector",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "menu-demos"
+      ],
+      "storybookUrl": "/?path=/story/components-menu-context-selector--overview"
+    },
+    {
+      "id": "components-menu-custom-menus",
+      "kind": "component",
+      "title": "Custom menus",
+      "breadcrumb": "Components/Menu/Custom menus",
+      "summary": "Recipes built on the lib's Menu primitive that don't fit one of the higher-level wrappers ( Dropdown , Select ). Two common shapes: a search-filtered command palette, and a menu with a sticky footer for &ldquo;view all&rdquo; / save-state / clear- filter actions.",
+      "tags": [
+        "components",
+        "menu",
+        "custom",
+        "menus",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "menu-demos"
+      ],
+      "storybookUrl": "/?path=/story/components-menu-custom-menus--overview"
+    },
+    {
+      "id": "components-menu-dropdown",
+      "kind": "component",
+      "title": "Dropdown",
+      "breadcrumb": "Components/Menu/Dropdown",
+      "summary": "A menu of actions opened by a trigger. Use for action menus (kebab in toolbars / cards), command lists (&ldquo;Run&rdquo;, &ldquo;Duplicate&rdquo;, &ldquo;Delete&rdquo;), and any click-to-open list of things to do . For value selection, use Select instead.",
+      "tags": [
+        "components",
+        "menu",
+        "dropdown",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-menu-dropdown--overview"
+    },
+    {
+      "id": "components-menu-menu",
+      "kind": "component",
+      "title": "Menu",
+      "breadcrumb": "Components/Menu/Menu",
+      "summary": "The base menu primitive — used directly for static menus, wrapped by Dropdown / Select / OverflowMenu for triggered menus. Use it directly when you want a menu that's always visible (settings panel, inline pickers) or when you need composition that the higher-level wrappers don't cover.",
+      "tags": [
+        "components",
+        "menu",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-menu-menu--overview"
+    },
+    {
+      "id": "components-menu-menu-toggle",
+      "kind": "component",
+      "title": "Menu toggle",
+      "breadcrumb": "Components/Menu/Menu toggle",
+      "summary": "The trigger element for menus — used by Dropdown , Select , and any custom menu pattern. Comes in variants (default / primary / secondary / plain), sizes, split-button shapes (action + checkbox), and stateful styling. Use it directly when you need a menu trigger that doesn't fit one of the higher-level wrappers.",
+      "tags": [
+        "components",
+        "menu",
+        "toggle",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "menutoggle"
+      ],
+      "storybookUrl": "/?path=/story/components-menu-menu-toggle--overview"
+    },
+    {
+      "id": "components-menu-options-menu",
+      "kind": "component",
+      "title": "Options menu",
+      "breadcrumb": "Components/Menu/Options menu",
+      "summary": "A toggleable menu of toggleable settings — used for filter sets, display preferences, and any cluster of options the user keeps tweaking. Built on Select with hasCheckbox options for multi-select shapes; grouped sections for settings clusters.",
+      "tags": [
+        "components",
+        "menu",
+        "options",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "menu-demos",
+        "optionsmenu"
+      ],
+      "storybookUrl": "/?path=/story/components-menu-options-menu--overview"
+    },
+    {
+      "id": "components-menu-select",
+      "kind": "component",
+      "title": "Select",
+      "breadcrumb": "Components/Menu/Select",
+      "summary": "A menu for picking values — single or multi, with optional grouping, validation, and typeahead. The trigger label updates to reflect the selection. Use for form fields, switchers, and any choice list. For action menus, use Dropdown instead.",
+      "tags": [
+        "components",
+        "menu",
+        "select",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-menu-select--overview"
+    },
+    {
+      "id": "components-modal",
+      "kind": "component",
+      "title": "Modal",
+      "breadcrumb": "Components/Modal",
+      "summary": "A blocking overlay that demands attention. Use for confirmations, destructive actions, focused tasks, and errors that require a response. For non-blocking contextual content, use Drawer or Popover instead.",
+      "tags": [
+        "components",
+        "modal",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-modal--overview"
+    },
+    {
+      "id": "components-navigation",
+      "kind": "component",
+      "title": "Navigation",
+      "breadcrumb": "Components/Navigation",
+      "summary": "Vertical or horizontal nav lists with active states, grouping, and nested sections. Renders as &lt;nav&gt; for landmark semantics. Pair with aria-label when the page has more than one nav region.",
+      "tags": [
+        "components",
+        "navigation",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-navigation--overview"
+    },
+    {
+      "id": "components-notificationbadge",
+      "kind": "component",
+      "title": "NotificationBadge",
+      "breadcrumb": "Components/NotificationBadge",
+      "summary": "A bell-icon trigger that surfaces unread / attention status — commonly placed in the masthead to open a NotificationDrawer. Three semantic variants ( read / unread / attention ) plus an optional unread count.",
+      "tags": [
+        "components",
+        "notificationbadge",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-notificationbadge--overview"
+    },
+    {
+      "id": "components-notificationdrawer",
+      "kind": "component",
+      "title": "NotificationDrawer",
+      "breadcrumb": "Components/NotificationDrawer",
+      "summary": "The slide-in panel that hosts notifications — paired with NotificationBadge in the masthead, and surfaced via the Page.notificationDrawer slot. Use for system events, async job results, mentions, and any asynchronous status the user should be able to review at any time.",
+      "tags": [
+        "components",
+        "notificationdrawer",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-notificationdrawer--overview"
+    },
+    {
+      "id": "components-overflowmenu",
+      "kind": "component",
+      "title": "OverflowMenu",
+      "breadcrumb": "Components/OverflowMenu",
+      "summary": "A toolbar wrapper that collapses items into a kebab menu below a chosen breakpoint. Use it inside Toolbar / CardHeader when the row carries more actions than fit on narrow viewports — desktop sees the buttons, mobile sees the kebab + an overlay menu.",
+      "tags": [
+        "components",
+        "overflowmenu",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-overflowmenu--overview"
+    },
+    {
+      "id": "components-page",
+      "kind": "component",
+      "title": "Page",
+      "breadcrumb": "Components/Page",
+      "summary": "The top-level layout shell. Composes Masthead , PageSidebar , and PageSection into the standard app skeleton — header bar, optional collapsible sidebar, scrolling main content. Use it as the outermost container of every app screen; the lib's own Shell is built on top.",
+      "tags": [
+        "components",
+        "page",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-page--overview"
+    },
+    {
+      "id": "components-pagination",
+      "kind": "component",
+      "title": "Pagination",
+      "breadcrumb": "Components/Pagination",
+      "summary": "Page-through controls for long collections — tables, lists, search results. Combines per-page sizing, prev/next, jump-to-page, and a &ldquo;showing X–Y of Z&rdquo; summary. Use the same component above and below a table for symmetric controls.",
+      "tags": [
+        "components",
+        "pagination",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-pagination--overview"
+    },
+    {
+      "id": "components-panel",
+      "kind": "component",
+      "title": "Panel",
+      "breadcrumb": "Components/Panel",
+      "summary": "A lightweight surface container — header, scrollable body, footer. Use it for self-contained content blocks inside a page (filter summaries, side notes, log streams). For data rows use DataList ; for top-level page sections use PageSection ; for elevated content with chrome use Card .",
+      "tags": [
+        "components",
+        "panel",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-panel--overview"
+    },
+    {
+      "id": "components-popover",
+      "kind": "component",
+      "title": "Popover",
+      "breadcrumb": "Components/Popover",
+      "summary": "A click-triggered floating panel anchored to a control. Use for contextual help, definitions, mini-forms, and any rich content that doesn't justify a modal. Unlike Tooltip , popovers are interactive — they can hold links, buttons, and form inputs.",
+      "tags": [
+        "components",
+        "popover",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-popover--overview"
+    },
+    {
+      "id": "components-progress",
+      "kind": "component",
+      "title": "Progress",
+      "breadcrumb": "Components/Progress",
+      "summary": "A determinate progress bar with optional title, percentage, and status variant. Use for long-running tasks where you can express progress as a fraction of total — uploads, deployments, multi-step jobs. For indeterminate spinners (work-of-unknown-duration), use Spinner .",
+      "tags": [
+        "components",
+        "progress",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-progress--overview"
+    },
+    {
+      "id": "components-progressstepper",
+      "kind": "component",
+      "title": "ProgressStepper",
+      "breadcrumb": "Components/ProgressStepper",
+      "summary": "A multi-step progress indicator — each step has a status ( pending / info / success / warning / danger ) and one is marked isCurrent . Use for wizards, BPM workflow execution, deployment pipelines, onboarding flows — anywhere the user benefits from seeing where they are in a sequence.",
+      "tags": [
+        "components",
+        "progressstepper",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-progressstepper--overview"
+    },
+    {
+      "id": "components-sidebar",
+      "kind": "component",
+      "title": "Sidebar",
+      "breadcrumb": "Components/Sidebar",
+      "summary": "A two-column layout primitive — a fixed-width SidebarPanel next to a flexible SidebarContent. Use it for in-page side panels: filter trails, settings menus, table of contents, secondary navigation. For app-level sidebars (the kind that holds primary Nav), use PageSidebar on Page instead — that's a different component m",
+      "tags": [
+        "components",
+        "sidebar",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-sidebar--overview"
+    },
+    {
+      "id": "components-simplelist",
+      "kind": "component",
+      "title": "SimpleList",
+      "breadcrumb": "Components/SimpleList",
+      "summary": "A single-select list of items — the lightweight cousin of DataList . Use for in-page navigation lists, picker menus inside Drawers / Popovers, and side-rail selectors. Built-in keyboard navigation (arrow keys + Enter) and aria-selected wiring.",
+      "tags": [
+        "components",
+        "simplelist",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-simplelist--overview"
+    },
+    {
+      "id": "components-skeleton",
+      "kind": "component",
+      "title": "Skeleton",
+      "breadcrumb": "Components/Skeleton",
+      "summary": "A placeholder shape that mimics the layout of content while it loads. Better than a spinner for first-page loads — gives users a sense of structure before data arrives, reduces perceived wait time.",
+      "tags": [
+        "components",
+        "skeleton",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-skeleton--overview"
+    },
+    {
+      "id": "components-spinner",
+      "kind": "component",
+      "title": "Spinner",
+      "breadcrumb": "Components/Spinner",
+      "summary": "A loading indicator for short, indeterminate operations. Use it when something is happening but you can't communicate progress (no percentage, no step count). For known progress, use Progress instead.",
+      "tags": [
+        "components",
+        "spinner",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-spinner--overview"
+    },
+    {
+      "id": "components-table",
+      "kind": "component",
+      "title": "Table",
+      "breadcrumb": "Components/Table",
+      "summary": "The PF6 workhorse for tabular data — sortable, selectable, expandable, sticky-headerable. Lives in @patternfly/react-table (separate package from @patternfly/react-core ). Use Table for tabular data with column headers and any kind of column-level interaction; reach for DataList when each row is more like a card than a",
+      "tags": [
+        "components",
+        "table",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-table--overview"
+    },
+    {
+      "id": "components-tabs",
+      "kind": "component",
+      "title": "Tabs",
+      "breadcrumb": "Components/Tabs",
+      "summary": "Switch between sibling views without leaving the page. Use for related content that shares a heading — settings panels, detail views, dashboard subsections. For navigation between pages, use Nav instead.",
+      "tags": [
+        "components",
+        "tabs",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-tabs--overview"
+    },
+    {
+      "id": "components-timestamp",
+      "kind": "component",
+      "title": "Timestamp",
+      "breadcrumb": "Components/Timestamp",
+      "summary": "A locale-aware date / time renderer with built-in tooltip support. Use for any timestamp surfaced in the UI — &ldquo;last run&rdquo;, &ldquo;created at&rdquo;, &ldquo;updated&rdquo; — so dates get consistent formatting and a hover tooltip that surfaces the full date / timezone for context.",
+      "tags": [
+        "components",
+        "timestamp",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-timestamp--overview"
+    },
+    {
+      "id": "components-title",
+      "kind": "component",
+      "title": "Title",
+      "breadcrumb": "Components/Title",
+      "summary": "A heading with PatternFly type-scale styling. The visual size is decoupled from the heading level — pick the level for the document outline (H1 → H6), pick the size for the visual hierarchy.",
+      "tags": [
+        "components",
+        "title",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-title--overview"
+    },
+    {
+      "id": "components-toolbar",
+      "kind": "component",
+      "title": "Toolbar",
+      "breadcrumb": "Components/Toolbar",
+      "summary": "The action / filter row that sits above tables and lists. Composes search, filter chips, sort, view toggles, and primary actions in a single horizontal bar that wraps gracefully on narrow viewports.",
+      "tags": [
+        "components",
+        "toolbar",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-toolbar--overview"
+    },
+    {
+      "id": "components-tooltip",
+      "kind": "component",
+      "title": "Tooltip",
+      "breadcrumb": "Components/Tooltip",
+      "summary": "A small floating label that appears on hover or focus. Use it for short, supplemental hints — not for primary content. If a user must read it to understand the UI, it doesn't belong in a tooltip.",
+      "tags": [
+        "components",
+        "tooltip",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-tooltip--overview"
+    },
+    {
+      "id": "components-treeview",
+      "kind": "component",
+      "title": "TreeView",
+      "breadcrumb": "Components/TreeView",
+      "summary": "A collapsible tree of nodes — file-browser style hierarchical navigation. Items can be selected, multi-selected, paired with icons, badges, or per-node action menus, and filtered by an external search input. Use for nested data: workspaces / projects / environments, file trees, taxonomies.",
+      "tags": [
+        "components",
+        "treeview",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-treeview--overview"
+    },
+    {
+      "id": "components-truncate",
+      "kind": "component",
+      "title": "Truncate",
+      "breadcrumb": "Components/Truncate",
+      "summary": "A long-string truncator with auto-tooltip. Use for filenames, ids, URLs, and any unbounded text rendered in width-constrained layouts (table cells, sidebars, breadcrumb segments). The full string is available on hover via PF's Tooltip.",
+      "tags": [
+        "components",
+        "truncate",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-truncate--overview"
+    },
+    {
+      "id": "components-wizard",
+      "kind": "component",
+      "title": "Wizard",
+      "breadcrumb": "Components/Wizard",
+      "summary": "A multi-step task runner with a step rail, per-step body, and a standard footer (Back / Next / Cancel / Submit). Use it for create-flows that have natural sub-steps where users need orientation (&ldquo;step 2 of 5&rdquo;) and the option to jump back. For single-question flows, use a regular Form inside a Modal instead.",
+      "tags": [
+        "components",
+        "wizard",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-wizard--overview"
+    },
+    {
+      "id": "extensions",
+      "kind": "component",
+      "title": "Extensions",
+      "breadcrumb": "Extensions",
+      "summary": "Extensions are PatternFly packages that live outside @patternfly/react-core and ship larger, more opinionated building blocks — catalog tiles, data views, log viewers, quick starts, consoles, feedback modals. They're published as separate npm packages so you only pay for what you import.",
+      "tags": [
+        "extensions",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "about"
+      ],
+      "storybookUrl": "/?path=/story/extensions--overview"
+    },
+    {
+      "id": "extensions-catalog-view-catalog-item-header",
+      "kind": "component",
+      "title": "Catalog item header",
+      "breadcrumb": "Extensions/Catalog view/Catalog item header",
+      "summary": "The page header for a single catalog item — large icon, title, vendor line. Render it at the top of the catalog item's detail page so users know what they clicked into.",
+      "tags": [
+        "extensions",
+        "catalog",
+        "view",
+        "item",
+        "header",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/extensions-catalog-view-catalog-item-header--overview"
+    },
+    {
+      "id": "extensions-catalog-view-catalog-tile",
+      "kind": "component",
+      "title": "Catalog tile",
+      "breadcrumb": "Extensions/Catalog view/Catalog tile",
+      "summary": "A single tile in a catalog grid — title, vendor, description, optional icon, badges, footer. Renders as a link when href is set; renders as a selectable card when paired with isSelected + onClick .",
+      "tags": [
+        "extensions",
+        "catalog",
+        "view",
+        "tile",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "catalogtile"
+      ],
+      "storybookUrl": "/?path=/story/extensions-catalog-view-catalog-tile--overview"
+    },
+    {
+      "id": "extensions-catalog-view-catalog-view",
+      "kind": "component",
+      "title": "Catalog view",
+      "breadcrumb": "Extensions/Catalog view/Catalog view",
+      "summary": "A grid of selectable / linkable cards for catalogs — services, plugins, marketplace items. The pattern combines CatalogTile (the card), CatalogItemHeader (in-detail header), FilterSidePanel (left-rail facets), PropertiesSidePanel (right-rail metadata), and VerticalTabs (left-rail nav). All from @patternfly/react-catalo",
+      "tags": [
+        "extensions",
+        "catalog",
+        "view",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "catalogview"
+      ],
+      "storybookUrl": "/?path=/story/extensions-catalog-view-catalog-view--overview"
+    },
+    {
+      "id": "extensions-catalog-view-filter-side-panel",
+      "kind": "component",
+      "title": "Filter side panel",
+      "breadcrumb": "Extensions/Catalog view/Filter side panel",
+      "summary": "The left rail of facet checkboxes for a catalog page — vendor, type, status, region. Pair FilterSidePanel with one or more FilterSidePanelCategory blocks; each category has a Show-X-more affordance baked in.",
+      "tags": [
+        "extensions",
+        "catalog",
+        "view",
+        "filter",
+        "side",
+        "panel",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/extensions-catalog-view-filter-side-panel--overview"
+    },
+    {
+      "id": "extensions-catalog-view-properties-side-panel",
+      "kind": "component",
+      "title": "Properties side panel",
+      "breadcrumb": "Extensions/Catalog view/Properties side panel",
+      "summary": "The right rail of metadata on a catalog detail page — version, maintainer, support level, expires-on. Pair PropertiesSidePanel with one or more PropertyItem children, and stack actions (Install, Subscribe) at the bottom.",
+      "tags": [
+        "extensions",
+        "catalog",
+        "view",
+        "properties",
+        "side",
+        "panel",
+        "packages",
+        "ds-patternfly"
+      ],
+      "storybookUrl": "/?path=/story/extensions-catalog-view-properties-side-panel--overview"
+    },
+    {
+      "id": "extensions-catalog-view-vertical-tabs",
+      "kind": "component",
+      "title": "Vertical tabs",
+      "breadcrumb": "Extensions/Catalog view/Vertical tabs",
+      "summary": "A left-rail tab list — common as the secondary nav inside a catalog item detail page (Overview / Configuration / Permissions / Logs). Less heavyweight than PageSidebar , cleaner than horizontal Tabs when you have ≥ 4 entries.",
+      "tags": [
+        "extensions",
+        "catalog",
+        "view",
+        "vertical",
+        "tabs",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/extensions-catalog-view-vertical-tabs--overview"
+    },
+    {
+      "id": "extensions-data-view-overview",
+      "kind": "component",
+      "title": "Overview",
+      "breadcrumb": "Extensions/Data view/Overview",
+      "summary": "A pre-wired Table + Toolbar + Pagination + Selection package — handles the boilerplate every product table reinvents. Use it when you want a drop-in modern data table with filters, selection, sort, pagination, and consistent UX across products. From @patternfly/react-data-view .",
+      "tags": [
+        "extensions",
+        "data",
+        "view",
+        "overview",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "dataviewoverview"
+      ],
+      "storybookUrl": "/?path=/story/extensions-data-view-overview--overview"
+    },
+    {
+      "id": "extensions-data-view-table",
+      "kind": "component",
+      "title": "Table",
+      "breadcrumb": "Extensions/Data view/Table",
+      "summary": "The table renderer for Data view — accepts columns + rows arrays, handles selection wiring, and dispatches head / body content for loading / empty / error states.",
+      "tags": [
+        "extensions",
+        "data",
+        "view",
+        "table",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "dataviewtable"
+      ],
+      "storybookUrl": "/?path=/story/extensions-data-view-table--overview"
+    },
+    {
+      "id": "extensions-data-view-toolbar",
+      "kind": "component",
+      "title": "Toolbar",
+      "breadcrumb": "Extensions/Data view/Toolbar",
+      "summary": "The toolbar that sits above a Data view table — named slots for filters, bulk select, actions, view-toggle group, and pagination. Everything is a render-slot, so you stay in control of the inner components.",
+      "tags": [
+        "extensions",
+        "data",
+        "view",
+        "toolbar",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "dataviewtoolbar"
+      ],
+      "storybookUrl": "/?path=/story/extensions-data-view-toolbar--overview"
+    },
+    {
+      "id": "extensions-log-viewer",
+      "kind": "component",
+      "title": "Log viewer",
+      "breadcrumb": "Extensions/Log viewer",
+      "summary": "A virtualised log-streaming component with ANSI colour support, search, line numbers, and dark/light themes. From @patternfly/react-log-viewer . Use it whenever you need to render &gt; a few hundred lines of machine output without freezing the page. LogViewer mounts an off-screen &lt;canvas&gt; -style measurement layer",
+      "tags": [
+        "extensions",
+        "log",
+        "viewer",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "logviewer"
+      ],
+      "storybookUrl": "/?path=/story/extensions-log-viewer--overview"
+    },
+    {
+      "id": "extensions-quick-starts",
+      "kind": "component",
+      "title": "Quick starts",
+      "breadcrumb": "Extensions/Quick starts",
+      "summary": "Guided product tours rendered from declarative YAML / JSON. The package ships a catalog page (a grid of available tours), a drawer that walks the user through each step with markdown + screenshots, and a controller that persists progress to localStorage. From @patternfly/quickstarts . Quick starts wraps the entire app ",
+      "tags": [
+        "extensions",
+        "quick",
+        "starts",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "quickstarts"
+      ],
+      "storybookUrl": "/?path=/story/extensions-quick-starts--overview"
+    },
+    {
+      "id": "extensions-react-console",
+      "kind": "component",
+      "title": "React console",
+      "breadcrumb": "Extensions/React console",
+      "summary": "A toolkit of remote-console viewers — Serial (xterm.js wrapper), VNC (noVNC), and Desktop (RDP-style placeholder). Used in OpenShift-style admin UIs where the user needs an in-browser terminal or graphical session into a VM. From @patternfly/react-console . These components depend on heavy runtime libraries and a live ",
+      "tags": [
+        "extensions",
+        "react",
+        "console",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "reactconsole"
+      ],
+      "storybookUrl": "/?path=/story/extensions-react-console--overview"
+    },
+    {
+      "id": "extensions-user-feedback",
+      "kind": "component",
+      "title": "User feedback",
+      "breadcrumb": "Extensions/User feedback",
+      "summary": "A pre-built feedback / bug-report / mailing-list modal — same shape as Red Hat's product feedback flow. Configure each optional channel (feedback, bug report, mailing list, support case) by either passing a URL (redirect) or a callback (handle inline). From @patternfly/react-user-feedback .",
+      "tags": [
+        "extensions",
+        "user",
+        "feedback",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "userfeedback"
+      ],
+      "storybookUrl": "/?path=/story/extensions-user-feedback--overview"
+    },
+    {
+      "id": "foundations",
+      "kind": "foundation",
+      "title": "Foundations",
+      "breadcrumb": "Foundations",
+      "summary": "Design foundations are the building blocks of the design system — the things every component is made of. They are intentionally opinionated so that any UI assembled from them looks cohesive, performs well, and stays accessible. This system layers on top of PatternFly 6 and is brandable via swappable token sets (e.g. Go",
+      "tags": [
+        "foundations",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "about"
+      ],
+      "storybookUrl": "/?path=/story/foundations--overview"
+    },
+    {
+      "id": "foundations-colors",
+      "kind": "foundation",
+      "title": "Colors",
+      "breadcrumb": "Foundations/Colors",
+      "summary": "Semantic tokens describe a color's role in the UI. Components reference these, never raw palette values, so re-skinning is a matter of swapping the brand. Each token resolves to a different value per color mode (currently: ). Switch the Mode toolbar above to see how each role adapts. The right-most number on each row i",
+      "tags": [
+        "foundations",
+        "colors",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/foundations-colors--overview"
+    },
+    {
+      "id": "foundations-focus",
+      "kind": "foundation",
+      "title": "Focus",
+      "breadcrumb": "Foundations/Focus",
+      "summary": "The visible focus indicator is the most important a11y feature most teams under-invest in. The lib normalises PF6's mixed default (inputs inner, buttons / menus outer) into one consistent system-wide style, configurable via &lt;ThemeProvider focusRing=\"outer\" | \"inner\"&gt; .",
+      "tags": [
+        "foundations",
+        "focus",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/foundations-focus--overview"
+    },
+    {
+      "id": "foundations-icons",
+      "kind": "foundation",
+      "title": "Icons",
+      "breadcrumb": "Foundations/Icons",
+      "summary": "Icons come from @patternfly/react-icons (declared as a peer dependency). They inherit color from currentColor , so you set their color by setting CSS color on a parent — typically with one of our semantic icon tokens.",
+      "tags": [
+        "foundations",
+        "icons",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/foundations-icons--overview"
+    },
+    {
+      "id": "foundations-motion",
+      "kind": "foundation",
+      "title": "Motion",
+      "breadcrumb": "Foundations/Motion",
+      "summary": "Motion tokens describe how the system animates. Durations and easings are part of the brand contract so motion can feel different per brand (e.g. Golden Passport uses a softer, slightly slower set than the default).",
+      "tags": [
+        "foundations",
+        "motion",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/foundations-motion--overview"
+    },
+    {
+      "id": "foundations-open-ui-automation",
+      "kind": "foundation",
+      "title": "Open UI Automation",
+      "breadcrumb": "Foundations/Open UI Automation",
+      "summary": "OUIA (Open UI Automation) is a small, cross-framework spec for stable test selectors. PatternFly 6 implements it: every OUIA-compliant component emits three attributes on its root — data-ouia-component-type , data-ouia-component-id , data-ouia-safe . Test runners locate elements by data-ouia-component-id without coupli",
+      "tags": [
+        "foundations",
+        "open",
+        "automation",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "openuiautomation"
+      ],
+      "storybookUrl": "/?path=/story/foundations-open-ui-automation--overview"
+    },
+    {
+      "id": "foundations-radius",
+      "kind": "foundation",
+      "title": "Radius",
+      "breadcrumb": "Foundations/Radius",
+      "summary": "Six corner-radius tokens, aligned to PatternFly 6's semantic scale. Use them via the --gp-radius-* CSS variables or pass through brand tokens — values shift per brand without component changes.",
+      "tags": [
+        "foundations",
+        "radius",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/foundations-radius--overview"
+    },
+    {
+      "id": "foundations-responsive-and-mobile",
+      "kind": "foundation",
+      "title": "Responsive and mobile",
+      "breadcrumb": "Foundations/Responsive and mobile",
+      "summary": "This system is mobile-first: every layout starts as a single column and progressively reveals more structure as horizontal space allows. Apps built on the lib inherit PatternFly 6's breakpoint scale; the lib's own components branch at one point — the md threshold (768px) — where the primary navigation pattern shifts fr",
+      "tags": [
+        "foundations",
+        "responsive",
+        "and",
+        "mobile",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/foundations-responsive-and-mobile--overview"
+    },
+    {
+      "id": "foundations-spacers",
+      "kind": "foundation",
+      "title": "Spacers",
+      "breadcrumb": "Foundations/Spacers",
+      "summary": "The spacing scale is used for padding, margin, gaps, and inset. Five steps cover the great majority of layout decisions; if you need something between, prefer the next-larger token over a custom value to keep rhythm consistent.",
+      "tags": [
+        "foundations",
+        "spacers",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/foundations-spacers--overview"
+    },
+    {
+      "id": "foundations-theming",
+      "kind": "foundation",
+      "title": "Theming",
+      "breadcrumb": "Foundations/Theming",
+      "summary": "Theming is two dimensions: the active brand (a typed token object) and the active color mode (light or dark). Both are controlled by props on &lt;ThemeProvider&gt; — switching either re-renders all downstream components without a reload.",
+      "tags": [
+        "foundations",
+        "theming",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/foundations-theming--overview"
+    },
+    {
+      "id": "foundations-typography",
+      "kind": "foundation",
+      "title": "Typography",
+      "breadcrumb": "Foundations/Typography",
+      "summary": "Typography is sourced from the active brand. Two stacks: one for body , one for headings (defaults to body if unspecified). The scale below is a reference — the lib doesn't prescribe heading components today, leaving you free to use PatternFly's &lt;Title&gt; with these sizes.",
+      "tags": [
+        "foundations",
+        "typography",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/foundations-typography--overview"
+    },
+    {
+      "id": "foundations-usage-and-behavior",
+      "kind": "foundation",
+      "title": "Usage and behavior",
+      "breadcrumb": "Foundations/Usage and behavior",
+      "summary": "Cross-cutting rules every component in the system honors. These behaviors are guaranteed by the underlying PatternFly 6 primitives — wrappers in this lib never weaken them.",
+      "tags": [
+        "foundations",
+        "usage",
+        "and",
+        "behavior",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "usageandbehavior"
+      ],
+      "storybookUrl": "/?path=/story/foundations-usage-and-behavior--overview"
+    },
+    {
+      "id": "id",
+      "kind": "component",
+      "title": "ID",
+      "breadcrumb": "ID",
+      "summary": "A reusable selectable + reorderable list — the visible body of a column-management or preferences modal. Use the standalone ListManager when you want to embed the same UI inline (e.g. inside a Drawer) rather than launching the full ColumnManagementModal .",
+      "tags": [
+        "packages",
+        "ds-patternfly",
+        "src",
+        "component-groups",
+        "listmanager"
+      ],
+      "storybookUrl": "/?path=/story/id--overview"
+    },
+    {
+      "id": "layouts",
+      "kind": "foundation",
+      "title": "Layouts",
+      "breadcrumb": "Layouts",
+      "summary": "Layouts are PatternFly 6's set of structural primitives — small React components that compose into the page-level skeletons every BPM/automation app needs. They wrap CSS flexbox and grid with a token-aware API so spacing, breakpoints, and brand stay consistent across the system.",
+      "tags": [
+        "layouts",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "about"
+      ],
+      "storybookUrl": "/?path=/story/layouts--overview"
+    },
+    {
+      "id": "layouts-bullseye",
+      "kind": "foundation",
+      "title": "Bullseye",
+      "breadcrumb": "Layouts/Bullseye",
+      "summary": "Centers a single child both vertically and horizontally within its parent. The most common use case is empty states, loading spinners, and error screens where there's exactly one block of content and it should sit dead center of whatever space is available.",
+      "tags": [
+        "layouts",
+        "bullseye",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/layouts-bullseye--overview"
+    },
+    {
+      "id": "layouts-flex",
+      "kind": "foundation",
+      "title": "Flex",
+      "breadcrumb": "Layouts/Flex",
+      "summary": "The general-purpose flex container. Wraps CSS flexbox in a token-aware API where spacing, direction, alignment, and justification are all set per breakpoint. Use it whenever a layout is essentially a row or column of items and none of the more specialized layouts (Level, Split, Stack) fit.",
+      "tags": [
+        "layouts",
+        "flex",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/layouts-flex--overview"
+    },
+    {
+      "id": "layouts-gallery",
+      "kind": "foundation",
+      "title": "Gallery",
+      "breadcrumb": "Layouts/Gallery",
+      "summary": "A responsive grid of equal-width tiles. You specify the minimum tile width — the column count is computed by the browser at every viewport size. Use it for card grids, dashboards, and any collection where the items are interchangeable in shape.",
+      "tags": [
+        "layouts",
+        "gallery",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/layouts-gallery--overview"
+    },
+    {
+      "id": "layouts-grid",
+      "kind": "foundation",
+      "title": "Grid",
+      "breadcrumb": "Layouts/Grid",
+      "summary": "A 12-column grid with per-breakpoint span controls. Use it when items have distinct widths (a wide chart next to a narrow stat, a form with two columns of fields), and you want to express the layout in column units rather than pixels or percentages.",
+      "tags": [
+        "layouts",
+        "grid",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/layouts-grid--overview"
+    },
+    {
+      "id": "layouts-level",
+      "kind": "foundation",
+      "title": "Level",
+      "breadcrumb": "Layouts/Level",
+      "summary": "A single horizontal row that distributes its children with justify-content: space-between . Use it for headers, footers, and any row where one or two items sit at the edges with space (or other items) between them.",
+      "tags": [
+        "layouts",
+        "level",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/layouts-level--overview"
+    },
+    {
+      "id": "layouts-shell",
+      "kind": "foundation",
+      "title": "Shell",
+      "breadcrumb": "Layouts/Shell",
+      "summary": "Top-right masthead actions: notifications, help, settings, and a user dropdown (avatar + name + caret) — modelled on the PF6 reference demo patternfly.org/components/masthead/react-demos/utilities-and-user-dropdown-menu. Hooks live in a component so each render owns its dropdown open state.",
+      "tags": [
+        "layouts",
+        "shell",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/layouts-shell--overview"
+    },
+    {
+      "id": "layouts-split",
+      "kind": "foundation",
+      "title": "Split",
+      "breadcrumb": "Layouts/Split",
+      "summary": "A horizontal row where one item fills remaining space and the others stay intrinsic. The classic use is a sidebar + content area, or a row with a flexible label that expands to push trailing icons to the end.",
+      "tags": [
+        "layouts",
+        "split",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/layouts-split--overview"
+    },
+    {
+      "id": "layouts-stack",
+      "kind": "foundation",
+      "title": "Stack",
+      "breadcrumb": "Layouts/Stack",
+      "summary": "The vertical equivalent of Split — children stack top-to-bottom, and exactly one item can be marked isFilled to expand and consume remaining vertical space. The classic use is a page chrome layout: header, scrolling body, footer.",
+      "tags": [
+        "layouts",
+        "stack",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/layouts-stack--overview"
+    },
+    {
+      "id": "patterns-about-patterns",
+      "kind": "recipe",
+      "title": "About patterns",
+      "breadcrumb": "Patterns/About patterns",
+      "summary": "Patterns are recipes — proven compositions of PF6 primitives that solve a recurring UX problem (bulk select, card view, primary-detail, password strength). They're not packages and they're not components. Each page documents the shape, the accessibility considerations, and ships a working demo you can copy.",
+      "tags": [
+        "patterns",
+        "about",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/patterns-about-patterns--overview"
+    },
+    {
+      "id": "patterns-actions",
+      "kind": "recipe",
+      "title": "Actions",
+      "breadcrumb": "Patterns/Actions",
+      "summary": "How to lay out action buttons on a page, in a row, or in a toolbar — one primary, a few secondaries, the rest in a kebab. The pattern keeps button hierarchy predictable across surfaces so users don't have to re-learn which button does the destructive thing in each screen.",
+      "tags": [
+        "patterns",
+        "actions",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/patterns-actions--overview"
+    },
+    {
+      "id": "patterns-bulk-selection",
+      "kind": "recipe",
+      "title": "Bulk selection",
+      "breadcrumb": "Patterns/Bulk selection",
+      "summary": "The standard toolbar + checkbox triplet for &ldquo;select many, act on many&rdquo;. One BulkSelect dropdown for select-all / select-page / clear; per-row checkboxes for granular pick; bulk-action buttons in the toolbar that only appear when selection is non-empty.",
+      "tags": [
+        "patterns",
+        "bulk",
+        "selection",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "bulkselection"
+      ],
+      "storybookUrl": "/?path=/story/patterns-bulk-selection--overview"
+    },
+    {
+      "id": "patterns-card-view-demo",
+      "kind": "recipe",
+      "title": "Demo",
+      "breadcrumb": "Patterns/Card view/Demo",
+      "summary": "A responsive Gallery of Cards — the standard alternative to a Table when each row is more visual than tabular (catalog entries, dashboard tiles, image collections). Pair with a Toolbar for search + filters, and a Pagination below for large datasets.",
+      "tags": [
+        "patterns",
+        "card",
+        "view",
+        "demo",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "cardview"
+      ],
+      "storybookUrl": "/?path=/story/patterns-card-view-demo--overview"
+    },
+    {
+      "id": "patterns-dashboard-demo",
+      "kind": "recipe",
+      "title": "Demo",
+      "breadcrumb": "Patterns/Dashboard/Demo",
+      "summary": "The standard ops dashboard — KPI strip across the top, a wider chart / activity card, a sidebar of status cards. Built from Grid + Gallery + Card; no special dashboard component required.",
+      "tags": [
+        "patterns",
+        "dashboard",
+        "demo",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/patterns-dashboard-demo--overview"
+    },
+    {
+      "id": "patterns-filters-demo",
+      "kind": "recipe",
+      "title": "Demo",
+      "breadcrumb": "Patterns/Filters/Demo",
+      "summary": "The standard filter toolbar — search input, one or more facet selects, removable filter chips that summarize the current state. Wire onClear on each chip so users can lift filters one at a time without re-opening the dropdown.",
+      "tags": [
+        "patterns",
+        "filters",
+        "demo",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/patterns-filters-demo--overview"
+    },
+    {
+      "id": "patterns-password-generator-demo",
+      "kind": "recipe",
+      "title": "Demo",
+      "breadcrumb": "Patterns/Password generator/Demo",
+      "summary": "An input group that produces, reveals, and copies a strong password. The standard shape: a read-only TextInput + regenerate / show / copy buttons. Generate via crypto.getRandomValues so the result is cryptographically random — never Math.random() .",
+      "tags": [
+        "patterns",
+        "password",
+        "generator",
+        "demo",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "passwordgenerator"
+      ],
+      "storybookUrl": "/?path=/story/patterns-password-generator-demo--overview"
+    },
+    {
+      "id": "patterns-password-strength-demo",
+      "kind": "recipe",
+      "title": "Demo",
+      "breadcrumb": "Patterns/Password strength/Demo",
+      "summary": "A live strength meter that updates as the user types — colour + label drive at-a-glance feedback; a per-rule checklist tells the user exactly what's missing. Both signals matter: colour alone fails WCAG, checklists alone leave the user guessing whether they're close.",
+      "tags": [
+        "patterns",
+        "password",
+        "strength",
+        "demo",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "passwordstrength"
+      ],
+      "storybookUrl": "/?path=/story/patterns-password-strength-demo--overview"
+    },
+    {
+      "id": "patterns-primary-detail",
+      "kind": "recipe",
+      "title": "Primary-detail",
+      "breadcrumb": "Patterns/Primary-detail",
+      "summary": "A two-pane layout — a list of items on the leading edge (the primary), a content view on the trailing edge (the detail). Collapses to a single column with a &ldquo;back to list&rdquo; affordance below the md breakpoint. The headline pattern for record-browsing UIs: inbox, settings, user lists. See the live demo under P",
+      "tags": [
+        "patterns",
+        "primary",
+        "detail",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "primarydetail"
+      ],
+      "storybookUrl": "/?path=/story/patterns-primary-detail--overview"
+    },
+    {
+      "id": "patterns-primary-detail-demo",
+      "kind": "recipe",
+      "title": "Demo",
+      "breadcrumb": "Patterns/Primary-detail/Demo",
+      "summary": "Shared body for the two PF6 primary-detail demos. The two variants differ only in chrome (mainContainerId on DashboardWrapper, colorVariant on DrawerContent, hasPadding on DrawerContentBody) — everything else is identical, so the body is parameterized rather than duplicated.",
+      "tags": [
+        "patterns",
+        "primary",
+        "detail",
+        "demo",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "primarydetaildemo"
+      ],
+      "storybookUrl": "/?path=/story/patterns-primary-detail-demo--overview"
+    },
+    {
+      "id": "patterns-right-to-left-demo",
+      "kind": "recipe",
+      "title": "Demo",
+      "breadcrumb": "Patterns/Right-to-left/Demo",
+      "summary": "PF6 ships RTL support via dir=\"rtl\" + logical CSS properties ( margin-inline-* , padding-inline-* , inset-inline-* ). The lib's ThemeProvider takes a dir prop that flips the entire tree. Use the toolbar Direction control in this Storybook to flip the whole preview.",
+      "tags": [
+        "patterns",
+        "right",
+        "left",
+        "demo",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "righttoleft"
+      ],
+      "storybookUrl": "/?path=/story/patterns-right-to-left-demo--overview"
+    },
+    {
+      "id": "patterns-status-and-severity",
+      "kind": "recipe",
+      "title": "Status and severity",
+      "breadcrumb": "Patterns/Status and severity",
+      "summary": "When a screen shows both severity (how bad?) and status (where are we in the workflow?), they're different signals and should look different. Severity uses a fixed ordinal scale (critical → minor); Status uses a fixed health scale (healthy → failed); Label handles everything else (tags, versions, products).",
+      "tags": [
+        "patterns",
+        "status",
+        "and",
+        "severity",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "statusandseverity"
+      ],
+      "storybookUrl": "/?path=/story/patterns-status-and-severity--overview"
+    },
+    {
+      "id": "utility-classes",
+      "kind": "guideline",
+      "title": "Utility classes",
+      "breadcrumb": "Utility classes",
+      "summary": "PatternFly 6 ships a set of single-purpose CSS classes for the most common one-off styling needs — alignment, spacing, display, background color, and so on. The lib bundles them into its main stylesheet so you can use them directly in any consumer app without extra installs.",
+      "tags": [
+        "utility",
+        "classes",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "utilities",
+        "about"
+      ],
+      "storybookUrl": "/?path=/story/utility-classes--overview"
+    },
+    {
+      "id": "utility-classes-accessibility",
+      "kind": "guideline",
+      "title": "Accessibility",
+      "breadcrumb": "Utility classes/Accessibility",
+      "summary": "Three classes for managing what is visible to sighted users versus assistive technology. Use them sparingly — usually a properly structured component is better than hiding things — but they are essential for skip links, off-screen labels, and breakpoint-driven UI swaps.",
+      "tags": [
+        "utility",
+        "classes",
+        "accessibility",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "utilities"
+      ],
+      "storybookUrl": "/?path=/story/utility-classes-accessibility--overview"
+    },
+    {
+      "id": "utility-classes-alignment",
+      "kind": "guideline",
+      "title": "Alignment",
+      "breadcrumb": "Utility classes/Alignment",
+      "summary": "Logical-property text alignment. start and end respect writing direction (LTR vs RTL), so they work correctly in both English and Arabic without overrides.",
+      "tags": [
+        "utility",
+        "classes",
+        "alignment",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "utilities"
+      ],
+      "storybookUrl": "/?path=/story/utility-classes-alignment--overview"
+    },
+    {
+      "id": "utility-classes-background-color",
+      "kind": "guideline",
+      "title": "Background color",
+      "breadcrumb": "Utility classes/Background color",
+      "summary": "A small set of semantic background tones for cases where you need a quick surface treatment without authoring a component. These adapt to the active color mode automatically.",
+      "tags": [
+        "utility",
+        "classes",
+        "background",
+        "color",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "utilities"
+      ],
+      "storybookUrl": "/?path=/story/utility-classes-background-color--overview"
+    },
+    {
+      "id": "utility-classes-box-shadow",
+      "kind": "guideline",
+      "title": "Box shadow",
+      "breadcrumb": "Utility classes/Box shadow",
+      "summary": "Three elevation levels (sm, md, lg) and an edge variant for each side. Use sparingly — shadows compete for visual hierarchy, and the system relies more on borders and surface tone than on elevation.",
+      "tags": [
+        "utility",
+        "classes",
+        "box",
+        "shadow",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "utilities"
+      ],
+      "storybookUrl": "/?path=/story/utility-classes-box-shadow--overview"
+    },
+    {
+      "id": "utility-classes-display",
+      "kind": "guideline",
+      "title": "Display",
+      "breadcrumb": "Utility classes/Display",
+      "summary": "Set the CSS display property without writing styles. Combined with the responsive suffix, these are the workhorses of mobile-first layouts — show as block on mobile, swap to flex at the md breakpoint, that sort of thing.",
+      "tags": [
+        "utility",
+        "classes",
+        "display",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "utilities"
+      ],
+      "storybookUrl": "/?path=/story/utility-classes-display--overview"
+    },
+    {
+      "id": "utility-classes-flex",
+      "kind": "guideline",
+      "title": "Flex",
+      "breadcrumb": "Utility classes/Flex",
+      "summary": "Single-purpose classes for flex containers and their items. For most layouts, prefer PatternFly's Flex component — but when you need one-off alignment or a quick toolbar row, these utilities are faster than writing inline styles.",
+      "tags": [
+        "utility",
+        "classes",
+        "flex",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "utilities"
+      ],
+      "storybookUrl": "/?path=/story/utility-classes-flex--overview"
+    },
+    {
+      "id": "utility-classes-float",
+      "kind": "guideline",
+      "title": "Float",
+      "breadcrumb": "Utility classes/Float",
+      "summary": "Logical-property floats. Float layouts are rare in modern UI — flexbox or grid almost always do a cleaner job — but for embedding a small image or icon inline with prose, these are the right tool.",
+      "tags": [
+        "utility",
+        "classes",
+        "float",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "utilities"
+      ],
+      "storybookUrl": "/?path=/story/utility-classes-float--overview"
+    },
+    {
+      "id": "utility-classes-sizing",
+      "kind": "guideline",
+      "title": "Sizing",
+      "breadcrumb": "Utility classes/Sizing",
+      "summary": "Width and height in fixed percentage steps and viewport units. The percentage scale (0/25/33/50/66/75/100) covers the great majority of layout fractions; reach for raw CSS only when you need something between.",
+      "tags": [
+        "utility",
+        "classes",
+        "sizing",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "utilities"
+      ],
+      "storybookUrl": "/?path=/story/utility-classes-sizing--overview"
+    },
+    {
+      "id": "utility-classes-spacing",
+      "kind": "guideline",
+      "title": "Spacing",
+      "breadcrumb": "Utility classes/Spacing",
+      "summary": "Margin and padding on the spacer scale, for every side and direction. The largest set of utilities the system ships — use them for one-off adjustments, but if you find yourself stacking three or four on the same element, the right move is usually a custom class.",
+      "tags": [
+        "utility",
+        "classes",
+        "spacing",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "utilities"
+      ],
+      "storybookUrl": "/?path=/story/utility-classes-spacing--overview"
+    },
+    {
+      "id": "utility-classes-text",
+      "kind": "guideline",
+      "title": "Text",
+      "breadcrumb": "Utility classes/Text",
+      "summary": "Font family, size, weight, color, and wrapping. For body copy and headings, prefer the system's typography tokens ( --gp-font-* ) — these utilities are for one-off labels and inline emphasis.",
+      "tags": [
+        "utility",
+        "classes",
+        "text",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "utilities"
+      ],
+      "storybookUrl": "/?path=/story/utility-classes-text--overview"
+    }
+  ]
+}
