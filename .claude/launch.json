@@ -4,7 +4,15 @@
     {
       "name": "storybook",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["storybook", "dev", "-p", "6007", "--no-open"],
+      "runtimeArgs": [
+        "storybook",
+        "dev",
+        "-p",
+        "6007",
+        "--no-open",
+        "-c",
+        "packages/ds-patternfly/.storybook"
+      ],
       "port": 6007,
       "autoPort": false
     }

@@ -10,11 +10,25 @@ import { useTheme } from "../theme/ThemeProvider.js";
  * mode — `#0a0a0a` in light mode, `#f5f5f5` in dark mode — so the logo
  * stays readable when the Storybook toolbar flips the theme.
  *
- * Variants:
- *  - `widths` defaults match the consuming masthead layout (40px on
- *    mobile, 60px on sm, 180px on md+).
+ * Props:
+ *  - `widths` — width per breakpoint passed through to PF6 `<Brand>`.
+ *    Defaults to `{ default: 40px, sm: 60px, md: 180px }` so the
+ *    picture squares to icon-only on phones and stretches for the
+ *    wordmark on tablet+. Pass a single-value object (e.g.
+ *    `{ default: "140px" }`) to keep a consistent width across all
+ *    viewports — useful when you want the wordmark visible on mobile.
+ *  - `wideMinWidth` (default `768px`) is the viewport breakpoint at
+ *    which the logo switches from icon-only to icon + "Acme"
+ *    wordmark. Pass `992px` for tight masthead slots, or `0px` to
+ *    always render the wordmark.
  */
-export function AcmeLogo() {
+export function AcmeLogo({
+  wideMinWidth = "768px",
+  widths = { default: "40px", sm: "60px", md: "180px" },
+}: {
+  wideMinWidth?: string;
+  widths?: { default?: string; sm?: string; md?: string; lg?: string; xl?: string; "2xl"?: string };
+} = {}) {
   const { mode } = useTheme();
   const text = mode === "dark" ? "#f5f5f5" : "#0a0a0a";
   const svg = (m: string) =>
@@ -34,18 +48,14 @@ export function AcmeLogo() {
     </svg>`,
   );
 
+  // The browser picks the first <source> whose media query matches.
+  // A single `(min-width: wideMinWidth)` source covers every viewport
+  // at-or-above the wide cutoff; the fallback <img src> below it
+  // covers everything narrower. Defaults to 768px (md); pass 992px
+  // (lg) to keep icon-only through tablet widths.
   return (
-    <Brand
-      src={acmeWide}
-      alt="Acme"
-      widths={{ default: "40px", sm: "60px", md: "180px" }}
-    >
-      <source media="(min-width: 1200px)" srcSet={acmeWide} />
-      <source media="(min-width: 992px)" srcSet={acmeWide} />
-      <source media="(min-width: 768px)" srcSet={acmeWide} />
-      <source media="(min-width: 576px)" srcSet={acmeIcon} />
-      <source media="(min-width: 320px)" srcSet={acmeIcon} />
-      <source srcSet={acmeWide} />
+    <Brand src={acmeIcon} alt="Acme" widths={widths}>
+      <source media={`(min-width: ${wideMinWidth})`} srcSet={acmeWide} />
     </Brand>
   );
 }

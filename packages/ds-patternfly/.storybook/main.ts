@@ -16,6 +16,16 @@ const config: StorybookConfig = {
     name: "@storybook/react-vite",
     options: {},
   },
+  // Disable Storybook's anonymous telemetry across every command
+  // (dev, build, test). This is the authoritative setting — env vars
+  // like STORYBOOK_DISABLE_TELEMETRY work too but only on the
+  // command that reads them; setting it here covers every entry
+  // point uniformly. STORYBOOK_TELEMETRY_DEBUG (different var, easy
+  // to confuse) just LOGS the payload, doesn't disable it.
+  core: {
+    disableTelemetry: true,
+    enableCrashReports: false,
+  },
   typescript: {
     check: false,
     reactDocgen: "react-docgen-typescript",

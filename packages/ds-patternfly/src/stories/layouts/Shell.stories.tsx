@@ -182,7 +182,7 @@ function MastheadActions() {
 }
 
 const meta: Meta<typeof Shell> = {
-  title: "Layouts/Shell",
+  title: "Patterns/Shell",
   component: Shell,
   parameters: {
     layout: "fullscreen",

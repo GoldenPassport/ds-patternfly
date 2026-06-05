@@ -383,6 +383,35 @@
 }
 
 /*
+ * INNER mode — full-width focus ring on the wrapper.
+ *
+ * Mirrors the outer-mode rule above: when the input takes
+ * focus-within, draw the outline on the WRAPPER element so the
+ * ring spans the entire visual control (icon + input + utilities),
+ * and suppress the inner outline so it doesn't double-draw inside.
+ *
+ * For a bare TextInput, focus-within hits the .pf-v6-c-form-control
+ * directly. For a TextInputGroup, focus-within hits the wrapper —
+ * which is what we want, because the inner __text-input is narrower
+ * than the wrapper (icon + input share __main inline), and an
+ * inset outline on the input alone visibly stops short of the full
+ * control boundary.
+ *
+ * outline-offset is negative so the ring sits inside the wrapper's
+ * border edge (inner mode = inset ring).
+ */
+.gp-focus-ring-inner .pf-v6-c-form-control:focus-within,
+.gp-focus-ring-inner .pf-v6-c-text-input-group:focus-within {
+  outline: 2px solid var(--gp-color-focus-ring, currentColor);
+  outline-offset: -2px;
+  border-radius: var(--pf-v6-c-form-control--BorderRadius);
+}
+.gp-focus-ring-inner .pf-v6-c-form-control:focus-within > :is(input, textarea, select),
+.gp-focus-ring-inner .pf-v6-c-text-input-group:focus-within .pf-v6-c-text-input-group__text-input {
+  outline: none;
+}
+
+/*
  * TextInputGroup focus shape — PF6 hardcodes the inner <input>'s
  * outline-offset to -6px (deeply inset, ignores our focus-ring config)
  * and never sets a border-radius on it, so the focus outline renders as
@@ -1957,4 +1986,99 @@
 [data-brand] .pf-v6-c-progress-stepper {
   --pf-v6-c-progress-stepper--m-horizontal__step-connector--before--BorderBlockEndWidth: 2px;
   --pf-v6-c-progress-stepper--m-vertical__step-connector--before--BorderInlineEndWidth: 2px;
+}
+
+/* ---------------------------------------------------------------
+ * NotificationBadge — drop the border on the "read" state.
+ *
+ * PF6's NotificationBadge renders a stateful Button. In the "read"
+ * variant (no unread notifications) it ships with a 1px border via
+ * --pf-v6-c-button--m-read--BorderColor. The bell is supposed to
+ * feel quiet at this stage — the border reads as a button outline
+ * and pulls attention. Override the read-state border to
+ * transparent so the bell sits flat in the masthead until there
+ * are unread / attention items, at which point PF6's --m-unread /
+ * --m-attention rules paint the appropriate brand-coloured ring.
+ * Only the read state is touched.
+ * --------------------------------------------------------------- */
+[data-brand] .pf-v6-c-button.pf-m-stateful.pf-m-read {
+  --pf-v6-c-button--m-read--BorderColor: transparent;
+  --pf-v6-c-button--m-read--hover--BorderColor: transparent;
+  --pf-v6-c-button--m-read--focus--BorderColor: transparent;
+  --pf-v6-c-button--m-read--active--BorderColor: transparent;
+  --pf-v6-c-button--BorderColor: transparent;
+}
+
+/* ---------------------------------------------------------------
+ * ToggleGroup — selected item picks up the brand accent.
+ *
+ * PF6 ships toggle-group with a fixed light-blue fill on the
+ * `pf-m-selected` button (the "this option is active" state used in
+ * card/list view switchers, segmented controls, etc). That reads as
+ * a hard-coded brand colour rather than the active theme — flip it
+ * to `--gp-color-brand-default` so every ToggleGroup picks up the
+ * dial at the brand root. Icon + text use `--gp-color-brand-on` for
+ * AA contrast on the painted background; hover bumps to
+ * `--gp-color-brand-hover` so the interaction state still reads.
+ *
+ * Override the PF6 component tokens (not just `background-color`)
+ * because PF6 layers a few internal selectors on top of the base
+ * rule — token overrides win cleanly without specificity wars.
+ * --------------------------------------------------------------- */
+/* PF6 paints the toggle-group's borders via the button's ::before
+   and ::after pseudo-elements (not the button's own border) — see
+   toggle-group.css ships these tokens:
+     --pf-v6-c-toggle-group__button--before--BorderColor
+     --pf-v6-c-toggle-group__button--m-selected--before--BorderColor
+     --pf-v6-c-toggle-group__button--m-selected--after--BorderColor
+     --pf-v6-c-toggle-group__button--hover--before--BorderColor
+   Overriding the button's own `border-color` does nothing; we have
+   to override those token values instead. The icon uses its own
+   token chain (--pf-v6-c-toggle-group__icon--m-selected--Color and
+   --hover--Color). */
+
+/* Selected button — paint everything (fill, text/icon, ::before
+   ring, ::after underline) in brand-default. */
+[data-brand] .pf-v6-c-toggle-group__button.pf-m-selected {
+  --pf-v6-c-toggle-group__button--m-selected--BackgroundColor:
+    var(--gp-color-brand-default);
+  --pf-v6-c-toggle-group__button--m-selected--Color:
+    var(--gp-color-brand-on, #fff);
+  --pf-v6-c-toggle-group__button--m-selected--before--BorderColor:
+    var(--gp-color-brand-default);
+  --pf-v6-c-toggle-group__button--m-selected--after--BorderColor:
+    var(--gp-color-brand-default);
+  --pf-v6-c-toggle-group__button--m-selected--selected--before--BorderInlineStartColor:
+    var(--gp-color-brand-default);
+  --pf-v6-c-toggle-group__icon--m-selected--Color:
+    var(--gp-color-brand-on, #fff);
+}
+
+/* Non-selected hover — PF6 default is a light-blue tint; flip the
+   hover fill + ring to brand-hover (with brand-on text/icon) so
+   the interaction reads as part of the same theme. The selected
+   button's hover state is covered above by --m-selected--Background
+   staying at brand-default; we don't darken on hover-while-selected
+   because the brand fill is already saturated. */
+[data-brand] .pf-v6-c-toggle-group__button:not(.pf-m-selected):hover {
+  --pf-v6-c-toggle-group__button--hover--BackgroundColor:
+    var(--gp-color-brand-hover, var(--gp-color-brand-default));
+  --pf-v6-c-toggle-group__button--hover--Color:
+    var(--gp-color-brand-on, #fff);
+  --pf-v6-c-toggle-group__button--hover--before--BorderColor:
+    var(--gp-color-brand-default);
+  --pf-v6-c-toggle-group__icon--hover--Color:
+    var(--gp-color-brand-on, #fff);
+}
+
+/* Defensive: keep the SVG fill in sync with the inherited text
+   colour for both states. PF6 sometimes paints stroke/fill direct,
+   not via currentColor, so this guards against the icon staying
+   blue when the surrounding chrome has flipped to brand. */
+[data-brand] .pf-v6-c-toggle-group__button.pf-m-selected .pf-v6-c-toggle-group__icon,
+[data-brand] .pf-v6-c-toggle-group__button.pf-m-selected .pf-v6-c-toggle-group__text,
+[data-brand] .pf-v6-c-toggle-group__button.pf-m-selected svg,
+[data-brand] .pf-v6-c-toggle-group__button:not(.pf-m-selected):hover svg {
+  color: var(--gp-color-brand-on, #fff);
+  fill: currentColor;
 }

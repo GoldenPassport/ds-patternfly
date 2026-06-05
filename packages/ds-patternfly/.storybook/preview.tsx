@@ -127,6 +127,7 @@ const preview: Preview = {
             // Components alphabetical. Forms and Menu carry nested
             // sub-orders so their children stay alpha-sorted too.
             "Accordion",
+            "ActionList",
             "Alert",
             "Avatar",
             "Back to top",
@@ -139,6 +140,7 @@ const preview: Preview = {
             "Card",
             "ClipboardCopy",
             "CodeBlock",
+            "Compass",
             "Content",
             "DataList",
             "DescriptionList",
@@ -177,6 +179,7 @@ const preview: Preview = {
               "TextInputGroup",
               "ToggleGroup",
             ],
+            "Hero",
             "Hint",
             "Hyperlink",
             "Icon",
@@ -210,6 +213,7 @@ const preview: Preview = {
             "Sidebar",
             "SimpleList",
             "Skeleton",
+            "SkipToContent",
             "Spinner",
             "Table",
             "Tabs",

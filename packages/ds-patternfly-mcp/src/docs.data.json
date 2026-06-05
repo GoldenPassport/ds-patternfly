@@ -928,6 +928,21 @@
       "storybookUrl": "/?path=/story/components-accordion--overview"
     },
     {
+      "id": "components-actionlist",
+      "kind": "component",
+      "title": "ActionList",
+      "breadcrumb": "Components/ActionList",
+      "summary": "A spacing/layout primitive for groups of action buttons. ActionList handles the gap; you supply ActionListItem s containing real Button s. Use ActionListGroup to cluster related actions with extra space between groups. Most-used flags: isVertical (stack top-to-bottom — used inside Compass sidebars), isIconList (tighter",
+      "tags": [
+        "components",
+        "actionlist",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-actionlist--overview"
+    },
+    {
       "id": "components-alert",
       "kind": "component",
       "title": "Alert",
@@ -1108,6 +1123,21 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-codeblock--overview"
+    },
+    {
+      "id": "components-compass",
+      "kind": "component",
+      "title": "Compass",
+      "breadcrumb": "Components/Compass",
+      "summary": "A slot-based application layout — header, optional start / end sidebars, main body, and footer. Use Compass when the app needs persistent rails around the main content (notes panel, table-of-contents sidebar, activity feed) rather than the standard Masthead + single-sidebar shape that &lt;Page&gt; gives you. Added in P",
+      "tags": [
+        "components",
+        "compass",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-compass--overview"
     },
     {
       "id": "components-content",
@@ -1646,6 +1676,21 @@
       "storybookUrl": "/?path=/story/components-forms-togglegroup--overview"
     },
     {
+      "id": "components-hero",
+      "kind": "component",
+      "title": "Hero",
+      "breadcrumb": "Components/Hero",
+      "summary": "A banner region for landing pages and feature spotlights — full-width container, optional background image / gradient per colour mode, content centred to a constrained body width. PF6 6.5+ (currently @beta ). Used at the top of marketing-style pages where the header chrome is &lt;Masthead /&gt; but the first scroll pan",
+      "tags": [
+        "components",
+        "hero",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-hero--overview"
+    },
+    {
       "id": "components-hint",
       "kind": "component",
       "title": "Hint",
@@ -2112,6 +2157,21 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-skeleton--overview"
+    },
+    {
+      "id": "components-skiptocontent",
+      "kind": "component",
+      "title": "SkipToContent",
+      "breadcrumb": "Components/SkipToContent",
+      "summary": "A keyboard-only escape hatch: an anchor that's visually hidden until it receives focus, then jumps screen-reader and keyboard users straight to the main content region. PF6 renders it as the first child of the page so a single Tab press surfaces it before any chrome. Required for WCAG 2.1 2.4.1 Bypass Blocks compliance",
+      "tags": [
+        "components",
+        "skiptocontent",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/components-skiptocontent--overview"
     },
     {
       "id": "components-spinner",
@@ -2800,21 +2860,6 @@
       "storybookUrl": "/?path=/story/layouts-level--overview"
     },
     {
-      "id": "layouts-shell",
-      "kind": "foundation",
-      "title": "Shell",
-      "breadcrumb": "Layouts/Shell",
-      "summary": "Top-right masthead actions: notifications, help, settings, and a user dropdown (avatar + name + caret) — modelled on the PF6 reference demo patternfly.org/components/masthead/react-demos/utilities-and-user-dropdown-menu. Hooks live in a component so each render owns its dropdown open state.",
-      "tags": [
-        "layouts",
-        "shell",
-        "packages",
-        "ds-patternfly",
-        "src"
-      ],
-      "storybookUrl": "/?path=/story/layouts-shell--overview"
-    },
-    {
       "id": "layouts-split",
       "kind": "foundation",
       "title": "Split",
@@ -2845,19 +2890,19 @@
       "storybookUrl": "/?path=/story/layouts-stack--overview"
     },
     {
-      "id": "patterns-about-patterns",
+      "id": "patterns",
       "kind": "recipe",
-      "title": "About patterns",
-      "breadcrumb": "Patterns/About patterns",
+      "title": "Patterns",
+      "breadcrumb": "Patterns",
       "summary": "Patterns are recipes — proven compositions of PF6 primitives that solve a recurring UX problem (bulk select, card view, primary-detail, password strength). They're not packages and they're not components. Each page documents the shape, the accessibility considerations, and ships a working demo you can copy.",
       "tags": [
         "patterns",
-        "about",
         "packages",
         "ds-patternfly",
-        "src"
+        "src",
+        "about"
       ],
-      "storybookUrl": "/?path=/story/patterns-about-patterns--overview"
+      "storybookUrl": "/?path=/story/patterns--overview"
     },
     {
       "id": "patterns-actions",
@@ -2910,20 +2955,53 @@
       "storybookUrl": "/?path=/story/patterns-card-view-demo--overview"
     },
     {
-      "id": "patterns-dashboard-demo",
+      "id": "patterns-compass-dashboard",
       "kind": "recipe",
-      "title": "Demo",
-      "breadcrumb": "Patterns/Dashboard/Demo",
-      "summary": "The standard ops dashboard — KPI strip across the top, a wider chart / activity card, a sidebar of status cards. Built from Grid + Gallery + Card; no special dashboard component required.",
+      "title": "Compass dashboard",
+      "breadcrumb": "Patterns/Compass dashboard",
+      "summary": "Patterns/Compass dashboard story",
+      "tags": [
+        "patterns",
+        "compass",
+        "dashboard",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "compassdashboard"
+      ],
+      "storybookUrl": "/?path=/story/patterns-compass-dashboard--overview"
+    },
+    {
+      "id": "patterns-compass-integrations",
+      "kind": "recipe",
+      "title": "Compass integrations",
+      "breadcrumb": "Patterns/Compass integrations",
+      "summary": "Patterns/Compass integrations story",
+      "tags": [
+        "patterns",
+        "compass",
+        "integrations",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "compassintegrations"
+      ],
+      "storybookUrl": "/?path=/story/patterns-compass-integrations--overview"
+    },
+    {
+      "id": "patterns-dashboard",
+      "kind": "recipe",
+      "title": "Dashboard",
+      "breadcrumb": "Patterns/Dashboard",
+      "summary": "The standard ops dashboard — KPI strip across the top, a wider chart card, a sidebar of status cards. Built from Gallery + Grid + Card ; no special dashboard component required. For the full app-shell version with masthead + nav, see AppShell .",
       "tags": [
         "patterns",
         "dashboard",
-        "demo",
         "packages",
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/patterns-dashboard-demo--overview"
+      "storybookUrl": "/?path=/story/patterns-dashboard--overview"
     },
     {
       "id": "patterns-filters-demo",
@@ -3029,6 +3107,22 @@
         "righttoleft"
       ],
       "storybookUrl": "/?path=/story/patterns-right-to-left-demo--overview"
+    },
+    {
+      "id": "patterns-shell",
+      "kind": "recipe",
+      "title": "Shell",
+      "breadcrumb": "Patterns/Shell",
+      "summary": "Top-right masthead actions: notifications, help, settings, and a user dropdown (avatar + name + caret) — modelled on the PF6 reference demo patternfly.org/components/masthead/react-demos/utilities-and-user-dropdown-menu. Hooks live in a component so each render owns its dropdown open state.",
+      "tags": [
+        "patterns",
+        "shell",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "layouts"
+      ],
+      "storybookUrl": "/?path=/story/patterns-shell--overview"
     },
     {
       "id": "patterns-status-and-severity",

@@ -2,12 +2,17 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FoundationPage, Section, Card } from "../_storyKit.js";
 
 const meta: Meta = {
-  title: "Patterns/About patterns",
+  // Title is exactly "Patterns" (no sub-segment) so this becomes the
+  // group-root entry — Storybook renders it directly under the
+  // Patterns folder with "Overview" as the story name (export below
+  // is `Overview`). Same pattern as Components/Forms (FormControl) and
+  // Component groups (About).
+  title: "Patterns",
   parameters: { layout: "padded" },
 };
 export default meta;
 
-export const About: StoryObj = {
+export const Overview: StoryObj = {
   render: () => (
     <FoundationPage
       title="About patterns"
