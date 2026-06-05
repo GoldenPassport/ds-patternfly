@@ -100,9 +100,13 @@ export const defaultBrand = {
       on: { light: "#ffffff", dark: palette.gray[900] },
     },
     background: {
+      // Page / primary surface. Light mode pulls off pure white to a
+      // soft neutral grey (#f5f5f5) so the canvas reads as a clear
+      // background rather than washing out against white content —
+      // dark mode keeps the deep gray[900] base.
       primary: {
-        default: { light: "#ffffff", dark: palette.gray[900] },
-        hover: { light: palette.gray[50], dark: palette.gray[800] },
+        default: { light: "#f5f5f5", dark: palette.gray[900] },
+        hover: { light: palette.gray[100], dark: palette.gray[800] },
       },
       secondary: {
         default: { light: palette.gray[50], dark: palette.gray[800] },

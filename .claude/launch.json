@@ -3,15 +3,16 @@
   "configurations": [
     {
       "name": "storybook",
-      "runtimeExecutable": "npx",
+      "runtimeExecutable": "pnpm",
       "runtimeArgs": [
+        "--filter",
+        "@golden-passport/ds-patternfly",
+        "exec",
         "storybook",
         "dev",
         "-p",
         "6007",
-        "--no-open",
-        "-c",
-        "packages/ds-patternfly/.storybook"
+        "--no-open"
       ],
       "port": 6007,
       "autoPort": false

@@ -57,6 +57,11 @@ export interface ThemeProviderProps {
    * Default `"outer"`. See `FocusRing` for the visual trade-off.
    */
   focusRing?: FocusRing;
+  /**
+   * Opt into PF6's translucent "glass" theme — adds `pf-v6-theme-glass`
+   * to `<html>` so glass-aware surfaces render frosted. Default `false`.
+   */
+  glass?: boolean;
   children: ReactNode;
 }
 
@@ -65,6 +70,7 @@ export function ThemeProvider({
   mode = "light",
   dir = "ltr",
   focusRing = "outer",
+  glass = false,
   children,
 }: ThemeProviderProps) {
   // Inject rules for both modes so a child subtree can override the mode
@@ -98,6 +104,20 @@ export function ThemeProvider({
       if (!had) root.classList.remove("pf-v6-theme-dark");
     };
   }, [mode]);
+
+  // Glass theme — same story as dark: PF6 scopes the glass token
+  // redefinitions to `:root:where(.pf-v6-theme-glass)`, so the class
+  // must live on <html>. Toggle it here when `glass` is on, and clean
+  // up only if we were the ones who added it.
+  useIsomorphicLayoutEffect(() => {
+    if (!glass) return;
+    const root = document.documentElement;
+    const had = root.classList.contains("pf-v6-theme-glass");
+    root.classList.add("pf-v6-theme-glass");
+    return () => {
+      if (!had) root.classList.remove("pf-v6-theme-glass");
+    };
+  }, [glass]);
 
   // Mirror `data-brand` + `data-mode` onto <html> as well as the wrapper
   // div. Without this, content portaled outside the wrapper (PF6 popovers,

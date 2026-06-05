@@ -1913,6 +1913,43 @@
 }
 
 /* ---------------------------------------------------------------
+ * Filled status Labels — bold saturated chip in BOTH light + dark.
+ *
+ * PF6 paints the filled label background from
+ * `--color--status--{s}--default`, which our brand flips to a light
+ * pastel tone in dark mode (so status ICONS stay legible on a dark
+ * page). As a filled-label fill that pastel reads washed-out, and
+ * PF6 then pairs it with dark text — the chip loses the bold,
+ * high-contrast look it has in light mode.
+ *
+ * Re-point ONLY the filled variant (`.pf-m-filled`) to the
+ * non-flipping `--gp-status-{s}-solid-*` pair (saturated fill +
+ * white text, emitted by toCssVars). Outline labels are untouched,
+ * so their status-coloured text/border still adapt per mode. The
+ * `--pf-v6-c-label--BackgroundColor` / `--Color` overrides are what
+ * the `__content::before` fill and `__content` text actually read.
+ * No `[data-brand]` prefix: filled status labels portal to <body>
+ * (menus, toolbars) outside the brand wrapper, but the solid tokens
+ * live on <html> so they still resolve.
+ * --------------------------------------------------------------- */
+.pf-v6-c-label.pf-m-filled.pf-m-info {
+  --pf-v6-c-label--BackgroundColor: var(--gp-status-info-solid-bg);
+  --pf-v6-c-label--Color: var(--gp-status-info-solid-fg);
+}
+.pf-v6-c-label.pf-m-filled.pf-m-success {
+  --pf-v6-c-label--BackgroundColor: var(--gp-status-success-solid-bg);
+  --pf-v6-c-label--Color: var(--gp-status-success-solid-fg);
+}
+.pf-v6-c-label.pf-m-filled.pf-m-warning {
+  --pf-v6-c-label--BackgroundColor: var(--gp-status-warning-solid-bg);
+  --pf-v6-c-label--Color: var(--gp-status-warning-solid-fg);
+}
+.pf-v6-c-label.pf-m-filled.pf-m-danger {
+  --pf-v6-c-label--BackgroundColor: var(--gp-status-danger-solid-bg);
+  --pf-v6-c-label--Color: var(--gp-status-danger-solid-fg);
+}
+
+/* ---------------------------------------------------------------
  * Accordion — bordered variant divider visibility.
  *
  * PF6 wires the bordered variant's per-item bottom border to

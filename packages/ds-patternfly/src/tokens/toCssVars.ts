@@ -355,6 +355,17 @@ export function toCssVars(
     vars[`--pf-t--global--text--color--status--${status}--default`] = pick(t.text, mode);
     // Status-coloured BORDER on a neutral surface (Alert left rule, etc.).
     vars[`--pf-t--global--border--color--status--${status}--default`] = pick(t.icon, mode);
+    // SOLID label fill — a deliberately NON-flipping pair used only by
+    // filled status Labels (see index.css). The normal status accent
+    // (`--color--status--*--default`) flips to a light pastel tone in
+    // dark mode so status icons stay legible on a dark page — but that
+    // pastel reads as a washed-out chip when used as a filled-label
+    // background. Pin the filled label to the saturated LIGHT tone +
+    // white text in BOTH modes so it stays a bold, high-contrast chip
+    // (matches the light-mode look in dark mode). `on` is the
+    // text-on-brand colour (white in light) — pinned to light too.
+    vars[`--gp-status-${status}-solid-bg`] = pick(t.icon, "light");
+    vars[`--gp-status-${status}-solid-fg`] = pick(s.brand.on, "light");
   }
 
   // -------- Component-level overrides --------

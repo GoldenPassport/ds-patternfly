@@ -97,6 +97,70 @@ export const Overview: StoryObj = {
         </Card>
       </Section>
 
+      <Section
+        title="Outlined labels"
+        description="A less prominent label style — a tinted outline instead of a filled background. Reach for it when filled labels read too heavy, or to separate non-clickable tags from clickable ones. Works with both status and the color palette."
+      >
+        <Card>
+          <div style={{ padding: 24, display: "grid", gap: 16 }}>
+            <DemoFrame>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <Label variant="outline" status="info">Info</Label>
+                <Label variant="outline" status="success">Success</Label>
+                <Label variant="outline" status="warning">Warning</Label>
+                <Label variant="outline" status="danger">Danger</Label>
+              </div>
+            </DemoFrame>
+            <DemoFrame>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {COLORS.map((c) => (
+                  <Label key={c} variant="outline" color={c}>
+                    {c}
+                  </Label>
+                ))}
+              </div>
+            </DemoFrame>
+            <CodeBlock>{`<Label variant="outline" status="success">Approved</Label>
+<Label variant="outline" color="blue">Engineering</Label>`}</CodeBlock>
+          </div>
+        </Card>
+      </Section>
+
+      <Section
+        title="Compact labels"
+        description="Smaller padding for space-constrained surfaces — table cells, toolbar chips, or a Beta / preview tag beside a title. Pass isCompact; it composes with status, color, outline, icons, and onClose."
+      >
+        <Card>
+          <div style={{ padding: 24, display: "grid", gap: 16 }}>
+            <DemoFrame>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                }}
+              >
+                <Label isCompact status="info">Info</Label>
+                <Label isCompact status="success">Success</Label>
+                <Label isCompact color="blue">Blue</Label>
+                <Label isCompact variant="outline" color="blue">Outline</Label>
+                <Label
+                  isCompact
+                  color="grey"
+                  onClose={() => {}}
+                  closeBtnAriaLabel="Remove tag"
+                >
+                  Removable
+                </Label>
+              </div>
+            </DemoFrame>
+            <CodeBlock>{`<Label isCompact status="success">Approved</Label>
+<Label isCompact variant="outline" color="blue">Engineering</Label>`}</CodeBlock>
+          </div>
+        </Card>
+      </Section>
+
       <Section title="Removable" description="Pass onClose to make the label dismissible.">
         <Card>
           <div style={{ padding: 24 }}>

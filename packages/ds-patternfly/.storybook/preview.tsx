@@ -109,6 +109,18 @@ const preview: Preview = {
         ],
       },
     },
+    glass: {
+      name: "Glass",
+      description: "PF6 translucent glass theme (frosted surfaces)",
+      defaultValue: "off",
+      toolbar: {
+        icon: "mirror",
+        items: [
+          { value: "off", title: "Glass off" },
+          { value: "on", title: "Glass on" },
+        ],
+      },
+    },
   },
   parameters: {
     a11y: { test: "error" },
@@ -282,12 +294,14 @@ const preview: Preview = {
       const dir = (ctx.globals["direction"] as "ltr" | "rtl") ?? "ltr";
       const focusRing =
         (ctx.globals["focusRing"] as "inner" | "outer") ?? "outer";
+      const glass = ctx.globals["glass"] === "on";
       return (
         <ThemeProvider
           brand={brands[brandKey]}
           mode={mode}
           dir={dir}
           focusRing={focusRing}
+          glass={glass}
         >
           <div
             style={{
