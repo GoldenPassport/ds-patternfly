@@ -17,6 +17,23 @@ import {
 } from "@patternfly/react-icons";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
+import { useTheme } from "../../theme/ThemeProvider.js";
+
+/** The Acme demo logo (blue badge + "Acme" wordmark) as an inline-SVG
+ *  data-URI, so it can feed PF6 LoginPage's `brandImgSrc` (a string).
+ *  The wordmark colour adapts to mode so it stays legible on the form
+ *  panel — mirrors the shared <AcmeLogo> component used elsewhere. */
+function acmeLogo(textColor: string): string {
+  const svg =
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40'>` +
+    `<circle cx='20' cy='20' r='20' fill='#0066cc'/>` +
+    `<path d='M11 28 L20 10 L29 28 M14.5 22 L25.5 22' stroke='white' ` +
+    `stroke-width='3' stroke-linecap='round' stroke-linejoin='round' fill='none'/>` +
+    `<text x='52' y='27' fill='${textColor}' font-family='Arial, sans-serif' ` +
+    `font-size='22' font-weight='700' letter-spacing='-0.5'>Acme</text>` +
+    `</svg>`;
+  return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+}
 
 const meta: Meta = {
   title: "Components/LoginPage",
@@ -43,6 +60,8 @@ export default meta;
 
 export const Overview: StoryObj = {
   render: () => {
+    const { mode } = useTheme();
+    const brandImg = acmeLogo(mode === "dark" ? "#f5f5f5" : "#0a0a0a");
     const [showHelper, setShowHelper] = useState(false);
     const [username, setUsername] = useState("");
     const [validUsername, setValidUsername] = useState(true);
@@ -134,23 +153,45 @@ export const Overview: StoryObj = {
           description="Slots: brandImgSrc + brandImgAlt (logo), backgroundImgSrc (hero panel art), textContent (intro paragraph), loginTitle / loginSubtitle, socialMediaLoginContent (icon row), signUpForAccountMessage, forgotCredentials, footerListItems. The body holds a LoginForm."
         >
           <Card>
-            <div style={{ padding: 24, display: "grid", gap: 16 }}>
-              <DemoFrame height={620}>
-                <LoginPage
-                  footerListVariants={ListVariant.inline}
-                  brandImgSrc="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 24'><text x='0' y='18' font-family='sans-serif' font-size='20' font-weight='700' fill='%23ffffff'>Acme</text></svg>"
-                  brandImgAlt="Acme"
-                  textContent="Acme is the workflow automation platform for teams that ship software fast."
-                  loginTitle="Sign in to Acme"
-                  loginSubtitle="Use your single sign-on credentials."
-                  socialMediaLoginContent={socialMediaLogin}
-                  socialMediaLoginAriaLabel="Log in with social media"
-                  signUpForAccountMessage={signUp}
-                  forgotCredentials={forgot}
-                  footerListItems={footerLinks}
-                >
-                  {loginForm}
-                </LoginPage>
+            <div style={{ padding: 24, display: "grid", gap: 32 }}>
+              {/* Cap the brand wordmark to a logo-sized 32px (PF6's
+                  LoginPage otherwise scales the brand image to fill the
+                  header, which blows the wordmark up huge), and give the
+                  page bottom breathing room inside the frame. */}
+              <style>{`
+                .gp-login-demo .pf-v6-c-login__header img,
+                .gp-login-demo .pf-v6-c-login__header .pf-v6-c-brand {
+                  block-size: 32px;
+                  inline-size: auto;
+                }
+                .gp-login-demo .pf-v6-c-login__main {
+                  margin-block-end: 2rem;
+                }
+                /* PF6's LoginPage forces min-height to fill the viewport;
+                   in a doc demo let it size to its content so the frame
+                   (auto height) expands to show the whole example. */
+                .gp-login-demo .pf-v6-c-login {
+                  min-block-size: auto;
+                }
+              `}</style>
+              <DemoFrame>
+                <div className="gp-login-demo">
+                  <LoginPage
+                    footerListVariants={ListVariant.inline}
+                    brandImgSrc={brandImg}
+                    brandImgAlt="Acme logo"
+                    textContent="Acme is the workflow automation platform for teams that ship software fast."
+                    loginTitle="Sign in"
+                    loginSubtitle="Use your single sign-on credentials."
+                    socialMediaLoginContent={socialMediaLogin}
+                    socialMediaLoginAriaLabel="Log in with social media"
+                    signUpForAccountMessage={signUp}
+                    forgotCredentials={forgot}
+                    footerListItems={footerLinks}
+                  >
+                    {loginForm}
+                  </LoginPage>
+                </div>
               </DemoFrame>
               <CodeBlock>{`<LoginPage
   brandImgSrc="/logo.svg"

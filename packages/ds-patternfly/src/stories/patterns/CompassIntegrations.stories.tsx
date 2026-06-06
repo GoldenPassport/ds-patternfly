@@ -1009,9 +1009,9 @@ function IntegrationsDemo() {
           // the panel's own glass fill so the tiles sit directly on
           // the gradient canvas and read as frosted (otherwise two
           // translucent layers stack and the cards look milky/opaque).
-          className={
-            activeDisplay === "card" ? "gp-cmp-content-cards" : undefined
-          }
+          {...(activeDisplay === "card"
+            ? { className: "gp-cmp-content-cards" }
+            : {})}
         >
           <PanelMain tabIndex={-1}>
             <PanelMainBody>
@@ -1299,7 +1299,12 @@ function IntegrationsDemo() {
         .pf-v6-theme-glass .pf-v6-c-table__th,
         .pf-v6-theme-glass .pf-v6-c-table__td {
           --pf-v6-c-table--BackgroundColor: transparent;
-          background: transparent;
+          background: transparent !important;
+          /* This table lives inside the frosted content Panel, so it
+             must stay flat — override the lib's standalone-table frost
+             (which adds its own blur). */
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
         }
 
         /* Row kebab buttons in the DataView table — render as

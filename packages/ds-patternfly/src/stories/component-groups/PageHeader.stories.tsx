@@ -47,6 +47,27 @@ export const Overview: StoryObj = {
           </>
         }
       >
+        <style>{`
+          /* Breadcrumb → title spacing: PageHeader stacks the breadcrumb
+             tight against the title row by default; add breathing room.
+             (The breadcrumb lives in its own __main-breadcrumb section,
+             a sibling of the title's __main-section.) */
+          .pf-v6-c-page__main-breadcrumb {
+            margin-block-end: 0.75rem;
+          }
+          /* Pin the action menu (kebab) to the top-right corner of the
+             header instead of vertically centring it against the (often
+             tall) title row. */
+          .pf-v6-c-page__main-section {
+            position: relative;
+          }
+          .pf-v6-c-page__main-section
+            .pf-v6-l-split__item:has(button[aria-label*="actions" i]) {
+            position: absolute;
+            inset-block-start: 0;
+            inset-inline-end: 0;
+          }
+        `}</style>
         <Section title="Basic">
           <Card>
             <div style={{ padding: 24, display: "grid", gap: 16 }}>

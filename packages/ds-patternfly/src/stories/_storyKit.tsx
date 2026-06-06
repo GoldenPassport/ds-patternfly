@@ -27,7 +27,13 @@ export function FoundationPage({
     // axe sometimes can't trace text bg through the layout discontinuity
     // and reports color-contrast as "needs review" on Section descriptions.
     // Painting a solid bg here gives axe a known surface to compute against.
+    // gp-doc-page: under .pf-v6-theme-glass this bg goes transparent (see
+    // the glass layer in src/styles/index.css) so the decorator's gradient
+    // canvas shows through and the frosted doc surfaces have variation to
+    // blur — otherwise an opaque page bg hides the gradient and the glass
+    // effect collapses.
     <div
+      className="gp-doc-page"
       style={{
         maxWidth: 1000,
         background: "var(--gp-color-bg-primary-default)",
@@ -171,6 +177,9 @@ export function CodeBlock({
       tabIndex={0}
       role={label ? "region" : undefined}
       aria-label={label}
+      // gp-doc-codeblock: the glass layer (src/styles/index.css) frosts
+      // this surface when the .pf-v6-theme-glass theme is active.
+      className="gp-doc-codeblock"
       style={{
         margin: 0,
         padding: 16,
@@ -189,6 +198,9 @@ export function CodeBlock({
 export function Card({ children }: { children: ReactNode }) {
   return (
     <div
+      // gp-doc-card: glass-frosted under .pf-v6-theme-glass (see the
+      // glass layer in src/styles/index.css).
+      className="gp-doc-card"
       style={{
         border: "1px solid var(--gp-color-border-default)",
         borderRadius: "var(--gp-radius-md)",

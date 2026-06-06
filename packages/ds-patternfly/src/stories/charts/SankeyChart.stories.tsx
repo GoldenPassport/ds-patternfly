@@ -1,16 +1,45 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Label } from "@patternfly/react-core";
+import { Charts } from "@patternfly/react-charts/echarts";
+import * as echarts from "echarts/core";
+import { SankeyChart } from "echarts/charts";
+import { TitleComponent, TooltipComponent } from "echarts/components";
+import { SVGRenderer } from "echarts/renderers";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
-import { PropsTable } from "../_demoKit.js";
+import { DemoFrame, PropsTable } from "../_demoKit.js";
+import { chartA11yParams } from "./_chartKit.js";
+import { useTheme } from "../../theme/ThemeProvider.js";
+
+// Register only the ECharts pieces the Sankey needs (tree-shakeable).
+echarts.use([SankeyChart, SVGRenderer, TitleComponent, TooltipComponent]);
+
+// A realistic SaaS funnel: free trial → activated → paid plans / churn.
+const sankeyNodes = [
+  { name: "Free trial" },
+  { name: "Activated" },
+  { name: "Pro" },
+  { name: "Enterprise" },
+  { name: "Churned" },
+];
+const sankeyLinks = [
+  { source: "Free trial", target: "Activated", value: 480 },
+  { source: "Free trial", target: "Churned", value: 220 },
+  { source: "Activated", target: "Pro", value: 320 },
+  { source: "Activated", target: "Enterprise", value: 90 },
+  { source: "Activated", target: "Churned", value: 70 },
+];
 
 const meta: Meta = {
   title: "Charts/Sankey chart",
-  parameters: { layout: "padded" },
+  parameters: { layout: "padded", a11y: chartA11yParams },
 };
 export default meta;
 
 export const Overview: StoryObj = {
-  render: () => (
+  render: () => {
+    const { mode } = useTheme();
+    const labelColor = mode === "dark" ? "#f5f5f5" : "#151515";
+    return (
     <FoundationPage
       title="Sankey chart"
       intro={
@@ -20,12 +49,83 @@ export const Overview: StoryObj = {
           Flow visualization — values moving from one bucket to another.
           Use for funnel analysis (signups → active → paying), traffic
           routing (region → service → endpoint), and budget allocation.
-          PF6&rsquo;s Sankey API is still beta; current best practice is
-          to compose <code>d3-sankey</code> inside a PF6-themed SVG until
-          the wrapper stabilises.
+          PF6 ships a beta Sankey via the ECharts wrapper
+          (<code>@patternfly/react-charts/echarts</code>); a hand-rolled{" "}
+          <code>d3-sankey</code> recipe is shown below as an alternative.
         </>
       }
     >
+      <Section title="Basic (ECharts wrapper)">
+        <Card>
+          <div style={{ padding: 24, display: "grid", gap: 16 }}>
+            <DemoFrame height={420}>
+              <Charts
+                id="sankey-basic"
+                nodeSelector="html"
+                height={360}
+                width={760}
+                option={{
+                  aria: {
+                    enabled: true,
+                    label: {
+                      description:
+                        "User funnel: free trial through activation to paid plans and churn.",
+                    },
+                  },
+                  series: [
+                    {
+                      type: "sankey",
+                      data: sankeyNodes,
+                      links: sankeyLinks,
+                      label: { color: labelColor },
+                      lineStyle: { color: "gradient", opacity: 0.4 },
+                    },
+                  ],
+                  tooltip: {
+                    sourceLabel: "From",
+                    destinationLabel: "To",
+                    valueFormatter: (value: unknown) => `${value as number} users`,
+                  },
+                }}
+              />
+            </DemoFrame>
+            <CodeBlock>{`import { Charts } from "@patternfly/react-charts/echarts";
+import * as echarts from "echarts/core";
+import { SankeyChart } from "echarts/charts";
+import { TitleComponent, TooltipComponent } from "echarts/components";
+import { SVGRenderer } from "echarts/renderers";
+
+echarts.use([SankeyChart, SVGRenderer, TitleComponent, TooltipComponent]);
+
+const data = [
+  { name: "Free trial" }, { name: "Activated" }, { name: "Pro" },
+  { name: "Enterprise" }, { name: "Churned" },
+];
+const links = [
+  { source: "Free trial", target: "Activated",  value: 480 },
+  { source: "Free trial", target: "Churned",    value: 220 },
+  { source: "Activated",  target: "Pro",         value: 320 },
+  { source: "Activated",  target: "Enterprise",  value: 90  },
+  { source: "Activated",  target: "Churned",     value: 70  },
+];
+
+<Charts
+  id="sankey-basic"
+  height={360}
+  width={760}
+  option={{
+    series: [{ type: "sankey", data, links }],
+    tooltip: {
+      sourceLabel: "From",
+      destinationLabel: "To",
+      valueFormatter: (value) => \`\${value} users\`,
+    },
+  }}
+/>`}</CodeBlock>
+          </div>
+        </Card>
+      </Section>
+
       <Section title="Recipe (d3-sankey + PF6 theme tokens)">
         <Card>
           <div style={{ padding: 24 }}>
@@ -121,5 +221,6 @@ function SankeyChart({ width = 600, height = 320 }) {
         </Card>
       </Section>
     </FoundationPage>
-  ),
+    );
+  },
 };

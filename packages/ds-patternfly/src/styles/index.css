@@ -1913,40 +1913,50 @@
 }
 
 /* ---------------------------------------------------------------
- * Filled status Labels — bold saturated chip in BOTH light + dark.
+ * Labels — LIGHT mode: bold saturated filled status chip.
  *
  * PF6 paints the filled label background from
- * `--color--status--{s}--default`, which our brand flips to a light
- * pastel tone in dark mode (so status ICONS stay legible on a dark
- * page). As a filled-label fill that pastel reads washed-out, and
- * PF6 then pairs it with dark text — the chip loses the bold,
- * high-contrast look it has in light mode.
- *
- * Re-point ONLY the filled variant (`.pf-m-filled`) to the
- * non-flipping `--gp-status-{s}-solid-*` pair (saturated fill +
- * white text, emitted by toCssVars). Outline labels are untouched,
- * so their status-coloured text/border still adapt per mode. The
- * `--pf-v6-c-label--BackgroundColor` / `--Color` overrides are what
- * the `__content::before` fill and `__content` text actually read.
- * No `[data-brand]` prefix: filled status labels portal to <body>
- * (menus, toolbars) outside the brand wrapper, but the solid tokens
- * live on <html> so they still resolve.
+ * `--color--status--{s}--default`; re-point the filled variant to the
+ * non-flipping `--gp-status-{s}-solid-*` pair (saturated fill + white
+ * text) so the chip stays bold and high-contrast. Scoped to light
+ * (`:not(.pf-v6-theme-dark)`) — dark mode renders labels as outlines
+ * (see the block below).
  * --------------------------------------------------------------- */
-.pf-v6-c-label.pf-m-filled.pf-m-info {
+:root:not(.pf-v6-theme-dark) .pf-v6-c-label.pf-m-filled.pf-m-info {
   --pf-v6-c-label--BackgroundColor: var(--gp-status-info-solid-bg);
   --pf-v6-c-label--Color: var(--gp-status-info-solid-fg);
 }
-.pf-v6-c-label.pf-m-filled.pf-m-success {
+:root:not(.pf-v6-theme-dark) .pf-v6-c-label.pf-m-filled.pf-m-success {
   --pf-v6-c-label--BackgroundColor: var(--gp-status-success-solid-bg);
   --pf-v6-c-label--Color: var(--gp-status-success-solid-fg);
 }
-.pf-v6-c-label.pf-m-filled.pf-m-warning {
+:root:not(.pf-v6-theme-dark) .pf-v6-c-label.pf-m-filled.pf-m-warning {
   --pf-v6-c-label--BackgroundColor: var(--gp-status-warning-solid-bg);
   --pf-v6-c-label--Color: var(--gp-status-warning-solid-fg);
 }
-.pf-v6-c-label.pf-m-filled.pf-m-danger {
+:root:not(.pf-v6-theme-dark) .pf-v6-c-label.pf-m-filled.pf-m-danger {
   --pf-v6-c-label--BackgroundColor: var(--gp-status-danger-solid-bg);
   --pf-v6-c-label--Color: var(--gp-status-danger-solid-fg);
+}
+
+/* ---------------------------------------------------------------
+ * Labels — DARK mode: render every FILLED label as an OUTLINE label.
+ *
+ * Solid fills read heavy on a dark surface, so in dark mode we flip
+ * filled chips to the lighter outline treatment lib-wide (status +
+ * colour): transparent fill, a 1px border in the label's accent
+ * colour, and accent-coloured text/icon. The accent is the label's
+ * own `--pf-v6-c-label--BackgroundColor` — in dark that resolves to
+ * the lighter pastel tone, which reads well as a border/text on the
+ * dark page. Outline labels are left alone (already correct).
+ * --------------------------------------------------------------- */
+.pf-v6-theme-dark .pf-v6-c-label.pf-m-filled .pf-v6-c-label__content::before {
+  background-color: transparent !important;
+  border: 1px solid var(--pf-v6-c-label--BackgroundColor) !important;
+}
+.pf-v6-theme-dark .pf-v6-c-label.pf-m-filled .pf-v6-c-label__content,
+.pf-v6-theme-dark .pf-v6-c-label.pf-m-filled .pf-v6-c-label__icon {
+  color: var(--pf-v6-c-label--BackgroundColor) !important;
 }
 
 /* ---------------------------------------------------------------
@@ -2118,4 +2128,312 @@
 [data-brand] .pf-v6-c-toggle-group__button:not(.pf-m-selected):hover svg {
   color: var(--gp-color-brand-on, #fff);
   fill: currentColor;
+}
+
+/* =========================================================================
+ *  CHARTS — label colours that follow the colour mode
+ *
+ *  PF6's react-charts (victory) render label text with
+ *  `fill: var(--pf-v6-chart-…--Fill, #383838)` — the token is unset, so
+ *  every chart label falls back to a fixed dark gray that's near-
+ *  invisible on dark surfaces. Point each chart label-fill token at the
+ *  brand text colour so axis ticks, legends, and donut/bullet labels
+ *  flip with light/dark mode. Set on [data-brand] so it inherits into
+ *  the chart SVGs (the tokens are read inline by victory).
+ * ===================================================================== */
+[data-brand] {
+  --pf-v6-chart-global--label--Fill: var(--pf-t--global--text--color--regular);
+  --pf-v6-chart-axis--tick-label--Fill: var(--pf-t--global--text--color--regular);
+  --pf-v6-chart-axis--axis-label--Fill: var(--pf-t--global--text--color--regular);
+  --pf-v6-chart-axis--grid--label--Fill: var(--pf-t--global--text--color--regular);
+  --pf-v6-chart-legend--label--Fill: var(--pf-t--global--text--color--regular);
+  --pf-v6-chart-donut--label--title--Fill: var(--pf-t--global--text--color--regular);
+  --pf-v6-chart-donut--label--subtitle--Fill: var(--pf-t--global--text--color--subtle);
+  --pf-v6-chart-bullet--label--title--Fill: var(--pf-t--global--text--color--regular);
+  --pf-v6-chart-bullet--label--subtitle--Fill: var(--pf-t--global--text--color--subtle);
+  --pf-v6-chart-bullet--label--grouptitle--Fill: var(--pf-t--global--text--color--regular);
+}
+
+/* =========================================================================
+ *  GLASS THEME  —  opt-in via `.pf-v6-theme-glass` on <html>
+ *  (the Storybook "Glass" toolbar toggle, or `<ThemeProvider glass>`).
+ *
+ *  EVERY rule below is gated on `.pf-v6-theme-glass`, so the default
+ *  (non-glass) experience is completely untouched.
+ *
+ *  Surfaces read PF6's translucent glass token
+ *  (--pf-t--global--background--color--glass--primary--default) rather
+ *  than the brand-dial-overridden opaque --primary/--secondary tokens —
+ *  if a glass surface reads the dial token it renders SOLID ("no glass"),
+ *  because the dials map those to an opaque brand colour. A frosted
+ *  backdrop blur completes the effect.
+ * ===================================================================== */
+
+/* Storybook doc-page wrapper (FoundationPage) — its opaque page fill
+   would hide the decorator's gradient canvas and starve the frosted doc
+   surfaces of anything to blur. Drop it to transparent under glass so the
+   gradient shows through and every doc surface reads as real glass. */
+.pf-v6-theme-glass .gp-doc-page {
+  background: transparent !important;
+}
+
+/* Storybook demo frame (DemoFrame) — the bounds box around live demos.
+   Under glass it goes transparent (no fill, no blur) so the demo inside
+   sits directly on the gradient as a clean single glass layer; the
+   dashed border stays to mark the bounds. */
+.pf-v6-theme-glass .gp-doc-demoframe {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-color: color-mix(in srgb,
+    var(--gp-color-border-subtle, currentColor) 50%, transparent) !important;
+}
+
+/* Dial-safe redirect: any PF6 component opting into `pf-m-glass` pulls
+   its background from these per-component tokens; point them at the
+   translucent glass fill so the frost survives the dials. */
+.pf-v6-theme-glass {
+  --pf-v6-c-card--m-glass--BackgroundColor:
+    var(--pf-t--global--background--color--glass--primary--default);
+  --pf-v6-c-panel--m-glass--BackgroundColor:
+    var(--pf-t--global--background--color--glass--primary--default);
+}
+
+/* Frosted content surfaces — the real PF6 components (Card, CodeBlock)
+   plus the doc-kit CodeBlock. These carry copy, so they use a DENSER
+   frost: mix the glass fill toward the opaque page surface (~0.8
+   effective alpha) so text contrast stays comfortably above WCAG AA
+   while the surface still reads as glass. The blur sells the effect.
+   NOTE: the doc-kit *Card* wrapper is deliberately NOT in this list —
+   it goes fully transparent (below) so nested component cards don't
+   double-frost into a milky ~0.97-opaque stack.
+   NOTE 2: `:not(.pf-m-glass)` — a Card that opts into PF6's own glass
+   modifier already frosts from the m-glass token (the lighter ~0.5
+   ambient-chrome fill, matching panels/rails); the dense content frost
+   would make it read heavier/darker than the surfaces around it. So the
+   dense frost is only for plain (non-glass) cards that wouldn't
+   otherwise frost at all. */
+.pf-v6-theme-glass .pf-v6-c-card:not(.pf-m-glass),
+.pf-v6-theme-glass .pf-v6-c-code-block,
+.pf-v6-theme-glass .gp-doc-codeblock {
+  background-color: color-mix(in srgb,
+    var(--pf-t--global--background--color--primary--default) 65%,
+    var(--pf-t--global--background--color--glass--primary--default)) !important;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  /* Glass borders route through the single --gp-glass-border-color token
+     (transparent by default; see the glass-border block below). */
+  border-color: var(--gp-glass-border-color, transparent) !important;
+}
+/* Glass-modifier Cards (pf-m-glass) — keep PF6's lighter token fill so
+   they sit in the same surface family as Panels/rails; just guarantee
+   the blur + glass edge. */
+.pf-v6-theme-glass .pf-v6-c-card.pf-m-glass {
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border-color: var(--gp-glass-border-color, transparent) !important;
+}
+
+/* Selectable / clickable cards (radio + checkbox galleries) — unlike
+   plain content cards (which go borderless on glass), each option needs
+   a visible edge so it reads as a distinct, tappable surface. Give the
+   UNSELECTED ones a soft translucent glass border; the selected card
+   keeps PF6's brand selection ring on top. */
+.pf-v6-theme-glass
+  .pf-v6-c-card:is(.pf-m-selectable, .pf-m-clickable, .pf-m-selectable-raised):not(.pf-m-selected):not(.pf-m-current) {
+  border: 1px solid
+    color-mix(in srgb, var(--gp-color-text-regular) 16%, transparent) !important;
+}
+
+/* Doc-kit Card wrapper — the Storybook section container. Under glass its
+   FILL goes transparent (no frost) so the real components inside become
+   the single glass layer over the gradient and prose/tables sit directly
+   on the gradient — without this, a frosted component nested in a frosted
+   doc-card stacks two translucent layers into a milky box. But the
+   section needs its outline for structure, so the 1px border is KEPT
+   (it stays on the inline --gp-color-border-default value). */
+.pf-v6-theme-glass .gp-doc-card {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+/* PF6 CodeBlock paints an inner code surface — keep it transparent so the
+   outer frost shows through (the doc-kit CodeBlock is a single <pre>, no
+   inner layer, so it isn't affected). */
+.pf-v6-theme-glass .pf-v6-c-code-block__content,
+.pf-v6-theme-glass .pf-v6-c-code-block__code,
+.pf-v6-theme-glass .pf-v6-c-code-block pre {
+  background: transparent !important;
+}
+/* PF6 Card subsurfaces (header / body / footer / title) stay transparent
+   so only the Card itself carries the single frosted fill. */
+.pf-v6-theme-glass .pf-v6-c-card__header,
+.pf-v6-theme-glass .pf-v6-c-card__body,
+.pf-v6-theme-glass .pf-v6-c-card__footer,
+.pf-v6-theme-glass .pf-v6-c-card__title {
+  background: transparent;
+}
+
+/* Drawer — the slide-out panel is a chrome surface, so frost it like the
+   other panels (translucent glass fill + blur) instead of the opaque
+   dial colour it defaults to. The drawer content/body are transparent. */
+.pf-v6-theme-glass .pf-v6-c-drawer__panel {
+  --pf-v6-c-drawer__panel--BackgroundColor:
+    var(--pf-t--global--background--color--glass--primary--default);
+  background-color:
+    var(--pf-t--global--background--color--glass--primary--default) !important;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+/* DataList — rows/cells are already transparent and sit on whatever
+   surface is behind them. The only opaque bit is the expandable detail
+   panel; make it a faint translucent recess so the frosted surface shows
+   through, and keep selectable-row hover translucent. */
+.pf-v6-theme-glass .pf-v6-c-data-list__expandable-content {
+  --pf-v6-c-data-list__expandable-content--BackgroundColor: transparent;
+  background-color:
+    color-mix(in srgb, var(--gp-color-text-regular) 5%, transparent) !important;
+}
+.pf-v6-theme-glass
+  .pf-v6-c-data-list__item.pf-m-selectable
+  .pf-v6-c-data-list__item-row:hover {
+  background-color:
+    color-mix(in srgb, var(--gp-color-text-regular) 8%, transparent) !important;
+}
+
+/* DualListSelector — the panes/lists are transparent (they sit on the
+   frosted surface behind), so only the per-row hover + selected fills
+   need translucent treatment; the menu border softens to a low-alpha
+   edge on the frosted fill. */
+.pf-v6-theme-glass .pf-v6-c-dual-list-selector__menu {
+  border-color: color-mix(in srgb,
+    var(--pf-t--global--border--color--default, currentColor) 35%,
+    transparent) !important;
+}
+.pf-v6-theme-glass .pf-v6-c-dual-list-selector__list-item-row {
+  --pf-v6-c-dual-list-selector__list-item-row--hover--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-text-regular) 8%, transparent);
+}
+.pf-v6-theme-glass
+  .pf-v6-c-dual-list-selector__list-item.pf-m-selected
+  .pf-v6-c-dual-list-selector__list-item-row {
+  background-color:
+    color-mix(in srgb, var(--gp-color-brand-default) 22%, transparent) !important;
+}
+
+/* Tables — a standalone Table / DataView is a content surface, so the
+   table element frosts like a card (cells / rows / header transparent so
+   only one frosted layer paints). When a table is embedded in an
+   already-frosted container (e.g. a Panel), that container's own glass
+   rules zero the table background to avoid double-frosting. */
+.pf-v6-theme-glass .pf-v6-c-table {
+  background-color: color-mix(in srgb,
+    var(--pf-t--global--background--color--primary--default) 65%,
+    var(--pf-t--global--background--color--glass--primary--default));
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+.pf-v6-theme-glass .pf-v6-c-table__thead,
+.pf-v6-theme-glass .pf-v6-c-table__tbody,
+.pf-v6-theme-glass .pf-v6-c-table__tr,
+.pf-v6-theme-glass .pf-v6-c-table__th,
+.pf-v6-theme-glass .pf-v6-c-table__td {
+  --pf-v6-c-table--BackgroundColor: transparent;
+  background-color: transparent;
+}
+
+/* Hero — a prominent banner that carries headline copy, so it uses the
+   denser content-surface frost (text stays above WCAG AA) plus the
+   backdrop blur. Its own gradient overlay (background-image) stays on
+   top of the frosted fill for depth. */
+.pf-v6-theme-glass .pf-v6-c-hero {
+  --pf-v6-c-hero--BackgroundColor: color-mix(in srgb,
+    var(--pf-t--global--background--color--primary--default) 65%,
+    var(--pf-t--global--background--color--glass--primary--default));
+  background-color: color-mix(in srgb,
+    var(--pf-t--global--background--color--primary--default) 65%,
+    var(--pf-t--global--background--color--glass--primary--default)) !important;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  /* Hero ships an opaque 1px border — a hard line on the frosted
+     surface. Clear it so the frost defines the edge. */
+  border-color: transparent !important;
+}
+
+/* ── Glass border token (the ONE place to retint glass-surface edges) ──
+   On a frosted surface an opaque 1px ring reads as a hard line fighting
+   the soft edge, so by default glass borders are TRANSPARENT — the
+   frosted fill defines the edge. Every glass-surface border in this lib
+   routes through `--gp-glass-border-color`; override it once here (or per
+   subtree) to give all glass surfaces a different edge — e.g. a subtle
+   light highlight: `--gp-glass-border-color: rgba(255,255,255,0.14)`.
+   It also feeds PF6's own glass border token and the per-component
+   card/panel glass borders below. */
+.pf-v6-theme-glass {
+  --gp-glass-border-color: transparent;
+  --pf-t--global--border--color--glass--default: var(--gp-glass-border-color);
+}
+.pf-v6-theme-glass .pf-v6-c-card,
+.pf-v6-theme-glass .pf-v6-c-panel {
+  --pf-v6-c-card--BorderColor: var(--gp-glass-border-color);
+  --pf-v6-c-card--m-glass--BorderColor: var(--gp-glass-border-color);
+  --pf-v6-c-panel--m-glass--before--BorderColor: var(--gp-glass-border-color);
+  --pf-v6-c-panel--before--BorderColor: var(--gp-glass-border-color);
+}
+
+/* Menus — Dropdown, Select, Context selector, Application launcher,
+   Options menu, Custom menus all render `.pf-v6-c-menu`, portaled to
+   <body> but inheriting the :root glass tokens. Frost the menu surface
+   (only it paints a background; the list/items/groups are transparent)
+   and keep item hover translucent so it doesn't punch an opaque block. */
+.pf-v6-theme-glass .pf-v6-c-menu {
+  background-color:
+    var(--pf-t--global--background--color--glass--primary--default);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  --pf-v6-c-menu__list-item--hover--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-text-regular) 10%, transparent);
+  --pf-v6-c-menu__item--hover--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-text-regular) 10%, transparent);
+}
+
+/* Modal — the dialog carries copy / forms, so it uses the denser
+   content frost (~0.875 alpha) for readability; the backdrop softens to
+   a light tint + page blur so the frost reads against blurred content
+   instead of a flat black scrim. */
+.pf-v6-theme-glass .pf-v6-c-modal-box {
+  background-color: color-mix(in srgb,
+    var(--pf-t--global--background--color--primary--default) 75%,
+    var(--pf-t--global--background--color--glass--primary--default)) !important;
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+}
+/* Dark glass — the page surface (#151515) makes the modal read quite
+   heavy/black; mix toward the lighter recessed surface so the dialog
+   lifts off the frosted background a touch. */
+.pf-v6-theme-dark.pf-v6-theme-glass .pf-v6-c-modal-box {
+  background-color: color-mix(in srgb,
+    var(--pf-t--global--background--color--secondary--default) 80%,
+    var(--pf-t--global--background--color--glass--primary--default)) !important;
+}
+.pf-v6-theme-glass .pf-v6-c-backdrop {
+  background-color: color-mix(in srgb,
+    var(--pf-t--global--background--color--primary--default) 25%, transparent);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+}
+
+/* Navigation — the nav itself is transparent; only the current + hover
+   link fills are opaque, so translucent-tint them (brand for current,
+   neutral for hover) so they read on the frosted surface. */
+.pf-v6-theme-glass .pf-v6-c-nav__link {
+  --pf-v6-c-nav__link--hover--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-text-regular) 8%, transparent);
+  --pf-v6-c-nav__link--focus--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-text-regular) 8%, transparent);
+}
+.pf-v6-theme-glass .pf-v6-c-nav__link.pf-m-current {
+  background-color:
+    color-mix(in srgb, var(--gp-color-brand-default) 22%, transparent) !important;
 }

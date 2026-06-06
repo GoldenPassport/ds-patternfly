@@ -56,6 +56,81 @@ function MiniSurface() {
   );
 }
 
+/**
+ * Self-contained glass preview. Glass is toggled by a class on <html>, so a
+ * single cell can't opt into it without flipping the whole page — instead
+ * this hardcodes the glass look (translucent fill + backdrop blur over a
+ * brand-tinted canvas, with the soft glass edge) so light + dark can sit
+ * side by side regardless of the toolbar toggle.
+ */
+function GlassPreview({ label, dark }: { label: string; dark: boolean }) {
+  const pageBg = dark
+    ? "radial-gradient(circle at 80% 12%, rgba(0,102,204,0.55), transparent 52%), radial-gradient(circle at 12% 92%, rgba(0,135,135,0.5), transparent 55%), #151515"
+    : "radial-gradient(circle at 80% 12%, rgba(0,102,204,0.32), transparent 52%), radial-gradient(circle at 12% 92%, rgba(0,135,135,0.28), transparent 55%), #fafafa";
+  const glassFill = dark ? "rgba(41,41,41,0.5)" : "rgba(255,255,255,0.5)";
+  // Glass surfaces define their edge with the frosted fill, so the border
+  // is transparent (matches the real --gp-glass-border-color default).
+  const glassEdge = "transparent";
+  const text = dark ? "#f5f5f5" : "#151515";
+  const subtle = dark ? "#b8bbbe" : "#6a6e73";
+  return (
+    <div
+      style={{
+        borderRadius: 12,
+        overflow: "hidden",
+        border: "1px solid transparent",
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          padding: 20,
+          minHeight: 190,
+          background: pageBg,
+        }}
+      >
+        {/* Shapes behind the glass so the backdrop blur is visible. */}
+        <div aria-hidden style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+          <div style={{ position: "absolute", top: 20, left: 14, inlineSize: 96, blockSize: 96, borderRadius: "50%", background: "rgba(0,102,204,0.6)" }} />
+          <div style={{ position: "absolute", bottom: 10, right: 26, inlineSize: 72, blockSize: 72, borderRadius: "50%", background: "rgba(0,135,135,0.55)" }} />
+        </div>
+        <div
+          style={{
+            position: "relative",
+            background: glassFill,
+            backdropFilter: "blur(14px) saturate(140%)",
+            WebkitBackdropFilter: "blur(14px) saturate(140%)",
+            border: `1px solid ${glassEdge}`,
+            borderRadius: 10,
+            padding: 16,
+            color: text,
+          }}
+        >
+          <div style={{ fontWeight: 600, marginBottom: 4 }}>{label}</div>
+          <p style={{ color: subtle, margin: "0 0 12px", fontSize: 13, lineHeight: 1.5 }}>
+            Frosted surface — a translucent fill plus a backdrop blur over the
+            brand-tinted canvas behind it.
+          </p>
+          <button
+            type="button"
+            style={{
+              background: "#0066cc",
+              color: "#fff",
+              border: "none",
+              padding: "6px 12px",
+              borderRadius: 6,
+              fontSize: 13,
+              cursor: "pointer",
+            }}
+          >
+            Primary action
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ---------- Theme dial catalogue (Phase 1: 35 dials, 11 categories) ----------
 // Mirrors the [data-brand] block in src/styles/index.css. The story reads
 // the live computed value of each dial off document.documentElement so the
@@ -384,11 +459,12 @@ export const Overview: StoryObj = {
       title="Theming"
       intro={
         <>
-          Theming is two dimensions: the active <strong>brand</strong> (a typed
-          token object) and the active <strong>color mode</strong> (light or
-          dark). Both are controlled by props on{" "}
-          <code>&lt;ThemeProvider&gt;</code> — switching either re-renders all
-          downstream components without a reload.
+          Theming is three dimensions: the active <strong>brand</strong> (a
+          typed token object), the active <strong>color mode</strong> (light or
+          dark), and an optional <strong>glass</strong> surface treatment. All
+          three are controlled by props on <code>&lt;ThemeProvider&gt;</code>{" "}
+          (and by the matching toolbar toggles above) — switching any of them
+          re-renders all downstream components without a reload.
         </>
       }
     >
@@ -414,6 +490,40 @@ export const Overview: StoryObj = {
             </ThemeProvider>
           ))}
         </div>
+      </Section>
+
+      <Section
+        title="Glass theme"
+        description="An optional translucent surface treatment layered on top of any brand × mode. Flip the Glass toggle in the toolbar above (or pass glass to ThemeProvider) and every glass-aware surface — cards, code blocks, panels, menus, modals, the masthead — frosts: a semi-transparent fill plus a backdrop blur over a brand-tinted gradient canvas. This whole page reframes live when you toggle it."
+      >
+        <Card>
+          <div style={{ padding: 24, display: "grid", gap: 16 }}>
+            <p style={{ margin: 0, color: "var(--gp-color-text-regular)", lineHeight: 1.7 }}>
+              Glass adds <code>pf-v6-theme-glass</code> to <code>&lt;html&gt;</code>.
+              Surfaces read PF6&rsquo;s translucent glass token rather than the
+              opaque brand-dial surfaces, so they stay frosted under any brand —
+              and the lib keeps content surfaces dense enough that text contrast
+              stays above WCAG AA. Toggle it from the toolbar to see the cards on
+              this page frost in place.
+            </p>
+            {/* Static side-by-side preview of the glass treatment in both
+                modes — independent of the toolbar toggle, since glass is a
+                document-level class. */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+                gap: 16,
+              }}
+            >
+              <GlassPreview label="Light · glass" dark={false} />
+              <GlassPreview label="Dark · glass" dark={true} />
+            </div>
+            <CodeBlock label="ThemeProvider with glass">{`<ThemeProvider brand={goldenPassport} mode="dark" glass>
+  <App />
+</ThemeProvider>`}</CodeBlock>
+          </div>
+        </Card>
       </Section>
 
       <Section

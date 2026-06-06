@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ChartPie } from "@patternfly/react-charts/victory";
+import { ChartContainer, ChartPie } from "@patternfly/react-charts/victory";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
 import { DemoFrame, PropsTable } from "../_demoKit.js";
 import { chartA11yParams } from "./_chartKit.js";
@@ -31,7 +31,11 @@ export const Overview: StoryObj = {
       <Section title="Basic">
         <Card>
           <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={280}>
+            <DemoFrame height={300}>
+              {/* responsive={false} renders the chart at its fixed
+                  width×height instead of scaling to fill the container —
+                  otherwise the SVG stretches to the frame width and its
+                  height balloons, overflowing onto the code block below. */}
               <ChartPie
                 ariaTitle="Plan distribution"
                 ariaDesc="60% Pro, 25% Enterprise, 15% Free."
@@ -41,10 +45,11 @@ export const Overview: StoryObj = {
                 }
                 themeColor="multi"
                 height={260}
-                width={300}
+                width={440}
                 legendData={data.map((d) => ({ name: `${d.x} (${d.y}%)` }))}
                 legendPosition="right"
-                padding={{ right: 140 }}
+                padding={{ top: 10, bottom: 10, left: 10, right: 160 }}
+                containerComponent={<ChartContainer responsive={false} />}
               />
             </DemoFrame>
             <CodeBlock>{`<ChartPie

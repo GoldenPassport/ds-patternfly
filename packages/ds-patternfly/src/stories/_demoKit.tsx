@@ -354,6 +354,11 @@ export function DemoFrame({
 }) {
   return (
     <div
+      // gp-doc-demoframe: under .pf-v6-theme-glass the recessed fill goes
+      // translucent + lightly frosted (see the glass layer in
+      // src/styles/index.css) so the gradient shows through and any live
+      // demo inside reads as glass instead of sitting on an opaque recess.
+      className="gp-doc-demoframe"
       style={{
         border: "1px dashed var(--gp-color-border-subtle)",
         borderRadius: "var(--gp-radius-sm)",

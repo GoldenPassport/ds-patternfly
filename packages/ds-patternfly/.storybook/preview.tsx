@@ -43,7 +43,7 @@ const _originalAxeRun = axe.run.bind(axe);
           ...(n.all ?? []).map((c: { message?: string }) => c.message ?? ""),
           ...(n.none ?? []).map((c: { message?: string }) => c.message ?? ""),
         ].join(" ");
-        return /partially overlaps|background gradient|pseudo element|background-?color (could not be|cannot be) determined/i.test(msgs);
+        return /partially overlaps|partially obscured|background gradient|pseudo element|background-?color (could not be|cannot be) determined/i.test(msgs);
       });
     });
     if (promotable.length > 0) {
@@ -305,7 +305,12 @@ const preview: Preview = {
         >
           <div
             style={{
-              background: "var(--gp-color-bg-primary-default)",
+              // Glass on → a brand-aware gradient canvas so the frosted
+              // surfaces have colour variation to blur (a flat fill
+              // blurred is invisible). Glass off → the flat page surface.
+              background: glass
+                ? `radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--gp-color-brand-default) 35%, transparent) 0%, transparent 45%), radial-gradient(circle at 15% 85%, color-mix(in srgb, var(--gp-color-accent, var(--gp-color-brand-hover)) 28%, transparent) 0%, transparent 45%), var(--gp-color-bg-primary-default)`
+                : "var(--gp-color-bg-primary-default)",
               color: "var(--gp-color-text-regular)",
               minHeight: "100vh",
               padding: 16,
