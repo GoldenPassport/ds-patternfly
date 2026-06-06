@@ -45,6 +45,17 @@ export const Basic: StoryObj = {
         title="Try it"
         description="Click into the demo below, press Tab — the link surfaces visually. Press Enter, focus jumps to the main region."
       >
+        {/* Glass: the mock-page demo uses inline-styled surfaces (not a
+            .pf-v6-c-card), so the lib glass layer can't auto-frost them.
+            Frost the chrome wrapper + main region explicitly when the
+            glass theme is active. */}
+        <style>{`
+          .pf-v6-theme-glass .gp-skip-demo-main {
+            background: color-mix(in srgb, var(--pf-t--global--background--color--secondary--default) 65%, transparent) !important;
+            backdrop-filter: blur(12px) saturate(140%);
+            -webkit-backdrop-filter: blur(12px) saturate(140%);
+          }
+        `}</style>
         <Card>
           <div
             style={{
@@ -80,6 +91,7 @@ export const Basic: StoryObj = {
               <main
                 id="skip-demo-main"
                 tabIndex={-1}
+                className="gp-skip-demo-main"
                 style={{
                   marginTop: 16,
                   padding: 16,
@@ -163,10 +175,9 @@ export const Basic: StoryObj = {
               joining the tab order.
             </li>
             <li>
-              <strong>Used by Compass patterns.</strong> See{" "}
-              <code>Patterns/Compass dashboard</code> and{" "}
-              <code>Patterns/Compass integrations</code> — both pages
-              wire SkipToContent to the CompassContent region.
+              <strong>Used by the Compass pattern.</strong> See{" "}
+              <code>Patterns/Compass</code> — it wires SkipToContent
+              to the CompassContent region.
             </li>
             <li>
               <strong>Don&apos;t hide it from AT.</strong> The PF6

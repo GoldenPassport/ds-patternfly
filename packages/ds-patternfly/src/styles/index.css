@@ -2131,6 +2131,29 @@
 }
 
 /* =========================================================================
+ *  OverflowMenu — round the plain icon (kebab / 3-dots) toggle so it
+ *  matches the circular row/card kebabs elsewhere instead of PF6's
+ *  default 6px-radius square.
+ * ===================================================================== */
+[data-brand] .pf-v6-c-overflow-menu .pf-v6-c-menu-toggle.pf-m-plain,
+[data-brand] .pf-v6-c-overflow-menu__item .pf-v6-c-menu-toggle.pf-m-plain {
+  border-radius: 9999px;
+  aspect-ratio: 1;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================================================
+ *  Pagination — centre the "current page" number in its input (PF6
+ *  left-aligns it with equal padding, so the digit hangs left).
+ * ===================================================================== */
+[data-brand] .pf-v6-c-pagination input[aria-label="Current page"] {
+  text-align: center;
+}
+
+/* =========================================================================
  *  CHARTS — label colours that follow the colour mode
  *
  *  PF6's react-charts (victory) render label text with
@@ -2234,6 +2257,17 @@
   border-color: var(--gp-glass-border-color, transparent) !important;
 }
 
+/* Cards NESTED inside another card (e.g. MultiContentCard's child
+   tiles, usually isPlain) must NOT carry their own frost — a second
+   translucent layer over the parent's frost composites to a dark,
+   solid-looking block. Keep nested cards transparent so the parent's
+   single glass surface shows through. */
+.pf-v6-theme-glass .pf-v6-c-card .pf-v6-c-card {
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 /* Selectable / clickable cards (radio + checkbox galleries) — unlike
    plain content cards (which go borderless on glass), each option needs
    a visible edge so it reads as a distinct, tappable surface. Give the
@@ -2284,6 +2318,58 @@
     var(--pf-t--global--background--color--glass--primary--default) !important;
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+/* Sidebar — frost the side panel (chrome); the main content area stays
+   transparent so it sits on whatever surface is behind it. */
+.pf-v6-theme-glass .pf-v6-c-sidebar__panel {
+  --pf-v6-c-sidebar__panel--BackgroundColor:
+    var(--pf-t--global--background--color--glass--primary--default);
+  background-color:
+    var(--pf-t--global--background--color--glass--primary--default) !important;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+.pf-v6-theme-glass .pf-v6-c-sidebar__content {
+  background-color: transparent !important;
+}
+
+/* Popover — content surface (portals to <body>). Carries copy, so use
+   the denser content frost for readable text; frost the arrow to match. */
+.pf-v6-theme-glass .pf-v6-c-popover__content {
+  --pf-v6-c-popover__content--BackgroundColor: color-mix(in srgb,
+    var(--pf-t--global--background--color--primary--default) 65%,
+    var(--pf-t--global--background--color--glass--primary--default));
+  background-color: color-mix(in srgb,
+    var(--pf-t--global--background--color--primary--default) 65%,
+    var(--pf-t--global--background--color--glass--primary--default)) !important;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+.pf-v6-theme-glass .pf-v6-c-popover__arrow {
+  background-color: color-mix(in srgb,
+    var(--pf-t--global--background--color--primary--default) 65%,
+    var(--pf-t--global--background--color--glass--primary--default)) !important;
+}
+
+/* NotificationDrawer — frost the drawer surface; header + list items go
+   transparent so they sit on the single frosted surface, and hoverable
+   items get a translucent hover. */
+.pf-v6-theme-glass .pf-v6-c-notification-drawer {
+  background-color: color-mix(in srgb,
+    var(--pf-t--global--background--color--primary--default) 65%,
+    var(--pf-t--global--background--color--glass--primary--default)) !important;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+.pf-v6-theme-glass .pf-v6-c-notification-drawer__header,
+.pf-v6-theme-glass .pf-v6-c-notification-drawer__list-item {
+  background-color: transparent !important;
+}
+.pf-v6-theme-glass
+  .pf-v6-c-notification-drawer__list-item.pf-m-hoverable:hover {
+  background-color:
+    color-mix(in srgb, var(--gp-color-text-regular) 8%, transparent) !important;
 }
 
 /* DataList — rows/cells are already transparent and sit on whatever
@@ -2436,4 +2522,16 @@
 .pf-v6-theme-glass .pf-v6-c-nav__link.pf-m-current {
   background-color:
     color-mix(in srgb, var(--gp-color-brand-default) 22%, transparent) !important;
+}
+
+/* SimpleList — hover/focus + selected item fills go translucent so they
+   read on the frosted surface instead of punching opaque blocks. Neutral
+   tint for hover/focus, brand tint for the current (selected) item. */
+.pf-v6-theme-glass .pf-v6-c-simple-list__item-link {
+  --pf-v6-c-simple-list__item-link--hover--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-text-regular) 8%, transparent);
+  --pf-v6-c-simple-list__item-link--focus--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-text-regular) 8%, transparent);
+  --pf-v6-c-simple-list__item-link--m-current--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-brand-default) 22%, transparent);
 }

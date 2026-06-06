@@ -34,6 +34,21 @@ export const Overview: StoryObj = {
   render: () => {
     const [open, setOpen] = useState(false);
     const [activeTabKey, setActiveTabKey] = useState<string | number>(0);
+    // 36×36 page icon, centred (both axes) inside its cell — the wrapper
+    // fills the cell width and flex-centres the glyph.
+    const pageIcon = (
+      <span
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          inlineSize: "100%",
+          blockSize: 36,
+        }}
+      >
+        <CubesIcon style={{ width: 36, height: 36 }} />
+      </span>
+    );
     return (
       <FoundationPage
         title="Page header"
@@ -56,16 +71,25 @@ export const Overview: StoryObj = {
             margin-block-end: 0.75rem;
           }
           /* Pin the action menu (kebab) to the top-right corner of the
-             header instead of vertically centring it against the (often
-             tall) title row. */
-          .pf-v6-c-page__main-section {
+             whole header CARD (the .gp-ph-relative wrapper spans the
+             breadcrumb + title), not just the title row — so it lands on
+             the breadcrumb row rather than centred against the tall
+             title. */
+          .gp-ph-relative {
             position: relative;
           }
-          .pf-v6-c-page__main-section
+          .gp-ph-relative
             .pf-v6-l-split__item:has(button[aria-label*="actions" i]) {
             position: absolute;
             inset-block-start: 0;
             inset-inline-end: 0;
+            z-index: 2;
+          }
+          /* Page icon cell — centre the 36px glyph in its (wider) cell. */
+          .pf-v6-c-page__main-section .pf-m-align-self-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
         `}</style>
         <Section title="Basic">
@@ -89,6 +113,7 @@ export const Overview: StoryObj = {
           <Card>
             <div style={{ padding: 24 }}>
               <DemoFrame>
+                <div className="gp-ph-relative">
                 <PageHeader
                   breadcrumbs={
                     <Breadcrumb aria-label="Workflow breadcrumb">
@@ -98,7 +123,7 @@ export const Overview: StoryObj = {
                       </BreadcrumbItem>
                     </Breadcrumb>
                   }
-                  icon={<CubesIcon />}
+                  icon={pageIcon}
                   title="Quarterly review"
                   label={<Label color="green">Active</Label>}
                   subtitle="Triggered hourly · 4 steps · last run 12 minutes ago"
@@ -132,6 +157,7 @@ export const Overview: StoryObj = {
                     </Dropdown>
                   }
                 />
+                </div>
               </DemoFrame>
             </div>
           </Card>
@@ -176,7 +202,7 @@ export const Overview: StoryObj = {
                         </BreadcrumbItem>
                       </Breadcrumb>
                     }
-                    icon={<CubesIcon />}
+                    icon={pageIcon}
                     title="3scale-control-fccb6ddb9-phyqv9"
                     label={<Label color="green">Running</Label>}
                   />
@@ -201,6 +227,10 @@ export const Overview: StoryObj = {
                     component="nav"
                     aria-label="Pod navigation tabs"
                     style={{
+                      // Space ABOVE the tabs so the tab targets don't
+                      // crowd the title/subtitle above them — easier to
+                      // click without grazing the text.
+                      marginBlockStart: "1rem",
                       // Section rhythm to the body content below.
                       // No marginInline / paddingInline overrides —
                       // the tabs render with PF6's stock padding so
