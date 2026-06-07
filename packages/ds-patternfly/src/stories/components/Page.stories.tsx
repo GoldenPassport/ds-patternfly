@@ -1456,6 +1456,92 @@ function FullscreenScrim({ onClose }: { onClose: () => void }) {
   );
 }
 
+// Dedicated full-height-overlay showcase. Push (≥ breakpoint) is identical to
+// the configurable demo above; this isolates the full-height OVERLAY: it spans
+// the whole viewport (covering the masthead), so it needs an in-drawer close
+// (×) button and dismisses on off-click via the clickable .gp-sidenav-scrim.
+// Forced to always-overlay so the full-height behaviour is visible without
+// resizing.
+function FullHeightSidenavDemo() {
+  const [open, setOpen] = useState(false);
+  const css = sidenavDrawerCss("ds-page-fullheight-demo", {
+    overlayBelow: "always",
+    fullHeight: true,
+  });
+  return (
+    <>
+      <style dangerouslySetInnerHTML={{ __html: css }} />
+      <div id="ds-page-fullheight-demo">
+        <DemoFrame height={360}>
+          <div style={{ position: "relative", height: "100%" }}>
+            <Page
+              masthead={
+                <Masthead display={{ default: "inline" }}>
+                  <MastheadMain>
+                    <MastheadToggle>
+                      <PageToggleButton
+                        isHamburgerButton
+                        aria-label="Global navigation"
+                        isSidebarOpen={open}
+                        onSidebarToggle={() => setOpen((v) => !v)}
+                        id="ds-page-fullheight-toggle"
+                      />
+                    </MastheadToggle>
+                    <MastheadBrand>
+                      <MastheadLogo component="a" href="#">
+                        {brandLogo}
+                      </MastheadLogo>
+                    </MastheadBrand>
+                  </MastheadMain>
+                </Masthead>
+              }
+              sidebar={
+                <PageSidebar
+                  isSidebarOpen={open}
+                  id="ds-page-fullheight-sidebar"
+                >
+                  <PageSidebarBody>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        padding: "var(--pf-t--global--spacer--sm)",
+                      }}
+                    >
+                      <Button
+                        variant="plain"
+                        aria-label="Close navigation"
+                        icon={<TimesIcon />}
+                        onClick={() => setOpen(false)}
+                      />
+                    </div>
+                    <Nav aria-label="Full-height sidenav demo">
+                      <NavList>
+                        <NavItem itemId={0} isActive>Dashboard</NavItem>
+                        <NavItem itemId={1}>Workflows</NavItem>
+                        <NavItem itemId={2}>Reports</NavItem>
+                        <NavItem itemId={3}>Settings</NavItem>
+                      </NavList>
+                    </Nav>
+                  </PageSidebarBody>
+                </PageSidebar>
+              }
+            >
+              <PageSection aria-label="Full-height sidenav body">
+                <span style={{ color: "var(--gp-color-text-subtle)" }}>
+                  Page body — click the hamburger to open the full-height nav.
+                  Close it with the × button or by clicking off it (the scrim).
+                </span>
+              </PageSection>
+            </Page>
+            {open && <FullscreenScrim onClose={() => setOpen(false)} />}
+          </div>
+        </DemoFrame>
+      </div>
+    </>
+  );
+}
+
 function SidenavDrawerStory({
   overlayBreakpoint = "md",
   overlayStyle = "inset",
@@ -1484,8 +1570,10 @@ function SidenavDrawerStory({
           hamburger toggles it. <strong>Push</strong> pins the sidebar beside
           the content (the content reflows); <strong>overlay</strong> floats
           it over the content. Use the controls to set the breakpoint where it
-          switches and the overlay style. In glass mode an overlay drawer
-          frosts; a pushed sidebar reads flat.
+          switches and the overlay style. In glass mode the nav sits in a
+          frosted glass box; pushed, that box floats as a rounded, shadowed
+          card inset from the edges, while the overlay drawer frosts as it
+          slides in.
         </>
       }
     >
@@ -1586,6 +1674,35 @@ function SidenavDrawerStory({
           </div>
         </DocCard>
       </Section>
+
+      <Section
+        title="Full-height overlay"
+        description="Same drawer, full-height overlay. The push sidebar (≥ breakpoint) is unchanged — it still pins beside the content. The overlay variant, though, takes the whole viewport height (covering the masthead too), so it carries its own close (×) button and dismisses when you click off it (tap the glass scrim). Ideal for mobile / narrow layouts where the nav wants the full screen. This example is forced to always-overlay so you can see it without resizing."
+      >
+        <DocCard>
+          <div style={{ padding: 24, display: "grid", gap: 16 }}>
+            <FullHeightSidenavDemo />
+            <CodeBlock>{`<style>{sidenavDrawerCss("page-shell", {
+  overlayBelow: "always",   // (or a breakpoint — the push side above it is unchanged)
+  fullHeight: true,         // full-viewport overlay + glass scrim
+})}</style>
+
+// A full-height overlay covers the masthead, so the hamburger is hidden —
+// give the drawer its own close button, and a clickable scrim for off-click:
+<PageSidebar isSidebarOpen={open}>
+  <PageSidebarBody>
+    <Button variant="plain" aria-label="Close navigation"
+            icon={<TimesIcon />} onClick={() => setOpen(false)} />
+    <Nav>{/* ... */}</Nav>
+  </PageSidebarBody>
+</PageSidebar>
+{open && (
+  <button className="gp-sidenav-scrim" aria-label="Close navigation"
+          onClick={() => setOpen(false)} />
+)}`}</CodeBlock>
+          </div>
+        </DocCard>
+      </Section>
     </FoundationPage>
   );
 }
@@ -1599,6 +1716,12 @@ export const SidenavDrawer: StoryObj = {
           // can't resolve some background colours — tooling limitation,
           // not a real contrast failure (filtered in preview.tsx).
           { id: "scrollable-region-focusable", enabled: false },
+          // This story now mounts two Pages (the configurable demo + the
+          // full-height showcase), so the duplicate <main>/<header>/<nav>
+          // landmarks are doc-only — real apps render one Page per route.
+          { id: "landmark-unique", enabled: false },
+          { id: "landmark-no-duplicate-main", enabled: false },
+          { id: "landmark-no-duplicate-banner", enabled: false },
         ],
       },
     },

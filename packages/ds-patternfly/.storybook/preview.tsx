@@ -298,6 +298,9 @@ const preview: Preview = {
       const focusRing =
         (ctx.globals["focusRing"] as "inner" | "outer") ?? "outer";
       const glass = ctx.globals["glass"] === "on";
+      // Full-app layouts (Shell) render edge-to-edge: drop the canvas
+      // breathing-room padding so the masthead spans the full width.
+      const fullBleed = ctx.parameters["fullBleed"] === true;
       return (
         <ThemeProvider
           brand={brands[brandKey]}
@@ -316,7 +319,7 @@ const preview: Preview = {
                 : "var(--gp-color-bg-primary-default)",
               color: "var(--gp-color-text-regular)",
               minHeight: "100vh",
-              padding: 16,
+              padding: fullBleed ? 0 : 16,
             }}
           >
             <Story />

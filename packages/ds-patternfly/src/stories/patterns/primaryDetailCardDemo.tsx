@@ -53,7 +53,11 @@ import {
 } from "@patternfly/react-core";
 import EllipsisVIcon from "@patternfly/react-icons/dist/esm/icons/ellipsis-v-icon";
 import TrashIcon from "@patternfly/react-icons/dist/esm/icons/trash-icon";
-import { DashboardWrapper } from "@patternfly/react-core/dist/js/demos/DashboardWrapper";
+// ESM build (see note in PrimaryDetailDemo.stories.tsx) so the custom masthead
+// and DashboardWrapper's <Page> share the same PageContext — keeps the managed
+// sidebar hamburger working.
+import { DashboardWrapper } from "@patternfly/react-core/dist/esm/demos/DashboardWrapper";
+import { AcmeDashboardMasthead } from "../_acmeMasthead.js";
 
 // 10 generated inline-SVG product icons. The upstream demo imports 10
 // separate PNG/SVG files from `./assets`; we generate them on the fly to
@@ -470,9 +474,6 @@ export function PrimaryDetailCardView() {
           <DropdownList>{toolbarKebabDropdownItems}</DropdownList>
         </Dropdown>
       </ToolbarItem>
-      <ToolbarItem variant="pagination" align={{ default: "alignEnd" }}>
-        {renderPagination("top")}
-      </ToolbarItem>
     </Fragment>
   );
 
@@ -490,6 +491,7 @@ export function PrimaryDetailCardView() {
         <Card
           key={product.name}
           id={`card-view-${key}`}
+          isGlass
           isClickable
           isSelectable
           isSelected={activeCard === product.id}
@@ -598,7 +600,10 @@ export function PrimaryDetailCardView() {
   );
 
   return (
-    <DashboardWrapper mainContainerId="main-content-card-view-default-nav">
+    <DashboardWrapper
+      masthead={<AcmeDashboardMasthead />}
+      mainContainerId="main-content-card-view-default-nav"
+    >
       <PageSection aria-labelledby="projects">
         <Content>
           <h1 id="projects">Projects</h1>

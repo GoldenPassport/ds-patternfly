@@ -66,6 +66,9 @@
   --gp-radius-card:    var(--gp-radius-md, 12px);
   --gp-radius-popover: var(--gp-radius-md, 12px);
   --gp-radius-pill:    var(--gp-radius-full, 999px);
+  /* Shape of every action button. Pill by default; icon-only buttons are
+     squared so this radius renders them as circles (see "Button shape"). */
+  --gp-radius-button:  var(--gp-radius-pill, 999px);
 
   /* --- F. Shadow + border (4) ------------------------------------------ */
   --gp-shadow-card:    var(--pf-t--global--box-shadow--sm, 0 1px 2px rgba(0,0,0,0.08));
@@ -290,6 +293,34 @@
   --pf-v6-c-button--m-plain--BorderColor: transparent;
   --pf-v6-c-button--m-plain--hover--BorderColor: transparent;
   --pf-v6-c-button--m-plain--m-clicked--BorderColor: transparent;
+}
+
+/*
+ * Button shape — one dial drives it. `--gp-radius-button` (pill by default)
+ * sets the corner radius of every action button. We apply it at component
+ * scope because PF6 declares the radius on `.pf-v6-c-button` itself, which
+ * shadows the [data-brand] root token mapping. Change the dial once to
+ * reshape every button (e.g. set it to `--gp-radius-control` for rounded
+ * rectangles).
+ *
+ * Icon-only buttons — and icon-only plain menu toggles (kebabs) — are
+ * additionally squared (aspect-ratio: 1, no inline padding) so the same
+ * radius renders them as perfect CIRCLES: hamburgers, kebabs (⋮), bell /
+ * cog, close (×), delete, and any plain icon button in any story. Buttons
+ * with text (incl. the user-menu avatar + name toggle, which keeps its
+ * `__text`) stay pill-shaped. InputGroup `.pf-m-control` triggers keep the
+ * rectangular control radius; the calendar nav chevrons opt out via their
+ * own higher-specificity rule.
+ */
+[data-brand] .pf-v6-c-button:not(.pf-m-control) {
+  border-radius: var(--gp-radius-button);
+}
+[data-brand] .pf-v6-c-button.pf-m-plain:not(:has(.pf-v6-c-button__text)),
+[data-brand] .pf-v6-c-button.pf-m-stateful:not(:has(.pf-v6-c-button__text)),
+[data-brand] .pf-v6-c-menu-toggle.pf-m-plain:not(:has(.pf-v6-c-menu-toggle__text)) {
+  aspect-ratio: 1;
+  padding-inline: 0;
+  border-radius: var(--gp-radius-button);
 }
 
 /*
@@ -2416,14 +2447,14 @@
     var(--gp-color-border-subtle, currentColor) 50%, transparent) !important;
 }
 
-/* Dial-safe redirect: any PF6 component opting into `pf-m-glass` pulls
-   its background from these per-component tokens; point them at the
-   translucent glass fill so the frost survives the dials. */
+/* Dial-safe redirect: any PF6 component opting into `pf-m-glass` pulls its
+   background from these per-component tokens; point them at the SAME
+   standardised glass fill (~0.35) used by every other glass surface, so an
+   isGlass Card/Panel reads as true glass rather than the raw ~0.5 token —
+   which sits denser than the frosted panel it floats on. */
 .pf-v6-theme-glass {
-  --pf-v6-c-card--m-glass--BackgroundColor:
-    var(--pf-t--global--background--color--glass--primary--default);
-  --pf-v6-c-panel--m-glass--BackgroundColor:
-    var(--pf-t--global--background--color--glass--primary--default);
+  --pf-v6-c-card--m-glass--BackgroundColor: var(--gp-glass-surface-fill);
+  --pf-v6-c-panel--m-glass--BackgroundColor: var(--gp-glass-surface-fill);
 }
 
 /* Frosted content surfaces — the real PF6 components (Card, CodeBlock)
@@ -2452,13 +2483,22 @@
      (transparent by default; see the glass-border block below). */
   border-color: var(--gp-glass-border-color, transparent) !important;
 }
-/* Glass-modifier Cards (pf-m-glass) — keep PF6's lighter token fill so
-   they sit in the same surface family as Panels/rails; just guarantee
-   the blur + glass edge. */
+/* Glass-modifier Cards (pf-m-glass) — fill with the SAME standardised glass
+   (~0.35) as every other glass surface so a glass card reads as true glass,
+   not a denser white tile floating on the frosted panel. Set at the element
+   scope because PF6 declares the m-glass fill token on `.pf-v6-c-card` itself
+   (which shadows the theme-root redirect above). Plus the blur + glass edge.
+   These cards usually sit ON a frosted panel (which is itself the elevated
+   surface), so keep their elevation LOW — a soft, subtle shadow instead of
+   the default card / glass shadow (which in dark mode is a heavy 0.5-black
+   that reads as floating too high above the panel). The frost + edge define
+   the card; the shadow is just a hint of lift. */
 .pf-v6-theme-glass .pf-v6-c-card.pf-m-glass {
+  background-color: var(--gp-glass-surface-fill);
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
   border-color: var(--gp-glass-border-color, transparent) !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.16);
 }
 
 /* Cards NESTED inside another card (e.g. MultiContentCard's child
@@ -2481,6 +2521,29 @@
   .pf-v6-c-card:is(.pf-m-selectable, .pf-m-clickable, .pf-m-selectable-raised):not(.pf-m-selected):not(.pf-m-current) {
   border: 1px solid
     color-mix(in srgb, var(--gp-color-text-regular) 16%, transparent) !important;
+}
+/* Selected / current selectable card on glass — restore a brand edge. The
+   glass-card border (transparent !important) would otherwise blank out PF6's
+   selection ring, leaving selection invisible on the frosted surface. */
+.pf-v6-theme-glass
+  .pf-v6-c-card:is(.pf-m-selectable, .pf-m-clickable, .pf-m-selectable-raised):is(.pf-m-selected, .pf-m-current) {
+  border: 1px solid var(--gp-color-brand-default) !important;
+}
+
+/* Glass cards that sit ON the glass page panel (the main-container is itself
+   a frosted surface) must NOT stack a second frost layer — glass-on-glass
+   composites into a denser, darker, over-elevated block (very visible in
+   dark mode). Drop the card's own fill / blur / shadow so the panel's single
+   glass surface shows straight through; a faint border keeps each card
+   delineated (selectable cards override it with their own edge / brand ring
+   above). Flat, transparent, on-surface — not a floating tile. */
+.pf-v6-theme-glass .pf-v6-c-page__main-container .pf-v6-c-card.pf-m-glass {
+  background-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+  border: var(--pf-t--global--border--width--regular, 1px) solid
+    color-mix(in srgb, var(--gp-color-text-regular) 14%, transparent) !important;
 }
 
 /* Doc-kit Card wrapper — the Storybook section container. Under glass its
@@ -2596,6 +2659,78 @@
   background-color: var(--gp-glass-surface-fill);
   backdrop-filter: var(--gp-glass-surface-blur);
   -webkit-backdrop-filter: var(--gp-glass-surface-blur);
+}
+/* Push vs overlay. Below PF6's push breakpoint (75rem) the nav is an OVERLAY
+   drawer — keep it flush (square, no margin) so it docks to the screen edge
+   with no gap above or beside it. At/above 75rem it's a PUSH sidebar pinned
+   beside the content; there, float it as a frosted glass BOX — inset on all
+   sides (a strip of page shows around it), rounded corners, and a glass
+   shadow, so it reads as an elevated floating panel rather than fusing into
+   the chrome.
+
+   Keyed on `:not(.pf-m-collapsed)` rather than `.pf-m-expanded` so it covers
+   BOTH controlled sidebars (which carry `pf-m-expanded` when open) AND PF6's
+   managed push sidebars / DashboardWrapper (which carry no modifier class at
+   push) — only a collapsed nav is excluded. (Overlay drawers driven by
+   sidenavDrawerCss id-scope their own margins and are unaffected.) */
+@media (min-width: 75rem) {
+  .pf-v6-theme-glass
+    .pf-v6-c-page__sidebar:not(.pf-m-collapsed)
+    .pf-v6-c-page__sidebar-main {
+    margin: var(--pf-t--global--spacer--lg, 1.5rem);
+    border-radius: var(--gp-radius-card, 16px);
+    box-shadow: var(--pf-t--global--box-shadow--glass--default);
+  }
+  /* When an OPEN side-nav box sits beside it, drop the card's start
+     margin — the box's own margin already supplies that gap, so this avoids a
+     doubled gap. When the nav is collapsed or absent the card keeps its start
+     margin so it doesn't butt the screen edge. */
+  .pf-v6-theme-glass
+    .pf-v6-c-page:has(.pf-v6-c-page__sidebar:not(.pf-m-collapsed))
+    .pf-v6-c-page__main-container {
+    margin-inline-start: 0;
+  }
+}
+
+/* Page main content — PF6's glass theme turns the main content area into a
+   floating frosted panel (rounded + bordered + shadowed). PF6 fills it with
+   the raw ~0.5 glass token and draws a hard page-coloured 1px border, which
+   reads denser than the rest of our glass and edges it with a solid line.
+   Route it through the shared system instead: the standard ~0.35 fill +
+   blur, and the single glass-border token so the panel's edge matches every
+   other glass surface (transparent by default — the frost defines the edge;
+   retint --gp-glass-border-color once to give every glass surface, this
+   panel included, a visible edge). Keep PF6's rounded corners + glass shadow
+   so it still reads as an elevated floating surface. */
+.pf-v6-theme-glass .pf-v6-c-page__main-container {
+  --pf-v6-c-page__main-container--BackgroundColor: var(--gp-glass-surface-fill);
+  --pf-v6-c-page__main-container--BorderColor:
+    var(--gp-glass-border-color, transparent);
+  backdrop-filter: var(--gp-glass-surface-blur) saturate(140%);
+  -webkit-backdrop-filter: var(--gp-glass-surface-blur) saturate(140%);
+  /* Float the card on every side, rounded, at ALL widths (PF6 only insets it
+     from the masthead + end edge at desktop, and squares it on mobile). The
+     start-margin is dropped above when an open push nav box sits beside it. */
+  margin-block: var(--pf-t--global--spacer--lg, 1.5rem);
+  margin-inline: var(--pf-t--global--spacer--lg, 1.5rem);
+  border-radius: var(--pf-t--global--border--radius--glass--default, 16px);
+}
+
+/* Sticky page chrome — a breadcrumb / heading group (or a breadcrumb /
+   subnav bar) pinned to the top stays put while the content scrolls under
+   it, so PF6 gives it an OPAQUE fill to stop the scrolled content bleeding
+   through. On glass that reads as a solid block fighting the frosted
+   masthead above it, so frost it with the shared system glass instead:
+   content blurs under it like every other chrome surface, the edge goes
+   transparent, and the heavy sticky shadow softens to the glass shadow. */
+.pf-v6-theme-glass .pf-v6-c-page__main-group.pf-m-sticky-top,
+.pf-v6-theme-glass .pf-v6-c-page__main-breadcrumb.pf-m-sticky-top,
+.pf-v6-theme-glass .pf-v6-c-page__main-subnav.pf-m-sticky-top {
+  background-color: var(--gp-glass-surface-fill);
+  backdrop-filter: var(--gp-glass-surface-blur) saturate(140%);
+  -webkit-backdrop-filter: var(--gp-glass-surface-blur) saturate(140%);
+  box-shadow: var(--pf-t--global--box-shadow--glass--default);
+  border-color: var(--gp-glass-border-color, transparent);
 }
 
 /* NotificationDrawer — frost the drawer surface; header + list items go
@@ -2748,6 +2883,25 @@
   /* Selected menu item → translucent brand tint (not an opaque block). */
   --pf-v6-c-menu__item--m-selected--BackgroundColor:
     color-mix(in srgb, var(--gp-color-brand-default) 18%, transparent);
+}
+
+/* Toolbar filter popup — when the toolbar collapses its search / filters
+   behind the toggle (below its breakpoint), clicking it reveals this
+   expandable panel, which PF6 paints as a solid square box. Frost it, round
+   it via the card radius, and route the edge through the glass-border token.
+   This popup floats OVER the data-list and carries its own controls, so a
+   translucent frost lets the list text behind bleed through and clash. Give
+   it a near-solid THEME elevated surface (the same dial popovers use, tinted
+   per brand/mode) with just a hint of blur — legible first, a touch of glass
+   second. (Keeps PF6's drop shadow so it still reads as an elevated popup.) */
+.pf-v6-theme-glass .pf-v6-c-toolbar__expandable-content {
+  background-color: color-mix(in srgb,
+    var(--gp-color-bg-elevated, var(--gp-color-bg-primary-default)) 94%,
+    transparent);
+  backdrop-filter: var(--gp-glass-surface-blur) saturate(140%);
+  -webkit-backdrop-filter: var(--gp-glass-surface-blur) saturate(140%);
+  border-radius: var(--gp-radius-card, 16px);
+  border-color: var(--gp-glass-border-color, transparent);
 }
 
 /* Interactive backgrounds on glass — hover / focus / active / selected

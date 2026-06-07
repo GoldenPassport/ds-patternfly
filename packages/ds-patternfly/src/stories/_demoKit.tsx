@@ -115,6 +115,14 @@ export function sidenavDrawerCss(
     `}`,
     `${c} .pf-v6-c-page__sidebar.pf-m-collapsed {`,
     `  transform: translateX(-100%);`,
+    `  /* When collapsed, PF6 marks the drawer aria-hidden; hide it after the`,
+    `     slide-out so its off-screen controls (close button, nav links) drop`,
+    `     out of the tab order too — otherwise axe flags aria-hidden-focus.`,
+    `     visibility flips only after the 220ms transform, so the slide-out`,
+    `     still animates; on expand the base rule restores it immediately. */`,
+    `  visibility: hidden;`,
+    `  transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1),`,
+    `    visibility 0s linear 220ms;`,
     `}`,
     `:dir(rtl) ${c} .pf-v6-c-page__sidebar.pf-m-collapsed {`,
     `  transform: translateX(100%);`,
@@ -186,16 +194,26 @@ export function sidenavDrawerCss(
     `${c} .gp-sidenav-scrim {`,
     `  display: none;`,
     `}`,
-    // Glass + push: the sidebar is pinned inline with the page, so it
-    // should read flat — drop PF6's floating glass card (transparent fill,
-    // no blur, no rounding, no shadow) and let the page surface show through.
+    // Glass + push: float the nav as a frosted glass BOX — the standardised
+    // system glass fill + blur, inset on all sides (so a strip of page shows
+    // around it), rounded corners, and a soft glass shadow, so it reads as an
+    // elevated floating panel (PF6's default glass floating-nav look, with our
+    // standardised frost). Overrides the global push side-nav rule for this
+    // demo (which keeps the nav flush with only an inner gap).
     `.pf-v6-theme-glass ${c} .pf-v6-c-page__sidebar-main {`,
-    `  background-color: transparent !important;`,
-    `  backdrop-filter: none;`,
-    `  -webkit-backdrop-filter: none;`,
-    `  border-radius: 0;`,
-    `  box-shadow: none;`,
-    `  margin: 0;`,
+    `  background-color: var(--gp-glass-surface-fill) !important;`,
+    `  backdrop-filter: var(--gp-glass-surface-blur) saturate(140%);`,
+    `  -webkit-backdrop-filter: var(--gp-glass-surface-blur) saturate(140%);`,
+    `  margin: var(--pf-t--global--spacer--lg, 24px);`,
+    `  border-radius: var(--gp-radius-card, 16px);`,
+    `  box-shadow: var(--pf-t--global--box-shadow--glass--default);`,
+    `}`,
+    // The floating nav box already insets itself from the content with its
+    // own end-inline margin, so drop the content panel's start-inline margin
+    // — otherwise the two stack into a doubled gap. (Push only; the overlay
+    // drawer floats over the content, so the panel keeps its symmetric inset.)
+    `.pf-v6-theme-glass ${c} .pf-v6-c-page__main-container {`,
+    `  margin-inline-start: 0;`,
     `}`,
   ];
   if (overlayBelow === "always") {

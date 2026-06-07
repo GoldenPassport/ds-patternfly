@@ -207,7 +207,8 @@ const DIALS: DialCategory[] = [
     title: "E · Corner radius",
     description: "Reuses the radius scale (see Foundations / Radius). Four roles.",
     dials: [
-      { name: "--gp-radius-control", purpose: "Form fields, buttons, menu-toggles.", maps: "--pf-v6-c-form-control--BorderRadius, --pf-v6-c-button--BorderRadius, --pf-v6-c-menu-toggle--BorderRadius" },
+      { name: "--gp-radius-control", purpose: "Form fields, menu-toggles, InputGroup control buttons.", maps: "--pf-v6-c-form-control--BorderRadius, --pf-v6-c-menu-toggle--BorderRadius" },
+      { name: "--gp-radius-button",  purpose: "Shape of every action button (pill by default). Icon-only buttons are squared so this radius renders them as circles.", maps: "border-radius on .pf-v6-c-button (+ icon-only buttons / kebab toggles → circle)" },
       { name: "--gp-radius-card",    purpose: "Cards + modal boxes.",                 maps: "--pf-v6-c-card--BorderRadius, --pf-v6-c-modal-box--BorderRadius" },
       { name: "--gp-radius-popover", purpose: "Popovers, tooltips.",                   maps: "--pf-v6-c-popover__content--BorderRadius" },
       { name: "--gp-radius-pill",    purpose: "Labels, chips, pill buttons.",         maps: "(consumer-applied)" },

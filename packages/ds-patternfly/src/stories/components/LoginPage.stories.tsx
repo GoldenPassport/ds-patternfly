@@ -154,14 +154,14 @@ export const Overview: StoryObj = {
         >
           <Card>
             <div style={{ padding: 24, display: "grid", gap: 32 }}>
-              {/* Cap the brand wordmark to a logo-sized 32px (PF6's
+              {/* Cap the brand wordmark to a logo-sized height (PF6's
                   LoginPage otherwise scales the brand image to fill the
                   header, which blows the wordmark up huge), and give the
                   page bottom breathing room inside the frame. */}
               <style>{`
                 .gp-login-demo .pf-v6-c-login__header img,
                 .gp-login-demo .pf-v6-c-login__header .pf-v6-c-brand {
-                  block-size: 32px;
+                  block-size: 56px;
                   inline-size: auto;
                 }
                 .gp-login-demo .pf-v6-c-login__main {

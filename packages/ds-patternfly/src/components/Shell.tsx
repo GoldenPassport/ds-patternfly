@@ -163,12 +163,16 @@ export function Shell({
        *    property, which pushes the action toolbar off-screen on
        *    phones. Below md (768px) we let the logo hug its real
        *    width so notifications / settings / help / user menu fit. */}
-      {/* Plus: RTL sidebar shadow flip — PF6 v6 flips the sidebar's
-       *  transform for RTL but ships only a `--right` shadow token, so
-       *  the overlay drawer in RTL ends up with a right-edge shadow
-       *  (wrong — should face the main content on the left). Override
-       *  with the mirrored X offset. The base token value is
-       *  `10px 0 9px -8px rgba(41,41,41,0.15)`; we negate the X for RTL. */}
+      {/* Plus: overlay-drawer cast shadow — below PF6's push breakpoint
+       *  (75rem) the sidebar floats over the content, so it casts a shadow
+       *  off the edge that faces the main content: right in LTR, left in
+       *  RTL. (PF6 v6 only ships a `--right` token and flips the transform
+       *  for RTL, so without this the glass overlay drawer has no edge
+       *  shadow in LTR and a wrong-side one in RTL.) Above 75rem the sidebar
+       *  is a pushed glass box with its own shadow, so no cast shadow. */}
+      {/* Plus: mobile content-card corners — PF6 squares the glass content
+       *  card at narrow widths; keep it rounded (and keep its top inset
+       *  below the masthead) so it reads as a floating card on phones too. */}
       <style
         dangerouslySetInnerHTML={{
           __html: [
@@ -176,8 +180,47 @@ export function Shell({
             `  overflow: hidden;`,
             `  transition: width 220ms cubic-bezier(0.4, 0, 0.2, 1);`,
             `}`,
-            `:dir(rtl) #${SHELL_ROOT_ID} .pf-v6-c-page__sidebar.pf-m-expanded {`,
-            `  box-shadow: -10px 0 9px -8px rgba(41, 41, 41, 0.15);`,
+            // Full-height main: PF6 sets the content card to align-self:start
+            // so it hugs its content. Stretch it to fill the content row
+            // instead — it already has overflow:auto, so long content scrolls
+            // inside the card. The inner main wrapper becomes a flex column so
+            // a trailing footer section can be pinned to the card bottom (it
+            // stays there when content is short; scrolls with content when not).
+            // (The glass side-nav box, the content card's float margins, and
+            // the open-nav start-margin coordination are all handled by the
+            // global push-glass rules in src/styles/index.css.)
+            `#${SHELL_ROOT_ID} .pf-v6-c-page__main-container {`,
+            `  align-self: stretch;`,
+            `}`,
+            `#${SHELL_ROOT_ID} .gp-main {`,
+            `  display: flex;`,
+            `  flex-direction: column;`,
+            `}`,
+            // Keep each section at its natural height (don't let the flex
+            // column shrink them) so long content overflows the card and
+            // scrolls, rather than being squeezed to fit.
+            `#${SHELL_ROOT_ID} .gp-main > * {`,
+            `  flex-shrink: 0;`,
+            `}`,
+            // Pin a trailing footer section to the card bottom.
+            `#${SHELL_ROOT_ID} .gp-main > footer {`,
+            `  margin-block-start: auto;`,
+            `}`,
+            // Below the push breakpoint the nav is an overlay drawer: cast a
+            // shadow off the edge facing the content (right LTR / left RTL),
+            // and float the glass content card with even margins + rounded
+            // corners (the global float rules only kick in at push/≥75rem).
+            `@media (max-width: 74.99rem) {`,
+            `  #${SHELL_ROOT_ID} .pf-v6-c-page__sidebar.pf-m-expanded {`,
+            `    box-shadow: 10px 0 9px -8px rgba(41, 41, 41, 0.15);`,
+            `  }`,
+            `  :dir(rtl) #${SHELL_ROOT_ID} .pf-v6-c-page__sidebar.pf-m-expanded {`,
+            `    box-shadow: -10px 0 9px -8px rgba(41, 41, 41, 0.15);`,
+            `  }`,
+            `  .pf-v6-theme-glass #${SHELL_ROOT_ID} .pf-v6-c-page__main-container {`,
+            `    margin: var(--pf-t--global--spacer--lg, 1.5rem);`,
+            `    border-radius: var(--pf-t--global--border--radius--glass--default, 16px);`,
+            `  }`,
             `}`,
             `@media (max-width: 47.98rem) {`,
             `  #${SHELL_ROOT_ID} .pf-v6-c-masthead {`,

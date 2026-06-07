@@ -59,7 +59,8 @@ function MoveDemo({ duration, easing }: { duration: string; easing: string }) {
             width: 32,
             height: 32,
             background: "var(--gp-color-brand-default)",
-            borderRadius: "var(--gp-radius-sm)",
+            // Square box → circle via the pill radius dial (matches icon btns).
+            borderRadius: "var(--gp-radius-pill)",
             transition: `inset-inline-start ${duration} ${easing}`,
           }}
         />
@@ -72,7 +73,8 @@ function MoveDemo({ duration, easing }: { duration: string; easing: string }) {
           background: "var(--gp-color-bg-secondary-default)",
           color: "var(--gp-color-text-regular)",
           border: "1px solid var(--gp-color-border-default)",
-          borderRadius: "var(--gp-radius-sm)",
+          // Use the global button-shape dial (pill by default).
+          borderRadius: "var(--gp-radius-button)",
           cursor: "pointer",
           fontFamily: "var(--gp-font-family)",
         }}

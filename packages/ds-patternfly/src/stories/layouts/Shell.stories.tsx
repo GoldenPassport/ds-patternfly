@@ -186,6 +186,9 @@ const meta: Meta<typeof Shell> = {
   component: Shell,
   parameters: {
     layout: "fullscreen",
+    // Render the shell edge-to-edge (drop the story-canvas padding) so the
+    // masthead is full width, as it would be in a real app.
+    fullBleed: true,
     a11y: {
       // PF6 v6 paints gradient backgrounds on its Button component that axe
       // can't analyze (color-contrast → "needs review"). Upstream PF6 issue.
@@ -247,8 +250,31 @@ export const WithSidebarAndPrimaryDetail: Story = {
     const [actionMenuOpen, setActionMenuOpen] = useState(false);
     const meta = pageMeta[activeNav] ?? pageMeta["Workflows"]!;
     return (
-      <Shell
-        labels={shellEnLabels}
+      <>
+        {/* Pin the PageHeader action kebab to the top-right corner of the
+            content card. PageHeader normally drops it into the title row;
+            absolutely positioning it against the (positioned) main-container
+            lifts it to the card corner. */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: [
+              `#gp-app-shell-root .pf-v6-c-page__main-container {`,
+              `  position: relative;`,
+              `}`,
+              `#gp-app-shell-root .gp-card-action-menu.pf-v6-c-menu-toggle {`,
+              `  position: absolute;`,
+              // Sit on the breadcrumb row: the breadcrumb sits at the header's
+              // reduced 16px (spacer-md) top padding; center the 36px circular
+              // toggle on that ~24px line (lift it half the height difference).
+              `  inset-block-start: calc(var(--pf-t--global--spacer--md, 1rem) - 6px);`,
+              `  inset-inline-end: var(--pf-t--global--spacer--lg);`,
+              `  z-index: 2;`,
+              `}`,
+            ].join("\n"),
+          }}
+        />
+        <Shell
+          labels={shellEnLabels}
         brandLogo={<AcmeLogo />}
         mastheadActions={<MastheadActions />}
         sidebar={
@@ -309,11 +335,11 @@ export const WithSidebarAndPrimaryDetail: Story = {
                     ref={toggleRef}
                     aria-label={`Actions for ${activeNav}`}
                     variant="plain"
+                    className="gp-card-action-menu"
                     isExpanded={actionMenuOpen}
                     onClick={() => setActionMenuOpen((o) => !o)}
-                  >
-                    <EllipsisVIcon />
-                  </MenuToggle>
+                    icon={<EllipsisVIcon />}
+                  />
                 )}
               >
                 <DropdownList>
@@ -330,7 +356,7 @@ export const WithSidebarAndPrimaryDetail: Story = {
           <Gallery hasGutter minWidths={{ default: "200px" }}>
             {kpis.map((k) => (
               <GalleryItem key={k.label}>
-                <Card isCompact>
+                <Card isCompact isGlass>
                   <CardBody>
                     <div
                       style={{
@@ -368,7 +394,7 @@ export const WithSidebarAndPrimaryDetail: Story = {
           </Gallery>
         </PageSection>
         <PageSection>
-          <Card>
+          <Card isGlass>
             <CardTitle>Recent activity</CardTitle>
             <CardBody>
               <p style={{ marginTop: 0, color: "var(--gp-color-text-subtle)" }}>
@@ -413,6 +439,7 @@ export const WithSidebarAndPrimaryDetail: Story = {
           </div>
         </PageSection>
       </Shell>
+      </>
     );
   },
   play: async ({ canvasElement, step }) => {
