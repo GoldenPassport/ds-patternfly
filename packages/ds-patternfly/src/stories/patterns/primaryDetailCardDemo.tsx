@@ -12,7 +12,13 @@
  *    `any` removed from event handlers and the `state` map.
  */
 
-import { Fragment, useState, type FormEvent, type MouseEvent } from "react";
+import {
+  Fragment,
+  useEffect,
+  useState,
+  type FormEvent,
+  type MouseEvent,
+} from "react";
 import {
   Badge,
   Button,
@@ -177,6 +183,16 @@ export function PrimaryDetailCardView() {
   const [filters, setFilters] = useState<{ products: string[] }>({ products: [] });
   const [cardKebabState, setCardKebabState] = useState<Record<string, boolean>>({});
   const [activeCard, setActiveCard] = useState(-1);
+  // Below `md` the primary actions (Create instance / Action) collapse into
+  // the toolbar kebab.
+  const [isNarrow, setIsNarrow] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767.98px)");
+    const apply = () => setIsNarrow(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
 
   const onToolbarDropdownToggle = () => {
     setIsLowerToolbarDropdownOpen((v) => !v);
@@ -449,12 +465,18 @@ export function PrimaryDetailCardView() {
     <Fragment>
       <ToolbarItem>{buildSelectDropdown()}</ToolbarItem>
       <ToolbarItem>{buildFilterDropdown()}</ToolbarItem>
-      <ToolbarItem>
-        <Button variant="primary">Create instance</Button>
-      </ToolbarItem>
-      <ToolbarItem>
-        <Button variant="secondary">Action</Button>
-      </ToolbarItem>
+      {/* On wider screens the primary actions sit inline; below md they
+          collapse into the toolbar kebab (see the dropdown items below). */}
+      {!isNarrow && (
+        <Fragment>
+          <ToolbarItem>
+            <Button variant="primary">Create instance</Button>
+          </ToolbarItem>
+          <ToolbarItem>
+            <Button variant="secondary">Action</Button>
+          </ToolbarItem>
+        </Fragment>
+      )}
       <ToolbarItem>
         <Dropdown
           onSelect={onToolbarKebabDropdownSelect}
@@ -471,7 +493,16 @@ export function PrimaryDetailCardView() {
             />
           )}
         >
-          <DropdownList>{toolbarKebabDropdownItems}</DropdownList>
+          <DropdownList>
+            {isNarrow && (
+              <Fragment>
+                <DropdownItem key="create-instance">Create instance</DropdownItem>
+                <DropdownItem key="action-primary">Action</DropdownItem>
+                <Divider component="li" key="primary-actions-sep" />
+              </Fragment>
+            )}
+            {toolbarKebabDropdownItems}
+          </DropdownList>
         </Dropdown>
       </ToolbarItem>
     </Fragment>
