@@ -1573,6 +1573,18 @@
 .gp-is-elevated .pf-v6-c-input-group .pf-v6-c-input-group__item.pf-m-box {
   background-color: var(--gp-color-bg-elevated, #ffffff);
 }
+/* Glass: the elevated fill is the only opaque input surface (defaults
+   are transparent), so soften it to a translucent frost + page blur so
+   elevated/search fields read as glass instead of solid blocks. */
+.pf-v6-theme-glass .gp-is-elevated.pf-v6-c-form-control,
+.pf-v6-theme-glass .gp-is-elevated .pf-v6-c-form-control,
+.pf-v6-theme-glass .gp-is-elevated.pf-v6-c-input-group .pf-v6-c-input-group__item.pf-m-box,
+.pf-v6-theme-glass .gp-is-elevated .pf-v6-c-input-group .pf-v6-c-input-group__item.pf-m-box {
+  background-color: color-mix(in srgb,
+    var(--gp-color-bg-elevated, #ffffff) 60%, transparent);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
 
 
 /* ---------------------------------------------------------------
@@ -1597,6 +1609,107 @@
 .pf-v6-c-masthead__logo > svg {
   display: block;
   max-height: 100%;
+}
+
+/* Masthead — vertical centering (inline). PF6 aligns the masthead grid to
+   `start`, so when the right-hand content is taller than the brand row
+   (e.g. a user-avatar profile toggle), the toggle/logo/utility buttons sit
+   high and look misaligned. Centre the regions for the single-row (inline)
+   masthead so everything lines up regardless of the tallest item; the
+   stacked masthead keeps PF6's start alignment. */
+.pf-v6-c-masthead.pf-m-display-inline {
+  align-items: center;
+}
+/* Centre the toolbar's own items too — the toolbar grid + OverflowMenu
+   content default to start/stretch, so a shorter icon button (e.g. the
+   bell/cog) sits high next to a taller item (the user-avatar toggle).
+   Centre them so every utility control lines up on the masthead row. */
+.pf-v6-c-masthead .pf-v6-c-toolbar__content,
+.pf-v6-c-masthead .pf-v6-c-toolbar__content-section,
+.pf-v6-c-masthead .pf-v6-c-overflow-menu,
+.pf-v6-c-masthead .pf-v6-c-overflow-menu__content,
+.pf-v6-c-masthead .pf-v6-c-overflow-menu__group {
+  align-items: center;
+}
+
+/* Masthead user menu — pill-shaped chip on desktop, avatar-only on mobile.
+   The toggle (Avatar icon + name span) reads as a rounded pill via a pill
+   radius and a subtle translucent fill. Wrap the profile name in
+   `gp-masthead-username`; below the masthead mobile breakpoint the name
+   hides, the pill fill / padding drop, and the empty text wrapper collapses
+   — so the circular avatar itself becomes the button. */
+.gp-user-menu-toggle.pf-v6-c-menu-toggle {
+  border-radius: var(--gp-radius-pill, 999px);
+  background-color: color-mix(in srgb, var(--gp-color-text-regular) 8%, transparent);
+}
+
+@media (max-width: 767.98px) {
+  .gp-masthead-username {
+    display: none;
+  }
+
+  .gp-user-menu-toggle.pf-v6-c-menu-toggle {
+    padding: 0;
+    background-color: transparent;
+  }
+  /* name already hidden above; drop the empty text wrapper's gap so only
+     the avatar remains */
+  .gp-user-menu-toggle .pf-v6-c-menu-toggle__text {
+    display: none;
+  }
+}
+
+
+/* ---------------------------------------------------------------
+ * Page hamburger toggle — correct hover-arrow direction at all widths.
+ *
+ * PF6 morphs the masthead hamburger into a directional arrow on hover
+ * (rest = plain hamburger). The arrow's direction is meant to face the
+ * way the sidebar will move on click: left when open (it will collapse),
+ * right when closed (it will expand). PF6 only gets this right at two
+ * extremes:
+ *   - desktop ≥ 75rem: dedicated media-query rules, and
+ *   - true mobile: where PageSidebar adds `.pf-m-expanded`.
+ * In the gap between (open sidebar, viewport < 75rem) the sidebar has no
+ * `.pf-m-expanded` class, so PF6's base hover rule wins and the arrow
+ * points the WRONG way (right) while the sidebar is open.
+ *
+ * Drive the direction off the toggle's own `aria-expanded` (which is
+ * always in sync with the sidebar) instead of the sidebar's class, and
+ * match PF6's full selector chain + the attribute so we out-specify the
+ * stock rule. Hover/focus only — the resting icon stays a hamburger.
+ * --------------------------------------------------------------- */
+.pf-v6-c-page > .pf-v6-c-masthead .pf-v6-c-masthead__toggle
+  .pf-v6-c-button.pf-m-hamburger[aria-expanded="true"]:is(:hover, :focus-visible) {
+  --pf-v6-c-button--hamburger-icon--top--path:
+    var(--pf-v6-c-button--hamburger-icon--top--collapse--path);
+  --pf-v6-c-button--hamburger-icon--arrow--path:
+    var(--pf-v6-c-button--hamburger-icon--arrow--collapse--path);
+  --pf-v6-c-button--hamburger-icon--bottom--path:
+    var(--pf-v6-c-button--hamburger-icon--bottom--collapse--path);
+  --pf-v6-c-button__icon--TransitionDelay: 0s;
+  --pf-v6-c-button--hover__icon--TransitionDelay: 0s;
+  /* open → clicking collapses → arrow faces the collapse (left) way */
+  --pf-v6-c-button__icon--ScaleX:
+    var(--pf-v6-c-button--m-hamburger__icon--m-collapse--ScaleX);
+  --pf-v6-c-button--hover__icon--ScaleX:
+    var(--pf-v6-c-button--m-hamburger__icon--m-collapse--ScaleX);
+}
+.pf-v6-c-page > .pf-v6-c-masthead .pf-v6-c-masthead__toggle
+  .pf-v6-c-button.pf-m-hamburger[aria-expanded="false"]:is(:hover, :focus-visible) {
+  --pf-v6-c-button--hamburger-icon--top--path:
+    var(--pf-v6-c-button--hamburger-icon--top--collapse--path);
+  --pf-v6-c-button--hamburger-icon--arrow--path:
+    var(--pf-v6-c-button--hamburger-icon--arrow--collapse--path);
+  --pf-v6-c-button--hamburger-icon--bottom--path:
+    var(--pf-v6-c-button--hamburger-icon--bottom--collapse--path);
+  --pf-v6-c-button__icon--TransitionDelay: 0s;
+  --pf-v6-c-button--hover__icon--TransitionDelay: 0s;
+  /* closed → clicking expands → arrow faces the expand (right) way */
+  --pf-v6-c-button__icon--ScaleX:
+    var(--pf-v6-c-button--m-hamburger__icon--m-expand--ScaleX);
+  --pf-v6-c-button--hover__icon--ScaleX:
+    var(--pf-v6-c-button--m-hamburger__icon--m-expand--ScaleX);
 }
 
 /* ---------------------------------------------------------------
@@ -1790,6 +1903,33 @@
     var(--gp-color-brand-default, currentColor);
   --pf-v6-c-tabs--m-box--m-secondary__item--m-current__link--after--BorderColor:
     var(--gp-color-brand-default, currentColor);
+  /* Horizontal rule under the strip (the tabs::before bottom border) —
+     match it to the inactive tab-text colour so the line and the labels
+     read as one tonal family instead of the line being a darker,
+     disconnected hairline. Tracks theme/brand automatically since it
+     references the same token the tab text resolves from. */
+  --pf-v6-c-tabs--before--BorderColor: var(--pf-v6-c-tabs__link--Color);
+}
+/* Disabled tabs draw their own 1px bottom border on the link ::before
+   (PF6 hard-codes it to the darker default border colour, with no
+   token). That segment overlays the strip rule under the disabled tab,
+   making its underline read darker/disconnected from the others. Recolour
+   the ::before border to the same tab-text token the strip line uses so
+   the disabled tab's underline is continuous with the rest. */
+.pf-v6-c-tabs.pf-v6-c-tabs .pf-v6-c-tabs__item.pf-m-disabled .pf-v6-c-tabs__link::before,
+.pf-v6-c-tabs.pf-v6-c-tabs .pf-v6-c-tabs__item.pf-m-aria-disabled .pf-v6-c-tabs__link::before {
+  border-bottom-color: var(--pf-v6-c-tabs__link--Color);
+}
+/* Disabled tab text — PF6's disabled text token resolves to the same
+   value as the inactive tab text, so disabled tabs don't read as
+   disabled. Mix the tab-text colour toward the page background so the
+   label dims relative to the active tabs: darker in dark mode, lighter
+   in light mode (one rule, both directions). */
+.pf-v6-c-tabs.pf-v6-c-tabs .pf-v6-c-tabs__item.pf-m-disabled .pf-v6-c-tabs__link,
+.pf-v6-c-tabs.pf-v6-c-tabs .pf-v6-c-tabs__item.pf-m-aria-disabled .pf-v6-c-tabs__link {
+  color: color-mix(in srgb,
+    var(--pf-v6-c-tabs__link--Color) 55%,
+    var(--pf-t--global--background--color--primary--default));
 }
 
 /* ---------------------------------------------------------------
@@ -1997,6 +2137,72 @@
     transparent
   );
   transition: background-color 120ms ease;
+}
+
+/* ---------------------------------------------------------------
+ * Compass content — vertical rhythm.
+ *
+ * The Compass `main` slot is a flex column with a spacer--md row gap,
+ * so the hero and the content region sit ~16px apart. But
+ * CompassContent (which holds the main-header / "content title" above
+ * the body panels) ships with no row gap, so the content title butts
+ * directly against the first panel. Give CompassContent the same
+ * spacer--md gap so the title-to-content gap matches the
+ * hero-to-title gap and the whole main column reads on one rhythm.
+ * --------------------------------------------------------------- */
+[data-brand] .pf-v6-c-compass__content {
+  row-gap: var(--pf-t--global--spacer--md, 1rem);
+}
+
+/* ---------------------------------------------------------------
+ * Compass mobile side-nav overlay.
+ *
+ * On mobile the header nav collapses into a side-nav. Rendering it as a
+ * Compass grid sidebar would grow the `auto` sidebar column and shrink
+ * `main`. Instead the demo renders it as an overlay drawer (a sibling of
+ * <Compass>) so it floats over the content and `main` never resizes.
+ * The wrapper is the positioning context; the drawer slides in from the
+ * inline-start edge with a dismiss scrim behind it.
+ * --------------------------------------------------------------- */
+.gp-compass-mobile-overlay {
+  position: relative;
+}
+.gp-compass-mobile-overlay .gp-compass-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 90;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  background-color: color-mix(
+    in srgb,
+    var(--pf-t--global--background--color--primary--default) 45%,
+    transparent
+  );
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.gp-compass-mobile-overlay .gp-compass-drawer {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  z-index: 100;
+  display: flex;
+  width: min(88%, 20rem);
+  max-width: 100%;
+  overflow: auto;
+  translate: -100% 0;
+  transition: translate
+    var(--pf-t--global--motion--duration--fade--default, 200ms)
+    var(--pf-t--global--motion--timing-function--decelerate, ease);
+}
+.gp-compass-mobile-overlay .gp-compass-drawer.pf-m-open {
+  translate: 0 0;
+}
+/* The drawer hosts a single glass Panel — let it fill the drawer height. */
+.gp-compass-mobile-overlay .gp-compass-drawer > .pf-v6-c-panel {
+  flex: 1;
+  width: 100%;
 }
 
 /* ---------------------------------------------------------------
@@ -2352,6 +2558,54 @@
     var(--pf-t--global--background--color--glass--primary--default)) !important;
 }
 
+/* Masthead — glass. Per PF6's glass-mode handbook the masthead is a
+   *banded dock*: a frosted, full-bleed header band — NOT a rounded
+   floating panel. PF6 already frosts the fill (translucent glass token +
+   16px blur); keep the square edges (no border-radius), pin the edge to
+   the transparent glass-border token, and keep the glass drop shadow so
+   the band reads as a persistent dock above the content. Applies to
+   every masthead variant (inline, stack, inset, Page-driven) except the
+   already-docked nav. See reference-glass-mode-handbook. */
+.pf-v6-theme-glass .pf-v6-c-masthead:not(.pf-m-docked) {
+  border-radius: 0;
+  border: var(--pf-t--global--border--width--regular, 1px) solid
+    var(--gp-glass-border-color, transparent);
+  box-shadow: var(--pf-t--global--box-shadow--glass--default);
+  /* Thin the fill so the header reads as semi-see-through frosted glass
+     (PF6's glass token is ~0.5 alpha, which looks nearly solid over dark
+     content). The 16px blur keeps the brand/nav legible at this lower
+     opacity. */
+  background-color: color-mix(in srgb,
+    var(--pf-t--global--background--color--glass--primary--default) 70%,
+    transparent);
+}
+
+/* Page side navigation — glass. PF6's glass theme turns the side nav into
+   a floating, inset, rounded panel (rounded corners + inset margins that
+   leave a gap above and to the side). Per our handbook rule the side nav,
+   like the masthead, is edge-anchored chrome: square the corners AND drop
+   the inset margins so it sits flush — no gap between it and the header
+   above or the screen edge beside it. (Doesn't touch the Compass nav,
+   which is its own component.) */
+.pf-v6-theme-glass .pf-v6-c-page__sidebar,
+.pf-v6-theme-glass .pf-v6-c-page__sidebar-main {
+  margin: 0;
+}
+.pf-v6-theme-glass .pf-v6-c-page__sidebar-main {
+  border-radius: 0;
+  /* Frost the side-nav surface itself (PF6 gives it a solid fill). Match
+     the masthead: semi-see-through glass fill + backdrop blur. The nav
+     items keep their own translucent hover / selected fills (see the
+     .pf-v6-c-nav__link glass rules), so they read on top of the frost. */
+  background-color: color-mix(in srgb,
+    var(--pf-t--global--background--color--glass--primary--default) 70%,
+    transparent);
+  backdrop-filter: var(--pf-t--global--background--filter--glass--blur--primary,
+    blur(16px));
+  -webkit-backdrop-filter: var(
+    --pf-t--global--background--filter--glass--blur--primary, blur(16px));
+}
+
 /* NotificationDrawer — frost the drawer surface; header + list items go
    transparent so they sit on the single frosted surface, and hoverable
    items get a translucent hover. */
@@ -2482,6 +2736,31 @@
     color-mix(in srgb, var(--gp-color-text-regular) 10%, transparent);
   --pf-v6-c-menu__item--hover--BackgroundColor:
     color-mix(in srgb, var(--gp-color-text-regular) 10%, transparent);
+  /* Selected menu item → translucent brand tint (not an opaque block). */
+  --pf-v6-c-menu__item--m-selected--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-brand-default) 18%, transparent);
+}
+
+/* Interactive backgrounds on glass — hover / focus / active / selected
+   fills. Plain buttons and menu toggles paint an OPAQUE hover fill by
+   default, which punches a solid block on a frosted surface; route them
+   through translucent tints so the glass shows through. (Nav links,
+   SimpleList, tabs, accordion and menu items already do this — this
+   covers the masthead icon buttons, the user-avatar toggle, and any plain
+   button / toggle that sits on a glass surface.) */
+.pf-v6-theme-glass .pf-v6-c-button.pf-m-plain {
+  --pf-v6-c-button--m-plain--hover--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-text-regular) 10%, transparent);
+  --pf-v6-c-button--m-plain--focus--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-text-regular) 10%, transparent);
+  --pf-v6-c-button--m-plain--active--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-text-regular) 16%, transparent);
+}
+.pf-v6-theme-glass .pf-v6-c-menu-toggle.pf-m-plain {
+  --pf-v6-c-menu-toggle--hover--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-text-regular) 10%, transparent);
+  --pf-v6-c-menu-toggle--active--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-text-regular) 16%, transparent);
 }
 
 /* Modal — the dialog carries copy / forms, so it uses the denser
@@ -2490,17 +2769,20 @@
    instead of a flat black scrim. */
 .pf-v6-theme-glass .pf-v6-c-modal-box {
   background-color: color-mix(in srgb,
-    var(--pf-t--global--background--color--primary--default) 75%,
+    var(--pf-t--global--background--color--primary--default) 58%,
     var(--pf-t--global--background--color--glass--primary--default)) !important;
-  backdrop-filter: blur(24px) saturate(140%);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  /* A strong blur keeps body text legible even at this lower fill, so
+     the dialog itself reads as frosted glass (you see the blurred page
+     through it) rather than a flat opaque panel. */
+  backdrop-filter: blur(28px) saturate(140%);
+  -webkit-backdrop-filter: blur(28px) saturate(140%);
 }
 /* Dark glass — the page surface (#151515) makes the modal read quite
    heavy/black; mix toward the lighter recessed surface so the dialog
    lifts off the frosted background a touch. */
 .pf-v6-theme-dark.pf-v6-theme-glass .pf-v6-c-modal-box {
   background-color: color-mix(in srgb,
-    var(--pf-t--global--background--color--secondary--default) 80%,
+    var(--pf-t--global--background--color--secondary--default) 58%,
     var(--pf-t--global--background--color--glass--primary--default)) !important;
 }
 .pf-v6-theme-glass .pf-v6-c-backdrop {
@@ -2518,6 +2800,25 @@
     color-mix(in srgb, var(--gp-color-text-regular) 8%, transparent);
   --pf-v6-c-nav__link--focus--BackgroundColor:
     color-mix(in srgb, var(--gp-color-text-regular) 8%, transparent);
+  /* The hover/current fills are translucent here, so the opaque
+     on-brand text colour (dark) is unreadable on the frosted surface in
+     dark mode. Pin all states to the regular text colour, which already
+     resolves to the theme's dark text in light mode and light text in
+     dark mode — so idle, hover and selected links all read correctly. */
+  --pf-v6-c-nav__link--Color: var(--gp-color-text-regular);
+  --pf-v6-c-nav__link--hover--Color: var(--gp-color-text-regular);
+  --pf-v6-c-nav__link--focus--Color: var(--gp-color-text-regular);
+  --pf-v6-c-nav__link--m-current--Color: var(--gp-color-text-regular);
+}
+.pf-v6-theme-glass .pf-v6-c-nav__link,
+.pf-v6-theme-glass .pf-v6-c-nav__link:hover,
+.pf-v6-theme-glass .pf-v6-c-nav__link.pf-m-current {
+  color: var(--gp-color-text-regular);
+}
+.pf-v6-theme-glass .pf-v6-c-nav__link .pf-v6-c-nav__link-icon,
+.pf-v6-theme-glass .pf-v6-c-nav__link:hover .pf-v6-c-nav__link-icon,
+.pf-v6-theme-glass .pf-v6-c-nav__link.pf-m-current .pf-v6-c-nav__link-icon {
+  color: var(--gp-color-icon-regular);
 }
 .pf-v6-theme-glass .pf-v6-c-nav__link.pf-m-current {
   background-color:
@@ -2534,4 +2835,77 @@
     color-mix(in srgb, var(--gp-color-text-regular) 8%, transparent);
   --pf-v6-c-simple-list__item-link--m-current--BackgroundColor:
     color-mix(in srgb, var(--gp-color-brand-default) 22%, transparent);
+}
+
+/* Hint — a contextual callout carrying copy + links, so it uses the
+   denser content frost (~0.83 alpha) for text readability and blurs the
+   page behind it. Border follows the universal glass-border token. */
+.pf-v6-theme-glass .pf-v6-c-hint {
+  --pf-v6-c-hint--BackgroundColor: color-mix(in srgb,
+    var(--pf-t--global--background--color--primary--default) 65%,
+    var(--pf-t--global--background--color--glass--primary--default));
+  border-color: var(--pf-t--global--border--color--glass--default);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+/* Accordion — the container, items and collapsed toggles are already
+   transparent (they frost via the surrounding card). The only opaque
+   surface is the expanded toggle, which PF6 fills with an opaque
+   secondary-hover tone to mark the open row. Soften it to a translucent
+   brand tint + neutral hover so the open/hover states read on the frost
+   instead of punching opaque blocks. Bordered dividers go translucent
+   too so they don't read as solid lines over the glass. */
+.pf-v6-theme-glass .pf-v6-c-accordion__toggle.pf-m-expanded,
+.pf-v6-theme-glass .pf-v6-c-accordion__toggle.pf-m-expanded:hover {
+  --pf-v6-c-accordion__toggle--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-brand-default) 16%, transparent);
+  background-color:
+    color-mix(in srgb, var(--gp-color-brand-default) 16%, transparent);
+}
+.pf-v6-theme-glass .pf-v6-c-accordion__toggle:hover {
+  --pf-v6-c-accordion__toggle--hover--BackgroundColor:
+    color-mix(in srgb, var(--gp-color-text-regular) 8%, transparent);
+}
+
+/* Alert — toast / block alerts carry an opaque neutral fill (the status
+   colour lives on the left border, not the fill). Soften the fill to a
+   translucent frost + page blur so the alert reads as glass while the
+   status border keeps the variant meaning. Plain alerts have no fill, so
+   leave them out (a backdrop blur on a transparent box would blur a bare
+   rectangle). Mixing the existing fill var keeps any per-variant tint
+   intact. */
+.pf-v6-theme-glass .pf-v6-c-alert:not(.pf-m-plain) {
+  background-color: color-mix(in srgb,
+    var(--pf-v6-c-alert--BackgroundColor) 72%, transparent);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+/* Badge — a small count pill. Mix its own fill var toward transparent so
+   it reads as glass while preserving each badge's hue (neutral grey,
+   brand, or status colour) and enough opacity for the count to stay
+   legible. A light blur completes the frost. */
+.pf-v6-theme-glass .pf-v6-c-badge {
+  background-color: color-mix(in srgb,
+    var(--pf-v6-c-badge--BackgroundColor) 78%, transparent);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+}
+
+/* Avatar — the image is transparent; only the bordered variant adds an
+   opaque ring. Soften it to a translucent neutral hairline so it reads
+   on the frosted surface instead of as a solid ring. */
+.pf-v6-theme-glass .pf-v6-c-avatar.pf-m-bordered,
+.pf-v6-theme-glass .pf-v6-c-avatar[class*="m-"] {
+  border-color: color-mix(in srgb, var(--gp-color-text-regular) 20%, transparent);
+}
+
+/* Back to top — a floating action that sits over scrolling content, so
+   frost the button: translucent brand fill + blur lets the page show
+   through while it stays legible as a brand control. */
+.pf-v6-theme-glass .pf-v6-c-back-to-top .pf-v6-c-button {
+  background-color: color-mix(in srgb, var(--gp-color-brand-default) 70%, transparent);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
 }

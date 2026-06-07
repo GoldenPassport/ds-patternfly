@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "1",
-  "generatedAt": "2026-06-04",
+  "generatedAt": "2026-06-05",
   "library": {
     "name": "@golden-passport/ds-patternfly",
     "version": "0.2.4",
@@ -2955,38 +2955,20 @@
       "storybookUrl": "/?path=/story/patterns-card-view-demo--overview"
     },
     {
-      "id": "patterns-compass-dashboard",
+      "id": "patterns-compass",
       "kind": "recipe",
-      "title": "Compass dashboard",
-      "breadcrumb": "Patterns/Compass dashboard",
-      "summary": "Patterns/Compass dashboard story",
+      "title": "Compass",
+      "breadcrumb": "Patterns/Compass",
+      "summary": "Patterns/Compass story",
       "tags": [
         "patterns",
         "compass",
-        "dashboard",
-        "packages",
-        "ds-patternfly",
-        "src",
-        "compassdashboard"
-      ],
-      "storybookUrl": "/?path=/story/patterns-compass-dashboard--overview"
-    },
-    {
-      "id": "patterns-compass-integrations",
-      "kind": "recipe",
-      "title": "Compass integrations",
-      "breadcrumb": "Patterns/Compass integrations",
-      "summary": "Patterns/Compass integrations story",
-      "tags": [
-        "patterns",
-        "compass",
-        "integrations",
         "packages",
         "ds-patternfly",
         "src",
         "compassintegrations"
       ],
-      "storybookUrl": "/?path=/story/patterns-compass-integrations--overview"
+      "storybookUrl": "/?path=/story/patterns-compass--overview"
     },
     {
       "id": "patterns-dashboard",

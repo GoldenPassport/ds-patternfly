@@ -111,7 +111,7 @@ export const Basic: StoryObj = {
 
       <Section
         title="Vertical icon list — Compass sidebar shape"
-        description="isVertical stacks the items top-to-bottom; isIconList tightens spacing and centres icon-only Buttons. This is the exact shape used in CompassDashboard / CompassIntegrations sidebars."
+        description="isVertical stacks the items top-to-bottom; isIconList tightens spacing and centres icon-only Buttons. This is the exact shape used in the Compass pattern's sidebars."
       >
         <Card>
           <div

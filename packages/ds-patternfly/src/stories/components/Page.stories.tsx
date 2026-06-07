@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Breadcrumb,
   BreadcrumbItem,
+  Button,
   Card,
   CardBody,
   Checkbox,
@@ -31,11 +32,13 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
+import { TimesIcon } from "@patternfly/react-icons";
 import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../_storyKit.js";
 import {
   DemoFrame,
   PropsTable,
   sidenavDrawerCss,
+  type SidenavOverlayBreakpoint,
   useBlockPushClickClose,
 } from "../_demoKit.js";
 import { AcmeLogo } from "../_acmeLogo.js";
@@ -1419,4 +1422,216 @@ const sidebar = (
       </FoundationPage>
     );
   },
+};
+
+// ──────────────────────────────────────────────────────────────────
+// Story: SidenavDrawer — configurable overlay/push + overlay styles
+// ──────────────────────────────────────────────────────────────────
+
+// Clickable glass scrim for the full-height overlay style. Sits just under
+// the sidebar (z 1100) and over the page content; tapping it (clicking off
+// the sidenav) closes the drawer. The .gp-sidenav-scrim class lets
+// sidenavDrawerCss hide it in push mode. Frosted via a translucent fill +
+// backdrop blur so it reads as glass.
+function FullscreenScrim({ onClose }: { onClose: () => void }) {
+  return (
+    <button
+      type="button"
+      className="gp-sidenav-scrim"
+      aria-label="Close navigation"
+      onClick={onClose}
+      style={{
+        position: "absolute",
+        inset: 0,
+        zIndex: 1050,
+        border: 0,
+        padding: 0,
+        cursor: "pointer",
+        background:
+          "color-mix(in srgb, var(--pf-t--global--background--color--primary--default) 30%, transparent)",
+        backdropFilter: "blur(8px) saturate(140%)",
+        WebkitBackdropFilter: "blur(8px) saturate(140%)",
+      }}
+    />
+  );
+}
+
+function SidenavDrawerStory({
+  overlayBreakpoint = "md",
+  overlayStyle = "inset",
+}: {
+  // When the sidebar switches from push (pinned beside content) to overlay
+  // (floats over content). Below this container width → overlay; at/above →
+  // push. "always" / "never" force one mode.
+  overlayBreakpoint?: SidenavOverlayBreakpoint;
+  // Overlay drawer styling: "inset" floats below the header row (dismiss via
+  // the hamburger); "fullscreen" takes the full viewport height (scrolls a
+  // long nav) with a close button + glass scrim.
+  overlayStyle?: "inset" | "fullscreen";
+}) {
+  const [open, setOpen] = useState(true);
+  const isFullscreen = overlayStyle === "fullscreen";
+  const css = sidenavDrawerCss("ds-page-sidenav-demo", {
+    overlayBelow: overlayBreakpoint,
+    fullHeight: isFullscreen,
+  });
+  return (
+    <FoundationPage
+      title="Page — sidenav drawer"
+      intro={
+        <>
+          How the <code>&lt;PageSidebar&gt;</code> behaves as the masthead
+          hamburger toggles it. <strong>Push</strong> pins the sidebar beside
+          the content (the content reflows); <strong>overlay</strong> floats
+          it over the content. Use the controls to set the breakpoint where it
+          switches and the overlay style. In glass mode an overlay drawer
+          frosts; a pushed sidebar reads flat.
+        </>
+      }
+    >
+      <style dangerouslySetInnerHTML={{ __html: css }} />
+      <Section
+        title="Push / overlay + overlay style"
+        description="“Overlay below breakpoint” sets where the sidebar flips from push to overlay (or 'always' / 'never'). “Overlay style” picks inset (floats below the header, dismiss via the hamburger) or fullscreen (full viewport height, scrolls a long nav, close button + tap-scrim-to-dismiss glass overlay)."
+      >
+        <DocCard>
+          <div style={{ padding: 24, display: "grid", gap: 16 }}>
+            <div id="ds-page-sidenav-demo">
+              <DemoFrame height={360}>
+                <div style={{ position: "relative", height: "100%" }}>
+                  <Page
+                    masthead={
+                      <Masthead display={{ default: "inline" }}>
+                        <MastheadMain>
+                          <MastheadToggle>
+                            <PageToggleButton
+                              isHamburgerButton
+                              aria-label="Global navigation"
+                              isSidebarOpen={open}
+                              onSidebarToggle={() => setOpen((v) => !v)}
+                              id="ds-page-sidenav-toggle"
+                            />
+                          </MastheadToggle>
+                          <MastheadBrand>
+                            <MastheadLogo component="a" href="#">
+                              {brandLogo}
+                            </MastheadLogo>
+                          </MastheadBrand>
+                        </MastheadMain>
+                      </Masthead>
+                    }
+                    sidebar={
+                      <PageSidebar
+                        isSidebarOpen={open}
+                        id="ds-page-sidenav-sidebar"
+                      >
+                        <PageSidebarBody>
+                          {isFullscreen && (
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "flex-end",
+                                padding: "var(--pf-t--global--spacer--sm)",
+                              }}
+                            >
+                              <Button
+                                variant="plain"
+                                aria-label="Close navigation"
+                                icon={<TimesIcon />}
+                                onClick={() => setOpen(false)}
+                              />
+                            </div>
+                          )}
+                          <Nav aria-label="Sidenav drawer demo">
+                            <NavList>
+                              <NavItem itemId={0} isActive>Dashboard</NavItem>
+                              <NavItem itemId={1}>Workflows</NavItem>
+                              <NavItem itemId={2}>Reports</NavItem>
+                              <NavItem itemId={3}>Settings</NavItem>
+                            </NavList>
+                          </Nav>
+                        </PageSidebarBody>
+                      </PageSidebar>
+                    }
+                  >
+                    <PageSection aria-label="Sidenav drawer body">
+                      <span style={{ color: "var(--gp-color-text-subtle)" }}>
+                        Page body — toggle the hamburger; resize the frame (or
+                        the “Overlay below breakpoint” control) to switch
+                        push ↔ overlay.
+                      </span>
+                    </PageSection>
+                  </Page>
+                  {isFullscreen && open && (
+                    <FullscreenScrim onClose={() => setOpen(false)} />
+                  )}
+                </div>
+              </DemoFrame>
+            </div>
+            <CodeBlock>{`// sidenavDrawerCss (lib demo helper) drives push/overlay off the demo
+// container's width via a @container query, and the overlay style:
+<style>{sidenavDrawerCss("page-shell", {
+  overlayBelow: "md",       // push at/above md, overlay below
+  fullHeight: false,        // true → full-height overlay + glass scrim
+})}</style>
+
+<div id="page-shell">
+  <Page
+    masthead={<Masthead>{/* PageToggleButton + brand */}</Masthead>}
+    sidebar={<PageSidebar isSidebarOpen={open}>{/* Nav */}</PageSidebar>}
+  >
+    <PageSection>{/* content */}</PageSection>
+  </Page>
+</div>`}</CodeBlock>
+          </div>
+        </DocCard>
+      </Section>
+    </FoundationPage>
+  );
+}
+
+export const SidenavDrawer: StoryObj = {
+  parameters: {
+    a11y: {
+      config: {
+        rules: [
+          // The full-height overlay scrim overlaps page content, so axe
+          // can't resolve some background colours — tooling limitation,
+          // not a real contrast failure (filtered in preview.tsx).
+          { id: "scrollable-region-focusable", enabled: false },
+        ],
+      },
+    },
+  },
+  argTypes: {
+    overlayBreakpoint: {
+      name: "Overlay below breakpoint",
+      description:
+        "When the sidebar switches from push (pinned beside content) to overlay (floats over content). Below this width it's an overlay; at/above it pushes. 'always' = always overlay, 'never' = always push.",
+      control: "select",
+      options: ["sm", "md", "lg", "xl", "2xl", "always", "never"],
+      table: { defaultValue: { summary: "md" } },
+    },
+    overlayStyle: {
+      name: "Overlay style",
+      description:
+        "Overlay drawer styling. 'inset' floats below the header row (dismiss via the hamburger). 'fullscreen' takes the full viewport height, scrolls a long nav, and shows a close button + glass scrim.",
+      control: "inline-radio",
+      options: ["inset", "fullscreen"],
+      table: { defaultValue: { summary: "inset" } },
+    },
+  },
+  args: {
+    overlayBreakpoint: "md",
+    overlayStyle: "inset",
+  },
+  render: (args: {
+    overlayBreakpoint?: SidenavOverlayBreakpoint;
+    overlayStyle?: "inset" | "fullscreen";
+  }) => (
+    <SidenavDrawerStory
+      overlayBreakpoint={args.overlayBreakpoint ?? "md"}
+      overlayStyle={args.overlayStyle ?? "inset"}
+    />
+  ),
 };

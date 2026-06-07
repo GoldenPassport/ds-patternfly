@@ -48,7 +48,18 @@ export type SidenavOverlayBreakpoint =
  */
 export function sidenavDrawerCss(
   containerId: string,
-  { overlayBelow = "md" }: { overlayBelow?: SidenavOverlayBreakpoint } = {},
+  {
+    overlayBelow = "md",
+    fullHeight = false,
+  }: {
+    overlayBelow?: SidenavOverlayBreakpoint;
+    /** Full-viewport-height overlay variant: the drawer spans the whole
+     * page (over the masthead too), scrolls a long nav, and sits above
+     * the masthead with a full-page scrim — pair with an in-drawer close
+     * button since the masthead toggle is then covered. Only affects the
+     * overlay mode; push mode is unchanged. */
+    fullHeight?: boolean;
+  } = {},
 ) {
   const c = `#${containerId}`;
   // Overlay-mode rules. Apply at default (narrow) widths and below the
@@ -62,9 +73,15 @@ export function sidenavDrawerCss(
     `}`,
     `${c} .pf-v6-c-page__sidebar {`,
     `  position: absolute;`,
-    `  inset-block-start: var(--pf-v6-c-masthead--Height, 4.5rem);`,
-    `  inset-block-end: 0;`,
+    `  /* The sidebar is a grid item placed in the content row, so its`,
+    `     absolute containing block already begins just below the masthead.`,
+    `     Pin it with inset-block: 0 — adding a masthead-height offset here`,
+    `     would double-count and push the drawer too far down. */`,
+    `  inset-block: 0;`,
     `  inset-inline-start: 0;`,
+    `  /* Drop PF6's sidebar margins so the overlay drawer sits flush to the`,
+    `     header (no top gap) and the inline-start edge. */`,
+    `  margin: 0;`,
     `  width: var(--pf-v6-c-page__sidebar--xl--Width);`,
     `  overflow: hidden;`,
     `  z-index: 1000;`,
@@ -72,6 +89,26 @@ export function sidenavDrawerCss(
     `  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.18);`,
     `  transform: translateX(0);`,
     `  transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1);`,
+    `}`,
+    `${c} .pf-v6-c-page__sidebar-main {`,
+    `  /* In the glass theme PF6 turns the sidebar panel into a floating,`,
+    `     inset, rounded card with an all-round drop shadow. For an overlay`,
+    `     drawer that should be flush: drop the inset margin, the rounded`,
+    `     corners, and the card shadow — the only shadow we keep is the`,
+    `     sidebar's end-inline (right) edge shadow set above. */`,
+    `  margin: 0;`,
+    `  border-radius: 0;`,
+    `  box-shadow: none;`,
+    `}`,
+    // Glass + overlay: the drawer floats over the content, so frost it —
+    // translucent fill + blur so the page shows through (dense enough to
+    // keep the nav legible).
+    `.pf-v6-theme-glass ${c} .pf-v6-c-page__sidebar-main {`,
+    `  background-color: color-mix(in srgb,`,
+    `    var(--pf-t--global--background--color--primary--default) 65%,`,
+    `    var(--pf-t--global--background--color--glass--primary--default)) !important;`,
+    `  backdrop-filter: blur(20px) saturate(140%);`,
+    `  -webkit-backdrop-filter: blur(20px) saturate(140%);`,
     `}`,
     `:dir(rtl) ${c} .pf-v6-c-page__sidebar {`,
     `  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.18);`,
@@ -84,13 +121,42 @@ export function sidenavDrawerCss(
     `}`,
     `${c} .pf-v6-c-page:has(.pf-v6-c-page__sidebar.pf-m-expanded)::before {`,
     `  content: "";`,
+    `  /* Place the scrim in the content row (row 2, below the masthead`,
+    `     header row) via the grid, then fill it. This keeps the masthead`,
+    `     uncovered without depending on a fixed masthead-height value. */`,
+    `  grid-row: 2 / -1;`,
+    `  grid-column: 1 / -1;`,
     `  position: absolute;`,
-    `  inset: var(--pf-v6-c-masthead--Height, 4.5rem) 0 0 0;`,
+    `  inset: 0;`,
     `  background: rgba(0, 0, 0, 0.32);`,
     `  z-index: 999;`,
     `  pointer-events: none;`,
     `}`,
   ];
+  if (fullHeight) {
+    // Override the overlay rules above for the full-viewport-height
+    // variant: span header + content rows (full page height), scroll a
+    // long nav, and lift above the masthead.
+    overlayRules.push(
+      `${c} .pf-v6-c-page__sidebar {`,
+      `  grid-row: 1 / -1;`,
+      `  overflow-y: auto;`,
+      `  z-index: 1100;`,
+      `  /* PF6 gives the sidebar a top margin; zero it so the full-height`,
+      `     overlay reaches the very top (covering the masthead). */`,
+      `  margin-block-start: 0;`,
+      `}`,
+      // Drop the ::before scrim — the demo renders a real, clickable
+      // .gp-sidenav-scrim (tapping the overlay closes the nav). It sits
+      // just under the sidebar (z 1100) and over the page content.
+      `${c} .pf-v6-c-page:has(.pf-v6-c-page__sidebar.pf-m-expanded)::before {`,
+      `  content: none;`,
+      `}`,
+      `${c} .gp-sidenav-scrim {`,
+      `  display: block;`,
+      `}`,
+    );
+  }
   // Push-mode rules. Reset overlay-mode rules and pin the sidebar back
   // into the page grid with a width transition.
   const pushRules = [
@@ -115,6 +181,21 @@ export function sidenavDrawerCss(
     `}`,
     `${c} .pf-v6-c-page:has(.pf-v6-c-page__sidebar.pf-m-expanded)::before {`,
     `  content: none;`,
+    `}`,
+    // No overlay in push mode → hide the clickable scrim (if present).
+    `${c} .gp-sidenav-scrim {`,
+    `  display: none;`,
+    `}`,
+    // Glass + push: the sidebar is pinned inline with the page, so it
+    // should read flat — drop PF6's floating glass card (transparent fill,
+    // no blur, no rounding, no shadow) and let the page surface show through.
+    `.pf-v6-theme-glass ${c} .pf-v6-c-page__sidebar-main {`,
+    `  background-color: transparent !important;`,
+    `  backdrop-filter: none;`,
+    `  -webkit-backdrop-filter: none;`,
+    `  border-radius: 0;`,
+    `  box-shadow: none;`,
+    `  margin: 0;`,
     `}`,
   ];
   if (overlayBelow === "always") {

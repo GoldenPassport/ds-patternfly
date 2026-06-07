@@ -1,16 +1,27 @@
-import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import {
+  Avatar,
   Button,
+  Dropdown,
+  DropdownItem,
+  DropdownList,
   Masthead,
   MastheadBrand,
   MastheadContent,
   MastheadLogo,
   MastheadMain,
   MastheadToggle,
+  MenuToggle,
+  type MenuToggleElement,
   Nav,
   NavItem,
   NavList,
+  OverflowMenu,
+  OverflowMenuContent,
+  OverflowMenuControl,
+  OverflowMenuGroup,
+  OverflowMenuItem,
   Page,
   PageSection,
   PageSidebar,
@@ -20,12 +31,13 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
-import { BellIcon, CogIcon } from "@patternfly/react-icons";
+import { BellIcon, CogIcon, EllipsisVIcon } from "@patternfly/react-icons";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
 import {
   DemoFrame,
   PropsTable,
   sidenavDrawerCss,
+  useBlockPushClickClose,
 } from "../_demoKit.js";
 import { AcmeLogo } from "../_acmeLogo.js";
 
@@ -35,10 +47,10 @@ const meta: Meta = {
     layout: "padded",
     a11y: {
       // The Basic + Display-variants demos each mount a full Page (so the
-      // hamburger drives a real sidenav drawer) — two Pages on one doc
-      // produce two <main>/<header> landmarks. In real apps you only ever
-      // render one Page per route, so these uniqueness rules are doc-only
-      // false-positives.
+      // masthead toggle drives a real sidebar) — two Pages on one doc
+      // produce duplicate <main>/<header> landmarks. In real apps you only
+      // ever render one Page per route, so these are doc-only false
+      // positives.
       config: {
         rules: [
           { id: "landmark-no-duplicate-main", enabled: false },
@@ -51,10 +63,22 @@ const meta: Meta = {
 };
 export default meta;
 
-// Tiny sidebar nav used by the Page-mounted Masthead demos. Kept local —
-// each Masthead example needs a sidebar to drive when the hamburger clicks,
-// otherwise the canonical "sidenav drawer (hamburger toggle)" pattern can't
-// be illustrated.
+// Inline-SVG avatar (Acme brand blue) so the masthead profile menu is
+// asset-free. Initials centred via dominant-baseline.
+const AVATAR_SRC =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'>` +
+      `<circle cx='20' cy='20' r='20' fill='#0066cc'/>` +
+      `<text x='20' y='20' text-anchor='middle' dominant-baseline='central' ` +
+      `font-family='-apple-system,Segoe UI,sans-serif' font-size='15' ` +
+      `font-weight='600' fill='white'>AF</text></svg>`,
+  );
+
+// Tiny sidebar nav so the masthead toggle has something to drive. The
+// sidebar/sidenav behaviour itself (push vs overlay, breakpoints,
+// full-height drawers, glass) lives in Components/Page — these demos keep
+// the focus on the masthead (header) and just use a plain managed sidebar.
 function DemoSidebarNav({ label }: { label: string }) {
   return (
     <Nav aria-label={label}>
@@ -68,14 +92,25 @@ function DemoSidebarNav({ label }: { label: string }) {
 }
 
 function OverviewStory() {
-  // Basic demo: inline single-row masthead + push-mode sidebar. No
-  // off-click close — push-mode sidebars only collapse from the
-  // hamburger toggle (overlay-mode sidebars are the ones where tapping
-  // the scrim dismisses; see Drawer → "Sidenav drawer (hamburger toggle)").
-  const [basicOpen, setBasicOpen] = useState(true);
+  // Basic demo: the masthead utility icons live in an OverflowMenu that
+  // collapses to this kebab dropdown below the breakpoint.
+  const [isUtilityKebabOpen, setIsUtilityKebabOpen] = useState(false);
+  // Basic demo: top-right user avatar + profile dropdown.
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
-  // Display-variants demo: stacked two-row masthead, same push-mode rule.
+  // Display-variants demo: controlled stacked-masthead sidebar (restored to
+  // the committed form — uses sidenavDrawerCss for push/overlay).
   const [stackOpen, setStackOpen] = useState(true);
+
+  // The masthead demos mount a managed Page so the hamburger toggles a real
+  // sidebar. Inside the DemoFrame the Page is narrower than PF6's xl push
+  // threshold while the viewport is wider, so PF6 paints push but would
+  // close the sidebar on outside click — block that so it stays pinned and
+  // only the hamburger collapses it (same approach as Components/Page).
+  useBlockPushClickClose({
+    pageContainerId: "basic-masthead-demo",
+    sidebarId: "basic-masthead-sidebar",
+  });
 
   return (
     <FoundationPage
@@ -83,31 +118,79 @@ function OverviewStory() {
       intro={
         <>
           The top bar of an app. Three slots: a left brand region (logo +
-          optional sidebar toggle), a centre region (often empty or holding
-          a search), and a right region for global actions / user menu /
-          notifications. Renders as <code>&lt;header&gt;</code> for proper
-          landmark semantics.
+          optional sidebar toggle), a centre/right region for global actions,
+          search, user menu and notifications. Renders as{" "}
+          <code>&lt;header&gt;</code> for proper landmark semantics. The
+          sidebar it toggles — push vs overlay, breakpoints, full-height
+          drawers, glass — is documented under{" "}
+          <code>Components/Page</code>.
         </>
       }
     >
+      {/* The Display variants demo (restored to its committed form) drives
+          its own push/overlay sidebar CSS via sidenavDrawerCss. The glass
+          rule gives the demo frames a branded page background so the
+          frosted masthead has something to show through — a flat dark
+          backdrop makes the (correctly translucent) frost read as opaque. */}
       <style
         dangerouslySetInnerHTML={{
           __html: [
-            sidenavDrawerCss("basic-masthead-demo"),
             sidenavDrawerCss("stack-masthead-demo"),
+            `.pf-v6-theme-glass #basic-masthead-demo .gp-doc-demoframe,
+             .pf-v6-theme-glass #stack-masthead-demo .gp-doc-demoframe,
+             .pf-v6-theme-glass #inset-masthead-demo .gp-doc-demoframe {
+               background:
+                 radial-gradient(140% 120% at 50% -10%,
+                   color-mix(in srgb, var(--gp-color-brand-default) 50%, transparent),
+                   transparent 62%),
+                 var(--gp-color-bg-primary-default) !important;
+             }`,
           ].join("\n"),
         }}
       />
 
       <Section
         title="Basic — toggle + brand + content"
-        description="Mounted inside a Page so the hamburger drives a real sidenav drawer (PageToggleButton + PageSidebar). Click the hamburger or anywhere outside the sidebar to collapse it — same sidenav-drawer pattern used across the docs."
+        description="The three regions: MastheadToggle (the sidebar hamburger) + MastheadBrand on the left, and MastheadContent (a Toolbar) on the right holding the utility actions and a user-avatar profile dropdown. Mounted in a managed Page so the hamburger drives a real sidebar."
       >
         <Card>
           <div style={{ padding: 24, display: "grid", gap: 16 }}>
+            <ul
+              style={{
+                margin: 0,
+                padding: "0 0 0 20px",
+                color: "var(--gp-color-text-regular)",
+                lineHeight: 1.7,
+                fontSize: 14,
+              }}
+            >
+              <li>
+                <strong>Animated hamburger.</strong> At rest it&rsquo;s a
+                plain hamburger. On <strong>hover</strong> (or keyboard
+                focus) the bars morph into a directional arrow that{" "}
+                <strong>faces the way the sidebar will move on click</strong>{" "}
+                — left while the sidebar is open, right while it&rsquo;s
+                closed — then returns to a hamburger on mouse-out. PF6&rsquo;s
+                built-in <code>PageToggleButton</code> behaviour.
+              </li>
+              <li>
+                <strong>Utility actions collapse.</strong> The notifications
+                and settings icons sit in an <code>OverflowMenu</code> — shown
+                inline on wider screens, collapsed into a 3-dot kebab below
+                the <code>md</code> breakpoint.
+              </li>
+              <li>
+                <strong>Sidebar behaviour lives in Page.</strong> The toggle
+                drives a <code>&lt;PageSidebar&gt;</code>; how that sidebar
+                pushes / overlays / frosts is shown in{" "}
+                <code>Components/Page</code>.
+              </li>
+            </ul>
             <div id="basic-masthead-demo">
               <DemoFrame height={320}>
                 <Page
+                  isManagedSidebar
+                  defaultManagedSidebarIsOpen
                   masthead={
                     <Masthead id="basic-masthead" display={{ default: "inline" }}>
                       <MastheadMain>
@@ -115,8 +198,6 @@ function OverviewStory() {
                           <PageToggleButton
                             isHamburgerButton
                             aria-label="Global navigation"
-                            isSidebarOpen={basicOpen}
-                            onSidebarToggle={() => setBasicOpen((v) => !v)}
                             id="basic-masthead-toggle"
                           />
                         </MastheadToggle>
@@ -130,14 +211,106 @@ function OverviewStory() {
                         <Toolbar isStatic id="basic-masthead-toolbar">
                           <ToolbarContent>
                             <ToolbarItem align={{ default: "alignEnd" }}>
-                              <Button variant="plain" aria-label="Notifications">
-                                <BellIcon />
-                              </Button>
+                              {/* OverflowMenu shows the utility icons inline
+                                  above md; below md they collapse into the
+                                  3-dot kebab dropdown (OverflowMenuControl). */}
+                              <OverflowMenu breakpoint="md">
+                                <OverflowMenuContent>
+                                  <OverflowMenuGroup groupType="icon">
+                                    <OverflowMenuItem>
+                                      <Button
+                                        variant="plain"
+                                        aria-label="Notifications"
+                                        icon={<BellIcon />}
+                                      />
+                                    </OverflowMenuItem>
+                                    <OverflowMenuItem>
+                                      <Button
+                                        variant="plain"
+                                        aria-label="Settings"
+                                        icon={<CogIcon />}
+                                      />
+                                    </OverflowMenuItem>
+                                  </OverflowMenuGroup>
+                                </OverflowMenuContent>
+                                <OverflowMenuControl>
+                                  <Dropdown
+                                    isOpen={isUtilityKebabOpen}
+                                    onSelect={() => setIsUtilityKebabOpen(false)}
+                                    onOpenChange={(open: boolean) =>
+                                      setIsUtilityKebabOpen(open)
+                                    }
+                                    popperProps={{ position: "right" }}
+                                    toggle={(
+                                      toggleRef: React.Ref<MenuToggleElement>,
+                                    ) => (
+                                      <MenuToggle
+                                        ref={toggleRef}
+                                        aria-label="More actions"
+                                        variant="plain"
+                                        isExpanded={isUtilityKebabOpen}
+                                        onClick={() =>
+                                          setIsUtilityKebabOpen((v) => !v)
+                                        }
+                                        icon={<EllipsisVIcon />}
+                                      />
+                                    )}
+                                  >
+                                    <DropdownList>
+                                      <DropdownItem icon={<BellIcon />}>
+                                        Notifications
+                                      </DropdownItem>
+                                      <DropdownItem icon={<CogIcon />}>
+                                        Settings
+                                      </DropdownItem>
+                                    </DropdownList>
+                                  </Dropdown>
+                                </OverflowMenuControl>
+                              </OverflowMenu>
                             </ToolbarItem>
+                            {/* Top-right user avatar + profile dropdown. */}
                             <ToolbarItem>
-                              <Button variant="plain" aria-label="Settings">
-                                <CogIcon />
-                              </Button>
+                              <Dropdown
+                                isOpen={isUserMenuOpen}
+                                onSelect={() => setIsUserMenuOpen(false)}
+                                onOpenChange={(open: boolean) =>
+                                  setIsUserMenuOpen(open)
+                                }
+                                popperProps={{ position: "right" }}
+                                toggle={(
+                                  toggleRef: React.Ref<MenuToggleElement>,
+                                ) => (
+                                  <MenuToggle
+                                    ref={toggleRef}
+                                    aria-label="User menu"
+                                    variant="plain"
+                                    className="gp-user-menu-toggle"
+                                    isExpanded={isUserMenuOpen}
+                                    onClick={() =>
+                                      setIsUserMenuOpen((v) => !v)
+                                    }
+                                    icon={
+                                      // alt="" — the visible name beside it
+                                      // is the accessible label; a duplicate
+                                      // alt trips axe image-redundant-alt.
+                                      <Avatar src={AVATAR_SRC} alt="" size="md" />
+                                    }
+                                  >
+                                    {/* Name hides below the masthead mobile
+                                        breakpoint → the toggle collapses to
+                                        just the avatar. */}
+                                    <span className="gp-masthead-username">
+                                      Aliyah Frazier
+                                    </span>
+                                  </MenuToggle>
+                                )}
+                              >
+                                <DropdownList>
+                                  <DropdownItem>My profile</DropdownItem>
+                                  <DropdownItem>User management</DropdownItem>
+                                  <DropdownItem>Logout</DropdownItem>
+                                </DropdownList>
+                              </Dropdown>
                             </ToolbarItem>
                           </ToolbarContent>
                         </Toolbar>
@@ -145,7 +318,7 @@ function OverviewStory() {
                     </Masthead>
                   }
                   sidebar={
-                    <PageSidebar isSidebarOpen={basicOpen} id="basic-masthead-sidebar">
+                    <PageSidebar id="basic-masthead-sidebar">
                       <PageSidebarBody>
                         <DemoSidebarNav label="Basic masthead demo" />
                       </PageSidebarBody>
@@ -154,39 +327,60 @@ function OverviewStory() {
                 >
                   <PageSection aria-label="Basic masthead body">
                     <span style={{ color: "var(--gp-color-text-subtle)" }}>
-                      Page body — the hamburger toggles the sidenav drawer.
+                      Page body — the masthead hamburger toggles the sidebar.
                     </span>
                   </PageSection>
                 </Page>
               </DemoFrame>
             </div>
-            <CodeBlock>{`<Page
-  masthead={
-    <Masthead display={{ default: "inline" }}>
-      <MastheadMain>
-        <MastheadToggle>
-          <PageToggleButton
-            isHamburgerButton
-            aria-label="Global navigation"
-            isSidebarOpen={open}
-            onSidebarToggle={() => setOpen(v => !v)}
-          />
-        </MastheadToggle>
-        <MastheadBrand>{/* logo */}</MastheadBrand>
-      </MastheadMain>
-      <MastheadContent>{/* toolbar */}</MastheadContent>
-    </Masthead>
-  }
-  sidebar={
-    <PageSidebar isSidebarOpen={open}>
-      <PageSidebarBody>
-        <Nav aria-label="Primary">{/* nav items */}</Nav>
-      </PageSidebarBody>
-    </PageSidebar>
-  }
->
-  <PageSection>{/* page content */}</PageSection>
-</Page>`}</CodeBlock>
+            <CodeBlock>{`<Masthead display={{ default: "inline" }}>
+  <MastheadMain>
+    <MastheadToggle>
+      <PageToggleButton isHamburgerButton aria-label="Global navigation" />
+    </MastheadToggle>
+    <MastheadBrand>
+      <MastheadLogo component="a" href="/">{/* logo */}</MastheadLogo>
+    </MastheadBrand>
+  </MastheadMain>
+  <MastheadContent>
+    <Toolbar isStatic>
+      <ToolbarContent>
+        <ToolbarItem align={{ default: "alignEnd" }}>
+          <OverflowMenu breakpoint="md">
+            <OverflowMenuContent>
+              <OverflowMenuGroup groupType="icon">
+                <OverflowMenuItem>{/* Bell button */}</OverflowMenuItem>
+                <OverflowMenuItem>{/* Cog button */}</OverflowMenuItem>
+              </OverflowMenuGroup>
+            </OverflowMenuContent>
+            <OverflowMenuControl>{/* kebab Dropdown */}</OverflowMenuControl>
+          </OverflowMenu>
+        </ToolbarItem>
+        <ToolbarItem>
+          {/* user avatar + profile dropdown */}
+          <Dropdown
+            isOpen={open}
+            onOpenChange={setOpen}
+            toggle={(ref) => (
+              <MenuToggle ref={ref} variant="plain" isExpanded={open}
+                onClick={() => setOpen(v => !v)}
+                icon={<Avatar src={avatarSrc} alt="" size="md" />}>
+                {/* hides on mobile → avatar-only */}
+                <span className="gp-masthead-username">Aliyah Frazier</span>
+              </MenuToggle>
+            )}
+          >
+            <DropdownList>
+              <DropdownItem>My profile</DropdownItem>
+              <DropdownItem>User management</DropdownItem>
+              <DropdownItem>Logout</DropdownItem>
+            </DropdownList>
+          </Dropdown>
+        </ToolbarItem>
+      </ToolbarContent>
+    </Toolbar>
+  </MastheadContent>
+</Masthead>`}</CodeBlock>
           </div>
         </Card>
       </Section>
@@ -254,7 +448,7 @@ function OverviewStory() {
         description="inset adds horizontal padding inside the masthead. Pair with Toolbar inset to keep alignment consistent across the header."
       >
         <Card>
-          <div style={{ padding: 24 }}>
+          <div id="inset-masthead-demo" style={{ padding: 24 }}>
             <DemoFrame>
               <Masthead
                 id="inset-masthead"

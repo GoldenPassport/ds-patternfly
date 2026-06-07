@@ -527,6 +527,82 @@ export const Overview: StoryObj = {
       </Section>
 
       <Section
+        title="Glass tokens"
+        description="The PF6 design tokens that drive every frosted surface. Reach for these (not hard-coded rgba / blur values) when adding glass support, so surfaces stay consistent and re-theme with the brand."
+      >
+        <Card>
+          <div style={{ padding: 24, display: "grid", gap: 16 }}>
+            <CodeBlock label="PatternFly glass tokens">{`/* Fill — colour + opacity are BAKED IN (light .5 white / dark .5 #292929).
+   There is NO separate opacity token: thin it with color-mix toward
+   transparent when a surface should read more see-through. */
+--pf-t--global--background--color--glass--primary--default
+
+/* Backdrop blur */
+--pf-t--global--background--filter--glass--blur--primary   /* blur(16px) */
+
+/* Edge */
+--pf-t--global--border--color--glass--default    /* defaults to border-color--alt (VISIBLE) */
+--pf-t--global--border--width--glass--default    /* 1px (regular) */
+--pf-t--global--border--radius--glass--default   /* medium */
+
+/* Lift */
+--pf-t--global--box-shadow--glass--default        /* box-shadow--md */
+
+/* Optional frosted textures */
+--pf-t--global--background--image--glass / --glass--dark
+--pf-t--global--background--image--felt--glass / --dark`}</CodeBlock>
+
+            <p style={{ margin: 0, color: "var(--gp-color-text-regular)", lineHeight: 1.7 }}>
+              Two DS conventions layered on top of the raw tokens:
+            </p>
+            <ul
+              style={{
+                margin: 0,
+                padding: "0 0 0 20px",
+                color: "var(--gp-color-text-regular)",
+                lineHeight: 1.8,
+              }}
+            >
+              <li>
+                <strong>Borders are transparent by default.</strong> PF6&rsquo;s
+                glass border colour is the (visible) <em>alt</em> border, which
+                reads as a hard line on a frosted edge. The lib pins it through
+                one config token — <code>--gp-glass-border-color</code> (set to{" "}
+                <code>transparent</code>) — in the central{" "}
+                <code>.pf-v6-theme-glass</code> block of{" "}
+                <code>src/styles/index.css</code>. Override it once (e.g.{" "}
+                <code>rgba(255,255,255,0.14)</code>) to give every glass surface a
+                subtle light edge.
+              </li>
+              <li>
+                <strong>Radius / shadow are overridden for edge-anchored
+                chrome.</strong> The default glass radius (medium) and shadow suit{" "}
+                <em>floating</em> surfaces — cards, drawers, panels, menus. But
+                elements pushed to the screen edge — the <strong>masthead</strong>{" "}
+                (top) and the <strong>side nav</strong> (left) — square their
+                corners (<code>border-radius: 0</code>) and trim the shadow on the
+                edge that meets the viewport, so they read as a flush banded dock
+                rather than a rounded card. See{" "}
+                <code>Components/Masthead</code> and the glass-mode handbook.
+              </li>
+              <li>
+                <strong>Interactive states go translucent too.</strong> Glass
+                isn&rsquo;t just surface fills — on a glass surface the{" "}
+                <strong>hover</strong> and <strong>selected</strong>{" "}
+                backgrounds of buttons, links, nav items, tabs and menu items
+                also become translucent, so they read on the frost instead of
+                punching an opaque block. Hover / focus fills use a neutral
+                <code> text</code>-tinted wash; selected / current fills use a{" "}
+                <code>brand</code> wash. Plain icon buttons and menu toggles
+                that ship an opaque hover fill are routed through the same
+                translucent tints in glass mode.
+              </li>
+            </ul>
+          </div>
+        </Card>
+      </Section>
+
+      <Section
         title="Theme dials"
         description="35 high-level brand tokens grouped into 11 categories. Edit any dial at the [data-brand] root and the change cascades into every PF6 component that depends on it — no per-component CSS patches. Tables below show the live computed value of each dial; flip mode in the toolbar to see colour dials swap."
       >

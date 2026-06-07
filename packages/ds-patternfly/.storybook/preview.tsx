@@ -28,6 +28,9 @@ const _originalAxeRun = axe.run.bind(axe);
     // heuristic giving up — these are tooling limitations, not real
     // contrast failures:
     //   - "partially overlaps other elements" (adjacent layout items)
+    //   - "overlapped by another element" (a translucent overlay/scrim
+    //     axe can't see through to compute the bg — e.g. a sidenav drawer
+    //     scrim sitting over the page)
     //   - "background gradient" (PF6 buttons, labels use gradients)
     //   - "pseudo element" (PF6 labels paint bg via ::before)
     // Real could-not-determine cases (e.g. images-as-bg, opaque overlays
@@ -43,7 +46,7 @@ const _originalAxeRun = axe.run.bind(axe);
           ...(n.all ?? []).map((c: { message?: string }) => c.message ?? ""),
           ...(n.none ?? []).map((c: { message?: string }) => c.message ?? ""),
         ].join(" ");
-        return /partially overlaps|partially obscured|background gradient|pseudo element|background-?color (could not be|cannot be) determined/i.test(msgs);
+        return /partially overlaps|overlap|partially obscured|background gradient|pseudo element|background-?color (could not be|cannot be) determined/i.test(msgs);
       });
     });
     if (promotable.length > 0) {

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   ActionList,
@@ -11,6 +11,7 @@ import {
   CompassHeader,
   CompassHero,
   CompassMainHeader,
+  CompassMainHeaderContent,
   CompassMessageBar,
   CompassNavContent,
   CompassNavHome,
@@ -23,6 +24,10 @@ import {
   Hero,
   MenuToggle,
   type MenuToggleElement,
+  Nav,
+  NavExpandable,
+  NavItem,
+  NavList,
   Panel,
   PanelMain,
   PanelMainBody,
@@ -34,6 +39,8 @@ import {
   Title,
   Tooltip,
 } from "@patternfly/react-core";
+import BarsIcon from "@patternfly/react-icons/dist/esm/icons/bars-icon";
+import ColumnsIcon from "@patternfly/react-icons/dist/esm/icons/columns-icon";
 import OutlinedCopyIcon from "@patternfly/react-icons/dist/esm/icons/outlined-copy-icon";
 import OutlinedPlusSquareIcon from "@patternfly/react-icons/dist/esm/icons/outlined-plus-square-icon";
 import PlayIcon from "@patternfly/react-icons/dist/esm/icons/play-icon";
@@ -75,7 +82,7 @@ const ACME_AVATAR_SRC = (initials = "AF") =>
   encodeURIComponent(
     `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'>` +
       `<circle cx='20' cy='20' r='20' fill='#0066cc'/>` +
-      `<text x='50%' y='55%' text-anchor='middle' ` +
+      `<text x='20' y='20' text-anchor='middle' dominant-baseline='central' ` +
       `font-family='-apple-system,Segoe UI,sans-serif' font-size='15' ` +
       `font-weight='600' fill='white'>${initials}</text>` +
       `</svg>`,
@@ -137,58 +144,220 @@ export const Basic: StoryObj = {
     >
       <Section
         title="The five slots"
-        description="header / sidebarStart / main / sidebarEnd / footer. Pass any subset as ReactNode props on the Compass root; missing slots collapse without taking space."
+        description="In a basic Compass layout, content is passed to five ReactNode props to populate the different areas of the page. Pass any subset; missing slots collapse without taking space."
+      >
+        <Card>
+          <ul
+            style={{
+              margin: 0,
+              padding: "16px 24px 16px 40px",
+              color: "var(--gp-color-text-regular)",
+              lineHeight: 1.9,
+            }}
+          >
+            <li>
+              <strong><code>header</code></strong> — rendered at the top of
+              the page, typically a <code>&lt;CompassHeader&gt;</code> that
+              divides the header into three areas: a <code>logo</code> /
+              brand, middle <code>nav</code>, and <code>profile</code>.
+            </li>
+            <li>
+              <strong><code>sidebarStart</code></strong> — rendered at the
+              horizontal start of the page (the left side by default).
+            </li>
+            <li>
+              <strong><code>main</code></strong> — rendered in the centre,
+              typically a <code>&lt;CompassMainHeader&gt;</code> or{" "}
+              <code>&lt;CompassHero&gt;</code> alongside a{" "}
+              <code>&lt;CompassContent&gt;</code> filled with one or more{" "}
+              <code>&lt;Panel&gt;</code> components.
+            </li>
+            <li>
+              <strong><code>sidebarEnd</code></strong> — rendered at the
+              horizontal end of the page (the right side by default).
+            </li>
+            <li>
+              <strong><code>footer</code></strong> — rendered at the bottom
+              of the page. (We use the footer for the AI search in the
+              later illustrations.)
+            </li>
+          </ul>
+        </Card>
+      </Section>
+
+      <Section
+        title="Basic structure"
+        description="The five slots wired with real sub-components. Coloured placeholders stand in for nav / sidebars / footer so the regions stay legible. The hero is optional — the content title and main content areas are the key parts."
       >
         <Card>
           <div style={{ padding: 24, display: "grid", gap: 16 }}>
             <Compass
               header={
-                <Slot
-                  label="header"
-                  bg="var(--gp-color-bg-secondary-default)"
-                  height={48}
+                <CompassHeader
+                  logo={<AcmeLogo />}
+                  nav={<Slot label="Nav" bg="transparent" />}
+                  profile={
+                    <Avatar src={ACME_AVATAR_SRC("AF")} alt="Profile" size="md" />
+                  }
                 />
               }
               sidebarStart={
-                <Slot
-                  label="sidebarStart"
-                  bg="rgba(0, 102, 204, 0.10)"
-                />
+                <Slot label="Sidebar start" bg="rgba(0, 102, 204, 0.10)" />
               }
               main={
-                <Slot
-                  label="main"
-                  bg="rgba(125, 87, 42, 0.08)"
-                />
+                <>
+                  {/* Hero is optional — drop it for a plain content page. */}
+                  <CompassHero>
+                    <Slot label="Hero (optional)" bg="rgba(125, 87, 42, 0.08)" height={96} />
+                  </CompassHero>
+                  <CompassContent>
+                    <CompassMainHeader>
+                      <Panel>
+                        <PanelMain>
+                          <PanelMainBody>
+                            <CompassMainHeaderContent>
+                              <Title headingLevel="h1" size="xl">
+                                Content title
+                              </Title>
+                            </CompassMainHeaderContent>
+                          </PanelMainBody>
+                        </PanelMain>
+                      </Panel>
+                    </CompassMainHeader>
+                    <Panel>
+                      <PanelMain>
+                        <PanelMainBody>
+                          Main content — tables, dashboards, forms, whatever
+                          the page hosts.
+                        </PanelMainBody>
+                      </PanelMain>
+                    </Panel>
+                  </CompassContent>
+                </>
               }
               sidebarEnd={
-                <Slot
-                  label="sidebarEnd"
-                  bg="rgba(62, 134, 53, 0.10)"
-                />
+                <Slot label="Sidebar end" bg="rgba(62, 134, 53, 0.10)" />
               }
               footer={
-                <Slot
-                  label="footer"
-                  bg="var(--gp-color-bg-secondary-default)"
-                  height={48}
-                />
+                <Slot label="Footer (AI search later)" bg="var(--gp-color-bg-secondary-default)" height={48} />
               }
-              style={{ height: 480 }}
+              style={{ height: 560 }}
             />
             <CodeBlock>{`import {
   Compass,
+  CompassHeader,
+  CompassHero,
+  CompassContent,
+  CompassMainHeader,
+  CompassMainHeaderContent,
+  Panel,
+  PanelMain,
+  PanelMainBody,
 } from "@patternfly/react-core";
 
+const header = (
+  <CompassHeader logo={<Logo />} nav={<Nav />} profile={<Profile />} />
+);
+
+const main = (
+  <>
+    {/* Hero is optional */}
+    <CompassHero>
+      <Hero />
+    </CompassHero>
+    <CompassContent>
+      <CompassMainHeader>
+        <Panel>
+          <PanelMain>
+            <PanelMainBody>
+              <CompassMainHeaderContent>Content title</CompassMainHeaderContent>
+            </PanelMainBody>
+          </PanelMain>
+        </Panel>
+      </CompassMainHeader>
+      <div>Content</div>
+    </CompassContent>
+  </>
+);
+
 <Compass
-  header={<MyHeader />}
-  sidebarStart={<MyLeftRail />}
-  main={<MyBody />}
-  sidebarEnd={<MyRightRail />}
-  footer={<MyFooter />}
+  header={header}
+  sidebarStart={<div>Sidebar start</div>}
+  main={main}
+  sidebarEnd={<div>Sidebar end</div>}
+  footer={<div>Footer</div>}
   style={{ height: "600px" }}
 />`}</CodeBlock>
           </div>
+        </Card>
+      </Section>
+
+      <Section
+        title="Background image"
+        description="How the Compass and Hero backgrounds are sourced."
+      >
+        <Card>
+          <ul
+            style={{
+              margin: 0,
+              padding: "16px 24px 16px 40px",
+              color: "var(--gp-color-text-regular)",
+              lineHeight: 1.9,
+            }}
+          >
+            <li>
+              The background image of <code>&lt;Compass&gt;</code> is set at
+              a global level alongside the theme — you don&apos;t set it
+              per-instance.
+            </li>
+            <li>
+              Customise the background of the <code>&lt;Hero&gt;</code>{" "}
+              inside <code>&lt;CompassHero&gt;</code> with its{" "}
+              <code>backgroundSrcLight</code> /{" "}
+              <code>backgroundSrcDark</code> props, or set a gradient with{" "}
+              <code>gradientLight</code> / <code>gradientDark</code>. When
+              using a gradient, keep the stops in a tonal band that
+              contrasts with the hero text — see{" "}
+              <code>Components/Hero → With gradient</code>.
+            </li>
+          </ul>
+        </Card>
+      </Section>
+
+      <Section
+        title="Responsive behaviour"
+        description="Compass adapts the chrome for narrow viewports so the five-slot layout still works on mobile."
+      >
+        <Card>
+          <ul
+            style={{
+              margin: 0,
+              padding: "16px 24px 16px 40px",
+              color: "var(--gp-color-text-regular)",
+              lineHeight: 1.9,
+            }}
+          >
+            <li>
+              <strong>Header nav collapses to a hamburger.</strong> On
+              small screens the middle <code>nav</code> in{" "}
+              <code>&lt;CompassHeader&gt;</code> folds behind a hamburger
+              toggle that opens a slide-in side-nav, so the tabs / links
+              stay reachable without crowding the header.
+            </li>
+            <li>
+              <strong>Sidebars collapse with open / close buttons.</strong>{" "}
+              <code>sidebarStart</code> and <code>sidebarEnd</code> are
+              hidden by default on mobile and surfaced on demand via their
+              own expand / collapse controls, so the <code>main</code>{" "}
+              content keeps the full width until the user opens a rail.
+            </li>
+            <li>
+              <strong>Main content stays primary.</strong> The hero,
+              content title, and body reflow to the single available
+              column — the chrome (header, rails, footer) gets out of the
+              way rather than competing for space.
+            </li>
+          </ul>
         </Card>
       </Section>
     </FoundationPage>
@@ -216,7 +385,23 @@ function CompassFullDemo() {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [activeSubtab, setActiveSubtab] = useState<number>(0);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  // Desktop: both icon rails default open; the toolbar toggles collapse them.
+  const [isStartRailExpanded, setIsStartRailExpanded] = useState(true);
+  const [isEndRailExpanded, setIsEndRailExpanded] = useState(true);
+  // Mobile (< PF6's 62rem breakpoint): the header nav (main tabs + subtabs)
+  // folds away and is surfaced as a slide-in side nav via the start sidebar,
+  // opened by a hamburger to the left of the logo.
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const subTabsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 61.99rem)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const navContent = (
     <>
@@ -297,6 +482,89 @@ function CompassFullDemo() {
         </PanelMain>
       </Panel>
     </>
+  );
+
+  // Mobile side nav — the two-level nav rendered as a PatternFly Nav (the
+  // Page-sidebar pattern): the tab that owns subtabs becomes a
+  // NavExpandable nested section, the rest are flat NavItems. It lives in
+  // the start sidebar slot on mobile, so PF6's sidebar slide-in gives it
+  // the off-canvas drawer behaviour; the hamburger toggles it.
+  const disabledItemProps = {
+    "aria-disabled": true,
+    style: { opacity: 0.5, pointerEvents: "none" as const },
+  };
+  const mobileNavContent = (
+    <Panel isGlass>
+      <PanelMain>
+        <PanelMainBody
+          style={{ paddingInline: "var(--pf-t--global--spacer--sm)" }}
+        >
+          <Nav aria-label="Compass mobile navigation">
+            <NavList>
+              {/* Tab 1 owns the subtabs → render it as a nested expandable
+                  section, mirroring the desktop tab + subtab strip. */}
+              <NavExpandable
+                title="Tab 1"
+                groupId="tab1"
+                isExpanded
+                isActive={activeTab === 0}
+              >
+                <NavItem
+                  preventDefault
+                  groupId="tab1"
+                  itemId="subtab-0"
+                  to="#subtab-1"
+                  isActive={activeTab === 0 && activeSubtab === 0}
+                  onClick={() => {
+                    setActiveTab(0);
+                    setActiveSubtab(0);
+                  }}
+                >
+                  Subtab 1
+                </NavItem>
+                <NavItem
+                  preventDefault
+                  groupId="tab1"
+                  itemId="subtab-1"
+                  to="#subtab-2"
+                  isActive={activeTab === 0 && activeSubtab === 1}
+                  onClick={() => {
+                    setActiveTab(0);
+                    setActiveSubtab(1);
+                  }}
+                >
+                  Subtab 2
+                </NavItem>
+                <NavItem preventDefault to="#subtab-3" {...disabledItemProps}>
+                  Disabled Subtab 3
+                </NavItem>
+              </NavExpandable>
+              <NavItem
+                preventDefault
+                itemId="tab-1"
+                to="#tab-2"
+                isActive={activeTab === 1}
+                onClick={() => setActiveTab(1)}
+              >
+                Tab 2
+              </NavItem>
+              <NavItem
+                preventDefault
+                itemId="tab-2"
+                to="#tab-3"
+                isActive={activeTab === 2}
+                onClick={() => setActiveTab(2)}
+              >
+                Tab 3
+              </NavItem>
+              <NavItem preventDefault to="#tab-4" {...disabledItemProps}>
+                Disabled Tab 4
+              </NavItem>
+            </NavList>
+          </Nav>
+        </PanelMainBody>
+      </PanelMain>
+    </Panel>
   );
 
   const sidebarContent = (
@@ -402,11 +670,31 @@ function CompassFullDemo() {
   const headerContent = (
     <CompassHeader
       logo={
-        <a href="#" aria-label="Acme home" tabIndex={0}>
-          <AcmeLogo />
-        </a>
+        <Flex
+          gap={{ default: "gapSm" }}
+          alignItems={{ default: "alignItemsCenter" }}
+          flexWrap={{ default: "nowrap" }}
+        >
+          {/* Hamburger sits to the left of the brand and only appears on
+              mobile, where it opens the slide-in side nav. */}
+          {isMobile && (
+            <Button
+              isCircle
+              variant="plain"
+              icon={<BarsIcon />}
+              aria-label="Global navigation"
+              aria-expanded={isMobileNavOpen}
+              onClick={() => setIsMobileNavOpen((v) => !v)}
+            />
+          )}
+          <a href="#" aria-label="Acme home" tabIndex={0}>
+            <AcmeLogo />
+          </a>
+        </Flex>
       }
-      nav={navContent}
+      // The inline tabs/subtabs nav shows on desktop; on mobile it folds
+      // away and is reachable through the hamburger side nav instead.
+      nav={isMobile ? undefined : navContent}
       profile={profileDropdown}
     />
   );
@@ -419,12 +707,16 @@ function CompassFullDemo() {
           gradientDark={{
             stop1: "var(--gp-color-bg-primary-default, #1a1611)",
             stop2: "var(--gp-color-bg-secondary-default, #2a2018)",
-            stop3: "var(--gp-color-brand-default, #7d572a)",
+            // Brand accent pulled toward the surface so the gradient stays
+            // inside a tonal band that contrasts with the (light) hero text.
+            stop3:
+              "color-mix(in srgb, var(--gp-color-brand-default, #7d572a) 30%, var(--gp-color-bg-primary-default, #1a1611))",
           }}
           gradientLight={{
             stop1: "var(--gp-color-bg-secondary-default, #f3ede1)",
             stop2: "var(--gp-color-bg-secondary-hover, #e6dcc8)",
-            stop3: "var(--gp-color-brand-default, #7d572a)",
+            stop3:
+              "color-mix(in srgb, var(--gp-color-brand-default, #7d572a) 25%, var(--gp-color-bg-secondary-default, #f3ede1))",
           }}
         >
           Hero
@@ -432,6 +724,46 @@ function CompassFullDemo() {
       </CompassHero>
       <CompassMainHeader
         title={<Title headingLevel="h1">Content title</Title>}
+        toolbar={
+          // Desktop-only: collapse / expand the two icon rails. On mobile
+          // the rails go off-canvas and the nav is driven by the header
+          // hamburger instead, so these are hidden.
+          isMobile ? undefined : (
+            <Flex
+              gap={{ default: "gapSm" }}
+              alignItems={{ default: "alignItemsCenter" }}
+            >
+              <Tooltip
+                content={
+                  isStartRailExpanded ? "Hide start rail" : "Show start rail"
+                }
+              >
+                <Button
+                  isCircle
+                  variant="plain"
+                  icon={<BarsIcon />}
+                  aria-label="Toggle start rail"
+                  aria-expanded={isStartRailExpanded}
+                  onClick={() => setIsStartRailExpanded((v) => !v)}
+                />
+              </Tooltip>
+              <Tooltip
+                content={
+                  isEndRailExpanded ? "Hide end rail" : "Show end rail"
+                }
+              >
+                <Button
+                  isCircle
+                  variant="plain"
+                  icon={<ColumnsIcon />}
+                  aria-label="Toggle end rail"
+                  aria-expanded={isEndRailExpanded}
+                  onClick={() => setIsEndRailExpanded((v) => !v)}
+                />
+              </Tooltip>
+            </Flex>
+          )
+        }
         panelProps={{ isGlass: true }}
       />
       <CompassContent>
@@ -460,14 +792,48 @@ function CompassFullDemo() {
   );
 
   return (
-    <Compass
-      header={headerContent}
-      sidebarStart={sidebarContent}
-      main={mainContent}
-      sidebarEnd={sidebarContent}
-      footer={footerContent}
-      style={{ height: 640 }}
-    />
+    // gp-compass-mobile-overlay: anchors the mobile side-nav drawer. On
+    // mobile the nav floats over the content as an overlay drawer (a
+    // sibling of Compass, not a grid sidebar) so opening it never resizes
+    // the main section. See styles/index.css.
+    <div className="gp-compass-mobile-overlay">
+      <Compass
+        header={headerContent}
+        // Both icon rails are collapsed (off-canvas) on mobile so the main
+        // section keeps the full width; on desktop they're collapsible via
+        // the toolbar toggles.
+        sidebarStart={sidebarContent}
+        isSidebarStartExpanded={isMobile ? false : isStartRailExpanded}
+        main={mainContent}
+        sidebarEnd={sidebarContent}
+        isSidebarEndExpanded={isMobile ? false : isEndRailExpanded}
+        footer={footerContent}
+        style={{ height: 640 }}
+      />
+      {isMobile && (
+        <>
+          {/* Scrim — tap outside the drawer to dismiss it. */}
+          {isMobileNavOpen && (
+            <button
+              type="button"
+              className="gp-compass-scrim"
+              aria-label="Close navigation"
+              onClick={() => setIsMobileNavOpen(false)}
+            />
+          )}
+          {/* Overlay side-nav drawer — slides in over the content without
+              displacing it. */}
+          <div
+            className={
+              "gp-compass-drawer" + (isMobileNavOpen ? " pf-m-open" : "")
+            }
+            {...(!isMobileNavOpen && { inert: "true" })}
+          >
+            {mobileNavContent}
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 
@@ -613,11 +979,67 @@ export const FullDemo: StoryObj = {
               subtab visibility.
             </li>
             <li>
-              <strong>No flyout state.</strong> Unlike a generic{" "}
-              <code>Drawer</code>, the Compass rails are always open
-              in this demo. Use the <code>isSidebarStartExpanded</code>{" "}
-              / <code>isSidebarEndExpanded</code> Compass props if
-              you want collapsible rails.
+              <strong>
+                <code>isStartRailExpanded</code> /{" "}
+                <code>isEndRailExpanded</code>
+              </strong>{" "}
+              — desktop collapsible-rail state. The two toolbar toggles
+              flip these into <code>isSidebarStartExpanded</code> /{" "}
+              <code>isSidebarEndExpanded</code>; Compass adds{" "}
+              <code>inert</code> to a collapsed rail so it drops out of the
+              tab order.
+            </li>
+            <li>
+              <strong>
+                <code>isMobile</code> / <code>isMobileNavOpen</code>
+              </strong>{" "}
+              — a <code>matchMedia(&quot;(max-width: 61.99rem)&quot;)</code>{" "}
+              listener flips <code>isMobile</code>; below the breakpoint the
+              header tabs are dropped and the nav is re-rendered as an
+              expandable <code>Nav</code> (the tab that owns subtabs becomes
+              a <code>NavExpandable</code> nested section) inside an overlay
+              drawer, with <code>isMobileNavOpen</code> driving the slide-in.
+            </li>
+          </ul>
+        </Card>
+      </Section>
+
+      <Section
+        title="Responsive behaviour"
+        description="How the chrome adapts below PF6's 62rem breakpoint. Resize the preview (or use the Storybook viewport toolbar) to see it."
+      >
+        <Card>
+          <ul
+            style={{
+              margin: 0,
+              padding: "16px 24px 16px 40px",
+              color: "var(--gp-color-text-regular)",
+              lineHeight: 1.8,
+            }}
+          >
+            <li>
+              <strong>Nav collapses to a hamburger side nav.</strong> On
+              mobile the inline header tabs + subtabs fold away and a
+              hamburger appears to the left of the logo. It opens the same
+              nav as an <strong>overlay drawer</strong> (the Page-sidebar
+              pattern) — a PatternFly <code>Nav</code> where the tab that
+              owns subtabs becomes an expandable nested section. The drawer
+              floats over the content with a dismiss scrim, so the{" "}
+              <code>main</code> section never resizes.
+            </li>
+            <li>
+              <strong>Desktop rails collapse with open / close
+              buttons.</strong> At desktop widths the two toolbar toggles
+              by the content title collapse and reveal the start / end icon
+              rails. On mobile those rails go off-canvas so the{" "}
+              <code>main</code> content keeps the full width.
+            </li>
+            <li>
+              <strong>Docked-nav alternative.</strong> For a single
+              anchored nav that folds behind a hamburger masthead on
+              mobile, pass <code>dock</code> + <code>masthead</code>{" "}
+              instead of <code>header</code> + sidebars (PF6 renders the
+              masthead only at mobile).
             </li>
           </ul>
         </Card>
