@@ -550,10 +550,17 @@ export const Overview: StoryObj = {
 
 /* Optional frosted textures */
 --pf-t--global--background--image--glass / --glass--dark
---pf-t--global--background--image--felt--glass / --dark`}</CodeBlock>
+--pf-t--global--background--image--felt--glass / --dark
+
+/* ── Lib-derived glass dials (in .pf-v6-theme-glass, src/styles/index.css) ──
+   Standardise the values above into ONE place to tune per system. */
+--gp-glass-surface-opacity   /* 70% — share of the glass token's alpha to keep */
+--gp-glass-surface-fill      /* the thinned (~0.35 alpha) chrome fill */
+--gp-glass-surface-blur      /* blur(16px) — the shared backdrop blur */
+--gp-glass-border-color      /* transparent — the shared frosted edge */`}</CodeBlock>
 
             <p style={{ margin: 0, color: "var(--gp-color-text-regular)", lineHeight: 1.7 }}>
-              Two DS conventions layered on top of the raw tokens:
+              Three DS conventions layered on top of the raw tokens:
             </p>
             <ul
               style={{
@@ -563,6 +570,20 @@ export const Overview: StoryObj = {
                 lineHeight: 1.8,
               }}
             >
+              <li>
+                <strong>One transparency dial for every chrome surface.</strong>{" "}
+                The glass fill token bakes in ~0.5 alpha, which reads near-solid
+                over dark content, and there is no opacity token. The lib thins
+                it once into <code>--gp-glass-surface-fill</code> (the token at{" "}
+                <code>--gp-glass-surface-opacity</code>, 70% &rarr; ~0.35 alpha)
+                plus a matching <code>--gp-glass-surface-blur</code>. Every
+                auto-glass <em>chrome</em> surface — <strong>masthead</strong>,{" "}
+                <strong>side nav</strong> and <strong>menus / dropdowns /
+                selects</strong> — renders through these, so they all frost to
+                the same level; retune the whole system in one place. (Dense
+                content surfaces like <code>Modal</code> and the notification
+                drawer deliberately keep a denser fill for legibility.)
+              </li>
               <li>
                 <strong>Borders are transparent by default.</strong> PF6&rsquo;s
                 glass border colour is the (visible) <em>alt</em> border, which

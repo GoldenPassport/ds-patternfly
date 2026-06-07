@@ -100,15 +100,15 @@ export function sidenavDrawerCss(
     `  border-radius: 0;`,
     `  box-shadow: none;`,
     `}`,
-    // Glass + overlay: the drawer floats over the content, so frost it —
-    // translucent fill + blur so the page shows through (dense enough to
-    // keep the nav legible).
+    // Glass + overlay: the drawer floats over the content, so frost it with
+    // the SAME standardised system glass as every other chrome surface
+    // (masthead, push side nav, menus) — see --gp-glass-surface-fill in
+    // src/styles/index.css. The backdrop blur keeps the nav legible at this
+    // thinner opacity.
     `.pf-v6-theme-glass ${c} .pf-v6-c-page__sidebar-main {`,
-    `  background-color: color-mix(in srgb,`,
-    `    var(--pf-t--global--background--color--primary--default) 65%,`,
-    `    var(--pf-t--global--background--color--glass--primary--default)) !important;`,
-    `  backdrop-filter: blur(20px) saturate(140%);`,
-    `  -webkit-backdrop-filter: blur(20px) saturate(140%);`,
+    `  background-color: var(--gp-glass-surface-fill) !important;`,
+    `  backdrop-filter: var(--gp-glass-surface-blur) saturate(140%);`,
+    `  -webkit-backdrop-filter: var(--gp-glass-surface-blur) saturate(140%);`,
     `}`,
     `:dir(rtl) ${c} .pf-v6-c-page__sidebar {`,
     `  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.18);`,

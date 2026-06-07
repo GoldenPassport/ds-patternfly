@@ -1632,15 +1632,14 @@
   align-items: center;
 }
 
-/* Masthead user menu — pill-shaped chip on desktop, avatar-only on mobile.
-   The toggle (Avatar icon + name span) reads as a rounded pill via a pill
-   radius and a subtle translucent fill. Wrap the profile name in
-   `gp-masthead-username`; below the masthead mobile breakpoint the name
-   hides, the pill fill / padding drop, and the empty text wrapper collapses
-   — so the circular avatar itself becomes the button. */
+/* Masthead user menu — naked pill toggle on desktop, avatar-only on mobile.
+   The toggle (Avatar icon + name span) is a plain/naked button: no resting
+   fill, just a pill radius so its hover/focus state reads as a rounded pill.
+   Wrap the profile name in `gp-masthead-username`; below the masthead mobile
+   breakpoint the name hides, padding drops, and the empty text wrapper
+   collapses — so the circular avatar itself becomes the button. */
 .gp-user-menu-toggle.pf-v6-c-menu-toggle {
   border-radius: var(--gp-radius-pill, 999px);
-  background-color: color-mix(in srgb, var(--gp-color-text-regular) 8%, transparent);
 }
 
 @media (max-width: 767.98px) {
@@ -1650,7 +1649,6 @@
 
   .gp-user-menu-toggle.pf-v6-c-menu-toggle {
     padding: 0;
-    background-color: transparent;
   }
   /* name already hidden above; drop the empty text wrapper's gap so only
      the avatar remains */
@@ -2571,13 +2569,10 @@
   border: var(--pf-t--global--border--width--regular, 1px) solid
     var(--gp-glass-border-color, transparent);
   box-shadow: var(--pf-t--global--box-shadow--glass--default);
-  /* Thin the fill so the header reads as semi-see-through frosted glass
-     (PF6's glass token is ~0.5 alpha, which looks nearly solid over dark
-     content). The 16px blur keeps the brand/nav legible at this lower
-     opacity. */
-  background-color: color-mix(in srgb,
-    var(--pf-t--global--background--color--glass--primary--default) 70%,
-    transparent);
+  /* Semi-see-through frosted glass — shared system fill (see
+     --gp-glass-surface-fill). PF6's own 16px masthead blur keeps the
+     brand/nav legible at this lower opacity. */
+  background-color: var(--gp-glass-surface-fill);
 }
 
 /* Page side navigation — glass. PF6's glass theme turns the side nav into
@@ -2593,17 +2588,14 @@
 }
 .pf-v6-theme-glass .pf-v6-c-page__sidebar-main {
   border-radius: 0;
-  /* Frost the side-nav surface itself (PF6 gives it a solid fill). Match
-     the masthead: semi-see-through glass fill + backdrop blur. The nav
-     items keep their own translucent hover / selected fills (see the
-     .pf-v6-c-nav__link glass rules), so they read on top of the frost. */
-  background-color: color-mix(in srgb,
-    var(--pf-t--global--background--color--glass--primary--default) 70%,
-    transparent);
-  backdrop-filter: var(--pf-t--global--background--filter--glass--blur--primary,
-    blur(16px));
-  -webkit-backdrop-filter: var(
-    --pf-t--global--background--filter--glass--blur--primary, blur(16px));
+  /* Frost the side-nav surface itself (PF6 gives it a solid fill) with the
+     shared system glass fill + blur, so it matches the masthead and menus
+     exactly. The nav items keep their own translucent hover / selected
+     fills (see the .pf-v6-c-nav__link glass rules), so they read on top of
+     the frost. */
+  background-color: var(--gp-glass-surface-fill);
+  backdrop-filter: var(--gp-glass-surface-blur);
+  -webkit-backdrop-filter: var(--gp-glass-surface-blur);
 }
 
 /* NotificationDrawer — frost the drawer surface; header + list items go
@@ -2713,6 +2705,21 @@
 .pf-v6-theme-glass {
   --gp-glass-border-color: transparent;
   --pf-t--global--border--color--glass--default: var(--gp-glass-border-color);
+
+  /* ── Glass surface fill (the ONE place to tune glass transparency) ──
+     PF6's glass fill token is ~0.5 alpha, which reads near-solid over dark
+     content. We thin it to `--gp-glass-surface-opacity` of that alpha
+     (70% → ~0.35) and pair it with a standard backdrop blur. Every
+     auto-glass *chrome* surface (masthead, side navigation, menus /
+     dropdowns / selects) routes through these so they all frost to the
+     SAME level — change the transparency for the whole system in one place
+     here. Content surfaces that carry dense copy (Modal, NotificationDrawer)
+     deliberately use a denser fill of their own for readability. */
+  --gp-glass-surface-opacity: 70%;
+  --gp-glass-surface-fill: color-mix(in srgb,
+    var(--pf-t--global--background--color--glass--primary--default)
+    var(--gp-glass-surface-opacity), transparent);
+  --gp-glass-surface-blur: blur(16px);
 }
 .pf-v6-theme-glass .pf-v6-c-card,
 .pf-v6-theme-glass .pf-v6-c-panel {
@@ -2726,12 +2733,14 @@
    Options menu, Custom menus all render `.pf-v6-c-menu`, portaled to
    <body> but inheriting the :root glass tokens. Frost the menu surface
    (only it paints a background; the list/items/groups are transparent)
-   and keep item hover translucent so it doesn't punch an opaque block. */
+   and keep item hover translucent so it doesn't punch an opaque block.
+   Uses the shared system glass fill + blur (see --gp-glass-surface-fill) so
+   the menu frosts to the SAME transparency as the masthead and side nav;
+   saturate boosts colour as it floats over arbitrary page content. */
 .pf-v6-theme-glass .pf-v6-c-menu {
-  background-color:
-    var(--pf-t--global--background--color--glass--primary--default);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  background-color: var(--gp-glass-surface-fill);
+  backdrop-filter: var(--gp-glass-surface-blur) saturate(140%);
+  -webkit-backdrop-filter: var(--gp-glass-surface-blur) saturate(140%);
   --pf-v6-c-menu__list-item--hover--BackgroundColor:
     color-mix(in srgb, var(--gp-color-text-regular) 10%, transparent);
   --pf-v6-c-menu__item--hover--BackgroundColor:

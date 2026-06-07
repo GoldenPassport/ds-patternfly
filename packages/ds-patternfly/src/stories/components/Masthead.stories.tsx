@@ -91,6 +91,79 @@ function DemoSidebarNav({ label }: { label: string }) {
   );
 }
 
+// Two header-surface treatments for a "unified surface" shell — the flat
+// sidebar + content layout documented in Components/Page → "Unified surface".
+// The sidebar, content and page all share ONE flat background; the only
+// question is how the header meets that body:
+//   • "flat"   — the masthead shares the same surface, no divider (seamless).
+//   • "lifted" — the masthead floats above the flat body via a 1px bottom
+//                border + soft shadow (the treatment used in the Page example),
+//                so the header still reads as distinct chrome.
+function UnifiedHeaderVariant({ variant }: { variant: "flat" | "lifted" }) {
+  const lifted = variant === "lifted";
+  const id = `unified-header-${variant}`;
+  const css = `
+    #${id} {
+      background: var(--gp-color-bg-primary-default);
+      border: 1px solid var(--gp-color-border-subtle);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    /* Sidebar + content + header all share the one flat surface. */
+    #${id} .pf-v6-c-masthead {
+      background: var(--gp-color-bg-primary-default);
+      ${
+        lifted
+          ? `border-block-end: 1px solid var(--gp-color-border-subtle);
+             box-shadow: 0 2px 6px rgb(0 0 0 / 0.12);`
+          : `border-block-end: none; box-shadow: none;`
+      }
+    }
+  `;
+  return (
+    <div style={{ display: "grid", gap: 8 }}>
+      <span style={{ fontWeight: 600, color: "var(--gp-color-text-regular)" }}>
+        {lifted ? "Lifted header" : "Flat header"}
+      </span>
+      <div id={id}>
+        <style dangerouslySetInnerHTML={{ __html: css }} />
+        <Masthead id={`${id}-masthead`} display={{ default: "inline" }}>
+          <MastheadMain>
+            <MastheadBrand>
+              <MastheadLogo component="a" href="#">
+                <AcmeLogo />
+              </MastheadLogo>
+            </MastheadBrand>
+          </MastheadMain>
+          <MastheadContent>
+            <span style={{ color: "var(--gp-color-text-subtle)" }}>Actions</span>
+          </MastheadContent>
+        </Masthead>
+        <div style={{ display: "flex", minHeight: 150 }}>
+          <div style={{ width: 150, padding: 12 }}>
+            <Nav aria-label={`${variant} unified-header demo nav`}>
+              <NavList>
+                <NavItem itemId={0} isActive>Dashboard</NavItem>
+                <NavItem itemId={1}>Workflows</NavItem>
+                <NavItem itemId={2}>Reports</NavItem>
+              </NavList>
+            </Nav>
+          </div>
+          <div
+            style={{
+              flex: 1,
+              padding: 16,
+              color: "var(--gp-color-text-subtle)",
+            }}
+          >
+            Sidebar + content share one flat surface.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function OverviewStory() {
   // Basic demo: the masthead utility icons live in an OverflowMenu that
   // collapses to this kebab dropdown below the breakpoint.
@@ -439,6 +512,59 @@ function OverviewStory() {
             <CodeBlock>{`<Masthead display={{ default: "stack", lg: "inline" }}>
   {/* stack on small viewports, inline on lg+ */}
 </Masthead>`}</CodeBlock>
+          </div>
+        </Card>
+      </Section>
+
+      <Section
+        title="Header surface — flat vs lifted"
+        description={
+          <>
+            When the sidebar and content share one flat background — the{" "}
+            <strong>unified-surface</strong> shell shown in{" "}
+            <a href="./?path=/docs/components-page--docs" target="_top">
+              Components/Page &rarr; &ldquo;Unified surface — flat sidebar +
+              content&rdquo;
+            </a>{" "}
+            — the header can meet that body two ways.{" "}
+            <strong>Flat:</strong> the masthead shares the same surface with no
+            divider, for a fully seamless shell. <strong>Lifted:</strong> the
+            masthead floats above the flat body via a 1px bottom border + soft
+            shadow (the treatment used in the Page example), so the header still
+            reads as distinct chrome.
+          </>
+        }
+      >
+        <Card>
+          <div style={{ padding: 24, display: "grid", gap: 24 }}>
+            <div
+              style={{
+                display: "grid",
+                gap: 24,
+                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              }}
+            >
+              <UnifiedHeaderVariant variant="flat" />
+              <UnifiedHeaderVariant variant="lifted" />
+            </div>
+            <CodeBlock label="Header surface treatment (scope to your shell root)">{`/* Unified surface: sidebar + content + page share one flat bg */
+.app-shell .pf-v6-c-page__sidebar,
+.app-shell .pf-v6-c-page__main,
+.app-shell .pf-v6-c-page__main-container {
+  background: var(--gp-color-bg-primary-default);
+}
+
+/* Flat header — seamless, no divider */
+.app-shell .pf-v6-c-masthead {
+  border-block-end: none;
+  box-shadow: none;
+}
+
+/* Lifted header — float the masthead above the flat body (Page example) */
+.app-shell .pf-v6-c-masthead {
+  border-block-end: 1px solid var(--gp-color-border-subtle);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.12);
+}`}</CodeBlock>
           </div>
         </Card>
       </Section>
