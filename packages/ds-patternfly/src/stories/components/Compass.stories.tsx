@@ -39,12 +39,15 @@ import {
   Title,
   Tooltip,
 } from "@patternfly/react-core";
+import AngleLeftIcon from "@patternfly/react-icons/dist/esm/icons/angle-left-icon";
+import AngleRightIcon from "@patternfly/react-icons/dist/esm/icons/angle-right-icon";
 import BarsIcon from "@patternfly/react-icons/dist/esm/icons/bars-icon";
 import ColumnsIcon from "@patternfly/react-icons/dist/esm/icons/columns-icon";
 import OutlinedCopyIcon from "@patternfly/react-icons/dist/esm/icons/outlined-copy-icon";
 import OutlinedPlusSquareIcon from "@patternfly/react-icons/dist/esm/icons/outlined-plus-square-icon";
 import PlayIcon from "@patternfly/react-icons/dist/esm/icons/play-icon";
 import RhUiQuestionMarkCircleIcon from "@patternfly/react-icons/dist/esm/icons/rh-ui-question-mark-circle-icon";
+import TimesIcon from "@patternfly/react-icons/dist/esm/icons/times-icon";
 import {
   FoundationPage,
   Section,
@@ -393,6 +396,12 @@ function CompassFullDemo() {
   // opened by a hamburger to the left of the logo.
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const closeMobileNav = () => setIsMobileNavOpen(false);
+  // Mobile: the two icon rails go off-canvas and are opened on demand
+  // via edge-handle buttons (rendered into each rail below). Default
+  // closed so the main section keeps the full width on phones.
+  const [isStartRailOpen, setIsStartRailOpen] = useState(false);
+  const [isEndRailOpen, setIsEndRailOpen] = useState(false);
   const subTabsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -499,6 +508,26 @@ function CompassFullDemo() {
         <PanelMainBody
           style={{ paddingInline: "var(--pf-t--global--spacer--sm)" }}
         >
+          {/* Drawer head — title + close affordance, mirroring the PF6
+              DrawerHead pattern from the patterns/Compass → Example demo
+              so the slide-in nav reads as a proper sidenav. */}
+          <Flex
+            alignItems={{ default: "alignItemsCenter" }}
+            justifyContent={{ default: "justifyContentSpaceBetween" }}
+            style={{
+              paddingBlock: "var(--pf-t--global--spacer--sm)",
+              paddingInline: "var(--pf-t--global--spacer--sm)",
+            }}
+          >
+            <strong>Navigation</strong>
+            <Button
+              isCircle
+              variant="plain"
+              aria-label="Close navigation"
+              icon={<TimesIcon />}
+              onClick={closeMobileNav}
+            />
+          </Flex>
           <Nav aria-label="Compass mobile navigation">
             <NavList>
               {/* Tab 1 owns the subtabs → render it as a nested expandable
@@ -518,6 +547,7 @@ function CompassFullDemo() {
                   onClick={() => {
                     setActiveTab(0);
                     setActiveSubtab(0);
+                    closeMobileNav();
                   }}
                 >
                   Subtab 1
@@ -531,6 +561,7 @@ function CompassFullDemo() {
                   onClick={() => {
                     setActiveTab(0);
                     setActiveSubtab(1);
+                    closeMobileNav();
                   }}
                 >
                   Subtab 2
@@ -544,7 +575,10 @@ function CompassFullDemo() {
                 itemId="tab-1"
                 to="#tab-2"
                 isActive={activeTab === 1}
-                onClick={() => setActiveTab(1)}
+                onClick={() => {
+                  setActiveTab(1);
+                  closeMobileNav();
+                }}
               >
                 Tab 2
               </NavItem>
@@ -553,7 +587,10 @@ function CompassFullDemo() {
                 itemId="tab-2"
                 to="#tab-3"
                 isActive={activeTab === 2}
-                onClick={() => setActiveTab(2)}
+                onClick={() => {
+                  setActiveTab(2);
+                  closeMobileNav();
+                }}
               >
                 Tab 3
               </NavItem>
@@ -632,6 +669,53 @@ function CompassFullDemo() {
     </Panel>
   );
 
+  // Edge-handle buttons that expand / collapse each rail on mobile.
+  // Rendered as DOM children of the rail (.pf-v6-c-compass__sidebar) so
+  // they slide with it and the CSS can keep them tappable while the rail
+  // content is hidden (PF6 puts visibility:hidden on a collapsed rail).
+  // The chevron points inward when closed (open affordance) and outward
+  // when open (close affordance), mirrored for the start vs. end rail.
+  const startRailHandle = isMobile ? (
+    <button
+      type="button"
+      aria-label={isStartRailOpen ? "Close start rail" : "Open start rail"}
+      aria-expanded={isStartRailOpen}
+      onClick={() => setIsStartRailOpen((o) => !o)}
+      className={`gp-cmp-rail-handle gp-cmp-rail-handle--start${
+        isStartRailOpen ? " is-rail-open" : ""
+      }`}
+    >
+      {isStartRailOpen ? <AngleLeftIcon /> : <AngleRightIcon />}
+    </button>
+  ) : null;
+
+  const endRailHandle = isMobile ? (
+    <button
+      type="button"
+      aria-label={isEndRailOpen ? "Close end rail" : "Open end rail"}
+      aria-expanded={isEndRailOpen}
+      onClick={() => setIsEndRailOpen((o) => !o)}
+      className={`gp-cmp-rail-handle gp-cmp-rail-handle--end${
+        isEndRailOpen ? " is-rail-open" : ""
+      }`}
+    >
+      {isEndRailOpen ? <AngleRightIcon /> : <AngleLeftIcon />}
+    </button>
+  ) : null;
+
+  const startSidebar = (
+    <>
+      {sidebarContent}
+      {startRailHandle}
+    </>
+  );
+  const endSidebar = (
+    <>
+      {sidebarContent}
+      {endRailHandle}
+    </>
+  );
+
   // Real apps would pass a Brand src pointing at their hosted logo
   // asset and an Avatar src pointing at the user's profile image.
   // Stories ship inline SVG data URLs so the demo is asset-free.
@@ -641,23 +725,37 @@ function CompassFullDemo() {
       onSelect={() => setIsProfileOpen(false)}
       onOpenChange={(isOpen) => setIsProfileOpen(isOpen)}
       popperProps={{ position: "right" }}
-      toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
-        <MenuToggle
-          ref={toggleRef}
-          onClick={() => setIsProfileOpen(!isProfileOpen)}
-          isExpanded={isProfileOpen}
-          variant="plain"
-          isCircle
-        >
-          <Flex
-            alignItems={{ default: "alignItemsCenter" }}
-            gap={{ default: "gapMd" }}
+      toggle={(toggleRef: React.Ref<MenuToggleElement>) =>
+        // On mobile the profile collapses to just the avatar (no name) so
+        // the header fits on one row; desktop keeps name + avatar.
+        isMobile ? (
+          <MenuToggle
+            ref={toggleRef}
+            aria-label="Aliyah Frazier"
+            onClick={() => setIsProfileOpen(!isProfileOpen)}
+            isExpanded={isProfileOpen}
+            variant="plain"
+            className="gp-compass-avatar-toggle"
+            icon={<Avatar src={ACME_AVATAR_SRC("AF")} alt="" size="md" />}
+          />
+        ) : (
+          <MenuToggle
+            ref={toggleRef}
+            onClick={() => setIsProfileOpen(!isProfileOpen)}
+            isExpanded={isProfileOpen}
+            variant="plain"
+            isCircle
           >
-            Aliyah Frazier
-            <Avatar src={ACME_AVATAR_SRC("AF")} alt="" size="md" />
-          </Flex>
-        </MenuToggle>
-      )}
+            <Flex
+              alignItems={{ default: "alignItemsCenter" }}
+              gap={{ default: "gapMd" }}
+            >
+              Aliyah Frazier
+              <Avatar src={ACME_AVATAR_SRC("AF")} alt="" size="md" />
+            </Flex>
+          </MenuToggle>
+        )
+      }
     >
       <DropdownList>
         <DropdownItem>My profile</DropdownItem>
@@ -678,10 +776,17 @@ function CompassFullDemo() {
           {/* Hamburger sits to the left of the brand and only appears on
               mobile, where it opens the slide-in side nav. */}
           {isMobile && (
+            // Plain hamburger at rest; on hover/focus the bars morph into a
+            // directional arrow (facing the way the nav will move — left when
+            // open, right when closed), returning to a hamburger on mouse-out.
+            // That hover-only animation is PF6's built-in isHamburger
+            // behaviour — omit hamburgerVariant (which would pin the arrow on).
+            // isExpanded sets the hover arrow's direction. Uses Button
+            // directly so it needs no PageContext.
             <Button
-              isCircle
               variant="plain"
-              icon={<BarsIcon />}
+              isHamburger
+              isExpanded={isMobileNavOpen}
               aria-label="Global navigation"
               aria-expanded={isMobileNavOpen}
               onClick={() => setIsMobileNavOpen((v) => !v)}
@@ -797,16 +902,138 @@ function CompassFullDemo() {
     // sibling of Compass, not a grid sidebar) so opening it never resizes
     // the main section. See styles/index.css.
     <div className="gp-compass-mobile-overlay">
+      {/* Mobile rail overlays + edge handles. Below 62rem the two icon
+          rails leave the Compass grid and become fixed overlays that
+          slide in/out; each carries an edge-handle button (rendered into
+          the rail above) to expand/collapse it. Scoped under the demo's
+          overlay wrapper so other Compass instances are unaffected.
+          Ported from the patterns/Compass → Example demo. */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: [
+            "@media (max-width: 61.99rem) {",
+            // Clip the demo box so a collapsed rail (and its backdrop-filter)
+            // can't bleed into the page margin beside the example. The closed
+            // rail's edge handle sits just inside the box edge, so it stays
+            // visible/tappable.
+            "  .gp-compass-mobile-overlay { overflow: hidden; }",
+            // Bare avatar profile toggle — strip the circular toggle chrome
+            // (the ::before interactive background) so only the avatar shows,
+            // with no circle behind it in any state.
+            "  .gp-compass-mobile-overlay .gp-compass-avatar-toggle,",
+            "  .gp-compass-mobile-overlay .gp-compass-avatar-toggle:hover,",
+            "  .gp-compass-mobile-overlay .gp-compass-avatar-toggle.pf-m-expanded {",
+            "    background: transparent !important; box-shadow: none !important;",
+            "    padding: 0 !important;",
+            "  }",
+            "  .gp-compass-mobile-overlay .gp-compass-avatar-toggle::before { display: none !important; }",
+            // Rails out of the grid → absolute overlays anchored to the demo
+            // box (not the viewport) so the handles sit on the box edge rather
+            // than floating in the page margin. Keep the wrapper visible (PF6
+            // hides collapsed rails) so the handle inside stays tappable; the
+            // Panel content is gated separately.
+            "  .gp-compass-mobile-overlay .pf-v6-c-compass__sidebar.pf-m-start,",
+            "  .gp-compass-mobile-overlay .pf-v6-c-compass__sidebar.pf-m-end {",
+            "    position: absolute; grid-area: unset; inset-block-start: 0;",
+            "    block-size: 100%; z-index: 300; padding: 0.5rem;",
+            "    display: flex; align-items: center;",
+            "    visibility: visible !important; opacity: 1 !important;",
+            "  }",
+            "  .gp-compass-mobile-overlay .pf-v6-c-compass__sidebar.pf-m-start { inset-inline-start: 0; }",
+            "  .gp-compass-mobile-overlay .pf-v6-c-compass__sidebar.pf-m-end { inset-inline-end: 0; }",
+            // Slide open/closed driven by classes on the Compass root.
+            "  .gp-compass-mobile-overlay .gp-rail-left-closed .pf-v6-c-compass__sidebar.pf-m-start {",
+            "    translate: calc(var(--pf-v6-c-compass--section--slide--length--sidebar) * -1);",
+            "  }",
+            "  .gp-compass-mobile-overlay .gp-rail-left-open .pf-v6-c-compass__sidebar.pf-m-start { translate: 0; }",
+            "  .gp-compass-mobile-overlay .gp-rail-right-closed .pf-v6-c-compass__sidebar.pf-m-end {",
+            "    translate: var(--pf-v6-c-compass--section--slide--length--sidebar);",
+            "  }",
+            "  .gp-compass-mobile-overlay .gp-rail-right-open .pf-v6-c-compass__sidebar.pf-m-end { translate: 0; }",
+            // Hide rail content when closed; keep the wrapper for the handle.
+            "  .gp-compass-mobile-overlay .gp-rail-left-closed .pf-v6-c-compass__sidebar.pf-m-start > .pf-v6-c-panel,",
+            "  .gp-compass-mobile-overlay .gp-rail-right-closed .pf-v6-c-compass__sidebar.pf-m-end > .pf-v6-c-panel {",
+            "    visibility: hidden; opacity: 0; pointer-events: none;",
+            "  }",
+            "  .gp-compass-mobile-overlay .gp-rail-left-open .pf-v6-c-compass__sidebar.pf-m-start > .pf-v6-c-panel,",
+            "  .gp-compass-mobile-overlay .gp-rail-right-open .pf-v6-c-compass__sidebar.pf-m-end > .pf-v6-c-panel {",
+            "    visibility: visible; opacity: 1;",
+            "  }",
+            // Edge handle — absolute to the (fixed) rail; forced visible so
+            // it stays tappable while the collapsed rail is hidden.
+            "  .gp-compass-mobile-overlay .gp-cmp-rail-handle {",
+            "    position: absolute; inset-block-start: 50%; transform: translateY(-50%);",
+            "    z-index: 200; inline-size: 24px; block-size: 48px;",
+            "    display: flex; align-items: center; justify-content: center; padding: 0;",
+            "    border: 1px solid var(--gp-color-border-default, rgba(0,0,0,0.15));",
+            "    background: var(--gp-color-bg-secondary-default, rgba(255,255,255,0.85));",
+            "    color: var(--gp-color-text-regular); cursor: pointer;",
+            "    box-shadow: 0 1px 4px rgba(0,0,0,0.18);",
+            "    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);",
+            "    visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;",
+            "  }",
+            "  .gp-compass-mobile-overlay .gp-cmp-rail-handle:hover,",
+            "  .gp-compass-mobile-overlay .gp-cmp-rail-handle:focus-visible {",
+            "    background: var(--gp-color-bg-secondary-hover, var(--gp-color-bg-secondary-default));",
+            "  }",
+            // Glass theme — frost the handles to match the rail panels (use
+            // the glass--* token, not --primary--default which the dials
+            // override to an opaque colour).
+            "  .pf-v6-theme-glass .gp-compass-mobile-overlay .gp-cmp-rail-handle {",
+            "    background: var(--pf-t--global--background--color--glass--primary--default);",
+            "    backdrop-filter: var(--pf-t--global--background--filter--glass--blur--primary);",
+            "    -webkit-backdrop-filter: var(--pf-t--global--background--filter--glass--blur--primary);",
+            "    border-color: color-mix(in srgb, var(--pf-t--global--border--color--default, currentColor) 30%, transparent);",
+            "  }",
+            "  .pf-v6-theme-glass .gp-compass-mobile-overlay .gp-cmp-rail-handle:hover,",
+            "  .pf-v6-theme-glass .gp-compass-mobile-overlay .gp-cmp-rail-handle:focus-visible {",
+            "    background: color-mix(in srgb, var(--pf-t--global--background--color--glass--primary--default) 80%, var(--gp-color-brand-default) 20%);",
+            "  }",
+            // Anchor each handle to its rail's outer edge (chevron pokes out).
+            "  .gp-compass-mobile-overlay .gp-cmp-rail-handle--start {",
+            "    inset-inline-end: -24px; border-inline-start: 0;",
+            "    border-start-start-radius: 0; border-end-start-radius: 0;",
+            "    border-start-end-radius: 8px; border-end-end-radius: 8px;",
+            "    box-shadow: 2px 1px 4px rgba(0,0,0,0.18);",
+            "    transition: inset-inline-end 200ms ease;",
+            "  }",
+            "  .gp-compass-mobile-overlay .gp-cmp-rail-handle--end {",
+            "    inset-inline-start: -24px; border-inline-end: 0;",
+            "    border-start-end-radius: 0; border-end-end-radius: 0;",
+            "    border-start-start-radius: 8px; border-end-start-radius: 8px;",
+            "    box-shadow: -2px 1px 4px rgba(0,0,0,0.18);",
+            "    transition: inset-inline-start 200ms ease;",
+            "  }",
+            // When open, tuck the handle tighter against the rail edge.
+            "  .gp-compass-mobile-overlay .gp-rail-left-open .pf-v6-c-compass__sidebar.pf-m-start .gp-cmp-rail-handle--start { inset-inline-end: -16px; }",
+            "  .gp-compass-mobile-overlay .gp-rail-right-open .pf-v6-c-compass__sidebar.pf-m-end .gp-cmp-rail-handle--end { inset-inline-start: -16px; }",
+            "}",
+          ].join("\n"),
+        }}
+      />
       <Compass
+        // On mobile keep isSidebarXExpanded={true} so PF6 doesn't add
+        // `inert` to the collapsed rail (which would disable the edge
+        // handle inside it) — the open/closed visual is driven instead
+        // by the gp-rail-* classes + CSS below. On desktop the rails are
+        // ordinary grid columns toggled by the toolbar buttons.
+        className={
+          isMobile
+            ? [
+                isStartRailOpen ? "gp-rail-left-open" : "gp-rail-left-closed",
+                isEndRailOpen ? "gp-rail-right-open" : "gp-rail-right-closed",
+              ].join(" ")
+            : ""
+        }
         header={headerContent}
-        // Both icon rails are collapsed (off-canvas) on mobile so the main
-        // section keeps the full width; on desktop they're collapsible via
-        // the toolbar toggles.
-        sidebarStart={sidebarContent}
-        isSidebarStartExpanded={isMobile ? false : isStartRailExpanded}
+        // On mobile the icon rails are off-canvas overlays opened via the
+        // edge handles; on desktop they're collapsible via the toolbar
+        // toggles.
+        sidebarStart={startSidebar}
+        isSidebarStartExpanded={isMobile ? true : isStartRailExpanded}
         main={mainContent}
-        sidebarEnd={sidebarContent}
-        isSidebarEndExpanded={isMobile ? false : isEndRailExpanded}
+        sidebarEnd={endSidebar}
+        isSidebarEndExpanded={isMobile ? true : isEndRailExpanded}
         footer={footerContent}
         style={{ height: 640 }}
       />
@@ -1200,6 +1427,33 @@ export const StructuralPatterns: StoryObj = {
               Wrap each icon button in a <code>Tooltip</code> — the
               icon-only Button has only an <code>aria-label</code>{" "}
               for AT; sighted hover users rely on the tooltip.
+            </li>
+            <li>
+              <strong>Responsive collapse.</strong> At <code>md</code>{" "}
+              and up both rails stay pinned open beside the content. Below{" "}
+              <code>md</code> there isn&apos;t room for two fixed rails, so
+              each one <strong>collapses to a closed overlay by default</strong>{" "}
+              and slides in over the content only when opened — keeping the
+              phone layout to a single column.
+            </li>
+            <li>
+              <strong>Expand / close handles.</strong> Each rail gets its own
+              edge-handle <code>button</code> (rendered only when narrow) that
+              toggles it open and closed — an{" "}
+              <code>AngleRight</code>/<code>AngleLeft</code> chevron that points{" "}
+              <em>inward</em> when closed and <em>outward</em> when open, mirrored
+              for the start vs. end rail. Drive it from{" "}
+              <code>isOpen</code> state with{" "}
+              <code>aria-expanded={`{isOpen}`}</code> and an{" "}
+              <code>aria-label</code> that flips between{" "}
+              <code>&quot;Open … rail&quot;</code> and{" "}
+              <code>&quot;Close … rail&quot;</code>. Render the handle{" "}
+              <em>inside</em> the sidebar&apos;s own React tree so it slides with
+              the rail and overrides PF6&apos;s{" "}
+              <code>visibility:hidden</code> on the collapsed rail (
+              <code>visibility: visible !important</code>) — that keeps the
+              handle tappable while the rail itself is hidden. Working code:{" "}
+              <code>patterns/Compass → Example</code>.
             </li>
           </ul>
         </Card>
