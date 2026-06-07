@@ -2520,7 +2520,7 @@
 .pf-v6-theme-glass
   .pf-v6-c-card:is(.pf-m-selectable, .pf-m-clickable, .pf-m-selectable-raised):not(.pf-m-selected):not(.pf-m-current) {
   border: 1px solid
-    color-mix(in srgb, var(--gp-color-text-regular) 16%, transparent) !important;
+    color-mix(in srgb, var(--gp-color-text-regular) 9%, transparent) !important;
 }
 /* Selected / current selectable card on glass — restore a brand edge. The
    glass-card border (transparent !important) would otherwise blank out PF6's
@@ -2543,7 +2543,7 @@
   -webkit-backdrop-filter: none;
   box-shadow: none;
   border: var(--pf-t--global--border--width--regular, 1px) solid
-    color-mix(in srgb, var(--gp-color-text-regular) 14%, transparent) !important;
+    color-mix(in srgb, var(--gp-color-text-regular) 9%, transparent) !important;
 }
 
 /* Doc-kit Card wrapper — the Storybook section container. Under glass its

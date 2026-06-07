@@ -59,6 +59,7 @@ import {
 } from "@patternfly/react-core";
 import EllipsisVIcon from "@patternfly/react-icons/dist/esm/icons/ellipsis-v-icon";
 import TrashIcon from "@patternfly/react-icons/dist/esm/icons/trash-icon";
+import FilterIcon from "@patternfly/react-icons/dist/esm/icons/filter-icon";
 // ESM build (see note in PrimaryDetailDemo.stories.tsx) so the custom masthead
 // and DashboardWrapper's <Page> share the same PageContext — keeps the managed
 // sidebar hamburger working.
@@ -394,18 +395,37 @@ export function PrimaryDetailCardView() {
       <Select
         aria-label="Products"
         role="menu"
-        toggle={(toggleRef) => (
-          <MenuToggle
-            ref={toggleRef}
-            onClick={onToolbarDropdownToggle}
-            isExpanded={isLowerToolbarDropdownOpen}
-          >
-            Filter by creator name
-            {filters.products.length > 0 && (
-              <Badge isRead>{filters.products.length}</Badge>
-            )}
-          </MenuToggle>
-        )}
+        toggle={(toggleRef) =>
+          isNarrow ? (
+            // On mobile the labelled filter toggle is collapsed to a plain
+            // filter icon to save horizontal space; the active-count badge
+            // moves into the icon's badge slot so selections stay visible.
+            <MenuToggle
+              ref={toggleRef}
+              variant="plain"
+              aria-label="Filter by creator name"
+              onClick={onToolbarDropdownToggle}
+              isExpanded={isLowerToolbarDropdownOpen}
+              badge={
+                filters.products.length > 0 ? (
+                  <Badge isRead>{filters.products.length}</Badge>
+                ) : undefined
+              }
+              icon={<FilterIcon />}
+            />
+          ) : (
+            <MenuToggle
+              ref={toggleRef}
+              onClick={onToolbarDropdownToggle}
+              isExpanded={isLowerToolbarDropdownOpen}
+            >
+              Filter by creator name
+              {filters.products.length > 0 && (
+                <Badge isRead>{filters.products.length}</Badge>
+              )}
+            </MenuToggle>
+          )
+        }
         onSelect={onNameSelect}
         onOpenChange={(isOpen) => setIsLowerToolbarDropdownOpen(isOpen)}
         selected={filters.products}
