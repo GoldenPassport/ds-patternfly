@@ -4,9 +4,13 @@
 
 A brandable React design system built on **PatternFly 6**, designed to accelerate front-end work for BPM/automation projects (e.g. KIE).
 
+![Default theme — dark mode with glass surfaces](https://raw.githubusercontent.com/GoldenPassport/ds-patternfly/main/packages/ds-patternfly/assets/default-dark-glass.jpg)
+
+![Golden Passport brand — light mode](https://raw.githubusercontent.com/GoldenPassport/ds-patternfly/main/packages/ds-patternfly/assets/gp-light-noglass.jpg)
+
 ## Layout
 
-Single package — flat repo. `src/` is the library; `.storybook/` is the dev surface.
+pnpm monorepo. The library lives in [`packages/ds-patternfly`](packages/ds-patternfly) (`src/` is the lib, `.storybook/` is the dev surface); the MCP server lives in `packages/ds-patternfly-mcp`.
 
 ## Quickstart
 
@@ -45,17 +49,17 @@ import "@golden-passport/ds-patternfly/styles";
 
 import {
   ThemeProvider,
-  AppShell,
+  Shell,
   PrimaryDetailLayout,
   goldenPassport,
   primaryDetailLayoutEnLabels,
-  appShellEnLabels,
+  shellEnLabels,
 } from "@golden-passport/ds-patternfly";
 
 export default function App() {
   return (
     <ThemeProvider brand={goldenPassport}>
-      <AppShell labels={appShellEnLabels} brandLogo={<img src="/logo.svg" alt="" />}>
+      <Shell labels={shellEnLabels} brandLogo={<img src="/logo.svg" alt="" />}>
         <PrimaryDetailLayout
           items={items}
           selectedId={selectedId}
@@ -64,7 +68,7 @@ export default function App() {
           renderDetail={(i) => <div>{i.description}</div>}
           labels={primaryDetailLayoutEnLabels}
         />
-      </AppShell>
+      </Shell>
     </ThemeProvider>
   );
 }
