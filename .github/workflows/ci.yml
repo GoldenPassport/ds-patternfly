@@ -97,10 +97,10 @@ jobs:
 
       - name: Install Playwright Chromium + OS deps
         if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: pnpm exec playwright install chromium --with-deps
+        run: pnpm --filter @golden-passport/ds-patternfly exec playwright install chromium --with-deps
 
       - name: Install Chromium OS deps only (cache hit)
         if: steps.pw-cache.outputs.cache-hit == 'true'
-        run: pnpm exec playwright install-deps chromium
+        run: pnpm --filter @golden-passport/ds-patternfly exec playwright install-deps chromium
 
       - run: pnpm test
