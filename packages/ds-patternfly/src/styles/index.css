@@ -2820,18 +2820,21 @@
   background-color: color-mix(in srgb,
     var(--pf-t--global--background--color--primary--default) 65%,
     var(--pf-t--global--background--color--glass--primary--default)) !important;
-  /* Hero ships an opaque 1px border — a hard line on the frosted
-     surface. Clear it so the frost defines the edge. */
-  border-color: transparent !important;
-  /* No backdrop-filter here. The hero's decorative radius is asymmetric
-     (16px on two corners, 48px on the other two) and Chromium does NOT clip
-     backdrop-filter to a non-uniform radius — even with overflow:hidden — so
-     a squared-off frosted sliver pokes past the two large (top-right /
-     bottom-left) corners. The dense frosted fill above already reads as glass
-     (and an opaque gradient hero hides any blur entirely), so the blur only
-     bought the corner artifact. overflow:hidden keeps the fill / gradient
-     clipped cleanly to all four corners. */
-  overflow: hidden;
+  /* Drop the hero's 1px border entirely. On the frosted surface it's a hard
+     line, and with the asymmetric radius (16px on two corners, 48px on the
+     other two) its rounded corners antialias against the page background,
+     leaving a grey/transparent fringe at the two large (top-right /
+     bottom-left) corners while the straight edges stay dark. With no border,
+     the gradient / frosted fill — which background-clip already rounds to the
+     corner radius — defines a clean edge on all four corners. */
+  border: 0 !important;
+  /* No backdrop-filter: Chromium won't clip it to a non-uniform border-radius
+     (even with overflow:hidden), so it leaves a squared-off frosted sliver
+     past the two large corners. The dense fill already reads as glass, and an
+     opaque gradient hero hides any blur anyway — so the blur only bought the
+     artifact. No overflow:hidden either: background-clip rounds the fill /
+     gradient on its own, and the clip's corner antialiasing was itself part
+     of the fringe. */
 }
 
 /* ── Glass border token (the ONE place to retint glass-surface edges) ──
