@@ -95,27 +95,14 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
 
-      # needrestart on Ubuntu runners defaults to interactive mode, so the
-      # apt-get that Playwright's --with-deps / install-deps invokes hangs on
-      # a "restart services?" prompt that never receives input in CI. Force
-      # needrestart into automatic mode so the apt step runs unattended.
-      - name: Defuse needrestart (prevent apt hang)
-        run: |
-          sudo mkdir -p /etc/needrestart/conf.d
-          printf '$nrconf{restart} = "a";\n' | sudo tee /etc/needrestart/conf.d/99-no-prompt.conf
-
-      - name: Install Playwright Chromium + OS deps
+      # Install only the Chromium browser binary — NOT `--with-deps`. The
+      # GitHub ubuntu-latest runner image already ships Chromium's OS
+      # libraries (Chrome/Chromium/Edge/Firefox are preinstalled), so the
+      # apt-get that `--with-deps` runs is unnecessary and was hanging the
+      # job indefinitely on needrestart's interactive "restart services?"
+      # prompt. On a cache hit the browser is already present, so skip.
+      - name: Install Playwright Chromium
         if: steps.pw-cache.outputs.cache-hit != 'true'
-        env:
-          DEBIAN_FRONTEND: noninteractive
-          NEEDRESTART_MODE: a
-        run: pnpm --filter @golden-passport/ds-patternfly exec playwright install chromium --with-deps
-
-      - name: Install Chromium OS deps only (cache hit)
-        if: steps.pw-cache.outputs.cache-hit == 'true'
-        env:
-          DEBIAN_FRONTEND: noninteractive
-          NEEDRESTART_MODE: a
-        run: pnpm --filter @golden-passport/ds-patternfly exec playwright install-deps chromium
+        run: pnpm --filter @golden-passport/ds-patternfly exec playwright install chromium
 
       - run: pnpm test
