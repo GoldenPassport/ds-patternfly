@@ -72,9 +72,9 @@ const avatarSrc = svg(
 // Responsive kebab-collapse is documented in the PF6 page demos via
 // ToolbarItem.visibility, but that prop is JS-resolved through
 // PageContext.width, which doesn't synchronise reliably with Storybook's
-// iframe viewport. Rather than ship a flaky collapse, every action stays
-// visible at every breakpoint here; consuming apps that hit the real
-// breakpoint cascade can opt into the collapse pattern as needed.
+// iframe viewport. Instead this uses PF6 utility-class media queries
+// (see MastheadActions): the three icon buttons collapse into a kebab
+// dropdown below md and render inline above it.
 const userDropdownItems = (
   <>
     <DropdownItem key="profile">My profile</DropdownItem>
@@ -88,8 +88,8 @@ const userDropdownItems = (
 function MastheadActions() {
   const [userOpen, setUserOpen] = useState(false);
   const [kebabOpen, setKebabOpen] = useState(false);
-  // Responsive split via ToolbarItem `visibility` — viewport-based
-  // media queries, which gives predictable behaviour regardless of
+  // Responsive split via PF6 utility-class visibility — viewport-based
+  // media queries, which give predictable behaviour regardless of
   // available toolbar width (PF6's OverflowMenu measures its own
   // container width, which inside a Toolbar ends up only ~40px wide
   // and never trips above the md breakpoint). Below md the three
@@ -275,9 +275,9 @@ export const WithSidebarAndPrimaryDetail: Story = {
         />
         <Shell
           labels={shellEnLabels}
-        brandLogo={<AcmeLogo />}
-        mastheadActions={<MastheadActions />}
-        sidebar={
+          brandLogo={<AcmeLogo />}
+          mastheadActions={<MastheadActions />}
+          sidebar={
           <Nav aria-label="Main">
             <NavList>
               {navItems.map((item) => (

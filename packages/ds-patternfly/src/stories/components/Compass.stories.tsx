@@ -54,7 +54,6 @@ import {
   Card,
   CodeBlock,
 } from "../_storyKit.js";
-import { PropsTable } from "../_demoKit.js";
 import { AcmeLogo } from "../_acmeLogo.js";
 
 const meta: Meta = {
@@ -789,6 +788,7 @@ function CompassFullDemo() {
               isExpanded={isMobileNavOpen}
               aria-label="Global navigation"
               aria-expanded={isMobileNavOpen}
+              aria-controls="compass-mobile-nav"
               onClick={() => setIsMobileNavOpen((v) => !v)}
             />
           )}
@@ -1045,12 +1045,13 @@ function CompassFullDemo() {
               type="button"
               className="gp-compass-scrim"
               aria-label="Close navigation"
-              onClick={() => setIsMobileNavOpen(false)}
+              onClick={closeMobileNav}
             />
           )}
           {/* Overlay side-nav drawer — slides in over the content without
               displacing it. */}
           <div
+            id="compass-mobile-nav"
             className={
               "gp-compass-drawer" + (isMobileNavOpen ? " pf-m-open" : "")
             }

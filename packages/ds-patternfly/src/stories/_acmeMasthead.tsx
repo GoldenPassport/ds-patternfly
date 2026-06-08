@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   Avatar,
   Button,
-  ButtonVariant,
   Divider,
   Dropdown,
   DropdownGroup,
@@ -96,12 +95,13 @@ export function AcmeDashboardMasthead() {
                 <ToolbarItem>
                   <Button
                     aria-label="Help"
-                    variant={ButtonVariant.plain}
+                    variant="plain"
                     icon={<QuestionCircleIcon />}
                   />
                 </ToolbarItem>
               </ToolbarGroup>
-              {/* Below lg the utility icons + user actions collapse into a kebab */}
+              {/* Below lg the settings/help icons + user actions collapse into
+                  this kebab (notifications stays inline above). */}
               <ToolbarItem visibility={{ lg: "hidden" }}>
                 <Dropdown
                   isOpen={isKebabOpen}

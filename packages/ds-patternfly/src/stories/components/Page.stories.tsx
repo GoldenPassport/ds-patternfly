@@ -73,23 +73,8 @@ export default meta;
 const brandLogo = <AcmeLogo />;
 
 /**
- * Live demo of PF6's sticky-header pattern (patternfly.org/components/page
- * react-demos/sticky-section-breadcrumb-with-breakpoints). Three checkboxes
- * drive which parts of the header join the sticky group:
- *
- *   - Breadcrumb       → drives `groupProps.stickyOnBreakpoint`
- *   - Page heading     → if true, the <h1> lives in `additionalGroupedContent`
- *                        (sticky); if false, it goes in a regular body section.
- *   - Page subheading  → same toggle for the lead paragraph.
- *
- * PF6's grouping model: anything passed to `additionalGroupedContent` lives
- * inside the auto-PageGroup with the breadcrumb. The whole group inherits
- * `groupProps.stickyOnBreakpoint`, so heading / subheading sticky implicitly
- * pin the breadcrumb too. The demo body scrolls inside a fixed-height frame
- * so the stick / unstick transition is visible without scrolling the page.
- */
-/**
- * Rebuilt to mirror the Basic demo's sidenav pattern: PF6
+ * Live demo of PF6's sticky-header pattern, mirroring the Basic demo's
+ * sidenav pattern: PF6
  * `isManagedSidebar` + `useBlockPushClickClose`, no custom
  * `sidenavDrawerCss`. The fixed-height scroll viewport (DemoFrame's
  * own `height` prop) lets the user scroll inside the demo to see the
@@ -1428,9 +1413,10 @@ const sidebar = (
 // Story: SidenavDrawer — configurable overlay/push + overlay styles
 // ──────────────────────────────────────────────────────────────────
 
-// Clickable glass scrim for the full-height overlay style. Sits just under
-// the sidebar (z 1100) and over the page content; tapping it (clicking off
-// the sidenav) closes the drawer. The .gp-sidenav-scrim class lets
+// Clickable glass scrim for the full-height overlay style. Sits at z 1050 —
+// just under the sidebar (z 1100, set by sidenavDrawerCss) and over the page
+// content; tapping it (clicking off the sidenav) closes the drawer. The
+// .gp-sidenav-scrim class lets
 // sidenavDrawerCss hide it in push mode. Frosted via a translucent fill +
 // backdrop blur so it reads as glass.
 function FullscreenScrim({ onClose }: { onClose: () => void }) {
