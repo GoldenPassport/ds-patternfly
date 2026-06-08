@@ -114,6 +114,12 @@ jobs:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
 
+      # npm OIDC trusted publishing (how this package authenticates — there
+      # is no token secret) requires npm >= 11.5.1. Node 22 bundles npm 10.x,
+      # on which the OIDC exchange never runs, so npm falls back to the empty
+      # NODE_AUTH_TOKEN and the publish PUT 404s. Upgrade npm before publish.
+      - run: npm install -g npm@latest
+
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       # cd into the lib's package directory so npm publish picks up
