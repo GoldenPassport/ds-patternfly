@@ -5,7 +5,8 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GoldenPassport/ds-patternfly.git"
+    "url": "git+https://github.com/GoldenPassport/ds-patternfly.git",
+    "directory": "packages/ds-patternfly"
   },
   "bugs": {
     "url": "https://github.com/GoldenPassport/ds-patternfly/issues"
