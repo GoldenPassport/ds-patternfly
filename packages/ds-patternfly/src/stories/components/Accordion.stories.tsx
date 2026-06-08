@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionToggle,
 } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../../components/StoryKit.js";
 import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
 
 const meta: Meta = {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FoundationPage, Section, Card } from "../_storyKit.js";
+import { FoundationPage, Section, Card } from "../../components/StoryKit.js";
 
 const meta: Meta = {
   // Title is exactly "Patterns" (no sub-segment) so this becomes the

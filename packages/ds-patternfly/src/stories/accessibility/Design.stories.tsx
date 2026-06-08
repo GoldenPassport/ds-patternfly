@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FoundationPage, Section, Card } from "../_storyKit.js";
+import { FoundationPage, Section, Card } from "../../components/StoryKit.js";
 
 const meta: Meta = {
   title: "Accessibility/Design for accessibility",

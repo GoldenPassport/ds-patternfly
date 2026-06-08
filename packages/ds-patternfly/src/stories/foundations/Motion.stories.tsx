@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within } from "storybook/test";
 import { useState } from "react";
 import { useBrand } from "../../theme/useBrand.js";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
 
 const meta: Meta = {
   title: "Foundations/Motion",

@@ -24,7 +24,7 @@ import {
   Section,
   Card as DocCard,
   CodeBlock,
-} from "../_storyKit.js";
+} from "../../components/StoryKit.js";
 import { DemoFrame } from "../../components/DemoKit.js";
 
 const meta: Meta = {

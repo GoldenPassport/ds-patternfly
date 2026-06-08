@@ -18,7 +18,7 @@ import {
   ToolbarToggleGroup,
 } from "@patternfly/react-core";
 import { FilterIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
 import { DemoFrame } from "../../components/DemoKit.js";
 
 const meta: Meta = {

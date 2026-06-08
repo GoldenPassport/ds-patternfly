@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "@patternfly/react-core";
 import { FeedbackModal } from "@patternfly/react-user-feedback";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
 import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
 
 const meta: Meta = {

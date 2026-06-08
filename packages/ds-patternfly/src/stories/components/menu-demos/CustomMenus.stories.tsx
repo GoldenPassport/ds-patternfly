@@ -13,7 +13,7 @@ import {
   MenuSearchInput,
   SearchInput,
 } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../../../components/StoryKit.js";
 import { DemoFrame } from "../../../components/DemoKit.js";
 
 const meta: Meta = {

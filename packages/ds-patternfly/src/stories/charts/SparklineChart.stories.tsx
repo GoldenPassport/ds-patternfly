@@ -5,7 +5,7 @@ import {
   ChartGroup,
   ChartVoronoiContainer,
 } from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
 import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
 import { chartA11yParams } from "./_chartKit.js";
 

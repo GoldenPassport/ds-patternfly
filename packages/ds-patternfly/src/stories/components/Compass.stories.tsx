@@ -53,7 +53,7 @@ import {
   Section,
   Card,
   CodeBlock,
-} from "../_storyKit.js";
+} from "../../components/StoryKit.js";
 import { AcmeLogo } from "../../components/AcmeLogo.js";
 
 const meta: Meta = {

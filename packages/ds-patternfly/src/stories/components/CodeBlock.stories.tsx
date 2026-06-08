@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { PlayIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock as CodeBlockKit } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock as CodeBlockKit } from "../../components/StoryKit.js";
 import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
 
 const meta: Meta = {

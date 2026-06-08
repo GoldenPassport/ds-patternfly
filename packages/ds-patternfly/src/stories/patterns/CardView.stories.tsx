@@ -14,7 +14,7 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import { CubeIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../../components/StoryKit.js";
 import { DemoFrame } from "../../components/DemoKit.js";
 
 const meta: Meta = {

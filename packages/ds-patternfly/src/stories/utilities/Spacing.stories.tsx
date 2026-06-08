@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
 import { ClassTable, DemoFrame, ResponsiveNote } from "./_utilityKit.js";
 
 const meta: Meta = {

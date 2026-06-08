@@ -8,7 +8,7 @@ import {
   ModalHeader,
   ModalVariant,
 } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../../../components/StoryKit.js";
 import { DemoFrame, PropsTable } from "../../../components/DemoKit.js";
 import { CalendarPanel } from "./_libcal.js";
 

@@ -32,7 +32,7 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import { BellIcon, CogIcon, EllipsisVIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
 import {
   DemoFrame,
   PropsTable,

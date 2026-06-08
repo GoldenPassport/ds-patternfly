@@ -16,7 +16,7 @@ import {
   Section,
   Card,
   CodeBlock,
-} from "../_storyKit.js";
+} from "../../components/StoryKit.js";
 import { PropsTable } from "../../components/DemoKit.js";
 
 const meta: Meta = {
