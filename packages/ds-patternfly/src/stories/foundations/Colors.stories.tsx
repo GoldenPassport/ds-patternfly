@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useTheme } from "../../theme/ThemeProvider.js";
 import { useBrand } from "../../theme/useBrand.js";
-import { contrastRatio } from "../../a11y/contrast.js";
 import type {
   BrandColorScale,
   ColorMode,

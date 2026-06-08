@@ -131,7 +131,7 @@ function GlassPreview({ label, dark }: { label: string; dark: boolean }) {
   );
 }
 
-// ---------- Theme dial catalogue (Phase 1: 35 dials, 11 categories) ----------
+// ---------- Theme dial catalogue (Phase 1: 37 dials, 11 categories) ----------
 // Mirrors the [data-brand] block in src/styles/index.css. The story reads
 // the live computed value of each dial off document.documentElement so the
 // table reflects whatever the active brand × mode resolves to.
@@ -626,7 +626,7 @@ export const Overview: StoryObj = {
 
       <Section
         title="Theme dials"
-        description="35 high-level brand tokens grouped into 11 categories. Edit any dial at the [data-brand] root and the change cascades into every PF6 component that depends on it — no per-component CSS patches. Tables below show the live computed value of each dial; flip mode in the toolbar to see colour dials swap."
+        description="37 high-level brand tokens grouped into 11 categories. Edit any dial at the [data-brand] root and the change cascades into every PF6 component that depends on it — no per-component CSS patches. Tables below show the live computed value of each dial; flip mode in the toolbar to see colour dials swap."
       >
         <Card>
           <div style={{ padding: 24 }}>
@@ -723,7 +723,7 @@ export const myBrand = {
     nonstatus:  { /* border, borderSubtle */ },
   },
   font:   { /* family, sizeBase */ },
-  radius: { sm: "…", md: "…", lg: "…" },
+  radius: { sharp: "…", tiny: "…", sm: "…", md: "…", lg: "…", pill: "…" },
   space:  { xs: "…", sm: "…", md: "…", lg: "…", xl: "…" },
   motion: { duration: { /* … */ }, easing: { /* … */ } },
 } satisfies BrandTokens;`}</CodeBlock>

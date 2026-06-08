@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button, Card, CardBody, CardTitle } from "@patternfly/react-core";
+import { Button } from "@patternfly/react-core";
 import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../../components/StoryKit.js";
 import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
 

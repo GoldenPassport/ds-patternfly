@@ -44,7 +44,7 @@ const COMMON = [
   { name: "Eye slash", Icon: EyeSlashIcon },
   { name: "Arrow left", Icon: ArrowLeftIcon },
   { name: "Arrow right", Icon: ArrowRightIcon },
-  { name: "Caret down", Icon: AngleDownIcon },
+  { name: "Angle down", Icon: AngleDownIcon },
   { name: "Close", Icon: TimesIcon },
 ];
 
