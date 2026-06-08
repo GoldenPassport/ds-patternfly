@@ -2826,6 +2826,12 @@
   /* Hero ships an opaque 1px border — a hard line on the frosted
      surface. Clear it so the frost defines the edge. */
   border-color: transparent !important;
+  /* The hero's decorative radius is asymmetric (small on two corners,
+     large on the other two). backdrop-filter doesn't clip cleanly to the
+     large corners, leaving a squared-off frosted sliver at the top-right /
+     bottom-left. Clip the element to its rounded shape so the frost (and
+     gradient) follow all four corners. */
+  overflow: hidden;
 }
 
 /* ── Glass border token (the ONE place to retint glass-surface edges) ──

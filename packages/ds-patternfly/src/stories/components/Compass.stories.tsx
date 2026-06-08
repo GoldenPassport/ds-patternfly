@@ -933,6 +933,10 @@ function CompassFullDemo() {
             "    padding: 0 !important;",
             "  }",
             "  .gp-compass-mobile-overlay .gp-compass-avatar-toggle::before { display: none !important; }",
+            // The header grid is align-items:start, so the profile slot (just
+            // the avatar on mobile) sits at the top instead of centred next to
+            // the hamburger. Centre the profile cell in the header row.
+            "  .gp-compass-mobile-overlay .pf-v6-c-compass__profile { align-self: center; }",
             // Rails out of the grid → absolute overlays anchored to the demo
             // box (not the viewport) so the handles sit on the box edge rather
             // than floating in the page margin. Keep the wrapper visible (PF6
