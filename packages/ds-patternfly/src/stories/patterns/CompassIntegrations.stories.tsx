@@ -87,6 +87,7 @@ import OutlinedQuestionCircleIcon from "@patternfly/react-icons/dist/esm/icons/o
 import PlayIcon from "@patternfly/react-icons/dist/esm/icons/play-icon";
 import ThIcon from "@patternfly/react-icons/dist/esm/icons/th-icon";
 import { AcmeLogo } from "../../components/AcmeLogo.js";
+import { AiAssistant, aiAssistantCss } from "../../components/AiAssistant.js";
 import { useTheme } from "../../theme/ThemeProvider.js";
 
 // ──────────────────────────────────────────────────────────────────
@@ -324,11 +325,9 @@ function IntegrationsDemo() {
   // "Thinking" indicator on the AI message bar — flips on when the
   // user taps the send button, off after a few seconds. Drives the
   // pulsating brand-coloured ring around the pill.
-  const [isThinking, setIsThinking] = useState(false);
-  const handleSendMessage = () => {
-    setIsThinking(true);
-    setTimeout(() => setIsThinking(false), 4000);
-  };
+  // Positioned container the AiAssistant overlays (recent popover + full chat)
+  // portal into and anchor to — it wraps the whole Compass surface below.
+  const [aiOverlayEl, setAiOverlayEl] = useState<HTMLDivElement | null>(null);
   const [activeDisplay, setActiveDisplay] = useState<"table" | "card">("table");
   // "Add integration" demo modal — a small form (name + type) that
   // doesn't persist anything; closing or submitting just dismisses it.
@@ -1034,38 +1033,18 @@ function IntegrationsDemo() {
   // chain was making the input non-typable when overridden into a
   // pill shape. Keeping the markup minimal so the input is
   // straightforwardly interactive.
+  // The footer slot hosts the AiAssistant message bar. The bar renders here;
+  // its overlays (recent-chat popover + full-chat panel / modal) portal up to
+  // the positioned wrapper around the whole Compass surface (aiOverlayEl), so
+  // the conversation floats over the content rather than inside the footer.
   const footerContent = (
     <CompassMessageBar>
-      <div
-        className={`gp-cmp-message-bar${isThinking ? " is-thinking" : ""}`}
-      >
-        <input
-          type="text"
-          placeholder="Send a message…"
-          aria-label="Send a message"
-          className="gp-cmp-message-bar__input"
-          onKeyDown={(e) => {
-            // Enter (without modifier) triggers the same send
-            // action as the button — fires the "thinking" pulse.
-            // Shift+Enter is left alone so it could be wired to
-            // multi-line input later.
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              handleSendMessage();
-            }
-          }}
+      <div className="gp-cmp-ai-bar">
+        <AiAssistant
+          overlayContainer={aiOverlayEl}
+          placement="bottom-right"
+          persist={false}
         />
-        <Button
-          variant="plain"
-          aria-label="Send"
-          icon={<PaperPlaneIcon />}
-          className="gp-cmp-message-bar__send"
-          onClick={handleSendMessage}
-        />
-        {/* Live-region announcement so AT users hear the state. */}
-        <div className="pf-v6-screen-reader" aria-live="polite">
-          {isThinking ? "AI is thinking…" : ""}
-        </div>
       </div>
     </CompassMessageBar>
   );
@@ -2588,6 +2567,29 @@ function IntegrationsDemo() {
           text-align: center;
         }
       `}</style>
+      <style>{aiAssistantCss}</style>
+      <style>{`
+        /* AiAssistant in the Compass footer. The bar fills the footer width;
+           its overlays portal up to .gp-cmp-ai-root — a fixed layer over the
+           whole surface — so the recent-chat popover sits just above the
+           footer and the full chat floats over the content (never clipped by
+           the footer). The layer is click-through except where an overlay is
+           actually painted. */
+        .gp-cmp-ai-bar { inline-size: 100%; }
+        .gp-cmp-ai-bar .gp-ai-borderbar { max-inline-size: none; }
+        .gp-cmp-ai-root {
+          position: fixed;
+          inset-block-start: 0;
+          inset-inline: 0;
+          /* Stop the layer just above the footer message bar so both the
+             recent popover and the full-chat panel clear the footer. */
+          inset-block-end: 4.75rem;
+          z-index: 200;
+          pointer-events: none;
+          --gp-ai-bar-offset: 0.75rem;
+        }
+        .gp-cmp-ai-root .gp-ai-fullchat { pointer-events: auto; }
+      `}</style>
       <SkipToContent
         onClick={handleSkipClick}
         href="#integrations-main-content"
@@ -2626,6 +2628,9 @@ function IntegrationsDemo() {
           onExpand: () => setIsMobileNavOpen(true),
         }}
       />
+      {/* Fixed overlay layer the AiAssistant portals its recent-chat popover
+          and full-chat panel into (see footerContent + the CSS above). */}
+      <div className="gp-cmp-ai-root" ref={setAiOverlayEl} />
       {/* Rail handles are now rendered INSIDE startSidebar /
           endSidebar (see those constants above). They live as DOM
           children of .pf-v6-c-compass__sidebar so they travel
