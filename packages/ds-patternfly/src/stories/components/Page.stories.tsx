@@ -41,7 +41,7 @@ import {
   type SidenavOverlayBreakpoint,
   useBlockPushClickClose,
 } from "../_demoKit.js";
-import { AcmeLogo } from "../_acmeLogo.js";
+import { AcmeLogo } from "../../components/AcmeLogo.js";
 
 const meta: Meta = {
   title: "Components/Page",
@@ -69,7 +69,7 @@ const meta: Meta = {
 export default meta;
 
 // Shared Acme logo — colour-aware so the wordmark stays readable when the
-// Storybook toolbar toggles dark mode. See `src/stories/_acmeLogo.tsx`.
+// Storybook toolbar toggles dark mode. See `src/components/AcmeLogo.tsx`.
 const brandLogo = <AcmeLogo />;
 
 /**

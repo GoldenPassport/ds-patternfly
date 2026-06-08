@@ -86,7 +86,7 @@ import OutlinedPlusSquareIcon from "@patternfly/react-icons/dist/esm/icons/outli
 import OutlinedQuestionCircleIcon from "@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon";
 import PlayIcon from "@patternfly/react-icons/dist/esm/icons/play-icon";
 import ThIcon from "@patternfly/react-icons/dist/esm/icons/th-icon";
-import { AcmeLogo } from "../_acmeLogo.js";
+import { AcmeLogo } from "../../components/AcmeLogo.js";
 import { useTheme } from "../../theme/ThemeProvider.js";
 
 // ──────────────────────────────────────────────────────────────────

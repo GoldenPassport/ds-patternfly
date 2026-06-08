@@ -39,7 +39,7 @@ import {
   sidenavDrawerCss,
   useBlockPushClickClose,
 } from "../_demoKit.js";
-import { AcmeLogo } from "../_acmeLogo.js";
+import { AcmeLogo } from "../../components/AcmeLogo.js";
 
 const meta: Meta = {
   title: "Components/Masthead",

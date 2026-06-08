@@ -54,7 +54,7 @@ import {
   Card,
   CodeBlock,
 } from "../_storyKit.js";
-import { AcmeLogo } from "../_acmeLogo.js";
+import { AcmeLogo } from "../../components/AcmeLogo.js";
 
 const meta: Meta = {
   title: "Components/Compass",

@@ -25,7 +25,7 @@ import {
 } from "@patternfly/react-core";
 import EllipsisVIcon from "@patternfly/react-icons/dist/esm/icons/ellipsis-v-icon";
 import QuestionCircleIcon from "@patternfly/react-icons/dist/esm/icons/question-circle-icon";
-import { AcmeLogo } from "./_acmeLogo.js";
+import { AcmeLogo } from "./AcmeLogo.js";
 
 // Inline-SVG avatar (Acme brand blue) so the masthead profile menu is
 // asset-free.

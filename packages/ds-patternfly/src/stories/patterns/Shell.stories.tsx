@@ -38,10 +38,10 @@ import {
 import PageHeader from "@patternfly/react-component-groups/dist/dynamic/PageHeader";
 import { Shell } from "../../components/Shell.js";
 import { shellEnLabels } from "../../components/labels.js";
-import { AcmeLogo } from "../_acmeLogo.js";
+import { AcmeLogo } from "../../components/AcmeLogo.js";
 
 // Shared svg-data-URI helper. The Acme brand logo lives in
-// `src/stories/_acmeLogo.tsx` (colour-aware for dark mode); only the
+// `src/components/AcmeLogo.tsx` (colour-aware for dark mode); only the
 // avatar SVG is still inlined here.
 const svg = (m: string) =>
   "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(m);
