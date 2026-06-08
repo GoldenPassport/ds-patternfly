@@ -917,6 +917,12 @@ function CompassFullDemo() {
             // rail's edge handle sits just inside the box edge, so it stays
             // visible/tappable.
             "  .gp-compass-mobile-overlay { overflow: hidden; }",
+            // With the rails hidden (off-canvas overlays on mobile) the main
+            // section would otherwise stretch to within one spacer of the box
+            // edge. Give it explicit inline margins so the content stays an
+            // inset column rather than sprawling edge-to-edge under the
+            // full-bleed header.
+            "  .gp-compass-mobile-overlay .pf-v6-c-compass__main { margin-inline: var(--pf-t--global--spacer--md, 1rem); }",
             // Bare avatar profile toggle — strip the circular toggle chrome
             // (the ::before interactive background) so only the avatar shows,
             // with no circle behind it in any state.
