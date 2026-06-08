@@ -1,6 +1,6 @@
 {
   "name": "@golden-passport/ds-patternfly",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Brandable React design system built on PatternFly 6, for BPM/automation projects.",
   "license": "Apache-2.0",
   "repository": {
