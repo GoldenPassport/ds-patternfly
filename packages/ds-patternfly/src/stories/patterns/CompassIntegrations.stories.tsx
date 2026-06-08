@@ -1120,19 +1120,6 @@ function IntegrationsDemo() {
           line-height: 1.4;
           color: var(--gp-color-text-subtle, currentColor);
         }
-        /* Footer message bar — pill-shaped text input with a tight
-           background. The input + send button share one continuous
-           rounded shell. Three things have to be true:
-             1. The outer wrapper paints the pill chrome (radius,
-                border, background) and the inner PF6 chrome is
-                hidden so it doesn't double-border.
-             2. Tall enough to read as a chunky pill (3rem block
-                size, not the 2.25rem control default).
-             3. Focus ring follows the pill radius — outline on the
-                wrapper at focus-within, inner outline suppressed.
-           Plus a 0.75rem (12px) top margin on the wrapper so the
-           pill clearly separates from the body content above it
-           (without that the footer reads as fused to the table). */
         /* Footer message bar — pill-shaped row with a plain input
            + send button. Built as a div+input+button (NOT
            TextInputGroup) because PF6's TextInputGroup nests
@@ -2028,12 +2015,6 @@ function IntegrationsDemo() {
             flex-basis: 100%;
             justify-content: flex-end;
           }
-          /* Hide the floating glass-theme switch on phones — it
-             overlaps the message bar / drawer affordances. */
-          .gp-cmp-mobile-hide {
-            display: none !important;
-          }
-
           /* Side-rail edge handles — now DOM children of the rail
              itself. position: absolute relative to the rail (which
              is position: fixed on mobile) so the handle docks
