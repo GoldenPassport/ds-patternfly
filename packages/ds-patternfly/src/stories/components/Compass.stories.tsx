@@ -1007,6 +1007,23 @@ function CompassFullDemo() {
             // When open, tuck the handle tighter against the rail edge.
             "  .gp-compass-mobile-overlay .gp-rail-left-open .pf-v6-c-compass__sidebar.pf-m-start .gp-cmp-rail-handle--start { inset-inline-end: -16px; }",
             "  .gp-compass-mobile-overlay .gp-rail-right-open .pf-v6-c-compass__sidebar.pf-m-end .gp-cmp-rail-handle--end { inset-inline-start: -16px; }",
+            // Mobile nav drawer sits ABOVE the rail edge-handles (z 300), and
+            // its scrim covers them, so the open sidenav is modal over the
+            // rail expansion buttons. Square corners — it's a flush full-height
+            // edge drawer, not a floating rounded card.
+            "  .gp-compass-mobile-overlay .gp-compass-scrim { z-index: 350; }",
+            "  .gp-compass-mobile-overlay .gp-compass-drawer { z-index: 400; }",
+            "  .gp-compass-mobile-overlay .gp-compass-drawer,",
+            "  .gp-compass-mobile-overlay .gp-compass-drawer > .pf-v6-c-panel { border-radius: 0; }",
+            "}",
+            // Desktop: the header spans the full width of the Compass box
+            // (breaking out of the container's inline padding) while the rails
+            // and main content stay inset — a full-bleed app bar over a
+            // margined content area.
+            "@media (min-width: 62rem) {",
+            "  .gp-compass-mobile-overlay .pf-v6-c-compass__header {",
+            "    margin-inline: calc(-1 * var(--pf-t--global--spacer--lg, 1.5rem));",
+            "  }",
             "}",
           ].join("\n"),
         }}
