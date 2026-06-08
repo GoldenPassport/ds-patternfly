@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Skeleton } from "@patternfly/react-core";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
-import { DemoFrame } from "../_demoKit.js";
+import { DemoFrame } from "../../components/DemoKit.js";
 
 const meta: Meta = {
   title: "Charts/Skeletons",

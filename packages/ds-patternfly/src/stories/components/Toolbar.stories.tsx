@@ -17,7 +17,7 @@ import {
   SyncIcon,
 } from "@patternfly/react-icons";
 import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_storyKit.js";
-import { DemoFrame, PropsTable } from "../_demoKit.js";
+import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/Toolbar",

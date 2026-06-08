@@ -3,7 +3,7 @@ import { Button, Gallery, GalleryItem } from "@patternfly/react-core";
 import { CogIcon, KeyIcon, ShieldAltIcon } from "@patternfly/react-icons";
 import ServiceCard from "@patternfly/react-component-groups/dist/dynamic/ServiceCard";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
-import { DemoFrame, PropsTable } from "../_demoKit.js";
+import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
 
 const meta: Meta = {
   title: "Component groups/Content containers/Service card",

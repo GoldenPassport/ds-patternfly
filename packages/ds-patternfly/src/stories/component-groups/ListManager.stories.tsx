@@ -4,7 +4,7 @@ import ListManager, {
   type ListManagerItem,
 } from "@patternfly/react-component-groups/dist/dynamic/ListManager";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
-import { DemoFrame, PropsTable } from "../_demoKit.js";
+import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
 
 // Mirrors PF6's canonical ColumnExample for ListManager
 // (https://www.patternfly.org/component-groups/helpers/list-manager).

@@ -12,7 +12,7 @@ import {
 } from "@patternfly/react-core";
 import { ChevronRightIcon, BellIcon } from "@patternfly/react-icons";
 import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../_storyKit.js";
-import { DemoFrame } from "../_demoKit.js";
+import { DemoFrame } from "../../components/DemoKit.js";
 
 const meta: Meta = {
   title: "Patterns/Right-to-left/Demo",

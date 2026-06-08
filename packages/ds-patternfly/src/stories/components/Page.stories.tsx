@@ -40,7 +40,7 @@ import {
   sidenavDrawerCss,
   type SidenavOverlayBreakpoint,
   useBlockPushClickClose,
-} from "../_demoKit.js";
+} from "../../components/DemoKit.js";
 import { AcmeLogo } from "../../components/AcmeLogo.js";
 
 const meta: Meta = {

@@ -8,7 +8,7 @@ import {
 } from "@patternfly/react-data-view";
 import { Button, Pagination } from "@patternfly/react-core";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
-import { DemoFrame, PropsTable } from "../_demoKit.js";
+import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
 
 const meta: Meta = {
   title: "Extensions/Data view/Toolbar",

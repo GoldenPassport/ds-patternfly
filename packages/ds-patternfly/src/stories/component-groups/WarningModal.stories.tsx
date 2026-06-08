@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button, ButtonVariant } from "@patternfly/react-core";
 import WarningModal from "@patternfly/react-component-groups/dist/dynamic/WarningModal";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
-import { DemoFrame, PropsTable } from "../_demoKit.js";
+import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
 
 const meta: Meta = {
   title: "Component groups/Error communication/Warning modal",

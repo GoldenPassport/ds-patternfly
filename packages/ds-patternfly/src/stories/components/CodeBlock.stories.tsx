@@ -12,7 +12,7 @@ import {
 } from "@patternfly/react-core";
 import { PlayIcon } from "@patternfly/react-icons";
 import { FoundationPage, Section, Card, CodeBlock as CodeBlockKit } from "../_storyKit.js";
-import { DemoFrame, PropsTable } from "../_demoKit.js";
+import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/CodeBlock",

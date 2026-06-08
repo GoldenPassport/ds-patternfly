@@ -17,7 +17,7 @@ import {
   Card,
   CodeBlock,
 } from "../_storyKit.js";
-import { PropsTable } from "../_demoKit.js";
+import { PropsTable } from "../../components/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/ActionList",

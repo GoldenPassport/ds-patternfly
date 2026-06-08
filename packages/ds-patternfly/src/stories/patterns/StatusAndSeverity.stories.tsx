@@ -11,7 +11,7 @@ import {
 import { Severity } from "@patternfly/react-component-groups/dist/dynamic/Severity";
 import { Status } from "@patternfly/react-component-groups/dist/dynamic/Status";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
-import { DemoFrame } from "../_demoKit.js";
+import { DemoFrame } from "../../components/DemoKit.js";
 
 const meta: Meta = {
   title: "Patterns/Status and severity",

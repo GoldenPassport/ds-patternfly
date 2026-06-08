@@ -8,7 +8,7 @@ import {
   getCustomTheme,
 } from "@patternfly/react-charts/victory";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
-import { DemoFrame, PropsTable } from "../_demoKit.js";
+import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
 import { chartA11yParams } from "./_chartKit.js";
 
 const meta: Meta = {

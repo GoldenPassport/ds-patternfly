@@ -12,7 +12,7 @@ import {
 } from "@patternfly/react-core";
 import { CheckIcon } from "@patternfly/react-icons";
 import { FoundationPage, Section, Card, CodeBlock } from "../../_storyKit.js";
-import { DemoFrame } from "../../_demoKit.js";
+import { DemoFrame } from "../../../components/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/Menu/Context selector",

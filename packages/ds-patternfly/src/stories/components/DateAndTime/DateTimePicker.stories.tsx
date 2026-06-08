@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FormGroup, TimePicker } from "@patternfly/react-core";
 import { FoundationPage, Section, Card, CodeBlock } from "../../_storyKit.js";
-import { DemoFrame, PropsTable } from "../../_demoKit.js";
+import { DemoFrame, PropsTable } from "../../../components/DemoKit.js";
 import { LibDatePicker } from "./_libcal.js";
 
 const meta: Meta = {

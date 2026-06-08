@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button, FileUpload, FormGroup } from "@patternfly/react-core";
 import { UploadIcon } from "@patternfly/react-icons";
 import { FoundationPage, Section, Card, CodeBlock } from "../../_storyKit.js";
-import { DemoFrame, PropsTable } from "../../_demoKit.js";
+import { DemoFrame, PropsTable } from "../../../components/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/File upload/FileUpload",

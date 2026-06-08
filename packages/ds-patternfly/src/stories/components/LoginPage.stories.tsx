@@ -16,7 +16,7 @@ import {
   GoogleIcon,
 } from "@patternfly/react-icons";
 import { FoundationPage, Section, Card, CodeBlock } from "../_storyKit.js";
-import { DemoFrame, PropsTable } from "../_demoKit.js";
+import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
 import { useTheme } from "../../theme/ThemeProvider.js";
 
 /** The Acme demo logo (blue badge + "Acme" wordmark) as an inline-SVG
