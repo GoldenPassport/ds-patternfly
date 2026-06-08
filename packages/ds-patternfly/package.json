@@ -57,8 +57,17 @@
   },
   "devDependencies": {
     "@patternfly/patternfly": "^6.4.0",
+    "@patternfly/quickstarts": "6.4.0",
+    "@patternfly/react-catalog-view-extension": "6.3.0",
+    "@patternfly/react-charts": "8.4.1",
+    "@patternfly/react-component-groups": "6.4.0",
+    "@patternfly/react-console": "6.1.0",
     "@patternfly/react-core": "^6.5.1",
+    "@patternfly/react-data-view": "6.4.0",
     "@patternfly/react-icons": "^6.5.1",
+    "@patternfly/react-log-viewer": "6.3.0",
+    "@patternfly/react-table": "6.4.3",
+    "@patternfly/react-user-feedback": "6.2.0",
     "@storybook/addon-a11y": "^10.4.0",
     "@storybook/addon-docs": "^10.4.0",
     "@storybook/addon-vitest": "^10.4.0",
@@ -79,8 +88,12 @@
     "storybook": "^10.4.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.0",
+    "victory": "^37.3.6",
     "vite": "^6.0.0",
     "vitest": "^4.1.5"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "design-system",
@@ -89,17 +102,5 @@
     "bpm",
     "kie",
     "golden-passport"
-  ],
-  "dependencies": {
-    "@patternfly/quickstarts": "6.4.0",
-    "@patternfly/react-catalog-view-extension": "6.3.0",
-    "@patternfly/react-charts": "8.4.1",
-    "@patternfly/react-component-groups": "6.4.0",
-    "@patternfly/react-console": "6.1.0",
-    "@patternfly/react-data-view": "6.4.0",
-    "@patternfly/react-log-viewer": "6.3.0",
-    "@patternfly/react-table": "6.4.3",
-    "@patternfly/react-user-feedback": "6.2.0",
-    "victory": "^37.3.6"
-  }
+  ]
 }

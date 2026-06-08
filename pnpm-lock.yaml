@@ -14,7 +14,10 @@ importers:
   .: {}
 
   packages/ds-patternfly:
-    dependencies:
+    devDependencies:
+      '@patternfly/patternfly':
+        specifier: ^6.4.0
+        version: 6.4.0
       '@patternfly/quickstarts':
         specifier: 6.4.0
         version: 6.4.0(@patternfly/react-core@6.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(marked@15.0.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -30,9 +33,15 @@ importers:
       '@patternfly/react-console':
         specifier: 6.1.0
         version: 6.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@patternfly/react-core':
+        specifier: ^6.5.1
+        version: 6.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@patternfly/react-data-view':
         specifier: 6.4.0
         version: 6.4.0(@patternfly/react-drag-drop@6.4.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@patternfly/react-icons':
+        specifier: ^6.5.1
+        version: 6.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@patternfly/react-log-viewer':
         specifier: 6.3.0
         version: 6.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -42,19 +51,6 @@ importers:
       '@patternfly/react-user-feedback':
         specifier: 6.2.0
         version: 6.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      victory:
-        specifier: ^37.3.6
-        version: 37.3.6(react@18.3.1)
-    devDependencies:
-      '@patternfly/patternfly':
-        specifier: ^6.4.0
-        version: 6.4.0
-      '@patternfly/react-core':
-        specifier: ^6.5.1
-        version: 6.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@patternfly/react-icons':
-        specifier: ^6.5.1
-        version: 6.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@storybook/addon-a11y':
         specifier: ^10.4.0
         version: 10.4.0(storybook@10.4.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@testing-library/dom@10.4.1)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
@@ -115,6 +111,9 @@ importers:
       typescript:
         specifier: ^5.6.0
         version: 5.9.3
+      victory:
+        specifier: ^37.3.6
+        version: 37.3.6(react@18.3.1)
       vite:
         specifier: ^6.0.0
         version: 6.4.2(@types/node@20.19.40)(tsx@4.22.4)
