@@ -66,7 +66,6 @@ export * from "./Select.js";
 export * from "./Sidebar.js";
 export * from "./SimpleList.js";
 export * from "./Skeleton.js";
-
 export * from "./Slider.js";
 export * from "./Spinner.js";
 export * from "./Switch.js";
