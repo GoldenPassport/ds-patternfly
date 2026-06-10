@@ -183,6 +183,15 @@ export type AiAssistantProps = {
   persist?: boolean;
   /** localStorage key prefix used when `persist` is on. */
   persistKey?: string;
+  /**
+   * Produce the assistant's reply to a sent message — wire your backend
+   * here. Return the reply text (or a promise of it); the thinking
+   * indicator shows until it resolves. When omitted, a canned demo reply
+   * answers after a short delay.
+   */
+  onSend?: (text: string) => Promise<string> | string;
+  /** Seed the conversation (e.g. restored history). Defaults to empty. */
+  initialMessages?: ChatMsg[];
 };
 
 export function AiAssistant({
@@ -191,6 +200,8 @@ export function AiAssistant({
   labels: labelOverrides,
   persist = false,
   persistKey = "gp-ai-assistance",
+  onSend,
+  initialMessages,
 }: AiAssistantProps) {
   const labels = { ...DEFAULT_CHAT_LABELS, ...labelOverrides };
   const isMobile = useIsMobile();
@@ -268,29 +279,63 @@ export function AiAssistant({
     if (isHistoryOpen) pinToBottom(historyBodyRef.current);
   }, [isHistoryOpen, messages, historyThinking]);
 
+  // Resolve a reply via `onSend` (app-provided, possibly async) or the canned
+  // demo timeout. Pending replies are dropped when superseded or cancelled
+  // (`cancelReply`) — promises can't be aborted, so a sequence guard ignores
+  // stale resolutions.
+  const replySeqRef = useRef(0);
+  const requestReply = (
+    text: string,
+    deliver: (reply: string) => void,
+    onError: () => void,
+  ) => {
+    const seq = ++replySeqRef.current;
+    const fresh = (fn: () => void) => {
+      if (replySeqRef.current === seq) fn();
+    };
+    if (onSend) {
+      Promise.resolve()
+        .then(() => onSend(text))
+        .then(
+          (reply) => fresh(() => deliver(reply)),
+          () => fresh(onError),
+        );
+    } else {
+      thinkRef.current = setTimeout(() => deliver(AI_REPLY), 1300);
+    }
+  };
+  const cancelReply = () => {
+    replySeqRef.current++;
+    clearTimeout(thinkRef.current);
+  };
+
   const send = () => {
     const text = draft.trim();
     if (!text) return;
     clearTimeout(closeRef.current);
-    clearTimeout(thinkRef.current);
+    cancelReply();
     setMessages((m) => [...m, { role: "user", text, at: new Date() }]);
     setDraft("");
     setIsMultiline(false);
     setIsRecentOpen(true);
     setIsThinking(true);
-    thinkRef.current = setTimeout(() => {
-      setIsThinking(false);
-      setMessages((m) => [...m, { role: "ai", text: AI_REPLY, at: new Date() }]);
-      closeRef.current = setTimeout(
-        () => setIsRecentOpen(false),
-        RECENT_CHAT_AUTOCLOSE_MS,
-      );
-    }, 1300);
+    requestReply(
+      text,
+      (reply) => {
+        setIsThinking(false);
+        setMessages((m) => [...m, { role: "ai", text: reply, at: new Date() }]);
+        closeRef.current = setTimeout(
+          () => setIsRecentOpen(false),
+          RECENT_CHAT_AUTOCLOSE_MS,
+        );
+      },
+      () => setIsThinking(false),
+    );
   };
 
   const openHistory = () => {
     clearTimeout(closeRef.current);
-    clearTimeout(thinkRef.current);
+    cancelReply();
     setIsThinking(false);
     setIsRecentOpen(false);
     setIsHistoryOpen(true);
@@ -299,14 +344,18 @@ export function AiAssistant({
   const sendInHistory = () => {
     const text = historyDraft.trim();
     if (!text) return;
-    clearTimeout(thinkRef.current);
+    cancelReply();
     setMessages((m) => [...m, { role: "user", text, at: new Date() }]);
     setHistoryDraft("");
     setHistoryThinking(true);
-    thinkRef.current = setTimeout(() => {
-      setHistoryThinking(false);
-      setMessages((m) => [...m, { role: "ai", text: AI_REPLY, at: new Date() }]);
-    }, 1300);
+    requestReply(
+      text,
+      (reply) => {
+        setHistoryThinking(false);
+        setMessages((m) => [...m, { role: "ai", text: reply, at: new Date() }]);
+      },
+      () => setHistoryThinking(false),
+    );
   };
 
   // Drag-to-resize from the panel's inner corner (opposite its anchor).
@@ -338,31 +387,15 @@ export function AiAssistant({
     window.addEventListener("pointerup", onUp);
   };
 
-  // A couple of seeded older turns (yesterday). In state so "Delete history"
-  // can clear them along with the live messages.
-  const [seeded, setSeeded] = useState<ChatMsg[]>(() => [
-    {
-      role: "ai",
-      text: "Welcome back! Here's where we left off.",
-      at: new Date(2026, 5, 7, 9, 41, 8),
-    },
-    {
-      role: "user",
-      text: "Remind me how theming works.",
-      at: new Date(2026, 5, 7, 9, 42, 2),
-    },
-    {
-      role: "ai",
-      text: "Brands are token objects you pass to ThemeProvider.",
-      at: new Date(2026, 5, 7, 9, 42, 40),
-    },
-  ]);
+  // Seeded older turns from `initialMessages` (e.g. restored history). In
+  // state so "Delete history" can clear them along with the live messages.
+  const [seeded, setSeeded] = useState<ChatMsg[]>(() => initialMessages ?? []);
   const fullHistory = [...seeded, ...messages].sort(
     (a, b) => a.at.getTime() - b.at.getTime(),
   );
 
   const clearHistory = () => {
-    clearTimeout(thinkRef.current);
+    cancelReply();
     setHistoryThinking(false);
     setSeeded([]);
     setMessages([]);
@@ -618,375 +651,3 @@ export function AiAssistant({
   );
 }
 
-// All component styles (everything except the demo-only stage). Inject once
-// per page (e.g. <style>{aiAssistantCss}</style>). The recent popover's
-// vertical offset above the bar is the `--gp-ai-bar-offset` custom property
-// (default 5.25rem) — override it on the overlay container to match the host
-// layout (e.g. a page footer's height).
-export const aiAssistantCss = `
-  @property --gp-ai-angle {
-    syntax: "<angle>";
-    inherits: false;
-    initial-value: 0deg;
-  }
-  .gp-ai-borderbar {
-    position: relative;
-    display: flex;
-    align-items: center;
-    border-radius: var(--gp-radius-button, 9999px);
-    background: var(--pf-t--global--background--color--primary--default);
-    padding-inline-start: 1rem;
-    padding-inline-end: 0.5rem;
-    block-size: var(--pf-t--global--spacer--2xl, 3rem);
-    inline-size: 100%;
-    transition: box-shadow 150ms ease;
-  }
-  /* Handed off to the full chat: the controls carry the disabled attribute,
-     and the vibrant AI border tones down to pale, surface-mixed theme colours
-     rather than the bar just fading out. */
-  .gp-ai-borderbar.is-disabled::before {
-    background: conic-gradient(
-      from var(--gp-ai-angle),
-      color-mix(in srgb, #f56e6e 35%, var(--pf-t--global--background--color--primary--default)),
-      color-mix(in srgb, #876fd4 35%, var(--pf-t--global--background--color--primary--default)),
-      color-mix(in srgb, #5e40be 35%, var(--pf-t--global--background--color--primary--default)),
-      color-mix(in srgb, #876fd4 35%, var(--pf-t--global--background--color--primary--default)),
-      color-mix(in srgb, #f56e6e 35%, var(--pf-t--global--background--color--primary--default))
-    ) border-box;
-  }
-  .gp-ai-borderbar.is-disabled .gp-ai-borderbar__input {
-    color: var(--gp-color-text-subtle, currentColor);
-  }
-  @media (min-width: 48rem) {
-    .gp-ai-borderbar { max-inline-size: 34rem; }
-  }
-  .gp-ai-borderbar::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    border-radius: inherit;
-    background: conic-gradient(
-      from var(--gp-ai-angle),
-      #f56e6e, #876fd4, #5e40be, #876fd4, #f56e6e
-    ) border-box;
-    border: 3px solid transparent;
-    mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
-    mask-composite: exclude;
-    -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-  }
-  .gp-ai-borderbar.is-thinking::before {
-    animation: gp-ai-borderbar-spin 2.4s linear infinite;
-  }
-  @keyframes gp-ai-borderbar-spin {
-    to { --gp-ai-angle: 360deg; }
-  }
-  .gp-ai-borderbar__input {
-    flex: 1;
-    min-inline-size: 0;
-    block-size: 100%;
-    padding: 0;
-    margin: 0;
-    background: transparent;
-    border: 0;
-    outline: none;
-    color: var(--gp-color-text-regular, currentColor);
-    font: inherit;
-    line-height: normal;
-  }
-  .gp-ai-borderbar__input::placeholder {
-    color: var(--gp-color-text-subtle, currentColor);
-  }
-  .gp-ai-borderbar__send {
-    color: var(--gp-color-text-link, currentColor);
-    flex: 0 0 auto;
-  }
-  .gp-ai-borderbar__input:focus,
-  .gp-ai-borderbar__input:focus-visible { outline: none; }
-  /* A soft, misty halo in the focus-ring colour (the AI gradient border stays
-     its resting 3px) — a diffuse glow rather than a hard outline. */
-  .gp-ai-borderbar:focus-within {
-    outline: none;
-    box-shadow:
-      0 0 8px 0 color-mix(in srgb, var(--gp-color-focus-ring, currentColor) 38%, transparent),
-      0 0 18px 3px color-mix(in srgb, var(--gp-color-focus-ring, currentColor) 22%, transparent);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .gp-ai-borderbar.is-thinking::before { animation: none; }
-  }
-
-  /* Auto-expanding bar: a textarea that grows with content, then caps + scrolls. */
-  .gp-ai-borderbar--grow {
-    block-size: auto;
-    min-block-size: var(--pf-t--global--spacer--2xl, 3rem);
-  }
-  /* Multi-line: soften a *pill* corner to a rounded rectangle (min() clamps a
-     pill to the card radius; an already-hard brand radius stays as-is). */
-  .gp-ai-borderbar--grow.is-multiline {
-    border-radius: min(
-      var(--gp-radius-button, 9999px),
-      var(--gp-radius-card, 0.75rem)
-    );
-  }
-  .gp-ai-borderbar__textarea {
-    block-size: auto;
-    field-sizing: content;
-    resize: none;
-    max-block-size: 6rem;
-    overflow-y: auto;
-    line-height: 1.4;
-    padding-block: 0.1rem;
-  }
-
-  /* ── Full-chat window (transcript + docked bar), shared by panel + modal ── */
-  .gp-ai-chatwindow {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    min-block-size: 0;
-  }
-  .gp-ai-fullchat .gp-ai-chatwindow {
-    flex: 1 1 auto;
-    padding: 0.75rem;
-  }
-  .gp-ai-chatwindow--modal {
-    block-size: min(65vh, 30rem);
-  }
-  .gp-ai-chatwindow__transcript {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    flex: 1 1 auto;
-    min-block-size: 0;
-    overflow-y: auto;
-    padding-block-end: 0.25rem;
-  }
-  .gp-ai-msg {
-    max-inline-size: 80%;
-    padding: 0.5rem 0.875rem;
-    border-radius: var(--gp-radius-card, 12px);
-    line-height: 1.5;
-  }
-  .gp-ai-msg--bot {
-    align-self: flex-start;
-    background: var(--gp-color-bg-secondary-default);
-    color: var(--gp-color-text-regular);
-    border-end-start-radius: 4px;
-  }
-  .gp-ai-msg--user {
-    align-self: flex-end;
-    background: var(--gp-color-brand-default);
-    color: var(--gp-color-brand-on, #fff);
-    border-end-end-radius: 4px;
-  }
-  .gp-ai-msg__time {
-    display: block;
-    margin-block-start: 0.25rem;
-    font-size: 0.6875rem;
-    line-height: 1;
-    opacity: 0.65;
-    text-align: end;
-  }
-  .gp-ai-chatwindow__empty {
-    margin: 0;
-    padding-block: 0.5rem;
-    text-align: center;
-    color: var(--gp-color-text-subtle, currentColor);
-    font-size: 0.8125rem;
-  }
-
-  /* ── Transient recent-chat popover (slides up above the bar) ── */
-  .gp-ai-recent {
-    position: absolute;
-    inset-block-end: var(--gp-ai-bar-offset, 5.25rem);
-    left: 50%;
-    inline-size: calc(100% - 3rem);
-    max-inline-size: 34rem;
-    max-block-size: 14rem;
-    z-index: 5;
-    display: flex;
-    flex-direction: column;
-    border-radius: var(--gp-radius-popover, 12px);
-    background: var(--pf-t--global--background--color--primary--default);
-    border: 1px solid var(--gp-color-border-default, rgba(0, 0, 0, 0.15));
-    box-shadow: var(--gp-shadow-popover, 0 6px 16px rgba(0, 0, 0, 0.18));
-    overflow: hidden;
-    transform: translateX(-50%) translateY(10px);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 220ms ease, opacity 220ms ease;
-  }
-  .gp-ai-recent.is-open {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .gp-ai-recent__head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.4rem 0.5rem 0.4rem 0.75rem;
-    border-block-end: 1px solid var(--gp-color-border-default, rgba(0, 0, 0, 0.12));
-  }
-  .gp-ai-recent__title {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--gp-color-text-subtle, currentColor);
-  }
-  /* Drive the History link from the brand link token. */
-  .gp-ai-recent__head .pf-v6-c-button.pf-m-link {
-    color: var(--gp-color-text-link, currentColor);
-  }
-  .gp-ai-recent__body {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    overflow-y: auto;
-  }
-  .gp-ai-dots {
-    display: inline-flex;
-    gap: 4px;
-    align-items: center;
-  }
-  .gp-ai-dots > span {
-    inline-size: 6px;
-    block-size: 6px;
-    border-radius: 50%;
-    background: currentColor;
-    opacity: 0.35;
-    animation: gp-ai-dot 1.2s infinite ease-in-out;
-  }
-  .gp-ai-dots > span:nth-child(2) { animation-delay: 0.18s; }
-  .gp-ai-dots > span:nth-child(3) { animation-delay: 0.36s; }
-  @keyframes gp-ai-dot {
-    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
-    30% { opacity: 1; transform: translateY(-3px); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .gp-ai-dots > span { animation: none; opacity: 0.6; }
-    .gp-ai-recent { transition: opacity 220ms ease; }
-  }
-
-  /* ── Glass: route surfaces through the canonical glass tokens ── */
-  .pf-v6-theme-glass .gp-ai-borderbar {
-    background: var(--gp-glass-surface-fill);
-    backdrop-filter: var(--gp-glass-surface-blur) saturate(140%);
-    -webkit-backdrop-filter: var(--gp-glass-surface-blur) saturate(140%);
-  }
-  .pf-v6-theme-glass .gp-ai-recent,
-  .pf-v6-theme-glass .gp-ai-fullchat,
-  .pf-v6-theme-glass .gp-ai-chatmodal.pf-v6-c-modal-box,
-  .pf-v6-theme-glass .gp-ai-chatmodal .pf-v6-c-modal-box {
-    --gp-glass-border-color: color-mix(in srgb, currentColor 16%, transparent);
-    background: var(--gp-glass-surface-fill);
-    border-color: var(--gp-glass-border-color);
-    backdrop-filter: var(--gp-glass-surface-blur, blur(16px)) saturate(140%);
-    -webkit-backdrop-filter: var(--gp-glass-surface-blur, blur(16px)) saturate(140%);
-  }
-  .pf-v6-theme-glass .gp-ai-fullchat__head,
-  .pf-v6-theme-glass .gp-ai-recent__head {
-    border-block-end-color: color-mix(in srgb, currentColor 14%, transparent);
-  }
-  .pf-v6-theme-glass .gp-ai-fullchat__search .pf-v6-c-text-input-group,
-  .pf-v6-theme-glass .gp-ai-fullchat__search .pf-v6-c-text-input-group__main {
-    background: transparent;
-  }
-
-  /* ── Full chat: floating panel (desktop), anchored to a corner ── */
-  .gp-ai-fullchat {
-    position: absolute;
-    z-index: 6;
-    display: flex;
-    flex-direction: column;
-    inline-size: min(22rem, calc(100% - 2rem));
-    block-size: min(48rem, calc(100% - 2rem));
-    border-radius: var(--gp-radius-popover, 12px);
-    background: var(--pf-t--global--background--color--primary--default);
-    border: 1px solid var(--gp-color-border-default, rgba(0, 0, 0, 0.15));
-    box-shadow: var(--gp-shadow-popover, 0 6px 16px rgba(0, 0, 0, 0.18));
-    overflow: hidden;
-    animation: gp-ai-fullchat-in 200ms ease;
-  }
-  .gp-ai-fullchat--top-left { inset-block-start: 1rem; inset-inline-start: 1rem; }
-  .gp-ai-fullchat--top-right { inset-block-start: 1rem; inset-inline-end: 1rem; }
-  .gp-ai-fullchat--bottom-left { inset-block-end: 1rem; inset-inline-start: 1rem; }
-  .gp-ai-fullchat--bottom-right { inset-block-end: 1rem; inset-inline-end: 1rem; }
-  .gp-ai-fullchat__head {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.25rem 0.5rem 0.5rem 0.875rem;
-    border-block-end: 1px solid var(--gp-color-border-default, rgba(0, 0, 0, 0.12));
-  }
-  .gp-ai-fullchat__headrow {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .gp-ai-fullchat__title {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--gp-color-text-regular, currentColor);
-  }
-  .gp-ai-fullchat__actions {
-    display: flex;
-    align-items: center;
-    gap: 0.125rem;
-  }
-  .gp-ai-fullchat__search {
-    inline-size: 100%;
-  }
-  .gp-ai-modalbody {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  /* Drag-to-resize grip on the corner opposite the anchor (the inner corner). */
-  .gp-ai-fullchat__resize {
-    position: absolute;
-    inline-size: 16px;
-    block-size: 16px;
-    z-index: 7;
-    touch-action: none;
-  }
-  .gp-ai-fullchat__resize::after {
-    content: "";
-    position: absolute;
-    inset: 3px;
-    opacity: 0.4;
-    color: var(--gp-color-text-subtle, currentColor);
-  }
-  .gp-ai-fullchat--bottom-right .gp-ai-fullchat__resize {
-    inset-block-start: 2px; inset-inline-start: 2px; cursor: nwse-resize;
-  }
-  .gp-ai-fullchat--bottom-right .gp-ai-fullchat__resize::after {
-    border-block-start: 2px solid currentColor; border-inline-start: 2px solid currentColor;
-  }
-  .gp-ai-fullchat--top-left .gp-ai-fullchat__resize {
-    inset-block-end: 2px; inset-inline-end: 2px; cursor: nwse-resize;
-  }
-  .gp-ai-fullchat--top-left .gp-ai-fullchat__resize::after {
-    border-block-end: 2px solid currentColor; border-inline-end: 2px solid currentColor;
-  }
-  .gp-ai-fullchat--bottom-left .gp-ai-fullchat__resize {
-    inset-block-start: 2px; inset-inline-end: 2px; cursor: nesw-resize;
-  }
-  .gp-ai-fullchat--bottom-left .gp-ai-fullchat__resize::after {
-    border-block-start: 2px solid currentColor; border-inline-end: 2px solid currentColor;
-  }
-  .gp-ai-fullchat--top-right .gp-ai-fullchat__resize {
-    inset-block-end: 2px; inset-inline-start: 2px; cursor: nesw-resize;
-  }
-  .gp-ai-fullchat--top-right .gp-ai-fullchat__resize::after {
-    border-block-end: 2px solid currentColor; border-inline-start: 2px solid currentColor;
-  }
-  @keyframes gp-ai-fullchat-in {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: none; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .gp-ai-fullchat { animation: none; }
-  }
-`;

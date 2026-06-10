@@ -31,17 +31,17 @@ import {
   Toolbar,
   ToolbarContent,
   ToolbarItem,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import { TimesIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../../components/StoryKit.js";
+import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../_kit/StoryKit.js";
 import {
   DemoFrame,
   PropsTable,
   sidenavDrawerCss,
   type SidenavOverlayBreakpoint,
   useBlockPushClickClose,
-} from "../../components/DemoKit.js";
-import { AcmeLogo } from "../../components/AcmeLogo.js";
+} from "../_kit/DemoKit.js";
+import { AcmeLogo } from "../_kit/AcmeLogo.js";
 
 const meta: Meta = {
   title: "Components/Page",
@@ -69,7 +69,7 @@ const meta: Meta = {
 export default meta;
 
 // Shared Acme logo — colour-aware so the wordmark stays readable when the
-// Storybook toolbar toggles dark mode. See `src/components/AcmeLogo.tsx`.
+// Storybook toolbar toggles dark mode. See `src/stories/_kit/AcmeLogo.tsx`.
 const brandLogo = <AcmeLogo />;
 
 /**
@@ -238,9 +238,9 @@ function StickyHeaderDemo() {
             additionalGroupedContent={groupedContent}
             isManagedSidebar
             defaultManagedSidebarIsOpen
-            groupProps={
-              anySticky ? { stickyOnBreakpoint: { default: "top" } } : undefined
-            }
+            {...(anySticky
+              ? { groupProps: { stickyOnBreakpoint: { default: "top" as const } } }
+              : {})}
           >
             {bodyHeader}
             <PageSection isFilled aria-label="Card gallery">

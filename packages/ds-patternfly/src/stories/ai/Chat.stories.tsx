@@ -7,16 +7,40 @@ import {
   Section,
   Card,
   CodeBlock,
+  ConfigurationSection,
   ThemingPointer,
-} from "../../components/StoryKit.js";
-import { PropsTable } from "../../components/DemoKit.js";
-import { AiAssistant, aiAssistantCss } from "../../components/AiAssistant.js";
+} from "../_kit/StoryKit.js";
+import { AiAssistant } from "../../components/AiAssistant.js";
+import type { AiAssistantProps, ChatMsg } from "../../components/AiAssistant.js";
+import AssistantInShell from "../../examples/AiAssistant/AssistantInShell.example.js";
+import propsData from "./aiAssistant.props.json";
 
-const meta: Meta = {
+const meta: Meta<typeof AiAssistant> = {
   title: "AI/Chat",
+  component: AiAssistant,
   parameters: { layout: "padded" },
 };
 export default meta;
+
+// Demo conversation seed — a few turns "from yesterday" so the History panel
+// opens with content (and "Delete history" has something to clear).
+const seededHistory: ChatMsg[] = [
+  {
+    role: "ai",
+    text: "Welcome back! Here's where we left off.",
+    at: new Date(2026, 5, 7, 9, 41, 8),
+  },
+  {
+    role: "user",
+    text: "Remind me how theming works.",
+    at: new Date(2026, 5, 7, 9, 42, 2),
+  },
+  {
+    role: "ai",
+    text: "Brands are token objects you pass to ThemeProvider.",
+    at: new Date(2026, 5, 7, 9, 42, 40),
+  },
+];
 
 /**
  * Example 1 — the bare prompt pill. On send (button or Enter) it flips a
@@ -205,9 +229,10 @@ const stageCss = `
   }
 `;
 
-// Example 3 — the full AiAssistant. The stage is the positioned container the
-// overlays portal into; the bar renders inline (docked at the stage bottom).
-function Example3Demo() {
+// Example 3 / Playground — the full AiAssistant on a tall stage: the
+// positioned container the overlays portal into; the bar renders inline
+// (docked at the stage bottom). Extra props pass through to the component.
+function Example3Demo(props: Omit<AiAssistantProps, "overlayContainer">) {
   const [stage, setStage] = useState<HTMLDivElement | null>(null);
   return (
     <div
@@ -224,6 +249,8 @@ function Example3Demo() {
           overlayContainer={stage}
           placement="bottom-right"
           persist={false}
+          initialMessages={seededHistory}
+          {...props}
         />
       </div>
     </div>
@@ -234,7 +261,6 @@ export const Chat: StoryObj = {
   render: () => (
     <>
       <style>{chatBarCss}</style>
-      <style>{aiAssistantCss}</style>
       <style>{stageCss}</style>
       <FoundationPage
         title="Chat"
@@ -361,26 +387,25 @@ export const Chat: StoryObj = {
 @keyframes spin { to { --gp-ai-angle: 360deg; } }`}</CodeBlock>
             </Card>
             <Card>
-              <CodeBlock>{`// Example 3 — the reusable AiAssistant. Inject its styles once, give it a
-// positioned container for the overlays, and place the component where the
-// bar should live. Every label is prop-driven (localise / re-word without
-// forking). Below the "sm" breakpoint the full chat opens as a modal.
-import { AiAssistant, aiAssistantCss } from "@golden-passport/ds-patternfly";
+              <CodeBlock>{`// Example 3 — the reusable AiAssistant. Styles ship in the lib stylesheet
+// (import "@golden-passport/ds-patternfly/styles" once at the app entry).
+// Give it a positioned container for the overlays and place the component
+// where the bar should live. Every label is prop-driven (localise / re-word
+// without forking). Below the "sm" breakpoint the full chat opens as a modal.
+import { AiAssistant } from "@golden-passport/ds-patternfly";
 
 function Demo() {
   const [container, setContainer] = useState<HTMLElement | null>(null);
   return (
-    <>
-      <style>{aiAssistantCss}</style>
-      <div ref={setContainer} style={{ position: "relative" }}>
-        {/* page content … */}
-        <AiAssistant
-          overlayContainer={container}
-          placement="bottom-right"   // | top-left | top-right | bottom-left
-          labels={{ chatHeader: "AI Assistance", chatLink: "History" }}
-        />
-      </div>
-    </>
+    <div ref={setContainer} style={{ position: "relative" }}>
+      {/* page content … */}
+      <AiAssistant
+        overlayContainer={container}
+        placement="bottom-right"   // | top-left | top-right | bottom-left
+        labels={{ chatHeader: "AI Assistance", chatLink: "History" }}
+        onSend={async (text) => await askYourBackend(text)}
+      />
+    </div>
   );
 }`}</CodeBlock>
             </Card>
@@ -398,49 +423,10 @@ function Demo() {
           </div>
         </Section>
 
-        <Section
-          title="AiAssistant props"
-          description="Example 3's reusable component. Behaviour is fixed; copy, placement and persistence are configurable."
-        >
-          <Card>
-            <div style={{ padding: 24 }}>
-              <PropsTable
-                rows={[
-                  {
-                    name: "overlayContainer",
-                    type: "HTMLElement | null",
-                    description:
-                      "A position:relative element the overlays (recent popover + full chat) portal into and anchor to. When omitted they render inline next to the bar.",
-                  },
-                  {
-                    name: "placement",
-                    type: '"top-left" | "top-right" | "bottom-left" | "bottom-right"',
-                    description:
-                      "Default corner the full-chat panel anchors to on desktop (always inset from the corner). Default: bottom-right.",
-                  },
-                  {
-                    name: "labels",
-                    type: "Partial<ChatLabels>",
-                    description:
-                      "Override any user-facing copy — placeholder, headers, link text, and every aria label. Merged over the defaults.",
-                  },
-                  {
-                    name: "persist",
-                    type: "boolean",
-                    description:
-                      "Remember the chosen corner + panel size across reloads (localStorage). Default: false.",
-                  },
-                  {
-                    name: "persistKey",
-                    type: "string",
-                    description:
-                      'localStorage key prefix used when persist is on. Default: "gp-ai-assistance".',
-                  },
-                ]}
-              />
-            </div>
-          </Card>
-        </Section>
+        <ConfigurationSection
+          importStatement={propsData.import}
+          rows={propsData.rows}
+        />
 
         <Section title="Accessibility">
           <Card>
@@ -488,4 +474,47 @@ function Demo() {
       </FoundationPage>
     </>
   ),
+};
+
+/**
+ * Live-controls playground for the exported AiAssistant. ReactNode / element
+ * props (overlayContainer, initialMessages) are driven by the demo stage and
+ * excluded from controls.
+ */
+export const Playground: StoryObj<typeof AiAssistant> = {
+  args: {
+    placement: "bottom-right",
+    persist: false,
+    persistKey: "gp-ai-assistance",
+    labels: {},
+  },
+  argTypes: {
+    placement: {
+      control: "select",
+      options: ["top-left", "top-right", "bottom-left", "bottom-right"],
+    },
+    persist: { control: "boolean" },
+    persistKey: { control: "text" },
+    labels: { control: "object" },
+    overlayContainer: { control: false },
+    initialMessages: { control: false },
+    onSend: { control: false },
+  },
+  render: (args) => (
+    <>
+      <style>{stageCss}</style>
+      <Example3Demo {...args} />
+    </>
+  ),
+};
+
+/**
+ * The full end-to-end example (src/examples/AiAssistant/
+ * AssistantInShell.example.tsx): the assistant docked in the app Shell with
+ * a live onSend handler. The same source is shipped verbatim in the MCP docs
+ * catalog — rendering it here keeps it compiling.
+ */
+export const FullExample: StoryObj = {
+  parameters: { layout: "fullscreen", fullBleed: true },
+  render: () => <AssistantInShell />,
 };

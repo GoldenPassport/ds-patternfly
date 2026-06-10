@@ -5,8 +5,8 @@ import * as echarts from "echarts/core";
 import { SankeyChart } from "echarts/charts";
 import { TitleComponent, TooltipComponent } from "echarts/components";
 import { SVGRenderer } from "echarts/renderers";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 import { chartA11yParams } from "./_chartKit.js";
 import { useTheme } from "../../theme/ThemeProvider.js";
 

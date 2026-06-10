@@ -12,9 +12,9 @@ import {
   MenuSearch,
   MenuSearchInput,
   SearchInput,
-} from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../../../components/StoryKit.js";
-import { DemoFrame } from "../../../components/DemoKit.js";
+} from "@golden-passport/ds-patternfly";
+import { FoundationPage, Section, Card, CodeBlock } from "../../_kit/StoryKit.js";
+import { DemoFrame } from "../../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/Menu/Custom menus",

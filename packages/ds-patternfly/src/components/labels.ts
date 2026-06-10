@@ -11,7 +11,12 @@ export interface ShellLabels {
   skipToContent: string;
   /** Aria-label for the masthead landmark. */
   mastheadAriaLabel: string;
-  /** Aria-label for the sidebar nav landmark. */
+  /**
+   * @deprecated No longer applied — the sidebar wrapper is a roleless
+   * element, and ARIA prohibits labels there (axe aria-prohibited-attr).
+   * Label your `<Nav aria-label="…">` in the sidebar slot instead. Kept in
+   * the contract for backward compatibility.
+   */
   sidebarAriaLabel: string;
   /** Aria-label for the sidebar toggle button. */
   toggleSidebar: string;

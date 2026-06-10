@@ -28,6 +28,22 @@ const PKG = JSON.parse(
   readFileSync(join(LIB_ROOT, "package.json"), "utf8"),
 );
 
+// Curation manifest for EXPORTED components: per catalog id, the colocated
+// props JSON (single source shared with the story's Configuration section),
+// usage guidance, key tokens, and end-to-end example files to embed.
+const MANIFEST = JSON.parse(
+  readFileSync(join(here, "exports.manifest.json"), "utf8"),
+);
+
+// Every component file in the lib's components/ folder is an exported
+// symbol (one file per component). Catalog entries whose title matches one
+// get an import statement automatically.
+const EXPORTED_COMPONENTS = new Set(
+  readdirSync(join(LIB_ROOT, "src", "components"))
+    .filter((f) => f.endsWith(".tsx"))
+    .map((f) => f.replace(/\.tsx$/, "")),
+);
+
 // ---------- file walker ----------
 
 function walk(dir, files = []) {
@@ -108,6 +124,59 @@ function cleanText(s) {
     .trim();
 }
 
+// ---------- exported-component enrichment ----------
+
+/**
+ * Read an example file verbatim, rewriting the local `_lib` shim import to
+ * the real package name so the embedded source shows consumer-ready imports.
+ */
+function readExample(entry) {
+  const source = readFileSync(join(LIB_ROOT, entry.file), "utf8").replace(
+    /["']\.{1,2}\/_lib\.js["']/g,
+    JSON.stringify(PKG.name),
+  );
+  const name = entry.file
+    .split("/")
+    .pop()
+    .replace(/\.example\.tsx$/, "");
+  return {
+    name,
+    ...(entry.description ? { description: entry.description } : {}),
+    source,
+  };
+}
+
+/**
+ * Merge the manifest's curation into a generated item: import statement +
+ * props from the colocated *.props.json (the same file the story renders,
+ * so story and catalog can't drift), usage, keyTokens, embedded examples.
+ */
+function enrich(item) {
+  const cur = MANIFEST[item.id];
+  if (!cur) {
+    // Auto-rule: title matches an exported component file → import line.
+    if (item.kind === "component" && EXPORTED_COMPONENTS.has(item.title)) {
+      return {
+        ...item,
+        import: `import { ${item.title} } from "${PKG.name}";`,
+      };
+    }
+    return item;
+  }
+  const out = { ...item };
+  if (cur.propsFile) {
+    const propsData = JSON.parse(
+      readFileSync(join(LIB_ROOT, cur.propsFile), "utf8"),
+    );
+    out.import = cur.import ?? propsData.import;
+    out.props = propsData.rows;
+  }
+  if (cur.usage) out.usage = cur.usage;
+  if (cur.keyTokens) out.keyTokens = cur.keyTokens;
+  if (cur.examples) out.examples = cur.examples.map(readExample);
+  return out;
+}
+
 // ---------- id + url derivation ----------
 
 /** Title → kebab id used by Storybook URLs. PF6's convention is to slug
@@ -149,18 +218,31 @@ function main() {
     const tags = deriveTags(title, rel);
     const storyId = toStoryId(title) + "--overview";
 
-    items.push({
-      id: toStoryId(title),
-      kind: classify(title),
-      title: title.split("/").pop(),
-      breadcrumb: title,
-      summary,
-      tags,
-      storybookUrl: `/?path=/story/${storyId}`,
-    });
+    items.push(
+      enrich({
+        id: toStoryId(title),
+        kind: classify(title),
+        title: title.split("/").pop(),
+        breadcrumb: title,
+        summary,
+        tags,
+        storybookUrl: `/?path=/story/${storyId}`,
+      }),
+    );
   }
 
   items.sort((a, b) => a.breadcrumb.localeCompare(b.breadcrumb));
+
+  // Every manifest key must land on a real story id — a typo here would
+  // silently drop the curation.
+  const ids = new Set(items.map((i) => i.id));
+  for (const key of Object.keys(MANIFEST)) {
+    if (key !== "$comment" && !ids.has(key)) {
+      throw new Error(
+        `exports.manifest.json key "${key}" matched no story id`,
+      );
+    }
+  }
 
   const out = {
     $schema: "https://json-schema.org/draft/2020-12/schema",

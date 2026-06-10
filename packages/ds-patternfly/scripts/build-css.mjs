@@ -9,7 +9,17 @@ import { dirname, resolve } from "node:path";
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "..");
 
-const libCss = await readFile(resolve(root, "src/styles/index.css"), "utf8");
+// Ordered list of the lib's stylesheets: base + dials first, then one
+// partial per exported component. Mirrors the imports in
+// `.storybook/preview.tsx` — keep them in sync.
+const partials = [
+  "src/styles/index.css",
+  "src/styles/components/ai-assistant.css",
+];
+
+const libCss = (
+  await Promise.all(partials.map((p) => readFile(resolve(root, p), "utf8")))
+).join("\n");
 const utilitiesCss = await readFile(
   resolve(root, "node_modules/@patternfly/patternfly/utilities/_index.css"),
   "utf8",

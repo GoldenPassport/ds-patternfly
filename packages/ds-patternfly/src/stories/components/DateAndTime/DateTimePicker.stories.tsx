@@ -1,8 +1,8 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FormGroup, TimePicker } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../../components/DemoKit.js";
+import { FormGroup, TimePicker } from "@golden-passport/ds-patternfly";
+import { FoundationPage, Section, Card, CodeBlock } from "../../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../../_kit/DemoKit.js";
 import { LibDatePicker } from "./_libcal.js";
 
 const meta: Meta = {

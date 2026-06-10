@@ -1,12 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+// PF6's own SkipToContent (href/onClick API). The DS exports its own
+// SkipToContent (targetId/label, see src/a11y/SkipToContent.tsx) under the
+// same name — this story documents the PF6 primitive it builds on.
 import { SkipToContent } from "@patternfly/react-core";
 import {
   FoundationPage,
   Section,
   Card,
   CodeBlock,
-} from "../../components/StoryKit.js";
-import { PropsTable } from "../../components/DemoKit.js";
+} from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/SkipToContent",

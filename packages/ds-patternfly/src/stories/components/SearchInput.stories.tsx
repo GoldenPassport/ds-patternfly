@@ -1,8 +1,8 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { SearchInput } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
+import { SearchInput } from "@golden-passport/ds-patternfly";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/Forms/SearchInput",

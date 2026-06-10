@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
-import { contrastRatio } from "../a11y/contrast.js";
+import { contrastRatio } from "../../a11y/contrast.js";
+import { PropsTable } from "./DemoKit.js";
+import type { PropRow } from "./DemoKit.js";
 
 /** Pick black or white as foreground for max contrast on a given background. */
 export function pickFg(bg: string): string {
@@ -192,6 +194,43 @@ export function CodeBlock({
     >
       {children}
     </pre>
+  );
+}
+
+/**
+ * The standard "Configuration" section every exported component's story
+ * carries: how to import it, then the full props reference. The same
+ * `rows` data (a colocated *.props.json) feeds the MCP catalog, so the
+ * story and the docs the bots see can't drift apart.
+ */
+export function ConfigurationSection({
+  importStatement,
+  rows,
+  description,
+}: {
+  importStatement: string;
+  rows: PropRow[];
+  description?: ReactNode;
+}) {
+  return (
+    <Section
+      title="Configuration"
+      description={
+        description ??
+        "How to import the component and every prop it accepts. Required props are marked with *."
+      }
+    >
+      <div style={{ display: "grid", gap: 16 }}>
+        <Card>
+          <CodeBlock label="Import">{importStatement}</CodeBlock>
+        </Card>
+        <Card>
+          <div style={{ padding: 16 }}>
+            <PropsTable rows={rows} />
+          </div>
+        </Card>
+      </div>
+    </Section>
   );
 }
 

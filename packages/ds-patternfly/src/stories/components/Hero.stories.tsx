@@ -6,14 +6,14 @@ import {
   FlexItem,
   Hero,
   Title,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import {
   FoundationPage,
   Section,
   Card,
   CodeBlock,
-} from "../../components/StoryKit.js";
-import { PropsTable } from "../../components/DemoKit.js";
+} from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/Hero",
@@ -111,7 +111,7 @@ export const Basic: StoryObj = {
                 </FlexItem>
               </Flex>
             </Hero>
-            <CodeBlock>{`import { Hero } from "@patternfly/react-core";
+            <CodeBlock>{`import { Hero } from "@golden-passport/ds-patternfly";
 
 <Hero>
   <Title headingLevel="h1" size="3xl">Welcome to Golden Passport</Title>

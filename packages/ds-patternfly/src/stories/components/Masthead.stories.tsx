@@ -30,16 +30,16 @@ import {
   Toolbar,
   ToolbarContent,
   ToolbarItem,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import { BellIcon, CogIcon, EllipsisVIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 import {
   DemoFrame,
   PropsTable,
   sidenavDrawerCss,
   useBlockPushClickClose,
-} from "../../components/DemoKit.js";
-import { AcmeLogo } from "../../components/AcmeLogo.js";
+} from "../_kit/DemoKit.js";
+import { AcmeLogo } from "../_kit/AcmeLogo.js";
 
 const meta: Meta = {
   title: "Components/Masthead",
@@ -606,7 +606,7 @@ function OverviewStory() {
         <Card>
           <div style={{ padding: 24 }}>
             <CodeBlock>{`import { Link } from "react-router-dom";
-import { Brand } from "@patternfly/react-core";
+import { Brand } from "@golden-passport/ds-patternfly";
 
 <MastheadBrand>
   <MastheadLogo component={(props) => <Link {...props} to="/" />}>

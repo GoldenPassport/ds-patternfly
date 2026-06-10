@@ -7,9 +7,9 @@ import {
   ModalFooter,
   ModalHeader,
   ModalVariant,
-} from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../../components/DemoKit.js";
+} from "@golden-passport/ds-patternfly";
+import { FoundationPage, Section, Card, CodeBlock } from "../../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../../_kit/DemoKit.js";
 import { CalendarPanel } from "./_libcal.js";
 
 // DD/MM/YYYY for the trigger label — matches the lib's default
@@ -182,7 +182,7 @@ const [date, setDate] = useState<Date>(new Date());
               </DemoFrame>
               <CodeBlock>{`import {
   Button, Modal, ModalBody, ModalFooter, ModalHeader, ModalVariant,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import { CalendarPanel } from "./_libcal";
 
 const [open, setOpen]   = useState(false);

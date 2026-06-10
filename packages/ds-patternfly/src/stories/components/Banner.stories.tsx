@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Banner, Flex, FlexItem } from "@patternfly/react-core";
+import { Banner, Flex, FlexItem } from "@golden-passport/ds-patternfly";
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
   InfoCircleIcon,
 } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/Banner",

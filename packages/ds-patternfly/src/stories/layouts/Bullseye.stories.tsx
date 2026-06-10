@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Bullseye } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 import { Box, DemoFrame, PropsTable } from "./_layoutKit.js";
 
 const meta: Meta = {

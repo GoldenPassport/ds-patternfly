@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 
 const meta: Meta = {
   title: "Foundations/Focus",

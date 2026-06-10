@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "@patternfly/react-core";
-import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
+import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Foundations/Open UI Automation",

@@ -7,7 +7,7 @@ import type {
   ModeValue,
   StatusColor,
 } from "../../tokens/types.js";
-import { FoundationPage, Section, Card, pickFg, fmtRatio } from "../../components/StoryKit.js";
+import { FoundationPage, Section, Card, pickFg, fmtRatio } from "../_kit/StoryKit.js";
 
 const meta: Meta = {
   title: "Foundations/Colors",

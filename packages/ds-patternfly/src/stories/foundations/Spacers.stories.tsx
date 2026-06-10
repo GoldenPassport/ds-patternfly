@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useBrand } from "../../theme/useBrand.js";
-import { FoundationPage, Section, Card } from "../../components/StoryKit.js";
+import { FoundationPage, Section, Card } from "../_kit/StoryKit.js";
 
 const meta: Meta = {
   title: "Foundations/Spacers",

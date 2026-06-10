@@ -13,6 +13,22 @@ export type DocKind =
   | "recipe"
   | "guideline";
 
+/** One prop of an exported component (mirrors the lib's PropsTable rows). */
+export interface DocProp {
+  name: string;
+  type: string;
+  default?: string;
+  required?: boolean;
+  description: string;
+}
+
+/** A complete, self-contained example app shipped verbatim. */
+export interface DocExample {
+  name: string;
+  description?: string;
+  source: string;
+}
+
 export interface DocItem {
   id: string;
   kind: DocKind;
@@ -20,9 +36,15 @@ export interface DocItem {
   /** Full Storybook breadcrumb path, e.g. "Components/Forms/TextInput". */
   breadcrumb?: string;
   summary: string;
+  /** Longer usage guidance for exported components (when curated). */
+  usage?: string;
   tags?: string[];
   keyTokens?: string[];
   import?: string;
+  /** Props reference for exported components (when curated). */
+  props?: DocProp[];
+  /** End-to-end example apps with full source (when curated). */
+  examples?: DocExample[];
   storybookUrl?: string;
 }
 
@@ -47,6 +69,7 @@ function blob(item: DocItem): string {
     item.title,
     item.breadcrumb ?? "",
     item.summary,
+    item.usage ?? "",
     ...(item.tags ?? []),
     ...(item.keyTokens ?? []),
   ]

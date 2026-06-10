@@ -4,9 +4,9 @@ import {
   ExpandableSection,
   ExpandableSectionToggle,
   ExpandableSectionVariant,
-} from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
+} from "@golden-passport/ds-patternfly";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/ExpandableSection",

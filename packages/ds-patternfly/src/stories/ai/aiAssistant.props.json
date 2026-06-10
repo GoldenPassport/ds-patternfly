@@ -1,0 +1,46 @@
+{
+  "import": "import { AiAssistant, aiAssistantEnLabels } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    {
+      "name": "overlayContainer",
+      "type": "HTMLElement | null",
+      "description": "A position:relative element the overlays (recent popover + full chat) portal into and anchor to. When omitted they render inline next to the bar."
+    },
+    {
+      "name": "placement",
+      "type": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\"",
+      "default": "\"bottom-right\"",
+      "description": "Default corner the full-chat panel anchors to on desktop (always inset from the corner). Users can move it at runtime via the panel's ⋮ menu."
+    },
+    {
+      "name": "labels",
+      "type": "Partial<AiAssistantLabels>",
+      "default": "aiAssistantEnLabels",
+      "description": "Override any user-facing copy — placeholder, headers, link text, and every aria label. Merged over the English defaults."
+    },
+    {
+      "name": "persist",
+      "type": "boolean",
+      "default": "false",
+      "description": "Remember the chosen corner + panel size across reloads (localStorage). When off, the panel always opens at the defaults."
+    },
+    {
+      "name": "persistKey",
+      "type": "string",
+      "default": "\"gp-ai-assistance\"",
+      "description": "localStorage key prefix used when persist is on."
+    },
+    {
+      "name": "onSend",
+      "type": "(text: string) => Promise<string> | string",
+      "default": "canned demo reply",
+      "description": "Produce the assistant's reply to a sent message — wire your AI backend here. The thinking indicator shows until the returned value resolves. When omitted, a canned demo reply answers after a short delay."
+    },
+    {
+      "name": "initialMessages",
+      "type": "ChatMsg[]",
+      "default": "[]",
+      "description": "Seed the conversation, e.g. history restored from your backend. ChatMsg is { role: \"user\" | \"ai\", text: string, at: Date }."
+    }
+  ]
+}

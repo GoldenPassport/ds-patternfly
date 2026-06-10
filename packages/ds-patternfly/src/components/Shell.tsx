@@ -146,8 +146,11 @@ export function Shell({
     </Masthead>
   );
 
+  // No aria-label on PageSidebar: it renders a roleless <div>, and ARIA
+  // prohibits labels on generic elements (axe aria-prohibited-attr). The
+  // consumer's <Nav aria-label="…"> inside the slot is the named landmark.
   const sidebarEl = sidebar ? (
-    <PageSidebar aria-label={labels.sidebarAriaLabel} id={SIDEBAR_ID}>
+    <PageSidebar id={SIDEBAR_ID}>
       <PageSidebarBody>{sidebar}</PageSidebarBody>
     </PageSidebar>
   ) : undefined;

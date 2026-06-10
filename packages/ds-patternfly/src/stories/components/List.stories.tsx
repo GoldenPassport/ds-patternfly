@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { List, ListComponent, ListItem, ListVariant, OrderType } from "@patternfly/react-core";
+import { List, ListComponent, ListItem, ListVariant, OrderType } from "@golden-passport/ds-patternfly";
 import {
   BookOpenIcon,
   DesktopIcon,
   KeyIcon,
 } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/List",

@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button, Gallery, GalleryItem } from "@patternfly/react-core";
 import { CogIcon, KeyIcon, ShieldAltIcon } from "@patternfly/react-icons";
 import ServiceCard from "@patternfly/react-component-groups/dist/dynamic/ServiceCard";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Component groups/Content containers/Service card",

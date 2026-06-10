@@ -54,6 +54,15 @@ const config: StorybookConfig = {
   //      issues #33067 / #32049 / #34042.
   //   2. Split heavy vendors out for PRODUCTION `storybook build` only.
   async viteFinal(config, { configType }) {
+    // Self-import alias — mirrors the tsconfig "paths" entry so stories
+    // import the lib by its published name; keep the two in sync.
+    config.resolve = {
+      ...(config.resolve ?? {}),
+      alias: {
+        ...(config.resolve?.alias ?? {}),
+        "@golden-passport/ds-patternfly": resolve(REPO_ROOT, "src/index.ts"),
+      },
+    };
     config.optimizeDeps = {
       ...(config.optimizeDeps ?? {}),
       include: [

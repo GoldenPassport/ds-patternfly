@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Icon } from "@patternfly/react-core";
+import { Icon } from "@golden-passport/ds-patternfly";
 import { CheckCircleIcon, InfoCircleIcon, ExclamationTriangleIcon, TimesCircleIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/Icon",
@@ -46,7 +46,7 @@ export const Overview: StoryObj = {
                 ))}
               </div>
             </DemoFrame>
-            <CodeBlock>{`import { Icon } from "@patternfly/react-core";
+            <CodeBlock>{`import { Icon } from "@golden-passport/ds-patternfly";
 import { CheckCircleIcon } from "@patternfly/react-icons";
 
 <Icon size="md">

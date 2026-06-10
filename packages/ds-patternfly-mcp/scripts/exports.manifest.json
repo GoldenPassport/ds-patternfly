@@ -1,0 +1,20 @@
+{
+  "$comment": "Curation manifest for the lib's EXPORTED components. Keyed by catalog id (the kebab-cased story title). Each entry enriches the generated catalog item with an import statement + props (read from the colocated *.props.json the story also renders), usage guidance, key brand tokens, and end-to-end examples whose full source is embedded verbatim (with the examples/_lib shim rewritten to the package name). Paths are relative to packages/ds-patternfly.",
+  "ai-chat": {
+    "propsFile": "src/stories/ai/aiAssistant.props.json",
+    "usage": "AiAssistant is the lib's exported AI chat experience: a brandable prompt bar that renders inline wherever you place it, plus the surfaces it grows into — a transient recent-chat popover and a repositionable, resizable, searchable full-conversation panel (a modal below the sm breakpoint). Overlays portal into the `overlayContainer` element (position: relative) and anchor to its corners. Wire your backend via `onSend`; seed restored history via `initialMessages`; localise every string via `labels`. Styles ship in the lib stylesheet (`@golden-passport/ds-patternfly/styles`) — no extra CSS import.",
+    "keyTokens": [
+      "--gp-radius-button",
+      "--gp-color-brand-default",
+      "--gp-color-text-link",
+      "--gp-glass-surface-fill",
+      "--gp-ai-bar-offset"
+    ],
+    "examples": [
+      {
+        "file": "src/examples/AiAssistant/AssistantInShell.example.tsx",
+        "description": "The assistant docked in the app Shell: branded masthead + sidebar nav, content stage as the overlay container, and a live async onSend handler."
+      }
+    ]
+  }
+}

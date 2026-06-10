@@ -86,8 +86,8 @@ import OutlinedPlusSquareIcon from "@patternfly/react-icons/dist/esm/icons/outli
 import OutlinedQuestionCircleIcon from "@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon";
 import PlayIcon from "@patternfly/react-icons/dist/esm/icons/play-icon";
 import ThIcon from "@patternfly/react-icons/dist/esm/icons/th-icon";
-import { AcmeLogo } from "../../components/AcmeLogo.js";
-import { AiAssistant, aiAssistantCss } from "../../components/AiAssistant.js";
+import { AcmeLogo } from "../_kit/AcmeLogo.js";
+import { AiAssistant } from "../../components/AiAssistant.js";
 import { useTheme } from "../../theme/ThemeProvider.js";
 
 // ──────────────────────────────────────────────────────────────────
@@ -2567,7 +2567,7 @@ function IntegrationsDemo() {
           text-align: center;
         }
       `}</style>
-      <style>{aiAssistantCss}</style>
+      {/* AiAssistant base styles are global (src/styles/components/ai-assistant.css). */}
       <style>{`
         /* AiAssistant in the Compass footer. The bar fills the footer width;
            its overlays portal up to .gp-cmp-ai-root — a fixed layer over the

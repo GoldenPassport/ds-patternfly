@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "1",
-  "generatedAt": "2026-06-05",
+  "generatedAt": "2026-06-10",
   "library": {
     "name": "@golden-passport/ds-patternfly",
-    "version": "0.2.4",
+    "version": "0.4.0",
     "storybook": "https://storybook.goldenpassport.com",
     "github": "https://github.com/GoldenPassport/ds-patternfly"
   },
@@ -102,6 +102,79 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/accessibility-testing-your-accessibility--overview"
+    },
+    {
+      "id": "ai-chat",
+      "kind": "component",
+      "title": "Chat",
+      "breadcrumb": "AI/Chat",
+      "summary": "The AI prompt bar — where users type to talk to an assistant — and the surfaces it grows into. Example 1 is the bare pill (the same bar the Compass Example demo docks in its CompassMessageBar footer slot), with a soft pulsating glow on send. Example 2 wraps it in a colourful AI-indicator border that sweeps around the b",
+      "tags": [
+        "chat",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/ai-chat--overview",
+      "import": "import { AiAssistant, aiAssistantEnLabels } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "overlayContainer",
+          "type": "HTMLElement | null",
+          "description": "A position:relative element the overlays (recent popover + full chat) portal into and anchor to. When omitted they render inline next to the bar."
+        },
+        {
+          "name": "placement",
+          "type": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\"",
+          "default": "\"bottom-right\"",
+          "description": "Default corner the full-chat panel anchors to on desktop (always inset from the corner). Users can move it at runtime via the panel's ⋮ menu."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<AiAssistantLabels>",
+          "default": "aiAssistantEnLabels",
+          "description": "Override any user-facing copy — placeholder, headers, link text, and every aria label. Merged over the English defaults."
+        },
+        {
+          "name": "persist",
+          "type": "boolean",
+          "default": "false",
+          "description": "Remember the chosen corner + panel size across reloads (localStorage). When off, the panel always opens at the defaults."
+        },
+        {
+          "name": "persistKey",
+          "type": "string",
+          "default": "\"gp-ai-assistance\"",
+          "description": "localStorage key prefix used when persist is on."
+        },
+        {
+          "name": "onSend",
+          "type": "(text: string) => Promise<string> | string",
+          "default": "canned demo reply",
+          "description": "Produce the assistant's reply to a sent message — wire your AI backend here. The thinking indicator shows until the returned value resolves. When omitted, a canned demo reply answers after a short delay."
+        },
+        {
+          "name": "initialMessages",
+          "type": "ChatMsg[]",
+          "default": "[]",
+          "description": "Seed the conversation, e.g. history restored from your backend. ChatMsg is { role: \"user\" | \"ai\", text: string, at: Date }."
+        }
+      ],
+      "usage": "AiAssistant is the lib's exported AI chat experience: a brandable prompt bar that renders inline wherever you place it, plus the surfaces it grows into — a transient recent-chat popover and a repositionable, resizable, searchable full-conversation panel (a modal below the sm breakpoint). Overlays portal into the `overlayContainer` element (position: relative) and anchor to its corners. Wire your backend via `onSend`; seed restored history via `initialMessages`; localise every string via `labels`. Styles ship in the lib stylesheet (`@golden-passport/ds-patternfly/styles`) — no extra CSS import.",
+      "keyTokens": [
+        "--gp-radius-button",
+        "--gp-color-brand-default",
+        "--gp-color-text-link",
+        "--gp-glass-surface-fill",
+        "--gp-ai-bar-offset"
+      ],
+      "examples": [
+        {
+          "name": "AssistantInShell",
+          "description": "The assistant docked in the app Shell: branded masthead + sidebar nav, content stage as the overlay container, and a live async onSend handler.",
+          "source": "/**\n * AiAssistant inside the app Shell — an end-to-end page: branded masthead +\n * sidebar nav, content area, and the AI prompt bar docked at the bottom of\n * the content. The assistant's overlays (recent-chat popover + full chat\n * panel) portal into the content area and anchor to its corners.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *\n *   import { ThemeProvider } from \"@golden-passport/ds-patternfly\";\n *   import { goldenPassport } from \"@golden-passport/ds-patternfly\";\n *\n *   <ThemeProvider brand={goldenPassport} mode=\"light\" focusRing=\"outer\">\n *     <App />\n *   </ThemeProvider>\n */\nimport { useState } from \"react\";\nimport { Nav, NavItem, NavList } from \"@patternfly/react-core\";\nimport {\n  AiAssistant,\n  Shell,\n  shellEnLabels,\n} from \"@golden-passport/ds-patternfly\";\n\n// Replace with your backend call — the thinking indicator shows until the\n// returned promise resolves.\nasync function askAssistant(text: string): Promise<string> {\n  await new Promise((r) => setTimeout(r, 900));\n  return `You asked: “${text}”. Wire \\`onSend\\` to your AI backend to answer for real.`;\n}\n\nexport default function AssistantInShell() {\n  // The positioned element the assistant's overlays portal into. Using the\n  // content stage (not document.body) keeps the chat panel anchored to the\n  // page content, clear of the masthead and sidebar.\n  const [stage, setStage] = useState<HTMLDivElement | null>(null);\n\n  return (\n    <Shell\n      labels={shellEnLabels}\n      brandLogo={<strong style={{ fontSize: \"1.125rem\" }}>Acme Cloud</strong>}\n      sidebar={\n        <Nav aria-label=\"Main\">\n          <NavList>\n            <NavItem itemId=\"overview\" isActive>\n              Overview\n            </NavItem>\n            <NavItem itemId=\"integrations\">Integrations</NavItem>\n            <NavItem itemId=\"settings\">Settings</NavItem>\n          </NavList>\n        </Nav>\n      }\n    >\n      <div\n        ref={setStage}\n        style={{\n          position: \"relative\",\n          display: \"flex\",\n          flexDirection: \"column\",\n          minHeight: \"70vh\",\n          padding: \"1.5rem\",\n          gap: \"1rem\",\n        }}\n      >\n        <h1 style={{ margin: 0 }}>Overview</h1>\n        <p style={{ maxWidth: 640 }}>\n          Page content lives here. The AI prompt bar is docked below; sending\n          a message opens the transient recent-chat popover above it, and the\n          History action expands into the full, resizable chat panel anchored\n          to this content area.\n        </p>\n        <div style={{ flex: 1 }} />\n        <AiAssistant\n          overlayContainer={stage}\n          placement=\"bottom-right\"\n          persist\n          persistKey=\"acme:ai-assistance\"\n          onSend={askAssistant}\n        />\n      </div>\n    </Shell>\n  );\n}\n"
+        }
+      ]
     },
     {
       "id": "ai-mcp",
@@ -338,7 +411,7 @@
       "kind": "component",
       "title": "Sankey chart",
       "breadcrumb": "Charts/Sankey chart",
-      "summary": "Beta Flow visualization — values moving from one bucket to another. Use for funnel analysis (signups → active → paying), traffic routing (region → service → endpoint), and budget allocation. PF6's Sankey API is still beta; current best practice is to compose d3-sankey inside a PF6-themed SVG until the wrapper stabilise",
+      "summary": "Beta Flow visualization — values moving from one bucket to another. Use for funnel analysis (signups → active → paying), traffic routing (region → service → endpoint), and budget allocation. PF6 ships a beta Sankey via the ECharts wrapper ( @patternfly/react-charts/echarts ); a hand-rolled d3-sankey recipe is shown bel",
       "tags": [
         "charts",
         "sankey",
@@ -925,7 +998,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-accordion--overview"
+      "storybookUrl": "/?path=/story/components-accordion--overview",
+      "import": "import { Accordion } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-actionlist",
@@ -940,7 +1014,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-actionlist--overview"
+      "storybookUrl": "/?path=/story/components-actionlist--overview",
+      "import": "import { ActionList } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-alert",
@@ -955,7 +1030,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-alert--overview"
+      "storybookUrl": "/?path=/story/components-alert--overview",
+      "import": "import { Alert } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-avatar",
@@ -970,7 +1046,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-avatar--overview"
+      "storybookUrl": "/?path=/story/components-avatar--overview",
+      "import": "import { Avatar } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-back-to-top",
@@ -1002,7 +1079,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-backdrop--overview"
+      "storybookUrl": "/?path=/story/components-backdrop--overview",
+      "import": "import { Backdrop } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-badge",
@@ -1017,7 +1095,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-badge--overview"
+      "storybookUrl": "/?path=/story/components-badge--overview",
+      "import": "import { Badge } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-banner",
@@ -1032,7 +1111,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-banner--overview"
+      "storybookUrl": "/?path=/story/components-banner--overview",
+      "import": "import { Banner } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-brand",
@@ -1047,7 +1127,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-brand--overview"
+      "storybookUrl": "/?path=/story/components-brand--overview",
+      "import": "import { Brand } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-breadcrumb",
@@ -1062,7 +1143,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-breadcrumb--overview"
+      "storybookUrl": "/?path=/story/components-breadcrumb--overview",
+      "import": "import { Breadcrumb } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-button",
@@ -1077,7 +1159,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-button--overview"
+      "storybookUrl": "/?path=/story/components-button--overview",
+      "import": "import { Button } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-card",
@@ -1092,7 +1175,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-card--overview"
+      "storybookUrl": "/?path=/story/components-card--overview",
+      "import": "import { Card } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-clipboardcopy",
@@ -1107,7 +1191,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-clipboardcopy--overview"
+      "storybookUrl": "/?path=/story/components-clipboardcopy--overview",
+      "import": "import { ClipboardCopy } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-codeblock",
@@ -1122,7 +1207,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-codeblock--overview"
+      "storybookUrl": "/?path=/story/components-codeblock--overview",
+      "import": "import { CodeBlock } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-compass",
@@ -1137,7 +1223,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-compass--overview"
+      "storybookUrl": "/?path=/story/components-compass--overview",
+      "import": "import { Compass } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-content",
@@ -1152,7 +1239,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-content--overview"
+      "storybookUrl": "/?path=/story/components-content--overview",
+      "import": "import { Content } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-datalist",
@@ -1167,7 +1255,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-datalist--overview"
+      "storybookUrl": "/?path=/story/components-datalist--overview",
+      "import": "import { DataList } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-descriptionlist",
@@ -1182,7 +1271,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-descriptionlist--overview"
+      "storybookUrl": "/?path=/story/components-descriptionlist--overview",
+      "import": "import { DescriptionList } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-divider",
@@ -1197,7 +1287,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-divider--overview"
+      "storybookUrl": "/?path=/story/components-divider--overview",
+      "import": "import { Divider } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-drawer",
@@ -1212,7 +1303,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-drawer--overview"
+      "storybookUrl": "/?path=/story/components-drawer--overview",
+      "import": "import { Drawer } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-duallistselector",
@@ -1227,7 +1319,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-duallistselector--overview"
+      "storybookUrl": "/?path=/story/components-duallistselector--overview",
+      "import": "import { DualListSelector } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-emptystate",
@@ -1242,7 +1335,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-emptystate--overview"
+      "storybookUrl": "/?path=/story/components-emptystate--overview",
+      "import": "import { EmptyState } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-expandablesection",
@@ -1257,7 +1351,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-expandablesection--overview"
+      "storybookUrl": "/?path=/story/components-expandablesection--overview",
+      "import": "import { ExpandableSection } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-file-upload-fileupload",
@@ -1274,7 +1369,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-file-upload-fileupload--overview"
+      "storybookUrl": "/?path=/story/components-file-upload-fileupload--overview",
+      "import": "import { FileUpload } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-file-upload-multiplefileupload",
@@ -1292,7 +1388,8 @@
         "src",
         "fileupload"
       ],
-      "storybookUrl": "/?path=/story/components-file-upload-multiplefileupload--overview"
+      "storybookUrl": "/?path=/story/components-file-upload-multiplefileupload--overview",
+      "import": "import { MultipleFileUpload } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-footer",
@@ -1339,7 +1436,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-forms-checkbox--overview"
+      "storybookUrl": "/?path=/story/components-forms-checkbox--overview",
+      "import": "import { Checkbox } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-date-and-time",
@@ -1375,7 +1473,8 @@
         "packages",
         "ds-patternfly"
       ],
-      "storybookUrl": "/?path=/story/components-forms-date-and-time-calendarmonth--overview"
+      "storybookUrl": "/?path=/story/components-forms-date-and-time-calendarmonth--overview",
+      "import": "import { CalendarMonth } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-date-and-time-datepicker",
@@ -1393,7 +1492,8 @@
         "packages",
         "ds-patternfly"
       ],
-      "storybookUrl": "/?path=/story/components-forms-date-and-time-datepicker--overview"
+      "storybookUrl": "/?path=/story/components-forms-date-and-time-datepicker--overview",
+      "import": "import { DatePicker } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-date-and-time-datetimepicker",
@@ -1447,7 +1547,8 @@
         "packages",
         "ds-patternfly"
       ],
-      "storybookUrl": "/?path=/story/components-forms-date-and-time-timepicker--overview"
+      "storybookUrl": "/?path=/story/components-forms-date-and-time-timepicker--overview",
+      "import": "import { TimePicker } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-form",
@@ -1463,7 +1564,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-forms-form--overview"
+      "storybookUrl": "/?path=/story/components-forms-form--overview",
+      "import": "import { Form } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-formselect",
@@ -1479,7 +1581,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-forms-formselect--overview"
+      "storybookUrl": "/?path=/story/components-forms-formselect--overview",
+      "import": "import { FormSelect } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-helpertext",
@@ -1495,7 +1598,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-forms-helpertext--overview"
+      "storybookUrl": "/?path=/story/components-forms-helpertext--overview",
+      "import": "import { HelperText } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-inline-edit",
@@ -1529,7 +1633,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-forms-inputgroup--overview"
+      "storybookUrl": "/?path=/story/components-forms-inputgroup--overview",
+      "import": "import { InputGroup } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-numberinput",
@@ -1545,7 +1650,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-forms-numberinput--overview"
+      "storybookUrl": "/?path=/story/components-forms-numberinput--overview",
+      "import": "import { NumberInput } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-radio",
@@ -1561,7 +1667,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-forms-radio--overview"
+      "storybookUrl": "/?path=/story/components-forms-radio--overview",
+      "import": "import { Radio } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-searchinput",
@@ -1577,7 +1684,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-forms-searchinput--overview"
+      "storybookUrl": "/?path=/story/components-forms-searchinput--overview",
+      "import": "import { SearchInput } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-slider",
@@ -1593,7 +1701,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-forms-slider--overview"
+      "storybookUrl": "/?path=/story/components-forms-slider--overview",
+      "import": "import { Slider } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-switch",
@@ -1609,7 +1718,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-forms-switch--overview"
+      "storybookUrl": "/?path=/story/components-forms-switch--overview",
+      "import": "import { Switch } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-textarea",
@@ -1625,7 +1735,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-forms-textarea--overview"
+      "storybookUrl": "/?path=/story/components-forms-textarea--overview",
+      "import": "import { TextArea } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-textinput",
@@ -1641,7 +1752,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-forms-textinput--overview"
+      "storybookUrl": "/?path=/story/components-forms-textinput--overview",
+      "import": "import { TextInput } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-textinputgroup",
@@ -1657,7 +1769,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-forms-textinputgroup--overview"
+      "storybookUrl": "/?path=/story/components-forms-textinputgroup--overview",
+      "import": "import { TextInputGroup } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-forms-togglegroup",
@@ -1673,7 +1786,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-forms-togglegroup--overview"
+      "storybookUrl": "/?path=/story/components-forms-togglegroup--overview",
+      "import": "import { ToggleGroup } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-hero",
@@ -1688,7 +1802,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-hero--overview"
+      "storybookUrl": "/?path=/story/components-hero--overview",
+      "import": "import { Hero } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-hint",
@@ -1703,7 +1818,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-hint--overview"
+      "storybookUrl": "/?path=/story/components-hint--overview",
+      "import": "import { Hint } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-hyperlink",
@@ -1718,7 +1834,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-hyperlink--overview"
+      "storybookUrl": "/?path=/story/components-hyperlink--overview",
+      "import": "import { Hyperlink } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-icon",
@@ -1733,7 +1850,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-icon--overview"
+      "storybookUrl": "/?path=/story/components-icon--overview",
+      "import": "import { Icon } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-jump-links",
@@ -1765,7 +1883,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-label--overview"
+      "storybookUrl": "/?path=/story/components-label--overview",
+      "import": "import { Label } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-list",
@@ -1780,7 +1899,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-list--overview"
+      "storybookUrl": "/?path=/story/components-list--overview",
+      "import": "import { List } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-loginpage",
@@ -1795,14 +1915,15 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-loginpage--overview"
+      "storybookUrl": "/?path=/story/components-loginpage--overview",
+      "import": "import { LoginPage } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-masthead",
       "kind": "component",
       "title": "Masthead",
       "breadcrumb": "Components/Masthead",
-      "summary": "The top bar of an app. Three slots: a left brand region (logo + optional sidebar toggle), a centre region (often empty or holding a search), and a right region for global actions / user menu / notifications. Renders as &lt;header&gt; for proper landmark semantics.",
+      "summary": "The top bar of an app. Three slots: a left brand region (logo + optional sidebar toggle), a centre/right region for global actions, search, user menu and notifications. Renders as &lt;header&gt; for proper landmark semantics. The sidebar it toggles — push vs overlay, breakpoints, full-height drawers, glass — is documen",
       "tags": [
         "components",
         "masthead",
@@ -1810,7 +1931,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-masthead--overview"
+      "storybookUrl": "/?path=/story/components-masthead--overview",
+      "import": "import { Masthead } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-menu-application-launcher",
@@ -1880,7 +2002,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-menu-dropdown--overview"
+      "storybookUrl": "/?path=/story/components-menu-dropdown--overview",
+      "import": "import { Dropdown } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-menu-menu",
@@ -1895,7 +2018,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-menu-menu--overview"
+      "storybookUrl": "/?path=/story/components-menu-menu--overview",
+      "import": "import { Menu } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-menu-menu-toggle",
@@ -1946,7 +2070,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-menu-select--overview"
+      "storybookUrl": "/?path=/story/components-menu-select--overview",
+      "import": "import { Select } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-modal",
@@ -1961,7 +2086,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-modal--overview"
+      "storybookUrl": "/?path=/story/components-modal--overview",
+      "import": "import { Modal } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-navigation",
@@ -1991,7 +2117,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-notificationbadge--overview"
+      "storybookUrl": "/?path=/story/components-notificationbadge--overview",
+      "import": "import { NotificationBadge } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-notificationdrawer",
@@ -2006,7 +2133,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-notificationdrawer--overview"
+      "storybookUrl": "/?path=/story/components-notificationdrawer--overview",
+      "import": "import { NotificationDrawer } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-overflowmenu",
@@ -2021,7 +2149,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-overflowmenu--overview"
+      "storybookUrl": "/?path=/story/components-overflowmenu--overview",
+      "import": "import { OverflowMenu } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-page",
@@ -2036,7 +2165,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-page--overview"
+      "storybookUrl": "/?path=/story/components-page--overview",
+      "import": "import { Page } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-pagination",
@@ -2051,7 +2181,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-pagination--overview"
+      "storybookUrl": "/?path=/story/components-pagination--overview",
+      "import": "import { Pagination } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-panel",
@@ -2066,7 +2197,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-panel--overview"
+      "storybookUrl": "/?path=/story/components-panel--overview",
+      "import": "import { Panel } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-popover",
@@ -2081,7 +2213,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-popover--overview"
+      "storybookUrl": "/?path=/story/components-popover--overview",
+      "import": "import { Popover } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-progress",
@@ -2096,7 +2229,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-progress--overview"
+      "storybookUrl": "/?path=/story/components-progress--overview",
+      "import": "import { Progress } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-progressstepper",
@@ -2111,7 +2245,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-progressstepper--overview"
+      "storybookUrl": "/?path=/story/components-progressstepper--overview",
+      "import": "import { ProgressStepper } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-sidebar",
@@ -2126,7 +2261,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-sidebar--overview"
+      "storybookUrl": "/?path=/story/components-sidebar--overview",
+      "import": "import { Sidebar } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-simplelist",
@@ -2141,7 +2277,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-simplelist--overview"
+      "storybookUrl": "/?path=/story/components-simplelist--overview",
+      "import": "import { SimpleList } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-skeleton",
@@ -2156,7 +2293,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-skeleton--overview"
+      "storybookUrl": "/?path=/story/components-skeleton--overview",
+      "import": "import { Skeleton } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-skiptocontent",
@@ -2186,7 +2324,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-spinner--overview"
+      "storybookUrl": "/?path=/story/components-spinner--overview",
+      "import": "import { Spinner } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-table",
@@ -2216,7 +2355,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-tabs--overview"
+      "storybookUrl": "/?path=/story/components-tabs--overview",
+      "import": "import { Tabs } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-timestamp",
@@ -2231,7 +2371,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-timestamp--overview"
+      "storybookUrl": "/?path=/story/components-timestamp--overview",
+      "import": "import { Timestamp } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-title",
@@ -2246,7 +2387,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-title--overview"
+      "storybookUrl": "/?path=/story/components-title--overview",
+      "import": "import { Title } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-toolbar",
@@ -2261,7 +2403,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-toolbar--overview"
+      "storybookUrl": "/?path=/story/components-toolbar--overview",
+      "import": "import { Toolbar } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-tooltip",
@@ -2276,7 +2419,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-tooltip--overview"
+      "storybookUrl": "/?path=/story/components-tooltip--overview",
+      "import": "import { Tooltip } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-treeview",
@@ -2291,7 +2435,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-treeview--overview"
+      "storybookUrl": "/?path=/story/components-treeview--overview",
+      "import": "import { TreeView } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-truncate",
@@ -2306,7 +2451,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-truncate--overview"
+      "storybookUrl": "/?path=/story/components-truncate--overview",
+      "import": "import { Truncate } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-wizard",
@@ -2321,7 +2467,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-wizard--overview"
+      "storybookUrl": "/?path=/story/components-wizard--overview",
+      "import": "import { Wizard } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "extensions",
@@ -2497,7 +2644,8 @@
         "src",
         "dataviewtoolbar"
       ],
-      "storybookUrl": "/?path=/story/extensions-data-view-toolbar--overview"
+      "storybookUrl": "/?path=/story/extensions-data-view-toolbar--overview",
+      "import": "import { Toolbar } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "extensions-log-viewer",
@@ -2711,7 +2859,7 @@
       "kind": "foundation",
       "title": "Theming",
       "breadcrumb": "Foundations/Theming",
-      "summary": "Theming is two dimensions: the active brand (a typed token object) and the active color mode (light or dark). Both are controlled by props on &lt;ThemeProvider&gt; — switching either re-renders all downstream components without a reload.",
+      "summary": "Theming is three dimensions: the active brand (a typed token object), the active color mode (light or dark), and an optional glass surface treatment. All three are controlled by props on &lt;ThemeProvider&gt; (and by the matching toolbar toggles above) — switching any of them re-renders all downstream components withou",
       "tags": [
         "foundations",
         "theming",
@@ -3101,8 +3249,7 @@
         "shell",
         "packages",
         "ds-patternfly",
-        "src",
-        "layouts"
+        "src"
       ],
       "storybookUrl": "/?path=/story/patterns-shell--overview"
     },

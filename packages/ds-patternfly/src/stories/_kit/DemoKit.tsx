@@ -472,18 +472,31 @@ export function DemoFrame({
 }
 
 /**
- * Two-column reference table for component props.
+ * One row of a `PropsTable`. `default` and `required` are optional — the
+ * Default column only renders when at least one row supplies a default, so
+ * the long tail of existing three-field call sites is unaffected.
  */
-export function PropsTable({
-  rows,
-}: {
-  rows: { name: string; type: string; description: ReactNode }[];
-}) {
+export type PropRow = {
+  name: string;
+  type: string;
+  default?: string;
+  required?: boolean;
+  description: ReactNode;
+};
+
+/**
+ * Reference table for component props. Required props are marked with an
+ * asterisk on the name.
+ */
+export function PropsTable({ rows }: { rows: PropRow[] }) {
+  const hasDefault = rows.some((r) => r.default !== undefined);
   return (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "minmax(140px, max-content) minmax(180px, max-content) 1fr",
+        gridTemplateColumns: hasDefault
+          ? "minmax(140px, max-content) minmax(180px, max-content) minmax(80px, max-content) 1fr"
+          : "minmax(140px, max-content) minmax(180px, max-content) 1fr",
         rowGap: 8,
         columnGap: 24,
         fontFamily: "var(--gp-font-family)",
@@ -493,13 +506,24 @@ export function PropsTable({
     >
       <strong style={{ color: "var(--gp-color-text-subtle)" }}>Prop</strong>
       <strong style={{ color: "var(--gp-color-text-subtle)" }}>Type</strong>
+      {hasDefault && (
+        <strong style={{ color: "var(--gp-color-text-subtle)" }}>Default</strong>
+      )}
       <strong style={{ color: "var(--gp-color-text-subtle)" }}>Description</strong>
       {rows.map((r) => (
         <div key={r.name} style={{ display: "contents" }}>
-          <code style={{ wordBreak: "break-all" }}>{r.name}</code>
+          <code style={{ wordBreak: "break-all" }}>
+            {r.name}
+            {r.required ? " *" : ""}
+          </code>
           <code style={{ color: "var(--gp-color-text-subtle)", wordBreak: "break-all" }}>
             {r.type}
           </code>
+          {hasDefault && (
+            <code style={{ color: "var(--gp-color-text-subtle)", wordBreak: "break-all" }}>
+              {r.default ?? "—"}
+            </code>
+          )}
           <span>{r.description}</span>
         </div>
       ))}

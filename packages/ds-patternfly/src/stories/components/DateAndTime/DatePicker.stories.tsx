@@ -13,15 +13,15 @@ import {
   InputGroupItem,
   Popover,
   TextInput,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import {
   AngleLeftIcon,
   AngleRightIcon,
   CalendarAltIcon,
   TimesIcon,
 } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/Forms/Date and time/DatePicker",
@@ -983,7 +983,7 @@ export const Overview: StoryObj = {
 import {
   Button, ButtonVariant, CalendarMonth, InputGroup,
   InputGroupItem, Popover, TextInput,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import { CalendarAltIcon } from "@patternfly/react-icons";
 
 <InputGroup>

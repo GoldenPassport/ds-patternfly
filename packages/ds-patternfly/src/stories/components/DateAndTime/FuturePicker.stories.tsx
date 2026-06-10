@@ -17,14 +17,14 @@ import {
   TabTitleText,
   Tabs,
   TextInput,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import {
   CalendarAltIcon,
   MinusIcon,
   PlusIcon,
 } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../../_kit/DemoKit.js";
 import {
   BottomSheet,
   CalendarPanel,
@@ -661,7 +661,7 @@ export const Overview: StoryObj = {
               </DemoFrame>
               <CodeBlock>{`import {
   Button, Modal, ModalBody, ModalFooter, ModalHeader, ModalVariant,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 
 const [open, setOpen]     = useState(false);
 const [value, setValue]   = useState<FuturePickerValue | null>(null);

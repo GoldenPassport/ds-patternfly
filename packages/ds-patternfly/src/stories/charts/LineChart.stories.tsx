@@ -6,8 +6,8 @@ import {
   ChartLine,
   ChartVoronoiContainer,
 } from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 import { chartA11yParams } from "./_chartKit.js";
 
 const meta: Meta = {

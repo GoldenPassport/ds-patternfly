@@ -24,8 +24,8 @@ import {
   Section,
   Card as DocCard,
   CodeBlock,
-} from "../../components/StoryKit.js";
-import { DemoFrame } from "../../components/DemoKit.js";
+} from "../_kit/StoryKit.js";
+import { DemoFrame } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Patterns/Dashboard",

@@ -41,13 +41,19 @@ export {
   WCAG_AAA_NORMAL,
 } from "./a11y/contrast.js";
 
+// PF6-derived DS components — one thin-wrapper file per PF family
+// (Button, Checkbox, Modal, …), scaffolded by scripts/gen-pf-wrappers.mjs.
+export * from "./components/pf.js";
+
 // Components + label contracts/defaults
 export {
   Shell,
   PrimaryDetailLayout,
   Hyperlink,
+  AiAssistant,
   shellEnLabels,
   primaryDetailLayoutEnLabels,
+  aiAssistantEnLabels,
 } from "./components/index.js";
 export type {
   ShellProps,
@@ -55,4 +61,8 @@ export type {
   PrimaryDetailLayoutProps,
   PrimaryDetailLayoutLabels,
   HyperlinkProps,
+  AiAssistantProps,
+  AiAssistantLabels,
+  ChatMsg,
+  ChatPlacement,
 } from "./components/index.js";

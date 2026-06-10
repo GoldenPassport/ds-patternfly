@@ -5,10 +5,10 @@ import {
   MultipleFileUploadMain,
   MultipleFileUploadStatus,
   MultipleFileUploadStatusItem,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import { UploadIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/File upload/MultipleFileUpload",

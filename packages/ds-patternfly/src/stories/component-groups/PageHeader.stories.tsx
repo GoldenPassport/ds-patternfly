@@ -21,8 +21,8 @@ import {
 import { CubesIcon, EllipsisVIcon } from "@patternfly/react-icons";
 import PageHeader from "@patternfly/react-component-groups/dist/dynamic/PageHeader";
 import { useState } from "react";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Component groups/Content containers/Page header",

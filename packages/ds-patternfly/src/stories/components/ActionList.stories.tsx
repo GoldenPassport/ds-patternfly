@@ -6,7 +6,7 @@ import {
   Button,
   ButtonVariant,
   Tooltip,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import OutlinedCopyIcon from "@patternfly/react-icons/dist/esm/icons/outlined-copy-icon";
 import OutlinedPlusSquareIcon from "@patternfly/react-icons/dist/esm/icons/outlined-plus-square-icon";
 import OutlinedQuestionCircleIcon from "@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon";
@@ -16,8 +16,8 @@ import {
   Section,
   Card,
   CodeBlock,
-} from "../../components/StoryKit.js";
-import { PropsTable } from "../../components/DemoKit.js";
+} from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/ActionList",

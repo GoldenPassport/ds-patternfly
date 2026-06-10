@@ -23,7 +23,7 @@ import {
   InputGroupItem,
   Popover,
   TextInput,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import {
   AngleLeftIcon,
   AngleRightIcon,

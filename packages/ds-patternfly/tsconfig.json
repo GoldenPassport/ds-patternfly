@@ -20,6 +20,12 @@
     "useDefineForClassFields": true,
     "allowSyntheticDefaultImports": true,
     "outDir": "dist",
+    // Self-import alias: stories (and code blocks shown to readers) import
+    // the lib by its published name, exactly as a consumer would. Storybook's
+    // Vite alias (.storybook/main.ts) mirrors this — keep them in sync.
+    "paths": {
+      "@golden-passport/ds-patternfly": ["./src/index.ts"]
+    },
     // node types for .storybook/main.ts (uses node:path / node:url to
     // resolve paths). tsup uses its own entry config so this doesn't leak
     // into the lib bundle.

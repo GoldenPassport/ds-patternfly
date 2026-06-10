@@ -1,5 +1,5 @@
 import { Brand } from "@patternfly/react-core";
-import { useTheme } from "../theme/ThemeProvider.js";
+import { useTheme } from "../../theme/ThemeProvider.js";
 
 /**
  * Shared Acme demo logo for the Storybook docs.

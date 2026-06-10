@@ -14,8 +14,8 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import { CubeIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../../components/StoryKit.js";
-import { DemoFrame } from "../../components/DemoKit.js";
+import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../_kit/StoryKit.js";
+import { DemoFrame } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Patterns/Card view/Demo",

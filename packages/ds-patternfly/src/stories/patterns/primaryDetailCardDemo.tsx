@@ -64,7 +64,7 @@ import FilterIcon from "@patternfly/react-icons/dist/esm/icons/filter-icon";
 // and DashboardWrapper's <Page> share the same PageContext — keeps the managed
 // sidebar hamburger working.
 import { DashboardWrapper } from "@patternfly/react-core/dist/esm/demos/DashboardWrapper";
-import { AcmeDashboardMasthead } from "../../components/AcmeMasthead.js";
+import { AcmeDashboardMasthead } from "../_kit/AcmeMasthead.js";
 
 // 10 generated inline-SVG product icons. The upstream demo imports 10
 // separate PNG/SVG files from `./assets`; we generate them on the fly to

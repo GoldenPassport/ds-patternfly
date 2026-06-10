@@ -8,10 +8,10 @@ import {
   SelectGroup,
   SelectList,
   SelectOption,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import { CogIcon, FilterIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../../../components/StoryKit.js";
-import { DemoFrame } from "../../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../../_kit/StoryKit.js";
+import { DemoFrame } from "../../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/Menu/Options menu",

@@ -10,7 +10,10 @@
  *   - gp-ds://docs/index        full catalog (JSON)
  *   - gp-ds://docs/{id}         single doc item (JSON)
  */
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import {
+  McpServer,
+  ResourceTemplate,
+} from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { catalog, get, search, storybookUrlFor } from "./catalog.js";
 
@@ -27,12 +30,19 @@ import "@golden-passport/ds-patternfly/styles";         // lib styles LAST
 \`\`\`
 Wrap the app root:
 \`\`\`tsx
-import { ThemeProvider } from "@golden-passport/ds-patternfly";
-import { goldenPassport } from "@golden-passport/ds-patternfly/brands";
+import { ThemeProvider, goldenPassport } from "@golden-passport/ds-patternfly";
 <ThemeProvider brand={goldenPassport} mode="light" focusRing="outer">
   <App />
 </ThemeProvider>
 \`\`\`
+
+## Exported components
+Beyond theming, the lib exports ready-made components — \`Shell\`,
+\`PrimaryDetailLayout\`, \`Hyperlink\`, \`AiAssistant\` — each with a
+\`labels\` i18n contract (\`xxxEnLabels\` defaults) and slot props. Their
+catalog entries carry \`import\`, \`props\`, and \`usage\`; large ones also
+list end-to-end \`examples\` — fetch full example source with
+\`getGpExample\`.
 
 ## Things that flow from dials — don't override
 - Field / button height → \`--gp-control-pad-y\` (resolves to 2.25rem = 36px via padding + line-height)
@@ -58,8 +68,9 @@ reach for page-level border tokens inside a popover — use
   the NumberInput story)
 
 Use \`searchGpDocs\` to find a component by name, intent, or token,
-then \`useGpDocs\` to pull the full entry (Storybook URL, summary,
-relevant tokens).
+then \`useGpDocs\` to pull the full entry (Storybook URL, summary, props,
+import statement, relevant tokens), and \`getGpExample\` for the full
+source of an entry's end-to-end examples.
 `;
 
 export function createServer(): McpServer {
@@ -152,8 +163,20 @@ export function createServer(): McpServer {
           ],
         };
       }
+      // Example sources are large — return names + descriptions here and
+      // point at getGpExample for the full code.
+      const { examples, ...rest } = item;
       const payload = {
-        ...item,
+        ...rest,
+        ...(examples
+          ? {
+              examples: examples.map(({ name, description }) => ({
+                name,
+                ...(description ? { description } : {}),
+              })),
+              examplesHint: `Call getGpExample with id "${item.id}" for full, self-contained example source (imports, setup, composition).`,
+            }
+          : {}),
         ...(storybookUrlFor(item)
           ? { storybookUrl: storybookUrlFor(item) }
           : {}),
@@ -163,6 +186,67 @@ export function createServer(): McpServer {
         content: [
           { type: "text", text: JSON.stringify(payload, null, 2) },
         ],
+      };
+    },
+  );
+
+  server.registerTool(
+    "getGpExample",
+    {
+      title: "Fetch a Golden Passport DS end-to-end example",
+      description:
+        "Return the full source of an exported component's end-to-end example app — real package imports, app-entry setup, composition, and data wiring. Use useGpDocs first to see which examples an entry lists; omit exampleName to get all of them.",
+      inputSchema: {
+        id: z
+          .string()
+          .min(1)
+          .describe("Catalog id (from searchGpDocs / useGpDocs), e.g. 'ai-chat'."),
+        exampleName: z
+          .string()
+          .optional()
+          .describe(
+            "Specific example name (from the entry's `examples` list), e.g. 'AssistantInShell'. Omit for all examples on the entry.",
+          ),
+      },
+    },
+    async ({ id, exampleName }) => {
+      const item = get(id);
+      if (!item) {
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text",
+              text: `No doc item found for id "${id}". Use searchGpDocs to discover valid ids.`,
+            },
+          ],
+        };
+      }
+      const all = item.examples ?? [];
+      const selected = exampleName
+        ? all.filter((e) => e.name === exampleName)
+        : all;
+      if (selected.length === 0) {
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text",
+              text:
+                all.length === 0
+                  ? `"${id}" has no embedded examples. Entries with examples list them in useGpDocs.`
+                  : `No example named "${exampleName}" on "${id}". Available: ${all
+                      .map((e) => e.name)
+                      .join(", ")}.`,
+            },
+          ],
+        };
+      }
+      return {
+        content: selected.map((e) => ({
+          type: "text" as const,
+          text: `// ${e.name}${e.description ? ` — ${e.description}` : ""}\n${e.source}`,
+        })),
       };
     },
   );
@@ -209,6 +293,34 @@ export function createServer(): McpServer {
         },
       ],
     }),
+  );
+
+  // gp-ds://examples/{id}/{name} — full source of one embedded example.
+  server.registerResource(
+    "gp-ds-example",
+    new ResourceTemplate("gp-ds://examples/{id}/{name}", { list: undefined }),
+    {
+      title: "Golden Passport DS — example source",
+      description:
+        "Full source of an exported component's end-to-end example app.",
+      mimeType: "text/x.typescript-jsx",
+    },
+    async (uri, { id, name }) => {
+      const item = get(String(id));
+      const example = item?.examples?.find((e) => e.name === String(name));
+      if (!example) {
+        throw new Error(`No example "${name}" on doc item "${id}".`);
+      }
+      return {
+        contents: [
+          {
+            uri: uri.href,
+            mimeType: "text/x.typescript-jsx",
+            text: example.source,
+          },
+        ],
+      };
+    },
   );
 
   return server;

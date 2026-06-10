@@ -5,7 +5,7 @@ import { defaultBrand } from "../../tokens/brands/default.js";
 import { goldenPassport } from "../../tokens/brands/golden-passport.js";
 import { useBrand } from "../../theme/useBrand.js";
 import { useTheme } from "../../theme/ThemeProvider.js";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 
 const meta: Meta = {
   title: "Foundations/Theming",

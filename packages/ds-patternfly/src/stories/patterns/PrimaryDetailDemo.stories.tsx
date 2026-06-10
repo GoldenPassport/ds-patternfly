@@ -51,7 +51,7 @@ import {
 // PageContext module — otherwise the managed-sidebar toggle reads a different
 // context instance and the hamburger does nothing.
 import { DashboardWrapper } from "@patternfly/react-core/dist/esm/demos/DashboardWrapper";
-import { AcmeDashboardMasthead } from "../../components/AcmeMasthead.js";
+import { AcmeDashboardMasthead } from "../_kit/AcmeMasthead.js";
 import CodeBranchIcon from "@patternfly/react-icons/dist/esm/icons/code-branch-icon";
 import CodeIcon from "@patternfly/react-icons/dist/esm/icons/code-icon";
 import CubeIcon from "@patternfly/react-icons/dist/esm/icons/cube-icon";

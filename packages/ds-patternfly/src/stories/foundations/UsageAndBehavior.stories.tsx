@@ -8,7 +8,7 @@ import {
   FormGroup,
 } from "@patternfly/react-core";
 import { useState } from "react";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 
 const meta: Meta = {
   title: "Foundations/Usage and behavior",

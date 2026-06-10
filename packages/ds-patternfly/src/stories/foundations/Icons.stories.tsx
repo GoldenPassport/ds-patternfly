@@ -21,7 +21,7 @@ import {
   DownloadIcon,
   UploadIcon,
 } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card } from "../../components/StoryKit.js";
+import { FoundationPage, Section, Card } from "../_kit/StoryKit.js";
 
 const meta: Meta = {
   title: "Foundations/Icons",

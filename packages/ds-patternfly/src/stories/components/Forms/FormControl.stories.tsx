@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../../../components/StoryKit.js";
-import { DemoFrame } from "../../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../../_kit/StoryKit.js";
+import { DemoFrame } from "../../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Components/Forms",

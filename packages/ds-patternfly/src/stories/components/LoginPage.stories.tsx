@@ -9,14 +9,14 @@ import {
   LoginMainFooterBandItem,
   LoginMainFooterLinksItem,
   LoginPage,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import {
   ExclamationCircleIcon,
   GithubIcon,
   GoogleIcon,
 } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 import { useTheme } from "../../theme/ThemeProvider.js";
 
 /** The Acme demo logo (blue badge + "Acme" wordmark) as an inline-SVG

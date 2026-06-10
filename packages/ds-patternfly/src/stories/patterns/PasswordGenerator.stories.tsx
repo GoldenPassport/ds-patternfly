@@ -7,8 +7,8 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import { CopyIcon, EyeIcon, EyeSlashIcon, SyncIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
-import { DemoFrame } from "../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { DemoFrame } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Patterns/Password generator/Demo",

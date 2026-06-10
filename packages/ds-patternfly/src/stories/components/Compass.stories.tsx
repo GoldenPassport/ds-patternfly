@@ -38,7 +38,7 @@ import {
   TabTitleText,
   Title,
   Tooltip,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import AngleLeftIcon from "@patternfly/react-icons/dist/esm/icons/angle-left-icon";
 import AngleRightIcon from "@patternfly/react-icons/dist/esm/icons/angle-right-icon";
 import BarsIcon from "@patternfly/react-icons/dist/esm/icons/bars-icon";
@@ -53,8 +53,8 @@ import {
   Section,
   Card,
   CodeBlock,
-} from "../../components/StoryKit.js";
-import { AcmeLogo } from "../../components/AcmeLogo.js";
+} from "../_kit/StoryKit.js";
+import { AcmeLogo } from "../_kit/AcmeLogo.js";
 
 const meta: Meta = {
   title: "Components/Compass",
@@ -255,7 +255,7 @@ export const Basic: StoryObj = {
   Panel,
   PanelMain,
   PanelMainBody,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 
 const header = (
   <CompassHeader logo={<Logo />} nav={<Nav />} profile={<Profile />} />

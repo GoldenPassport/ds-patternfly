@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Brand } from "@patternfly/react-core";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
-import { AcmeLogo } from "../../components/AcmeLogo.js";
+import { Brand } from "@golden-passport/ds-patternfly";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { AcmeLogo } from "../_kit/AcmeLogo.js";
 
 const meta: Meta = {
   title: "Components/Brand",
@@ -105,7 +105,7 @@ export const Overview: StoryObj = {
             <DemoFrame>
               <AcmeLogo />
             </DemoFrame>
-            <CodeBlock>{`import { Brand } from "@patternfly/react-core";
+            <CodeBlock>{`import { Brand } from "@golden-passport/ds-patternfly";
 import pfLogo   from "../../assets/PF-HorizontalLogo-Color.svg";
 import pfLogoSm from "../../assets/PF-IconLogo-color.svg";
 

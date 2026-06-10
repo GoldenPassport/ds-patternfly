@@ -4,8 +4,8 @@ import { Button } from "@patternfly/react-core";
 import ColumnManagementModal, {
   type ColumnManagementModalColumn,
 } from "@patternfly/react-component-groups/dist/dynamic/ColumnManagementModal";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
-import { DemoFrame, PropsTable } from "../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Component groups/Helpers/Column management modal",

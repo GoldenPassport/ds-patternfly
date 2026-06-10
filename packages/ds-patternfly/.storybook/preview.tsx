@@ -5,7 +5,10 @@ import "@patternfly/react-core/dist/styles/base.css";
 // file into dist/styles/index.css so consumers get utilities for free with
 // the lib's main stylesheet — keep the dev/prod paths in sync.
 import "@patternfly/patternfly/utilities/_index.css";
+// Lib stylesheets — the build script (scripts/build-css.mjs) concatenates
+// this same ordered list into dist/styles/index.css; keep them in sync.
 import "../src/styles/index.css";
+import "../src/styles/components/ai-assistant.css";
 import { ThemeProvider } from "../src/theme/ThemeProvider.js";
 import { defaultBrand } from "../src/tokens/brands/default.js";
 import { goldenPassport } from "../src/tokens/brands/golden-passport.js";

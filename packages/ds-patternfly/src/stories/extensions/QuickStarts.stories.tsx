@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FoundationPage, Section, Card, CodeBlock } from "../../components/StoryKit.js";
-import { PropsTable } from "../../components/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 
 const meta: Meta = {
   title: "Extensions/Quick starts",
