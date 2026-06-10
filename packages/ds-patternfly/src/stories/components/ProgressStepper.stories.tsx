@@ -1,10 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  ProgressStep,
-  ProgressStepper,
-} from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  Basic,
+  WithDescriptions,
+  WithFailure,
+  Vertical,
+  Compact,
+} from "../../examples/components/ProgressStepper.example.js";
+import progressStepperExampleSrc from "../../examples/components/ProgressStepper.example.tsx?raw";
+import progressStepperComponentSrc from "../../components/ProgressStepper.tsx?raw";
 
 const meta: Meta = {
   title: "Components/ProgressStepper",
@@ -32,48 +43,13 @@ export const Overview: StoryObj = {
         description="Three steps: completed (success), in-progress (info + isCurrent), upcoming (pending). The connector line between steps fills based on adjacent step states."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <ProgressStepper aria-label="Onboarding progress">
-                <ProgressStep
-                  variant="success"
-                  id="basic-step1"
-                  titleId="basic-step1-title"
-                  aria-label="Step 1, completed"
-                >
-                  Account
-                </ProgressStep>
-                <ProgressStep
-                  variant="info"
-                  isCurrent
-                  id="basic-step2"
-                  titleId="basic-step2-title"
-                  aria-label="Step 2, current"
-                >
-                  Profile
-                </ProgressStep>
-                <ProgressStep
-                  variant="pending"
-                  id="basic-step3"
-                  titleId="basic-step3-title"
-                  aria-label="Step 3, pending"
-                >
-                  Workspace
-                </ProgressStep>
-              </ProgressStepper>
-            </DemoFrame>
-            <CodeBlock>{`<ProgressStepper aria-label="Onboarding progress">
-  <ProgressStep variant="success" id="step1" titleId="step1-title" aria-label="Step 1, completed">
-    Account
-  </ProgressStep>
-  <ProgressStep variant="info" isCurrent id="step2" titleId="step2-title" aria-label="Step 2, current">
-    Profile
-  </ProgressStep>
-  <ProgressStep variant="pending" id="step3" titleId="step3-title" aria-label="Step 3, pending">
-    Workspace
-  </ProgressStep>
-</ProgressStepper>`}</CodeBlock>
-          </div>
+          <Example
+            source={progressStepperExampleSrc}
+            region="Basic"
+            fileName="ProgressStepper.example.tsx"
+          >
+            <Basic />
+          </Example>
         </Card>
       </Section>
 
@@ -82,40 +58,13 @@ export const Overview: StoryObj = {
         description="Pass description to each ProgressStep for a sub-label that explains what each step entails. Useful for first-time users or for steps with non-obvious names."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <ProgressStepper aria-label="Deployment progress">
-                <ProgressStep
-                  variant="success"
-                  description="Image pushed to registry"
-                  id="desc-step1"
-                  titleId="desc-step1-title"
-                  aria-label="Step 1, completed"
-                >
-                  Build
-                </ProgressStep>
-                <ProgressStep
-                  variant="info"
-                  isCurrent
-                  description="Running smoke tests"
-                  id="desc-step2"
-                  titleId="desc-step2-title"
-                  aria-label="Step 2, current"
-                >
-                  Test
-                </ProgressStep>
-                <ProgressStep
-                  variant="pending"
-                  description="Roll out to production"
-                  id="desc-step3"
-                  titleId="desc-step3-title"
-                  aria-label="Step 3, pending"
-                >
-                  Deploy
-                </ProgressStep>
-              </ProgressStepper>
-            </DemoFrame>
-          </div>
+          <Example
+            source={progressStepperExampleSrc}
+            region="WithDescriptions"
+            fileName="ProgressStepper.example.tsx"
+          >
+            <WithDescriptions />
+          </Example>
         </Card>
       </Section>
 
@@ -124,46 +73,13 @@ export const Overview: StoryObj = {
         description="Mark a failed step variant='danger' (and isCurrent if the failure is where the run stopped). Subsequent steps stay pending — no green checkmarks past the failure."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <ProgressStepper aria-label="Pipeline with failure">
-                <ProgressStep
-                  variant="success"
-                  id="fail-step1"
-                  titleId="fail-step1-title"
-                  aria-label="Step 1, completed"
-                >
-                  Source
-                </ProgressStep>
-                <ProgressStep
-                  variant="success"
-                  id="fail-step2"
-                  titleId="fail-step2-title"
-                  aria-label="Step 2, completed"
-                >
-                  Build
-                </ProgressStep>
-                <ProgressStep
-                  variant="danger"
-                  isCurrent
-                  description="exit code 1"
-                  id="fail-step3"
-                  titleId="fail-step3-title"
-                  aria-label="Step 3, failed"
-                >
-                  Test
-                </ProgressStep>
-                <ProgressStep
-                  variant="pending"
-                  id="fail-step4"
-                  titleId="fail-step4-title"
-                  aria-label="Step 4, pending"
-                >
-                  Deploy
-                </ProgressStep>
-              </ProgressStepper>
-            </DemoFrame>
-          </div>
+          <Example
+            source={progressStepperExampleSrc}
+            region="WithFailure"
+            fileName="ProgressStepper.example.tsx"
+          >
+            <WithFailure />
+          </Example>
         </Card>
       </Section>
 
@@ -172,37 +88,13 @@ export const Overview: StoryObj = {
         description="isVertical stacks the steps vertically. Pair with isCenterAligned to centre the labels relative to each step icon. Use for narrow side panels or when step descriptions are long."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 24 }}>
-            <DemoFrame>
-              <ProgressStepper aria-label="Vertical stepper" isVertical>
-                <ProgressStep
-                  variant="success"
-                  id="v-step1"
-                  titleId="v-step1-title"
-                  aria-label="Step 1, completed"
-                >
-                  First step
-                </ProgressStep>
-                <ProgressStep
-                  variant="info"
-                  isCurrent
-                  id="v-step2"
-                  titleId="v-step2-title"
-                  aria-label="Step 2, current"
-                >
-                  Second step
-                </ProgressStep>
-                <ProgressStep
-                  variant="pending"
-                  id="v-step3"
-                  titleId="v-step3-title"
-                  aria-label="Step 3, pending"
-                >
-                  Third step
-                </ProgressStep>
-              </ProgressStepper>
-            </DemoFrame>
-          </div>
+          <Example
+            source={progressStepperExampleSrc}
+            region="Vertical"
+            fileName="ProgressStepper.example.tsx"
+          >
+            <Vertical />
+          </Example>
         </Card>
       </Section>
 
@@ -211,54 +103,39 @@ export const Overview: StoryObj = {
         description="isCompact shrinks the step circles and tightens spacing — for use inside cards, drawers, or anywhere screen real estate is limited."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <ProgressStepper isCompact aria-label="Compact stepper">
-                <ProgressStep
-                  variant="success"
-                  id="compact-step1"
-                  titleId="compact-step1-title"
-                  aria-label="Step 1, completed"
-                >
-                  First
-                </ProgressStep>
-                <ProgressStep
-                  variant="info"
-                  isCurrent
-                  id="compact-step2"
-                  titleId="compact-step2-title"
-                  aria-label="Step 2, current"
-                >
-                  Second
-                </ProgressStep>
-                <ProgressStep
-                  variant="pending"
-                  id="compact-step3"
-                  titleId="compact-step3-title"
-                  aria-label="Step 3, pending"
-                >
-                  Third
-                </ProgressStep>
-              </ProgressStepper>
-            </DemoFrame>
-          </div>
+          <Example
+            source={progressStepperExampleSrc}
+            region="Compact"
+            fileName="ProgressStepper.example.tsx"
+          >
+            <Compact />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Most-used ProgressStepper props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                { name: "aria-label", type: "string", description: "Required. Names the stepper for screen readers." },
-                { name: "isCompact", type: "boolean", description: "Smaller step icons + tighter spacing — for cards, drawers, sidebars." },
-                { name: "isVertical", type: "boolean", description: "Stack steps vertically." },
-                { name: "isCenterAligned", type: "boolean", description: "Centre step labels relative to their icon. Useful in vertical or wide-spaced horizontal layouts." },
-              ]}
-            />
-          </div>
+          <Example
+            source={progressStepperExampleSrc}
+            fileName="ProgressStepper.example.tsx"
+          />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { ProgressStepper, ProgressStep } from "@golden-passport/ds-patternfly";'}
+        componentSource={progressStepperComponentSrc}
+        componentFileName="ProgressStepper.tsx"
+        rows={[
+          { name: "aria-label", type: "string", description: "Required. Names the stepper for screen readers." },
+          { name: "isCompact", type: "boolean", description: "Smaller step icons + tighter spacing — for cards, drawers, sidebars." },
+          { name: "isVertical", type: "boolean", description: "Stack steps vertically." },
+          { name: "isCenterAligned", type: "boolean", description: "Centre step labels relative to their icon. Useful in vertical or wide-spaced horizontal layouts." },
+        ]}
+      />
 
       <Section title="Most-used ProgressStep props">
         <Card>

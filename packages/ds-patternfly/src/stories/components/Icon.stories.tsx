@@ -1,22 +1,20 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Icon } from "@golden-passport/ds-patternfly";
-import { CheckCircleIcon, InfoCircleIcon, ExclamationTriangleIcon, TimesCircleIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import { Sizes, StatusColors } from "../../examples/components/Icon.example.js";
+import iconExampleSrc from "../../examples/components/Icon.example.tsx?raw";
+import iconComponentSrc from "../../components/Icon.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Icon",
   parameters: { layout: "padded" },
 };
 export default meta;
-
-const SIZES = ["sm", "md", "lg", "xl"] as const;
-const STATUSES = [
-  { status: "info" as const, IconC: InfoCircleIcon, label: "Info" },
-  { status: "success" as const, IconC: CheckCircleIcon, label: "Success" },
-  { status: "warning" as const, IconC: ExclamationTriangleIcon, label: "Warning" },
-  { status: "danger" as const, IconC: TimesCircleIcon, label: "Danger" },
-];
 
 export const Overview: StoryObj = {
   render: () => (
@@ -33,78 +31,60 @@ export const Overview: StoryObj = {
     >
       <Section title="Sizes">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-                {SIZES.map((s) => (
-                  <div key={s} style={{ textAlign: "center", color: "var(--gp-color-text-regular)" }}>
-                    <Icon size={s}>
-                      <CheckCircleIcon />
-                    </Icon>
-                    <div style={{ fontSize: 12, marginTop: 8 }}>{s}</div>
-                  </div>
-                ))}
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`import { Icon } from "@golden-passport/ds-patternfly";
-import { CheckCircleIcon } from "@patternfly/react-icons";
-
-<Icon size="md">
-  <CheckCircleIcon />
-</Icon>`}</CodeBlock>
-          </div>
+          <Example source={iconExampleSrc} region="Sizes" fileName="Icon.example.tsx">
+            <Sizes />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Status colors">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 24 }}>
-                {STATUSES.map(({ status, IconC, label }) => (
-                  <div key={status} style={{ textAlign: "center", color: "var(--gp-color-text-regular)" }}>
-                    <Icon status={status} size="lg">
-                      <IconC />
-                    </Icon>
-                    <div style={{ fontSize: 12, marginTop: 8 }}>{label}</div>
-                  </div>
-                ))}
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={iconExampleSrc}
+            region="StatusColors"
+            fileName="Icon.example.tsx"
+          >
+            <StatusColors />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "size",
-                  type: '"sm" | "md" | "lg" | "xl" | numeric body sizes',
-                  description: "Icon visual size. Use the named sizes for consistency across the system.",
-                },
-                {
-                  name: "status",
-                  type: '"info" | "success" | "warning" | "danger" | "custom"',
-                  description: "Apply a semantic color tint. Inherits the brand status palette.",
-                },
-                {
-                  name: "isInline",
-                  type: "boolean",
-                  description: "Aligns the icon to the surrounding text baseline — for icons used inline within prose.",
-                },
-                {
-                  name: "iconSize",
-                  type: '"sm" | "md" | "lg" | "xl"',
-                  description: "Override the inner SVG size independent of the surrounding box.",
-                },
-              ]}
-            />
-          </div>
+          <Example source={iconExampleSrc} fileName="Icon.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Icon } from "@golden-passport/ds-patternfly";'}
+        componentSource={iconComponentSrc}
+        componentFileName="Icon.tsx"
+        rows={[
+          {
+            name: "size",
+            type: '"sm" | "md" | "lg" | "xl" | numeric body sizes',
+            description: "Icon visual size. Use the named sizes for consistency across the system.",
+          },
+          {
+            name: "status",
+            type: '"info" | "success" | "warning" | "danger" | "custom"',
+            description: "Apply a semantic color tint. Inherits the brand status palette.",
+          },
+          {
+            name: "isInline",
+            type: "boolean",
+            description: "Aligns the icon to the surrounding text baseline — for icons used inline within prose.",
+          },
+          {
+            name: "iconSize",
+            type: '"sm" | "md" | "lg" | "xl"',
+            description: "Override the inner SVG size independent of the surrounding box.",
+          },
+        ]}
+      />
 
       <Section
         title="Accessibility"

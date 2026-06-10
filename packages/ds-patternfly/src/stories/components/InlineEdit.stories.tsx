@@ -1,19 +1,18 @@
-import { useEffect, useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  Button,
-  Flex,
-  FlexItem,
-  TextArea,
-  TextInput,
-} from "@golden-passport/ds-patternfly";
+  FoundationPage,
+  Section,
+  Card,
+  Example,
+  ThemingPointer,
+} from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 import {
-  CheckIcon,
-  PencilAltIcon,
-  TimesIcon,
-} from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+  SingleLineField,
+  EmptyState,
+  Multiline,
+} from "../../examples/components/InlineEdit.example.js";
+import inlineEditExampleSrc from "../../examples/components/InlineEdit.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/Inline edit",
@@ -21,129 +20,8 @@ const meta: Meta = {
 };
 export default meta;
 
-/**
- * Composed inline-edit pattern. PatternFly publishes this as a recipe rather
- * than a single component in 6.4.3, so this page documents the canonical
- * shape: a read view with a pencil affordance, an edit view with a control
- * + check / times buttons, Enter-to-save and Escape-to-cancel.
- */
-function InlineText({
-  value,
-  onSave,
-  ariaLabel,
-  placeholder,
-  multiline = false,
-}: {
-  value: string;
-  onSave: (next: string) => void;
-  ariaLabel: string;
-  placeholder?: string;
-  multiline?: boolean;
-}) {
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(value);
-  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    if (editing) inputRef.current?.focus();
-  }, [editing]);
-
-  const start = () => {
-    setDraft(value);
-    setEditing(true);
-  };
-  const commit = () => {
-    onSave(draft.trim());
-    setEditing(false);
-  };
-  const cancel = () => {
-    setDraft(value);
-    setEditing(false);
-  };
-
-  if (!editing) {
-    return (
-      <Flex
-        alignItems={{ default: "alignItemsCenter" }}
-        spaceItems={{ default: "spaceItemsSm" }}
-      >
-        <FlexItem>
-          <span style={{ color: value ? "var(--gp-color-text-regular)" : "var(--gp-color-text-subtle)" }}>
-            {value || placeholder || "—"}
-          </span>
-        </FlexItem>
-        <FlexItem>
-          <Button
-            variant="plain"
-            aria-label={`Edit ${ariaLabel}`}
-            onClick={start}
-            icon={<PencilAltIcon />}
-          />
-        </FlexItem>
-      </Flex>
-    );
-  }
-
-  return (
-    <Flex
-      alignItems={{ default: multiline ? "alignItemsFlexStart" : "alignItemsCenter" }}
-      spaceItems={{ default: "spaceItemsSm" }}
-    >
-      <FlexItem grow={{ default: "grow" }}>
-        {multiline ? (
-          <TextArea
-            ref={inputRef as React.RefObject<HTMLTextAreaElement>}
-            aria-label={ariaLabel}
-            value={draft}
-            onChange={(_e, v) => setDraft(v)}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") cancel();
-              if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) commit();
-            }}
-            rows={3}
-          />
-        ) : (
-          <TextInput
-            ref={inputRef as React.RefObject<HTMLInputElement>}
-            aria-label={ariaLabel}
-            value={draft}
-            onChange={(_e, v) => setDraft(v)}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") cancel();
-              if (e.key === "Enter") commit();
-            }}
-          />
-        )}
-      </FlexItem>
-      <FlexItem>
-        <Button
-          variant="plain"
-          aria-label={`Save ${ariaLabel}`}
-          onClick={commit}
-          icon={<CheckIcon />}
-        />
-      </FlexItem>
-      <FlexItem>
-        <Button
-          variant="plain"
-          aria-label={`Cancel editing ${ariaLabel}`}
-          onClick={cancel}
-          icon={<TimesIcon />}
-        />
-      </FlexItem>
-    </Flex>
-  );
-}
-
 export const Overview: StoryObj = {
   render: () => {
-    const [title, setTitle] = useState("Quarterly review");
-    const [owner, setOwner] = useState("Ada Lovelace");
-    const [empty, setEmpty] = useState("");
-    const [notes, setNotes] = useState(
-      "Action items captured from the planning session.",
-    );
-
     return (
       <FoundationPage
         title="Inline edit"
@@ -164,49 +42,13 @@ export const Overview: StoryObj = {
           description="Read view shows the value next to a pencil. Click pencil → TextInput appears with check / times. Enter saves, Escape cancels."
         >
           <Card>
-            <div style={{ padding: 24, display: "grid", gap: 16 }}>
-              <DemoFrame>
-                <div style={{ display: "grid", gap: 12, padding: 8 }}>
-                  <div>
-                    <div
-                      style={{
-                        fontSize: 12,
-                        color: "var(--gp-color-text-subtle)",
-                        marginBottom: 4,
-                      }}
-                    >
-                      Title
-                    </div>
-                    <InlineText
-                      value={title}
-                      onSave={setTitle}
-                      ariaLabel="title"
-                    />
-                  </div>
-                  <div>
-                    <div
-                      style={{
-                        fontSize: 12,
-                        color: "var(--gp-color-text-subtle)",
-                        marginBottom: 4,
-                      }}
-                    >
-                      Owner
-                    </div>
-                    <InlineText
-                      value={owner}
-                      onSave={setOwner}
-                      ariaLabel="owner"
-                    />
-                  </div>
-                </div>
-              </DemoFrame>
-              <CodeBlock>{`<InlineText
-  value={title}
-  onSave={setTitle}
-  ariaLabel="title"
-/>`}</CodeBlock>
-            </div>
+            <Example
+              source={inlineEditExampleSrc}
+              region="SingleLineField"
+              fileName="InlineEdit.example.tsx"
+            >
+              <SingleLineField />
+            </Example>
           </Card>
         </Section>
 
@@ -215,27 +57,13 @@ export const Overview: StoryObj = {
           description="When the value is empty, render the placeholder in a subtle tone. The pencil still opens the editor."
         >
           <Card>
-            <div style={{ padding: 24 }}>
-              <DemoFrame>
-                <div style={{ padding: 8 }}>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: "var(--gp-color-text-subtle)",
-                      marginBottom: 4,
-                    }}
-                  >
-                    Description
-                  </div>
-                  <InlineText
-                    value={empty}
-                    onSave={setEmpty}
-                    placeholder="Add a description"
-                    ariaLabel="description"
-                  />
-                </div>
-              </DemoFrame>
-            </div>
+            <Example
+              source={inlineEditExampleSrc}
+              region="EmptyState"
+              fileName="InlineEdit.example.tsx"
+            >
+              <EmptyState />
+            </Example>
           </Card>
         </Section>
 
@@ -244,82 +72,25 @@ export const Overview: StoryObj = {
           description="Swap TextInput for TextArea when the field accepts long text. Cmd/Ctrl + Enter saves; bare Enter inserts a newline."
         >
           <Card>
-            <div style={{ padding: 24 }}>
-              <DemoFrame>
-                <div style={{ padding: 8 }}>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: "var(--gp-color-text-subtle)",
-                      marginBottom: 4,
-                    }}
-                  >
-                    Notes
-                  </div>
-                  <InlineText
-                    value={notes}
-                    onSave={setNotes}
-                    ariaLabel="notes"
-                    multiline
-                  />
-                </div>
-              </DemoFrame>
-            </div>
+            <Example
+              source={inlineEditExampleSrc}
+              region="Multiline"
+              fileName="InlineEdit.example.tsx"
+            >
+              <Multiline />
+            </Example>
           </Card>
         </Section>
 
         <Section
-          title="Recipe"
-          description="The full implementation — drop into your codebase as a single component and reuse."
+          title="Full example"
+          description="The complete recipe — the InlineText implementation plus every demo above, ready to drop into your codebase. The same file ships in the MCP docs catalog."
         >
           <Card>
-            <div style={{ padding: 24 }}>
-              <CodeBlock>{`function InlineText({ value, onSave, ariaLabel, placeholder }) {
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(value);
-  const inputRef = useRef(null);
-
-  useEffect(() => { if (editing) inputRef.current?.focus(); }, [editing]);
-
-  const start  = () => { setDraft(value); setEditing(true); };
-  const commit = () => { onSave(draft.trim()); setEditing(false); };
-  const cancel = () => { setDraft(value); setEditing(false); };
-
-  if (!editing) {
-    return (
-      <Flex spaceItems={{ default: "spaceItemsSm" }} alignItems={{ default: "alignItemsCenter" }}>
-        <FlexItem>{value || placeholder || "—"}</FlexItem>
-        <FlexItem>
-          <Button variant="plain" aria-label={\`Edit \${ariaLabel}\`} onClick={start} icon={<PencilAltIcon />} />
-        </FlexItem>
-      </Flex>
-    );
-  }
-
-  return (
-    <Flex spaceItems={{ default: "spaceItemsSm" }} alignItems={{ default: "alignItemsCenter" }}>
-      <FlexItem grow={{ default: "grow" }}>
-        <TextInput
-          ref={inputRef}
-          aria-label={ariaLabel}
-          value={draft}
-          onChange={(_e, v) => setDraft(v)}
-          onKeyDown={(e) => {
-            if (e.key === "Escape") cancel();
-            if (e.key === "Enter")  commit();
-          }}
-        />
-      </FlexItem>
-      <FlexItem>
-        <Button variant="plain" aria-label={\`Save \${ariaLabel}\`}   onClick={commit} icon={<CheckIcon />} />
-      </FlexItem>
-      <FlexItem>
-        <Button variant="plain" aria-label={\`Cancel editing \${ariaLabel}\`} onClick={cancel} icon={<TimesIcon />} />
-      </FlexItem>
-    </Flex>
-  );
-}`}</CodeBlock>
-            </div>
+            <Example
+              source={inlineEditExampleSrc}
+              fileName="InlineEdit.example.tsx"
+            />
           </Card>
         </Section>
 

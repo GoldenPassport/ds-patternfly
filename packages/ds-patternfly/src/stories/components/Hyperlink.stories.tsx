@@ -1,7 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Hyperlink } from "../../components/Hyperlink.js";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+  ThemingPointer,
+} from "../_kit/StoryKit.js";
+import {
+  InlineLinks,
+  ExternalLinks,
+  Variants,
+} from "../../examples/components/Hyperlink.example.js";
+import hyperlinkExampleSrc from "../../examples/components/Hyperlink.example.tsx?raw";
+import hyperlinkComponentSrc from "../../components/Hyperlink.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Hyperlink",
@@ -25,22 +37,13 @@ export const Overview: StoryObj = {
     >
       <Section title="Inline links">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <p style={{ margin: 0, color: "var(--gp-color-text-regular)" }}>
-                See the{" "}
-                <Hyperlink href="#">PatternFly 6 documentation</Hyperlink>{" "}
-                for the full component surface, or read the{" "}
-                <Hyperlink href="#" variant="underline">always-underlined variant</Hyperlink>{" "}
-                for inline use inside prose.
-              </p>
-            </DemoFrame>
-            <CodeBlock>{`import { Hyperlink } from "@golden-passport/ds-patternfly";
-
-<p>
-  See the <Hyperlink href="/docs">documentation</Hyperlink> for details.
-</p>`}</CodeBlock>
-          </div>
+          <Example
+            source={hyperlinkExampleSrc}
+            region="InlineLinks"
+            fileName="Hyperlink.example.tsx"
+          >
+            <InlineLinks />
+          </Example>
         </Card>
       </Section>
 
@@ -49,27 +52,13 @@ export const Overview: StoryObj = {
         description='target="_blank" auto-adds rel="noopener noreferrer", an external-link icon, and a screen reader "(opens in a new tab)" announcement.'
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <p style={{ margin: 0, color: "var(--gp-color-text-regular)" }}>
-                Visit{" "}
-                <Hyperlink href="https://www.patternfly.org" target="_blank">
-                  patternfly.org
-                </Hyperlink>{" "}
-                for the source design system.
-              </p>
-            </DemoFrame>
-            <CodeBlock>{`<Hyperlink href="https://www.patternfly.org" target="_blank">
-  patternfly.org
-</Hyperlink>
-
-// Renders as:
-// <a href="..." target="_blank" rel="noopener noreferrer">
-//   patternfly.org
-//   <svg .../>                        ← external-link icon
-//   <span class="sr-only"> (opens in a new tab)</span>
-// </a>`}</CodeBlock>
-          </div>
+          <Example
+            source={hyperlinkExampleSrc}
+            region="ExternalLinks"
+            fileName="Hyperlink.example.tsx"
+          >
+            <ExternalLinks />
+          </Example>
         </Card>
       </Section>
 
@@ -78,67 +67,74 @@ export const Overview: StoryObj = {
         description="default underlines on hover/focus; underline always shows the underline."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ display: "grid", gap: 12, color: "var(--gp-color-text-regular)" }}>
-                <Hyperlink href="#">Default — underlines on hover/focus</Hyperlink>
-                <Hyperlink href="#" variant="underline">
-                  Underline — always underlined (use inline in prose)
-                </Hyperlink>
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={hyperlinkExampleSrc}
+            region="Variants"
+            fileName="Hyperlink.example.tsx"
+          >
+            <Variants />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "href",
-                  type: "string",
-                  description: "Required. Destination URL.",
-                },
-                {
-                  name: "children",
-                  type: "ReactNode",
-                  description: "Required. The link text — provides the accessible name.",
-                },
-                {
-                  name: "target",
-                  type: '"_blank" | "_self" | "_parent" | "_top" | string',
-                  description: 'When "_blank", auto-adds rel security defaults, an external-link icon, and an AT announcement.',
-                },
-                {
-                  name: "rel",
-                  type: "string",
-                  description: 'Custom rel — merged with "noopener noreferrer" when target="_blank". Pass them yourself if you want full control.',
-                },
-                {
-                  name: "variant",
-                  type: '"default" | "underline"',
-                  description: "default underlines on hover/focus only; underline is always underlined.",
-                },
-                {
-                  name: "hideExternalIcon",
-                  type: "boolean",
-                  description: 'Suppress the new-tab icon even when target="_blank". The screen reader announcement still fires.',
-                },
-                {
-                  name: "newTabLabel",
-                  type: "string",
-                  description: 'Translated string read by AT for new-tab links. Default "(opens in a new tab)".',
-                },
-              ]}
-            />
-            <p style={{ marginTop: 16, marginBottom: 0, color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
-              All other native <code>&lt;a&gt;</code> attributes pass through (e.g. <code>onClick</code>, <code>aria-*</code>, <code>data-*</code>).
-            </p>
-          </div>
+          <Example source={hyperlinkExampleSrc} fileName="Hyperlink.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Hyperlink } from "@golden-passport/ds-patternfly";'}
+        componentSource={hyperlinkComponentSrc}
+        componentFileName="Hyperlink.tsx"
+        description={
+          <>
+            How to import the component and every prop it accepts. All other
+            native <code>&lt;a&gt;</code> attributes pass through (e.g.{" "}
+            <code>onClick</code>, <code>aria-*</code>, <code>data-*</code>).
+          </>
+        }
+        rows={[
+          {
+            name: "href",
+            type: "string",
+            description: "Required. Destination URL.",
+          },
+          {
+            name: "children",
+            type: "ReactNode",
+            description: "Required. The link text — provides the accessible name.",
+          },
+          {
+            name: "target",
+            type: '"_blank" | "_self" | "_parent" | "_top" | string',
+            description: 'When "_blank", auto-adds rel security defaults, an external-link icon, and an AT announcement.',
+          },
+          {
+            name: "rel",
+            type: "string",
+            description: 'Custom rel — merged with "noopener noreferrer" when target="_blank". Pass them yourself if you want full control.',
+          },
+          {
+            name: "variant",
+            type: '"default" | "underline"',
+            description: "default underlines on hover/focus only; underline is always underlined.",
+          },
+          {
+            name: "hideExternalIcon",
+            type: "boolean",
+            description: 'Suppress the new-tab icon even when target="_blank". The screen reader announcement still fires.',
+          },
+          {
+            name: "newTabLabel",
+            type: "string",
+            description: 'Translated string read by AT for new-tab links. Default "(opens in a new tab)".',
+          },
+        ]}
+      />
 
       <Section title="Accessibility">
         <Card>

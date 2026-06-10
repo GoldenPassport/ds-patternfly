@@ -16,12 +16,14 @@ export const Overview: StoryObj = {
           The Date and time section collects every control for picking a
           moment — single dates, paired date + time, ranges, time-only,
           and relative waits. They all share the same{" "}
-          <strong>lib calendar primitives</strong> in{" "}
-          <code>_libcal.tsx</code> (CalendarPanel, CalendarPopout,
-          BottomSheet, useMobileViewport, year stepper helpers) so the
-          look, navigation, validators, and locale behaviour are
-          identical across DatePicker, DateTimePicker, FuturePicker, and
-          the standalone CalendarMonth.
+          <strong>lib calendar primitives</strong> (CalendarPanel,
+          CalendarPopout, BottomSheet, useMobileViewport, date-format
+          helpers) — carried by each downloadable example file under{" "}
+          <code>src/examples/components/DateAndTime/</code> (e.g.{" "}
+          <code>DatePicker.example.tsx</code>) so the look, navigation,
+          validators, and locale behaviour are identical across
+          DatePicker, DateTimePicker, FuturePicker, and the standalone
+          CalendarMonth.
         </>
       }
     >
@@ -187,9 +189,10 @@ export const Overview: StoryObj = {
                 <code>prefers-reduced-motion</code>.
               </li>
               <li>
-                <strong>Detection</strong> — driven by{" "}
-                <code>useMobileViewport()</code> in{" "}
-                <code>_libcal.tsx</code>, which subscribes to a{" "}
+                <strong>Detection</strong> — driven by the{" "}
+                <code>useMobileViewport()</code> hook (see{" "}
+                <code>DatePicker.example.tsx</code>), which subscribes to
+                a{" "}
                 <code>matchMedia(&quot;(max-width: 47.98rem)&quot;)</code>{" "}
                 query. Hot-swaps between popover and sheet as the
                 viewport crosses the breakpoint, no remount.
@@ -203,7 +206,9 @@ export const Overview: StoryObj = {
               </li>
             </ul>
             <CodeBlock>{`// Same prop API on both surfaces — the lib hook picks the right one.
-import { LibDatePicker, useMobileViewport } from "./_libcal";
+// The recipe lives in the downloadable example file:
+//   src/examples/components/DateAndTime/DatePicker.example.tsx
+// (also served by the MCP docs catalog via getGpExample).
 
 <LibDatePicker
   value={value} onChange={setValue}
@@ -222,7 +227,7 @@ const isMobile = useMobileViewport();
 
       <Section
         title="Shared lib primitives"
-        description="Everything in this section is composed from a small set of helpers in _libcal.tsx. If you're building a new date-shaped control, reach for these before re-implementing."
+        description="Everything in this section is composed from a small set of helpers carried by the downloadable example files (src/examples/components/DateAndTime/DatePicker.example.tsx is the canonical copy). If you're building a new date-shaped control, start from those before re-implementing."
       >
         <Card>
           <ul
