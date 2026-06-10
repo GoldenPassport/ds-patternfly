@@ -1,38 +1,24 @@
-import type { CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Badge } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import BadgeExample, {
+  Tone,
+  ReadVsUnread,
+  TruncatedCounts,
+} from "../../examples/components/Badge.example.js";
+import badgeExampleSrc from "../../examples/components/Badge.example.tsx?raw";
+import badgeComponentSrc from "../../components/Badge.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Badge",
   parameters: { layout: "padded" },
 };
 export default meta;
-
-// Badge tones — apply via inline CSS variable overrides so the badge inherits
-// the right text contrast for each background. PF6 ships read/unread/disabled
-// modifiers but no semantic-status variants, so we set the component's own
-// CSS vars (typed loosely so React accepts the custom property names).
-type BadgeStyle = CSSProperties & {
-  "--pf-v6-c-badge--BackgroundColor"?: string;
-  "--pf-v6-c-badge--Color"?: string;
-};
-
-const tones: Record<"nonstatus" | "warning" | "danger", BadgeStyle> = {
-  nonstatus: {
-    "--pf-v6-c-badge--BackgroundColor": "var(--pf-t--global--color--nonstatus--gray--default)",
-    "--pf-v6-c-badge--Color": "var(--pf-t--global--text--color--nonstatus--on-gray--default)",
-  },
-  warning: {
-    "--pf-v6-c-badge--BackgroundColor": "var(--pf-t--global--color--status--warning--default)",
-    "--pf-v6-c-badge--Color": "var(--pf-t--global--text--color--status--on-warning--default)",
-  },
-  danger: {
-    "--pf-v6-c-badge--BackgroundColor": "var(--pf-t--global--color--status--danger--default)",
-    "--pf-v6-c-badge--Color": "var(--pf-t--global--text--color--status--on-danger--default)",
-  },
-};
 
 export const Overview: StoryObj = {
   render: () => (
@@ -51,93 +37,79 @@ export const Overview: StoryObj = {
         description="Lead with the semantic that matches the count's meaning. Most badges are informational; reach for warning / danger when the count itself is the alarm."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap", color: "var(--gp-color-text-regular)" }}>
-                <span>Drafts <Badge style={tones.nonstatus}>4</Badge></span>
-                <span>Pending review <Badge style={tones.warning}>7</Badge></span>
-                <span>Failed builds <Badge style={tones.danger}>3</Badge></span>
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`const tones = {
-  nonstatus: {
-    "--pf-v6-c-badge--BackgroundColor": "var(--pf-t--global--color--nonstatus--gray--default)",
-    "--pf-v6-c-badge--Color":           "var(--pf-t--global--text--color--nonstatus--on-gray--default)",
-  },
-  warning: {
-    "--pf-v6-c-badge--BackgroundColor": "var(--pf-t--global--color--status--warning--default)",
-    "--pf-v6-c-badge--Color":           "var(--pf-t--global--text--color--status--on-warning--default)",
-  },
-  danger: {
-    "--pf-v6-c-badge--BackgroundColor": "var(--pf-t--global--color--status--danger--default)",
-    "--pf-v6-c-badge--Color":           "var(--pf-t--global--text--color--status--on-danger--default)",
-  },
-};
-
-<Badge style={tones.warning}>7</Badge>`}</CodeBlock>
-            <p style={{ margin: 0, color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
-              PF6&apos;s Badge ships <code>read</code> / <code>unread</code> / <code>disabled</code> modifiers built-in.
-              For status tones, override the badge&apos;s own CSS variables — that
-              keeps the rest of the badge styling (radius, padding, focus ring)
-              intact.
-            </p>
-          </div>
+          <Example
+            source={badgeExampleSrc}
+            region="Tone"
+            fileName="Badge.example.tsx"
+          >
+            <Tone />
+          </Example>
+          <p style={{ margin: "0 16px 16px", color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
+            PF6&apos;s Badge ships <code>read</code> / <code>unread</code> / <code>disabled</code> modifiers built-in.
+            For status tones, override the badge&apos;s own CSS variables — that
+            keeps the rest of the badge styling (radius, padding, focus ring)
+            intact.
+          </p>
         </Card>
       </Section>
 
       <Section title="Read vs unread">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 16, alignItems: "center", color: "var(--gp-color-text-regular)" }}>
-                <span>Inbox <Badge isRead>12</Badge></span>
-                <span>Notifications <Badge>3</Badge></span>
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<span>Inbox <Badge isRead>12</Badge></span>
-<span>Notifications <Badge>3</Badge></span>`}</CodeBlock>
-          </div>
+          <Example
+            source={badgeExampleSrc}
+            region="ReadVsUnread"
+            fileName="Badge.example.tsx"
+          >
+            <ReadVsUnread />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Truncated counts" description="Display a cap when the real count exceeds it.">
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 16, color: "var(--gp-color-text-regular)" }}>
-                <Badge>99+</Badge>
-                <Badge>1k</Badge>
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={badgeExampleSrc}
+            region="TruncatedCounts"
+            fileName="Badge.example.tsx"
+          >
+            <TruncatedCounts />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "isRead",
-                  type: "boolean",
-                  description: "Subdued styling for already-read items. Default false (active/unread).",
-                },
-                {
-                  name: "screenReaderText",
-                  type: "string",
-                  description: "Override what screen readers announce. Useful when the visible text is a number — \"3 unread notifications\" reads better than \"3\".",
-                },
-                {
-                  name: "children",
-                  type: "ReactNode",
-                  description: "The badge content — typically a number or short string. Cap at 99+ to avoid overflow.",
-                },
-              ]}
-            />
-          </div>
+          <Example source={badgeExampleSrc} fileName="Badge.example.tsx">
+            <BadgeExample />
+          </Example>
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Badge } from "@golden-passport/ds-patternfly";'}
+        componentSource={badgeComponentSrc}
+        componentFileName="Badge.tsx"
+        rows={[
+          {
+            name: "isRead",
+            type: "boolean",
+            description: "Subdued styling for already-read items. Default false (active/unread).",
+          },
+          {
+            name: "screenReaderText",
+            type: "string",
+            description: "Override what screen readers announce. Useful when the visible text is a number — \"3 unread notifications\" reads better than \"3\".",
+          },
+          {
+            name: "children",
+            type: "ReactNode",
+            description: "The badge content — typically a number or short string. Cap at 99+ to avoid overflow.",
+          },
+        ]}
+      />
 
       <Section
         title="Accessibility"

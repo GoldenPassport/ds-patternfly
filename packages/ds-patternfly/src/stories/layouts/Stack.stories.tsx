@@ -1,7 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Stack, StackItem } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { Box, DemoFrame, PropsTable } from "./_layoutKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import StackExample, {
+  PageChrome,
+  VerticalList,
+} from "../../examples/layouts/Stack.example.js";
+import stackExampleSrc from "../../examples/layouts/Stack.example.tsx?raw";
+import stackComponentSrc from "../../components/Stack.tsx?raw";
 
 const meta: Meta = {
   title: "Layouts/Stack",
@@ -27,33 +37,14 @@ export const Overview: StoryObj = {
         description="Header (intrinsic), scrolling body (filled), footer (intrinsic)."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={320}>
-              <Stack hasGutter style={{ height: "100%" }}>
-                <StackItem><Box label="header" /></StackItem>
-                <StackItem isFilled>
-                  <div
-                    style={{
-                      background: "var(--gp-color-bg-primary-default)",
-                      border: "1px solid var(--gp-color-border-subtle)",
-                      borderRadius: "var(--gp-radius-sm)",
-                      padding: 24,
-                      height: "100%",
-                      color: "var(--gp-color-text-regular)",
-                    }}
-                  >
-                    body — fills remaining height
-                  </div>
-                </StackItem>
-                <StackItem><Box label="footer" /></StackItem>
-              </Stack>
-            </DemoFrame>
-            <CodeBlock>{`<Stack hasGutter style={{ height: "100%" }}>
-  <StackItem>{header}</StackItem>
-  <StackItem isFilled>{body}</StackItem>
-  <StackItem>{footer}</StackItem>
-</Stack>`}</CodeBlock>
-          </div>
+          <Example
+            source={stackExampleSrc}
+            region="PageChrome"
+            fileName="Stack.example.tsx"
+            height={320}
+          >
+            <PageChrome />
+          </Example>
         </Card>
       </Section>
 
@@ -62,33 +53,44 @@ export const Overview: StoryObj = {
         description="Without isFilled, items just stack with gutter spacing."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Stack hasGutter>
-                <StackItem><Box label="row 1" /></StackItem>
-                <StackItem><Box label="row 2" /></StackItem>
-                <StackItem><Box label="row 3" /></StackItem>
-              </Stack>
-            </DemoFrame>
-          </div>
+          <Example
+            source={stackExampleSrc}
+            region="VerticalList"
+            fileName="Stack.example.tsx"
+          >
+            <VerticalList />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                { name: "hasGutter", type: "boolean", description: "Adds the standard spacer between rows." },
-                { name: "component", type: "ElementType", description: <>Override the rendered tag (defaults to <code>div</code>).</> },
-              ]}
-            />
-            <p style={{ marginTop: 16, marginBottom: 0, color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
-              StackItem accepts <code>isFilled</code> to mark the item that fills remaining vertical space. Mark exactly one for chrome layouts; omit for plain stacks.
-            </p>
-          </div>
+          <Example source={stackExampleSrc} fileName="Stack.example.tsx">
+            <StackExample />
+          </Example>
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Stack, StackItem } from "@golden-passport/ds-patternfly";'}
+        componentSource={stackComponentSrc}
+        componentFileName="Stack.tsx"
+        description={
+          <>
+            How to import the component and every prop it accepts. StackItem
+            accepts <code>isFilled</code> to mark the item that fills remaining
+            vertical space — mark exactly one for chrome layouts; omit for
+            plain stacks.
+          </>
+        }
+        rows={[
+          { name: "hasGutter", type: "boolean", description: "Adds the standard spacer between rows." },
+          { name: "component", type: "ElementType", description: <>Override the rendered tag (defaults to <code>div</code>).</> },
+        ]}
+      />
 
       <Section
         title="Stack vs Flex column"

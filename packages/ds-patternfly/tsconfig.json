@@ -27,9 +27,10 @@
       "@golden-passport/ds-patternfly": ["./src/index.ts"]
     },
     // node types for .storybook/main.ts (uses node:path / node:url to
-    // resolve paths). tsup uses its own entry config so this doesn't leak
-    // into the lib bundle.
-    "types": ["node"]
+    // resolve paths); vite/client for `?raw` source imports in stories.
+    // tsup uses its own entry config so this doesn't leak into the lib
+    // bundle.
+    "types": ["node", "vite/client"]
   },
   "include": ["src/**/*", ".storybook/**/*", "vitest.config.ts"],
   "exclude": ["dist", "storybook-static", "node_modules"]

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { contrastRatio } from "../../a11y/contrast.js";
-import { PropsTable } from "./DemoKit.js";
+import { DemoFrame, PropsTable } from "./DemoKit.js";
 import type { PropRow } from "./DemoKit.js";
 
 /** Pick black or white as foreground for max contrast on a given background. */
@@ -198,19 +198,132 @@ export function CodeBlock({
 }
 
 /**
+ * Prepare example-file source for display / download. Mirrors the MCP
+ * generator's embedding rewrite (build-catalog.mjs readExample) — keep the
+ * two in sync so the story, the download, and the MCP payload are
+ * byte-identical.
+ *
+ * - `region` given → return only the `// #region <name>` … `// #endregion`
+ *   span (markers stripped).
+ * - no region → the whole file with all region markers stripped.
+ * - The examples/_lib shim specifier is rewritten to the package name, so
+ *   readers see real consumer imports.
+ */
+export function presentExampleSource(source: string, region?: string): string {
+  let s = source;
+  if (region) {
+    const open = s.indexOf(`// #region ${region}`);
+    const close = open === -1 ? -1 : s.indexOf("// #endregion", open);
+    if (open !== -1 && close !== -1) {
+      s = s.slice(s.indexOf("\n", open) + 1, close);
+    }
+  } else {
+    s = s.replace(/^[ \t]*\/\/ #(?:region|endregion).*\r?\n?/gm, "");
+  }
+  return s
+    .replace(/["'](?:\.{1,2}\/)+_lib\.js["']/g, '"@golden-passport/ds-patternfly"')
+    .trimEnd();
+}
+
+/** Client-side "save this text as a file" — used by the example/component
+ * download buttons. */
+function downloadText(fileName: string, text: string) {
+  const url = URL.createObjectURL(new Blob([text], { type: "text/plain" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export function DownloadButton({
+  fileName,
+  text,
+  label,
+}: {
+  fileName: string;
+  text: string;
+  label?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => downloadText(fileName, text)}
+      style={{
+        font: "inherit",
+        fontSize: 13,
+        padding: "4px 12px",
+        borderRadius: "var(--gp-radius-control, 6px)",
+        border: "1px solid var(--gp-color-border-default)",
+        background: "var(--gp-color-bg-primary-default)",
+        color: "var(--gp-color-text-link)",
+        cursor: "pointer",
+      }}
+    >
+      {label ?? `Download ${fileName}`}
+    </button>
+  );
+}
+
+/**
+ * A story demo backed by a real example file: the live render, the exact
+ * source region it came from, and a download of the whole file. `source`
+ * is the file's raw text (Vite `?raw` import); `children` is the SAME
+ * named export the region shows — so what you see, read, download, and
+ * what MCP serves are one artifact.
+ */
+export function Example({
+  source,
+  region,
+  fileName,
+  height,
+  children,
+}: {
+  /** `import src from ".../X.example.tsx?raw"` */
+  source: string;
+  /** `// #region` name to display; omit to show the whole file. */
+  region?: string;
+  /** Download name, e.g. "Badge.example.tsx". */
+  fileName: string;
+  /** Forwarded to DemoFrame. */
+  height?: number | string;
+  children: ReactNode;
+}) {
+  return (
+    <div style={{ padding: 16, display: "grid", gap: 12 }}>
+      <DemoFrame {...(height !== undefined ? { height } : {})}>{children}</DemoFrame>
+      <CodeBlock>{presentExampleSource(source, region)}</CodeBlock>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <DownloadButton
+          fileName={fileName}
+          text={presentExampleSource(source)}
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
  * The standard "Configuration" section every exported component's story
  * carries: how to import it, then the full props reference. The same
  * `rows` data (a colocated *.props.json) feeds the MCP catalog, so the
- * story and the docs the bots see can't drift apart.
+ * story and the docs the bots see can't drift apart. Pass the component
+ * file's `?raw` source to offer it as a download.
  */
 export function ConfigurationSection({
   importStatement,
   rows,
   description,
+  componentSource,
+  componentFileName,
 }: {
   importStatement: string;
   rows: PropRow[];
   description?: ReactNode;
+  /** `import src from ".../components/X.tsx?raw"` */
+  componentSource?: string;
+  /** Download name, e.g. "Button.tsx". */
+  componentFileName?: string;
 }) {
   return (
     <Section
@@ -223,6 +336,15 @@ export function ConfigurationSection({
       <div style={{ display: "grid", gap: 16 }}>
         <Card>
           <CodeBlock label="Import">{importStatement}</CodeBlock>
+          {componentSource && componentFileName ? (
+            <div style={{ display: "flex", justifyContent: "flex-end", padding: "0 16px 12px" }}>
+              <DownloadButton
+                fileName={componentFileName}
+                text={componentSource}
+                label={`Download ${componentFileName} (DS component source)`}
+              />
+            </div>
+          ) : null}
         </Card>
         <Card>
           <div style={{ padding: 16 }}>
