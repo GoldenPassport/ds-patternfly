@@ -41,6 +41,8 @@ export interface DocItem {
   tags?: string[];
   keyTokens?: string[];
   import?: string;
+  /** Full source of the DS component file (thin PF6 wrapper or DS-own). */
+  componentSource?: string;
   /** Props reference for exported components (when curated). */
   props?: DocProp[];
   /** End-to-end example apps with full source (when curated). */

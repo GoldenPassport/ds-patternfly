@@ -1,6 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../../_kit/StoryKit.js";
-import { DemoFrame } from "../../_kit/DemoKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  Example,
+  ThemingPointer,
+} from "../../_kit/StoryKit.js";
+import {
+  CustomFormControl,
+} from "../../../examples/components/Forms/FormControl.example.js";
+import formControlExampleSrc from "../../../examples/components/Forms/FormControl.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms",
@@ -118,30 +127,27 @@ export const Overview: StoryObj = {
         description="When the right primitive doesn't exist, inherit the styling via the form-control modifier class."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <span className="pf-v6-c-form-control" style={{ width: 320 }}>
-                <input
-                  type="email"
-                  placeholder="you@example.com"
-                  aria-label="Custom email input"
-                />
-              </span>
-            </DemoFrame>
-            <CodeBlock>{`{/* The class belongs on a wrapper, not the <input> itself —
-   PF6 paints the input's border via ::before/::after pseudos
-   on the wrapper. Putting the class directly on a replaced
-   element like <input> breaks pseudo-element painting and
-   leaves adjacent edges with mismatched border colours. */}
-<span className="pf-v6-c-form-control">
-  <input type="email" placeholder="you@example.com" />
-</span>`}</CodeBlock>
-            <p style={{ margin: 0, color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
-              Use the class form only as an escape hatch. The named React
-              components handle a11y wiring (label, helper text,
-              validated state) that bare HTML inputs do not.
-            </p>
-          </div>
+          <Example
+            source={formControlExampleSrc}
+            region="CustomFormControl"
+            fileName="FormControl.example.tsx"
+          >
+            <CustomFormControl />
+          </Example>
+          <p style={{ margin: "0 16px 16px", color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
+            Use the class form only as an escape hatch. The named React
+            components handle a11y wiring (label, helper text,
+            validated state) that bare HTML inputs do not.
+          </p>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={formControlExampleSrc} fileName="FormControl.example.tsx" />
         </Card>
       </Section>
 

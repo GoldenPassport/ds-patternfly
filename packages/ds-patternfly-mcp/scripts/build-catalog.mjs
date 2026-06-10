@@ -13,7 +13,13 @@
  * the script stays a single self-contained file. Story titles are
  * stable enough that this is robust in practice.
  */
-import { readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  readFileSync,
+  readdirSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -127,14 +133,16 @@ function cleanText(s) {
 // ---------- exported-component enrichment ----------
 
 /**
- * Read an example file verbatim, rewriting the local `_lib` shim import to
- * the real package name so the embedded source shows consumer-ready imports.
+ * Read an example file, rewriting the local `_lib` shim import to the real
+ * package name and stripping `// #region` markers, so the embedded source
+ * matches what the story displays and the download produces (see
+ * presentExampleSource in the lib's _kit/StoryKit.tsx — keep in sync).
  */
 function readExample(entry) {
-  const source = readFileSync(join(LIB_ROOT, entry.file), "utf8").replace(
-    /["']\.{1,2}\/_lib\.js["']/g,
-    JSON.stringify(PKG.name),
-  );
+  const source = readFileSync(join(LIB_ROOT, entry.file), "utf8")
+    .replace(/["'](?:\.{1,2}\/)+_lib\.js["']/g, JSON.stringify(PKG.name))
+    .replace(/^[ \t]*\/\/ #(?:region|endregion).*\r?\n?/gm, "")
+    .trimEnd();
   const name = entry.file
     .split("/")
     .pop()
@@ -146,23 +154,40 @@ function readExample(entry) {
   };
 }
 
+/** Recursively list `*.example.tsx` under src/examples (paths relative to
+ * LIB_ROOT). */
+function walkExamples(dir, files = []) {
+  if (!existsSync(dir)) return files;
+  for (const entry of readdirSync(dir)) {
+    const p = join(dir, entry);
+    if (statSync(p).isDirectory()) walkExamples(p, files);
+    else if (entry.endsWith(".example.tsx"))
+      files.push(relative(LIB_ROOT, p));
+  }
+  return files;
+}
+
 /**
  * Merge the manifest's curation into a generated item: import statement +
  * props from the colocated *.props.json (the same file the story renders,
  * so story and catalog can't drift), usage, keyTokens, embedded examples.
  */
 function enrich(item) {
-  const cur = MANIFEST[item.id];
-  if (!cur) {
-    // Auto-rule: title matches an exported component file → import line.
-    if (item.kind === "component" && EXPORTED_COMPONENTS.has(item.title)) {
-      return {
-        ...item,
-        import: `import { ${item.title} } from "${PKG.name}";`,
-      };
-    }
-    return item;
+  // Auto-rules first: title matches an exported component file → import
+  // line + the component's source (served by getGpComponent / downloadable
+  // from the story's Configuration section).
+  if (item.kind === "component" && EXPORTED_COMPONENTS.has(item.title)) {
+    item = {
+      ...item,
+      import: `import { ${item.title} } from "${PKG.name}";`,
+      componentSource: readFileSync(
+        join(LIB_ROOT, "src", "components", `${item.title}.tsx`),
+        "utf8",
+      ).trimEnd(),
+    };
   }
+  const cur = MANIFEST[item.id];
+  if (!cur) return item;
   const out = { ...item };
   if (cur.propsFile) {
     const propsData = JSON.parse(
@@ -208,6 +233,8 @@ function classify(title) {
 function main() {
   const files = walk(STORIES_ROOT);
   const items = [];
+  /** story path relative to LIB_ROOT → catalog item (for example pairing). */
+  const byStoryPath = new Map();
 
   for (const file of files) {
     const src = readFileSync(file, "utf8");
@@ -218,17 +245,39 @@ function main() {
     const tags = deriveTags(title, rel);
     const storyId = toStoryId(title) + "--overview";
 
-    items.push(
-      enrich({
-        id: toStoryId(title),
-        kind: classify(title),
-        title: title.split("/").pop(),
-        breadcrumb: title,
-        summary,
-        tags,
-        storybookUrl: `/?path=/story/${storyId}`,
-      }),
-    );
+    const item = enrich({
+      id: toStoryId(title),
+      kind: classify(title),
+      title: title.split("/").pop(),
+      breadcrumb: title,
+      summary,
+      tags,
+      storybookUrl: `/?path=/story/${storyId}`,
+    });
+    items.push(item);
+    byStoryPath.set(relative(LIB_ROOT, file), item);
+  }
+
+  // Auto-attach example files by path mirroring:
+  // src/examples/<area>/<Name>.example.tsx ↔ src/stories/<area>/<Name>.stories.tsx
+  // (manifest-declared examples are already on the item; don't duplicate).
+  let attached = 0;
+  const orphans = [];
+  for (const exRel of walkExamples(join(LIB_ROOT, "src", "examples"))) {
+    const storyRel = exRel
+      .replace(/^src\/examples\//, "src/stories/")
+      .replace(/\.example\.tsx$/, ".stories.tsx");
+    const item = byStoryPath.get(storyRel);
+    if (!item) {
+      orphans.push(exRel);
+      continue;
+    }
+    const example = readExample({ file: exRel });
+    item.examples = item.examples ?? [];
+    if (!item.examples.some((e) => e.name === example.name)) {
+      item.examples.push(example);
+      attached++;
+    }
   }
 
   items.sort((a, b) => a.breadcrumb.localeCompare(b.breadcrumb));
@@ -259,8 +308,15 @@ function main() {
 
   writeFileSync(OUT, JSON.stringify(out, null, 2) + "\n");
   console.log(
-    `✓ wrote ${relative(here, OUT)} — ${items.length} stories indexed`,
+    `✓ wrote ${relative(here, OUT)} — ${items.length} stories indexed, ` +
+      `${attached} examples attached, ` +
+      `${items.filter((i) => i.componentSource).length} component sources embedded`,
   );
+  if (orphans.length) {
+    console.warn(
+      `⚠ ${orphans.length} example file(s) match no story (path mirroring):\n  ${orphans.join("\n  ")}`,
+    );
+  }
 }
 
 main();

@@ -271,6 +271,10 @@ export function DownloadButton({
  * is the file's raw text (Vite `?raw` import); `children` is the SAME
  * named export the region shows — so what you see, read, download, and
  * what MCP serves are one artifact.
+ *
+ * Omit `children` for source-only mode (used by "Full example" sections:
+ * the demos above are already the live render — re-rendering the whole
+ * composition would duplicate ids/landmarks on the page and fail axe).
  */
 export function Example({
   source,
@@ -287,11 +291,13 @@ export function Example({
   fileName: string;
   /** Forwarded to DemoFrame. */
   height?: number | string;
-  children: ReactNode;
+  children?: ReactNode;
 }) {
   return (
     <div style={{ padding: 16, display: "grid", gap: 12 }}>
-      <DemoFrame {...(height !== undefined ? { height } : {})}>{children}</DemoFrame>
+      {children !== undefined ? (
+        <DemoFrame {...(height !== undefined ? { height } : {})}>{children}</DemoFrame>
+      ) : null}
       <CodeBlock>{presentExampleSource(source, region)}</CodeBlock>
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <DownloadButton

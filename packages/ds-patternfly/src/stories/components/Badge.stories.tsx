@@ -6,7 +6,7 @@ import {
   ConfigurationSection,
   Example,
 } from "../_kit/StoryKit.js";
-import BadgeExample, {
+import {
   Tone,
   ReadVsUnread,
   TruncatedCounts,
@@ -82,9 +82,7 @@ export const Overview: StoryObj = {
         description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
       >
         <Card>
-          <Example source={badgeExampleSrc} fileName="Badge.example.tsx">
-            <BadgeExample />
-          </Example>
+          <Example source={badgeExampleSrc} fileName="Badge.example.tsx" />
         </Card>
       </Section>
 

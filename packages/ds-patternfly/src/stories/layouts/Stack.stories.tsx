@@ -6,7 +6,7 @@ import {
   ConfigurationSection,
   Example,
 } from "../_kit/StoryKit.js";
-import StackExample, {
+import {
   PageChrome,
   VerticalList,
 } from "../../examples/layouts/Stack.example.js";
@@ -68,9 +68,7 @@ export const Overview: StoryObj = {
         description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
       >
         <Card>
-          <Example source={stackExampleSrc} fileName="Stack.example.tsx">
-            <StackExample />
-          </Example>
+          <Example source={stackExampleSrc} fileName="Stack.example.tsx" />
         </Card>
       </Section>
 

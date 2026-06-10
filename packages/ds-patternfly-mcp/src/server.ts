@@ -69,8 +69,10 @@ reach for page-level border tokens inside a popover — use
 
 Use \`searchGpDocs\` to find a component by name, intent, or token,
 then \`useGpDocs\` to pull the full entry (Storybook URL, summary, props,
-import statement, relevant tokens), and \`getGpExample\` for the full
-source of an entry's end-to-end examples.
+import statement, relevant tokens). Most entries carry a per-story
+example file — \`getGpExample(id)\` returns its full, self-contained
+source (real package imports, composition, data). \`getGpComponent(name)\`
+returns the DS component file itself.
 `;
 
 export function createServer(): McpServer {
@@ -163,11 +165,16 @@ export function createServer(): McpServer {
           ],
         };
       }
-      // Example sources are large — return names + descriptions here and
-      // point at getGpExample for the full code.
-      const { examples, ...rest } = item;
+      // Example and component sources are large — return names/hints here
+      // and point at getGpExample / getGpComponent for the full code.
+      const { examples, componentSource, ...rest } = item;
       const payload = {
         ...rest,
+        ...(componentSource
+          ? {
+              componentSourceHint: `Call getGpComponent with name "${item.title}" for the DS component file's full source.`,
+            }
+          : {}),
         ...(examples
           ? {
               examples: examples.map(({ name, description }) => ({
@@ -247,6 +254,45 @@ export function createServer(): McpServer {
           type: "text" as const,
           text: `// ${e.name}${e.description ? ` — ${e.description}` : ""}\n${e.source}`,
         })),
+      };
+    },
+  );
+
+  server.registerTool(
+    "getGpComponent",
+    {
+      title: "Fetch a Golden Passport DS component's source",
+      description:
+        "Return the full source of a DS component file (the thin PF6 wrapper or DS-own component) by its exported name, e.g. 'Button', 'AiAssistant'. Useful to see exactly what the DS layer adds, or to vendor the file. Entries with a componentSourceHint in useGpDocs support this.",
+      inputSchema: {
+        name: z
+          .string()
+          .min(1)
+          .describe("Component name as exported, e.g. 'Button' or 'Table'."),
+      },
+    },
+    async ({ name }) => {
+      const item = catalog.items.find(
+        (i) => i.title === name && i.componentSource,
+      );
+      if (!item) {
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text",
+              text: `No component source for "${name}". Component names match their story titles (searchGpDocs to discover); only DS component files are served.`,
+            },
+          ],
+        };
+      }
+      return {
+        content: [
+          {
+            type: "text",
+            text: `// ${name}.tsx — @golden-passport/ds-patternfly component source\n${item.componentSource}`,
+          },
+        ],
       };
     },
   );

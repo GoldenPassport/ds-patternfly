@@ -172,7 +172,7 @@
         {
           "name": "AssistantInShell",
           "description": "The assistant docked in the app Shell: branded masthead + sidebar nav, content stage as the overlay container, and a live async onSend handler.",
-          "source": "/**\n * AiAssistant inside the app Shell — an end-to-end page: branded masthead +\n * sidebar nav, content area, and the AI prompt bar docked at the bottom of\n * the content. The assistant's overlays (recent-chat popover + full chat\n * panel) portal into the content area and anchor to its corners.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *\n *   import { ThemeProvider } from \"@golden-passport/ds-patternfly\";\n *   import { goldenPassport } from \"@golden-passport/ds-patternfly\";\n *\n *   <ThemeProvider brand={goldenPassport} mode=\"light\" focusRing=\"outer\">\n *     <App />\n *   </ThemeProvider>\n */\nimport { useState } from \"react\";\nimport { Nav, NavItem, NavList } from \"@patternfly/react-core\";\nimport {\n  AiAssistant,\n  Shell,\n  shellEnLabels,\n} from \"@golden-passport/ds-patternfly\";\n\n// Replace with your backend call — the thinking indicator shows until the\n// returned promise resolves.\nasync function askAssistant(text: string): Promise<string> {\n  await new Promise((r) => setTimeout(r, 900));\n  return `You asked: “${text}”. Wire \\`onSend\\` to your AI backend to answer for real.`;\n}\n\nexport default function AssistantInShell() {\n  // The positioned element the assistant's overlays portal into. Using the\n  // content stage (not document.body) keeps the chat panel anchored to the\n  // page content, clear of the masthead and sidebar.\n  const [stage, setStage] = useState<HTMLDivElement | null>(null);\n\n  return (\n    <Shell\n      labels={shellEnLabels}\n      brandLogo={<strong style={{ fontSize: \"1.125rem\" }}>Acme Cloud</strong>}\n      sidebar={\n        <Nav aria-label=\"Main\">\n          <NavList>\n            <NavItem itemId=\"overview\" isActive>\n              Overview\n            </NavItem>\n            <NavItem itemId=\"integrations\">Integrations</NavItem>\n            <NavItem itemId=\"settings\">Settings</NavItem>\n          </NavList>\n        </Nav>\n      }\n    >\n      <div\n        ref={setStage}\n        style={{\n          position: \"relative\",\n          display: \"flex\",\n          flexDirection: \"column\",\n          minHeight: \"70vh\",\n          padding: \"1.5rem\",\n          gap: \"1rem\",\n        }}\n      >\n        <h1 style={{ margin: 0 }}>Overview</h1>\n        <p style={{ maxWidth: 640 }}>\n          Page content lives here. The AI prompt bar is docked below; sending\n          a message opens the transient recent-chat popover above it, and the\n          History action expands into the full, resizable chat panel anchored\n          to this content area.\n        </p>\n        <div style={{ flex: 1 }} />\n        <AiAssistant\n          overlayContainer={stage}\n          placement=\"bottom-right\"\n          persist\n          persistKey=\"acme:ai-assistance\"\n          onSend={askAssistant}\n        />\n      </div>\n    </Shell>\n  );\n}\n"
+          "source": "/**\n * AiAssistant inside the app Shell — an end-to-end page: branded masthead +\n * sidebar nav, content area, and the AI prompt bar docked at the bottom of\n * the content. The assistant's overlays (recent-chat popover + full chat\n * panel) portal into the content area and anchor to its corners.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *\n *   import { ThemeProvider } from \"@golden-passport/ds-patternfly\";\n *   import { goldenPassport } from \"@golden-passport/ds-patternfly\";\n *\n *   <ThemeProvider brand={goldenPassport} mode=\"light\" focusRing=\"outer\">\n *     <App />\n *   </ThemeProvider>\n */\nimport { useState } from \"react\";\nimport { Nav, NavItem, NavList } from \"@patternfly/react-core\";\nimport {\n  AiAssistant,\n  Shell,\n  shellEnLabels,\n} from \"@golden-passport/ds-patternfly\";\n\n// Replace with your backend call — the thinking indicator shows until the\n// returned promise resolves.\nasync function askAssistant(text: string): Promise<string> {\n  await new Promise((r) => setTimeout(r, 900));\n  return `You asked: “${text}”. Wire \\`onSend\\` to your AI backend to answer for real.`;\n}\n\nexport default function AssistantInShell() {\n  // The positioned element the assistant's overlays portal into. Using the\n  // content stage (not document.body) keeps the chat panel anchored to the\n  // page content, clear of the masthead and sidebar.\n  const [stage, setStage] = useState<HTMLDivElement | null>(null);\n\n  return (\n    <Shell\n      labels={shellEnLabels}\n      brandLogo={<strong style={{ fontSize: \"1.125rem\" }}>Acme Cloud</strong>}\n      sidebar={\n        <Nav aria-label=\"Main\">\n          <NavList>\n            <NavItem itemId=\"overview\" isActive>\n              Overview\n            </NavItem>\n            <NavItem itemId=\"integrations\">Integrations</NavItem>\n            <NavItem itemId=\"settings\">Settings</NavItem>\n          </NavList>\n        </Nav>\n      }\n    >\n      <div\n        ref={setStage}\n        style={{\n          position: \"relative\",\n          display: \"flex\",\n          flexDirection: \"column\",\n          minHeight: \"70vh\",\n          padding: \"1.5rem\",\n          gap: \"1rem\",\n        }}\n      >\n        <h1 style={{ margin: 0 }}>Overview</h1>\n        <p style={{ maxWidth: 640 }}>\n          Page content lives here. The AI prompt bar is docked below; sending\n          a message opens the transient recent-chat popover above it, and the\n          History action expands into the full, resizable chat panel anchored\n          to this content area.\n        </p>\n        <div style={{ flex: 1 }} />\n        <AiAssistant\n          overlayContainer={stage}\n          placement=\"bottom-right\"\n          persist\n          persistKey=\"acme:ai-assistance\"\n          onSend={askAssistant}\n        />\n      </div>\n    </Shell>\n  );\n}"
         }
       ]
     },
@@ -999,7 +999,14 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-accordion--overview",
-      "import": "import { Accordion } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Accordion } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Accordion — PatternFly 6 Accordion under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Accordion is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Accordion as PFAccordion } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type AccordionProps = ComponentPropsWithoutRef<typeof PFAccordion>;\n\nexport function Accordion(props: AccordionProps) {\n  return <PFAccordion {...props} />;\n}\n\nexport {\n  AccordionContent,\n  AccordionItem,\n  AccordionToggle,\n} from \"@patternfly/react-core\";",
+      "examples": [
+        {
+          "name": "Accordion",
+          "source": "/**\n * Accordion — vertically stacked, expandable sections.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  Accordion,\n  AccordionContent,\n  AccordionItem,\n  AccordionToggle,\n} from \"@golden-passport/ds-patternfly\";\n\nexport function SingleExpand() {\n  const [expanded, setExpanded] = useState<string>(\"single-2\");\n  const toggle = (id: string) => setExpanded(id === expanded ? \"\" : id);\n\n  return (\n    <Accordion asDefinitionList={false}>\n      {[\n        { id: \"single-1\", title: \"What is a workflow?\", body: \"A workflow is a sequence of steps run on a trigger.\" },\n        { id: \"single-2\", title: \"How are steps retried?\", body: \"Failed steps retry with exponential back-off up to the configured limit.\" },\n        { id: \"single-3\", title: \"Can I pause a run?\", body: \"Yes — pause from the run detail screen, resume any time.\" },\n      ].map((it) => (\n        <AccordionItem key={it.id} isExpanded={expanded === it.id}>\n          <AccordionToggle onClick={() => toggle(it.id)} id={it.id}>\n            {it.title}\n          </AccordionToggle>\n          <AccordionContent id={`${it.id}-content`}>\n            <p>{it.body}</p>\n          </AccordionContent>\n        </AccordionItem>\n      ))}\n    </Accordion>\n  );\n}\n\nexport function MultipleExpand() {\n  const [expanded, setExpanded] = useState<string[]>([\"multi-2\"]);\n  const toggle = (id: string) =>\n    setExpanded((prev) =>\n      prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id],\n    );\n\n  return (\n    <Accordion asDefinitionList={false}>\n      {[\n        { id: \"multi-1\", title: \"Connection settings\", body: \"Host, port, credentials, TLS.\" },\n        { id: \"multi-2\", title: \"Retry policy\", body: \"Max attempts, back-off strategy, jitter.\" },\n        { id: \"multi-3\", title: \"Notifications\", body: \"Channels and per-event triggers.\" },\n      ].map((it) => (\n        <AccordionItem key={it.id} isExpanded={expanded.includes(it.id)}>\n          <AccordionToggle onClick={() => toggle(it.id)} id={it.id}>\n            {it.title}\n          </AccordionToggle>\n          <AccordionContent id={`${it.id}-content`}>\n            <p>{it.body}</p>\n          </AccordionContent>\n        </AccordionItem>\n      ))}\n    </Accordion>\n  );\n}\n\nexport function Bordered() {\n  const [expanded, setExpanded] = useState<string>(\"b-1\");\n  const toggle = (id: string) => setExpanded(id === expanded ? \"\" : id);\n\n  return (\n    <Accordion asDefinitionList={false} isBordered>\n      {[\n        { id: \"b-1\", title: \"Item one\", body: \"Bordered card-style accordion.\" },\n        { id: \"b-2\", title: \"Item two\", body: \"Each item gets its own outline.\" },\n        { id: \"b-3\", title: \"Item three\", body: \"Useful when the accordion is standalone.\" },\n      ].map((it) => (\n        <AccordionItem key={it.id} isExpanded={expanded === it.id}>\n          <AccordionToggle onClick={() => toggle(it.id)} id={it.id}>\n            {it.title}\n          </AccordionToggle>\n          <AccordionContent id={`${it.id}-content`}>\n            <p>{it.body}</p>\n          </AccordionContent>\n        </AccordionItem>\n      ))}\n    </Accordion>\n  );\n}\n\nexport function DefinitionList() {\n  const [expanded, setExpanded] = useState<string>(\"d-1\");\n  const toggle = (id: string) => setExpanded(id === expanded ? \"\" : id);\n\n  return (\n    <Accordion asDefinitionList>\n      {[\n        { id: \"d-1\", title: \"Workflow\", body: \"A sequence of steps that runs on a trigger.\" },\n        { id: \"d-2\", title: \"Step\", body: \"A single unit of work in a workflow.\" },\n        { id: \"d-3\", title: \"Trigger\", body: \"An event that starts a workflow run.\" },\n      ].map((it) => (\n        <AccordionItem key={it.id} isExpanded={expanded === it.id}>\n          <AccordionToggle onClick={() => toggle(it.id)} id={it.id}>\n            {it.title}\n          </AccordionToggle>\n          <AccordionContent id={`${it.id}-content`}>\n            <p>{it.body}</p>\n          </AccordionContent>\n        </AccordionItem>\n      ))}\n    </Accordion>\n  );\n}\n\nexport default function AccordionExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <SingleExpand />\n      <MultipleExpand />\n      <Bordered />\n      <DefinitionList />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "components-actionlist",
@@ -1015,7 +1022,14 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-actionlist--overview",
-      "import": "import { ActionList } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { ActionList } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS ActionList — PatternFly 6 ActionList under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's ActionList is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { ActionList as PFActionList } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type ActionListProps = ComponentPropsWithoutRef<typeof PFActionList>;\n\nexport function ActionList(props: ActionListProps) {\n  return <PFActionList {...props} />;\n}\n\nexport {\n  ActionListGroup,\n  ActionListItem,\n} from \"@patternfly/react-core\";",
+      "examples": [
+        {
+          "name": "ActionList",
+          "source": "/**\n * ActionList — a spacing/layout primitive for groups of action buttons.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  ActionList,\n  ActionListGroup,\n  ActionListItem,\n  Button,\n  ButtonVariant,\n  Tooltip,\n} from \"@golden-passport/ds-patternfly\";\nimport OutlinedCopyIcon from \"@patternfly/react-icons/dist/esm/icons/outlined-copy-icon\";\nimport OutlinedPlusSquareIcon from \"@patternfly/react-icons/dist/esm/icons/outlined-plus-square-icon\";\nimport OutlinedQuestionCircleIcon from \"@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon\";\nimport PlayIcon from \"@patternfly/react-icons/dist/esm/icons/play-icon\";\n\nexport function Basic() {\n  return (\n    <ActionList>\n      <ActionListItem>\n        <Button variant={ButtonVariant.primary}>Save</Button>\n      </ActionListItem>\n      <ActionListItem>\n        <Button variant={ButtonVariant.secondary}>Cancel</Button>\n      </ActionListItem>\n    </ActionList>\n  );\n}\n\nexport function Grouped() {\n  return (\n    <ActionList>\n      <ActionListGroup>\n        <ActionListItem>\n          <Button variant={ButtonVariant.primary}>Upgrade today</Button>\n        </ActionListItem>\n        <ActionListItem>\n          <Button variant={ButtonVariant.secondary}>\n            Talk to a specialist\n          </Button>\n        </ActionListItem>\n      </ActionListGroup>\n      <ActionListGroup>\n        <ActionListItem>\n          <Button variant={ButtonVariant.link}>Learn more</Button>\n        </ActionListItem>\n      </ActionListGroup>\n    </ActionList>\n  );\n}\n\nexport function VerticalIconList() {\n  return (\n    <div\n      style={{\n        display: \"inline-block\",\n        background: \"var(--gp-color-bg-secondary-default)\",\n        padding: 12,\n        borderRadius: 8,\n      }}\n    >\n      <ActionList isIconList isVertical>\n        <ActionListGroup>\n          <ActionListItem>\n            <Tooltip content=\"Run\">\n              <Button\n                variant=\"plain\"\n                icon={<PlayIcon />}\n                aria-label=\"Run\"\n                isCircle\n              />\n            </Tooltip>\n          </ActionListItem>\n          <ActionListItem>\n            <Tooltip content=\"Add\">\n              <Button\n                variant=\"plain\"\n                icon={<OutlinedPlusSquareIcon />}\n                aria-label=\"Add\"\n                isCircle\n              />\n            </Tooltip>\n          </ActionListItem>\n        </ActionListGroup>\n        <ActionListGroup>\n          <ActionListItem>\n            <Tooltip content=\"Help\">\n              <Button\n                variant=\"plain\"\n                icon={<OutlinedQuestionCircleIcon />}\n                aria-label=\"Help\"\n                isCircle\n              />\n            </Tooltip>\n          </ActionListItem>\n          <ActionListItem>\n            <Tooltip content=\"Copy\">\n              <Button\n                variant=\"plain\"\n                icon={<OutlinedCopyIcon />}\n                aria-label=\"Copy\"\n                isCircle\n              />\n            </Tooltip>\n          </ActionListItem>\n        </ActionListGroup>\n      </ActionList>\n    </div>\n  );\n}\n\nexport default function ActionListExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24, justifyItems: \"start\" }}>\n      <Basic />\n      <Grouped />\n      <VerticalIconList />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "components-alert",
@@ -1031,7 +1045,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-alert--overview",
-      "import": "import { Alert } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Alert } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Alert — PatternFly 6 Alert under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Alert is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Alert as PFAlert } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type AlertProps = ComponentPropsWithoutRef<typeof PFAlert>;\n\nexport function Alert(props: AlertProps) {\n  return <PFAlert {...props} />;\n}\n\nexport {\n  AlertActionCloseButton,\n  AlertActionLink,\n  AlertGroup,\n  AlertVariant,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-avatar",
@@ -1047,7 +1062,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-avatar--overview",
-      "import": "import { Avatar } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Avatar } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Avatar — PatternFly 6 Avatar under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Avatar is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Avatar as PFAvatar } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type AvatarProps = ComponentPropsWithoutRef<typeof PFAvatar>;\n\nexport function Avatar(props: AvatarProps) {\n  return <PFAvatar {...props} />;\n}"
     },
     {
       "id": "components-back-to-top",
@@ -1080,7 +1096,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-backdrop--overview",
-      "import": "import { Backdrop } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Backdrop } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Backdrop — PatternFly 6 Backdrop under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Backdrop is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Backdrop as PFBackdrop } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type BackdropProps = ComponentPropsWithoutRef<typeof PFBackdrop>;\n\nexport function Backdrop(props: BackdropProps) {\n  return <PFBackdrop {...props} />;\n}"
     },
     {
       "id": "components-badge",
@@ -1096,7 +1113,14 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-badge--overview",
-      "import": "import { Badge } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Badge } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Badge — PatternFly 6 Badge under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Badge is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Badge as PFBadge } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type BadgeProps = ComponentPropsWithoutRef<typeof PFBadge>;\n\nexport function Badge(props: BadgeProps) {\n  return <PFBadge {...props} />;\n}",
+      "examples": [
+        {
+          "name": "Badge",
+          "source": "/**\n * Badge — counts and unread indicators attached to another element.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport type { CSSProperties } from \"react\";\nimport { Badge } from \"@golden-passport/ds-patternfly\";\n\n// Badge tones — apply via inline CSS variable overrides so the badge\n// inherits the right text contrast for each background. PF6 ships\n// read/unread/disabled modifiers but no semantic-status variants, so we set\n// the component's own CSS vars (typed loosely so React accepts the custom\n// property names).\ntype BadgeStyle = CSSProperties & {\n  \"--pf-v6-c-badge--BackgroundColor\"?: string;\n  \"--pf-v6-c-badge--Color\"?: string;\n};\n\nconst tones: Record<\"nonstatus\" | \"warning\" | \"danger\", BadgeStyle> = {\n  nonstatus: {\n    \"--pf-v6-c-badge--BackgroundColor\": \"var(--pf-t--global--color--nonstatus--gray--default)\",\n    \"--pf-v6-c-badge--Color\": \"var(--pf-t--global--text--color--nonstatus--on-gray--default)\",\n  },\n  warning: {\n    \"--pf-v6-c-badge--BackgroundColor\": \"var(--pf-t--global--color--status--warning--default)\",\n    \"--pf-v6-c-badge--Color\": \"var(--pf-t--global--text--color--status--on-warning--default)\",\n  },\n  danger: {\n    \"--pf-v6-c-badge--BackgroundColor\": \"var(--pf-t--global--color--status--danger--default)\",\n    \"--pf-v6-c-badge--Color\": \"var(--pf-t--global--text--color--status--on-danger--default)\",\n  },\n};\n\nexport function Tone() {\n  return (\n    <div\n      style={{\n        display: \"flex\",\n        gap: 24,\n        alignItems: \"center\",\n        flexWrap: \"wrap\",\n        color: \"var(--gp-color-text-regular)\",\n      }}\n    >\n      <span>\n        Drafts <Badge style={tones.nonstatus}>4</Badge>\n      </span>\n      <span>\n        Pending review <Badge style={tones.warning}>7</Badge>\n      </span>\n      <span>\n        Failed builds <Badge style={tones.danger}>3</Badge>\n      </span>\n    </div>\n  );\n}\n\nexport function ReadVsUnread() {\n  return (\n    <div\n      style={{\n        display: \"flex\",\n        gap: 16,\n        alignItems: \"center\",\n        color: \"var(--gp-color-text-regular)\",\n      }}\n    >\n      <span>\n        Inbox <Badge isRead>12</Badge>\n      </span>\n      <span>\n        Notifications <Badge>3</Badge>\n      </span>\n    </div>\n  );\n}\n\nexport function TruncatedCounts() {\n  return (\n    <div style={{ display: \"flex\", gap: 16, color: \"var(--gp-color-text-regular)\" }}>\n      <Badge>99+</Badge>\n      <Badge>1k</Badge>\n    </div>\n  );\n}\n\nexport default function BadgeExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Tone />\n      <ReadVsUnread />\n      <TruncatedCounts />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "components-banner",
@@ -1112,7 +1136,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-banner--overview",
-      "import": "import { Banner } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Banner } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Banner — PatternFly 6 Banner under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Banner is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Banner as PFBanner } from \"@patternfly/react-core\";\nimport type { ComponentProps, ComponentPropsWithoutRef } from \"react\";\n\nexport type BannerProps = ComponentPropsWithoutRef<typeof PFBanner>;\n\nexport function Banner(props: BannerProps) {\n  return <PFBanner {...(props as ComponentProps<typeof PFBanner>)} />;\n}"
     },
     {
       "id": "components-brand",
@@ -1128,7 +1153,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-brand--overview",
-      "import": "import { Brand } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Brand } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Brand — PatternFly 6 Brand under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Brand is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Brand as PFBrand } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type BrandProps = ComponentPropsWithoutRef<typeof PFBrand>;\n\nexport function Brand(props: BrandProps) {\n  return <PFBrand {...props} />;\n}"
     },
     {
       "id": "components-breadcrumb",
@@ -1144,7 +1170,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-breadcrumb--overview",
-      "import": "import { Breadcrumb } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Breadcrumb } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Breadcrumb — PatternFly 6 Breadcrumb under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Breadcrumb is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Breadcrumb as PFBreadcrumb } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type BreadcrumbProps = ComponentPropsWithoutRef<typeof PFBreadcrumb>;\n\nexport function Breadcrumb(props: BreadcrumbProps) {\n  return <PFBreadcrumb {...props} />;\n}\n\nexport {\n  BreadcrumbHeading,\n  BreadcrumbItem,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-button",
@@ -1160,7 +1187,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-button--overview",
-      "import": "import { Button } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Button } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Button — PatternFly 6 Button under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's Button (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { Button as PFButton } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type ButtonProps = ComponentPropsWithoutRef<typeof PFButton>;\n\nexport const Button: ForwardRefExoticComponent<\n  ButtonProps & RefAttributes<ComponentRef<typeof PFButton>>\n> = forwardRef<ComponentRef<typeof PFButton>, ButtonProps>(\n  function Button(props, ref) {\n    return <PFButton ref={ref} {...props} />;\n  },\n);\n\nexport {\n  ButtonVariant,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-card",
@@ -1176,7 +1204,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-card--overview",
-      "import": "import { Card } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Card } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Card — PatternFly 6 Card under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's Card (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { Card as PFCard } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type CardProps = ComponentPropsWithoutRef<typeof PFCard>;\n\nexport const Card: ForwardRefExoticComponent<\n  CardProps & RefAttributes<ComponentRef<typeof PFCard>>\n> = forwardRef<ComponentRef<typeof PFCard>, CardProps>(\n  function Card(props, ref) {\n    return <PFCard ref={ref} {...props} />;\n  },\n);\n\nexport {\n  CardBody,\n  CardExpandableContent,\n  CardFooter,\n  CardHeader,\n  CardTitle,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-clipboardcopy",
@@ -1192,7 +1221,14 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-clipboardcopy--overview",
-      "import": "import { ClipboardCopy } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { ClipboardCopy } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS ClipboardCopy — PatternFly 6 ClipboardCopy under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's ClipboardCopy is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { ClipboardCopy as PFClipboardCopy } from \"@patternfly/react-core\";\nimport type { ClipboardCopyProps as PFClipboardCopyProps } from \"@patternfly/react-core\";\n\nexport type ClipboardCopyProps = Omit<PFClipboardCopyProps, \"ref\">;\n\nexport function ClipboardCopy(props: ClipboardCopyProps) {\n  return <PFClipboardCopy {...props} />;\n}\n\nexport {\n  ClipboardCopyButton,\n  ClipboardCopyVariant,\n} from \"@patternfly/react-core\";",
+      "examples": [
+        {
+          "name": "ClipboardCopy",
+          "source": "/**\n * ClipboardCopy — single-line input with a copy button.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { ClipboardCopy, ClipboardCopyVariant } from \"@golden-passport/ds-patternfly\";\n\nexport function DefaultEditable() {\n  return (\n    <ClipboardCopy\n      copyAriaLabel=\"Copy connection string\"\n      hoverTip=\"Copy\"\n      clickTip=\"Copied\"\n    >\n      postgres://user@host:5432/db\n    </ClipboardCopy>\n  );\n}\n\nexport function ReadOnly() {\n  return (\n    <ClipboardCopy\n      isReadOnly\n      copyAriaLabel=\"Copy API token\"\n      hoverTip=\"Copy\"\n      clickTip=\"Copied\"\n    >\n      sk_live_4eC39HqLyjWDarjtT1zdp7dc\n    </ClipboardCopy>\n  );\n}\n\nexport function Expanded() {\n  return (\n    <ClipboardCopy\n      toggleAriaLabel=\"Show / hide full value\"\n      copyAriaLabel=\"Copy full value\"\n      hoverTip=\"Copy\"\n      clickTip=\"Copied\"\n      variant={ClipboardCopyVariant.expansion}\n    >\n      {`{ \"name\": \"onboarding-flow\", \"trigger\": \"0 * * * *\", \"steps\": [\"validate\", \"notify\"], \"retries\": { \"max\": 3, \"backoff\": \"exponential\" } }`}\n    </ClipboardCopy>\n  );\n}\n\nexport function InlineCompact() {\n  return (\n    /* PF6 v6 ClipboardCopy[variant=\"inline-compact\"] still renders a <div>\n       internally, so it can't be a descendant of <p>. Use\n       <span style=\"display:block\"> as the line wrapper to get the same\n       visual layout with valid HTML nesting. */\n    <div style={{ display: \"grid\", gap: 12, color: \"var(--gp-color-text-regular)\" }}>\n      <span style={{ display: \"block\" }}>\n        Install with{\" \"}\n        <ClipboardCopy\n          copyAriaLabel=\"Copy install command\"\n          hoverTip=\"Copy\"\n          clickTip=\"Copied\"\n          variant=\"inline-compact\"\n        >\n          pnpm add @golden-passport/ds-patternfly\n        </ClipboardCopy>\n        {\" \"}from the package registry.\n      </span>\n      <span style={{ display: \"block\" }}>\n        Reference id:{\" \"}\n        <ClipboardCopy\n          copyAriaLabel=\"Copy reference id\"\n          hoverTip=\"Copy\"\n          clickTip=\"Copied\"\n          variant=\"inline-compact\"\n        >\n          01HX3KZ8M3W6GQ5R2Y4N7T9P0J\n        </ClipboardCopy>\n      </span>\n    </div>\n  );\n}\n\nexport default function ClipboardCopyExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <DefaultEditable />\n      <ReadOnly />\n      <Expanded />\n      <InlineCompact />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "components-codeblock",
@@ -1208,7 +1244,14 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-codeblock--overview",
-      "import": "import { CodeBlock } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { CodeBlock } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS CodeBlock — PatternFly 6 CodeBlock under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's CodeBlock is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { CodeBlock as PFCodeBlock } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type CodeBlockProps = ComponentPropsWithoutRef<typeof PFCodeBlock>;\n\nexport function CodeBlock(props: CodeBlockProps) {\n  return <PFCodeBlock {...props} />;\n}\n\nexport {\n  CodeBlockAction,\n  CodeBlockCode,\n} from \"@patternfly/react-core\";",
+      "examples": [
+        {
+          "name": "CodeBlock",
+          "source": "/**\n * CodeBlock — a fenced code surface for snippets, configuration, and CLI output.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { Fragment, useId, useState } from \"react\";\nimport {\n  Button,\n  ClipboardCopyButton,\n  CodeBlock,\n  CodeBlockAction,\n  CodeBlockCode,\n  ExpandableSection,\n  ExpandableSectionToggle,\n  Tooltip,\n} from \"@golden-passport/ds-patternfly\";\nimport { PlayIcon } from \"@patternfly/react-icons\";\n\nconst sampleYaml = `apiVersion: workflows.acme.io/v1\nkind: Workflow\nmetadata:\n  name: onboarding-flow\nspec:\n  trigger: { schedule: \"0 * * * *\" }\n  steps:\n    - name: validate\n    - name: notify`;\n\nconst longerYaml = `${sampleYaml}\n  retries:\n    max: 3\n    backoff: exponential\n  notifications:\n    on-success: [#deploys]\n    on-failure: [#oncall, #deploys]`;\n\nexport function Basic() {\n  const id = useId();\n  const [copied, setCopied] = useState(false);\n  const [running, setRunning] = useState(false);\n\n  const actions = (\n    <Fragment>\n      <CodeBlockAction>\n        <ClipboardCopyButton\n          id={`${id}-copy`}\n          aria-label=\"Copy code to clipboard\"\n          onClick={() => {\n            navigator.clipboard.writeText(sampleYaml);\n            setCopied(true);\n          }}\n          exitDelay={copied ? 1500 : 600}\n          maxWidth=\"110px\"\n          variant=\"plain\"\n          onTooltipHidden={() => setCopied(false)}\n        >\n          {copied ? \"Copied!\" : \"Copy to clipboard\"}\n        </ClipboardCopyButton>\n      </CodeBlockAction>\n      <CodeBlockAction>\n        <Tooltip\n          aria=\"none\"\n          aria-live=\"polite\"\n          content={running ? \"Running…\" : \"Run snippet\"}\n          onTooltipHidden={() => setRunning(false)}\n        >\n          <Button\n            variant=\"plain\"\n            aria-label=\"Run snippet\"\n            icon={<PlayIcon />}\n            onClick={() => setRunning((r) => !r)}\n          />\n        </Tooltip>\n      </CodeBlockAction>\n    </Fragment>\n  );\n\n  return (\n    <CodeBlock actions={actions}>\n      <CodeBlockCode id={`${id}-code`}>{sampleYaml}</CodeBlockCode>\n    </CodeBlock>\n  );\n}\n\nexport function Expandable() {\n  const id = useId();\n  const [expanded, setExpanded] = useState(false);\n  const [copied, setCopied] = useState(false);\n\n  const actions = (\n    <CodeBlockAction>\n      <ClipboardCopyButton\n        id={`${id}-copy`}\n        aria-label=\"Copy expandable code to clipboard\"\n        onClick={() => {\n          navigator.clipboard.writeText(longerYaml);\n          setCopied(true);\n        }}\n        exitDelay={copied ? 1500 : 600}\n        maxWidth=\"110px\"\n        variant=\"plain\"\n        onTooltipHidden={() => setCopied(false)}\n      >\n        {copied ? \"Copied!\" : \"Copy to clipboard\"}\n      </ClipboardCopyButton>\n    </CodeBlockAction>\n  );\n\n  const headSnippet = sampleYaml.split(\"\\n\").slice(0, 4).join(\"\\n\");\n  const tailSnippet = sampleYaml.split(\"\\n\").slice(4).join(\"\\n\") + \"\\n\" +\n    `  retries:\n    max: 3\n    backoff: exponential`;\n\n  return (\n    <CodeBlock actions={actions}>\n      <CodeBlockCode>\n        {headSnippet}\n        <ExpandableSection\n          isExpanded={expanded}\n          isDetached\n          contentId={`${id}-content`}\n          toggleId={`${id}-toggle`}\n        >\n          {tailSnippet}\n        </ExpandableSection>\n      </CodeBlockCode>\n      <ExpandableSectionToggle\n        isExpanded={expanded}\n        onToggle={setExpanded}\n        contentId={`${id}-content`}\n        toggleId={`${id}-toggle`}\n        direction=\"up\"\n      >\n        {expanded ? \"Show less\" : \"Show more\"}\n      </ExpandableSectionToggle>\n    </CodeBlock>\n  );\n}\n\nexport default function CodeBlockExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Basic />\n      <Expandable />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "components-compass",
@@ -1224,7 +1267,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-compass--overview",
-      "import": "import { Compass } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Compass } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Compass — PatternFly 6 Compass under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Compass is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Compass as PFCompass } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type CompassProps = ComponentPropsWithoutRef<typeof PFCompass>;\n\nexport function Compass(props: CompassProps) {\n  return <PFCompass {...props} />;\n}\n\nexport {\n  CompassContent,\n  CompassHeader,\n  CompassHero,\n  CompassMainHeader,\n  CompassMainHeaderContent,\n  CompassMessageBar,\n  CompassNavContent,\n  CompassNavHome,\n  CompassNavMain,\n  CompassNavSearch,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-content",
@@ -1240,7 +1284,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-content--overview",
-      "import": "import { Content } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Content } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Content — PatternFly 6 Content under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Content is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Content as PFContent } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type ContentProps = ComponentPropsWithoutRef<typeof PFContent>;\n\nexport function Content(props: ContentProps) {\n  return <PFContent {...props} />;\n}\n\nexport {\n  ContentVariants,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-datalist",
@@ -1256,7 +1301,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-datalist--overview",
-      "import": "import { DataList } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { DataList } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS DataList — PatternFly 6 DataList under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's DataList (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { DataList as PFDataList } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type DataListProps = ComponentPropsWithoutRef<typeof PFDataList>;\n\nexport const DataList: ForwardRefExoticComponent<\n  DataListProps & RefAttributes<ComponentRef<typeof PFDataList>>\n> = forwardRef<ComponentRef<typeof PFDataList>, DataListProps>(\n  function DataList(props, ref) {\n    return <PFDataList ref={ref} {...props} />;\n  },\n);\n\nexport {\n  DataListAction,\n  DataListCell,\n  DataListCheck,\n  DataListContent,\n  DataListItem,\n  DataListItemCells,\n  DataListItemRow,\n  DataListToggle,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-descriptionlist",
@@ -1272,7 +1318,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-descriptionlist--overview",
-      "import": "import { DescriptionList } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { DescriptionList } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS DescriptionList — PatternFly 6 DescriptionList under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's DescriptionList is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { DescriptionList as PFDescriptionList } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type DescriptionListProps = ComponentPropsWithoutRef<typeof PFDescriptionList>;\n\nexport function DescriptionList(props: DescriptionListProps) {\n  return <PFDescriptionList {...props} />;\n}\n\nexport {\n  DescriptionListDescription,\n  DescriptionListGroup,\n  DescriptionListTerm,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-divider",
@@ -1288,7 +1335,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-divider--overview",
-      "import": "import { Divider } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Divider } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Divider — PatternFly 6 Divider under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Divider is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Divider as PFDivider } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type DividerProps = ComponentPropsWithoutRef<typeof PFDivider>;\n\nexport function Divider(props: DividerProps) {\n  return <PFDivider {...props} />;\n}"
     },
     {
       "id": "components-drawer",
@@ -1304,7 +1352,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-drawer--overview",
-      "import": "import { Drawer } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Drawer } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Drawer — PatternFly 6 Drawer under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Drawer is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Drawer as PFDrawer } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type DrawerProps = ComponentPropsWithoutRef<typeof PFDrawer>;\n\nexport function Drawer(props: DrawerProps) {\n  return <PFDrawer {...props} />;\n}\n\nexport {\n  DrawerActions,\n  DrawerCloseButton,\n  DrawerContent,\n  DrawerContentBody,\n  DrawerHead,\n  DrawerPanelBody,\n  DrawerPanelContent,\n  DrawerPanelDescription,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-duallistselector",
@@ -1320,7 +1369,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-duallistselector--overview",
-      "import": "import { DualListSelector } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { DualListSelector } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS DualListSelector — PatternFly 6 DualListSelector under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's DualListSelector is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { DualListSelector as PFDualListSelector } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type DualListSelectorProps = ComponentPropsWithoutRef<typeof PFDualListSelector>;\n\nexport function DualListSelector(props: DualListSelectorProps) {\n  return <PFDualListSelector {...props} />;\n}\n\nexport {\n  DualListSelectorControl,\n  DualListSelectorControlsWrapper,\n  DualListSelectorList,\n  DualListSelectorListItem,\n  DualListSelectorPane,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-emptystate",
@@ -1336,7 +1386,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-emptystate--overview",
-      "import": "import { EmptyState } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { EmptyState } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS EmptyState — PatternFly 6 EmptyState under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's EmptyState is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { EmptyState as PFEmptyState } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type EmptyStateProps = ComponentPropsWithoutRef<typeof PFEmptyState>;\n\nexport function EmptyState(props: EmptyStateProps) {\n  return <PFEmptyState {...props} />;\n}\n\nexport {\n  EmptyStateActions,\n  EmptyStateBody,\n  EmptyStateFooter,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-expandablesection",
@@ -1352,7 +1403,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-expandablesection--overview",
-      "import": "import { ExpandableSection } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { ExpandableSection } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS ExpandableSection — PatternFly 6 ExpandableSection under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's ExpandableSection is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { ExpandableSection as PFExpandableSection } from \"@patternfly/react-core\";\nimport type { ExpandableSectionProps as PFExpandableSectionProps } from \"@patternfly/react-core\";\n\nexport type ExpandableSectionProps = Omit<PFExpandableSectionProps, \"ref\">;\n\nexport function ExpandableSection(props: ExpandableSectionProps) {\n  return <PFExpandableSection {...props} />;\n}\n\nexport {\n  ExpandableSectionToggle,\n  ExpandableSectionVariant,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-file-upload-fileupload",
@@ -1370,7 +1422,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-file-upload-fileupload--overview",
-      "import": "import { FileUpload } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { FileUpload } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS FileUpload — PatternFly 6 FileUpload under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's FileUpload is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { FileUpload as PFFileUpload } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type FileUploadProps = ComponentPropsWithoutRef<typeof PFFileUpload>;\n\nexport function FileUpload(props: FileUploadProps) {\n  return <PFFileUpload {...props} />;\n}"
     },
     {
       "id": "components-file-upload-multiplefileupload",
@@ -1389,7 +1442,8 @@
         "fileupload"
       ],
       "storybookUrl": "/?path=/story/components-file-upload-multiplefileupload--overview",
-      "import": "import { MultipleFileUpload } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { MultipleFileUpload } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS MultipleFileUpload — PatternFly 6 MultipleFileUpload under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's MultipleFileUpload is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { MultipleFileUpload as PFMultipleFileUpload } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type MultipleFileUploadProps = ComponentPropsWithoutRef<typeof PFMultipleFileUpload>;\n\nexport function MultipleFileUpload(props: MultipleFileUploadProps) {\n  return <PFMultipleFileUpload {...props} />;\n}\n\nexport {\n  MultipleFileUploadMain,\n  MultipleFileUploadStatus,\n  MultipleFileUploadStatusItem,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-footer",
@@ -1420,7 +1474,13 @@
         "src",
         "formcontrol"
       ],
-      "storybookUrl": "/?path=/story/components-forms--overview"
+      "storybookUrl": "/?path=/story/components-forms--overview",
+      "examples": [
+        {
+          "name": "FormControl",
+          "source": "/**\n * FormControl — authoring a custom input that inherits the DS field styling.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\n\nexport function CustomFormControl() {\n  // The class belongs on a wrapper, not the <input> itself — PF6 paints the\n  // input's border via ::before/::after pseudos on the wrapper. Putting the\n  // class directly on a replaced element like <input> breaks pseudo-element\n  // painting and leaves adjacent edges with mismatched border colours.\n  return (\n    <span className=\"pf-v6-c-form-control\" style={{ width: 320 }}>\n      <input\n        type=\"email\"\n        placeholder=\"you@example.com\"\n        aria-label=\"Custom email input\"\n      />\n    </span>\n  );\n}\n\nexport default function FormControlExample() {\n  return <CustomFormControl />;\n}"
+        }
+      ]
     },
     {
       "id": "components-forms-checkbox",
@@ -1437,7 +1497,14 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-forms-checkbox--overview",
-      "import": "import { Checkbox } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Checkbox } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Checkbox — PatternFly 6 Checkbox under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's Checkbox is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Checkbox as PFCheckbox } from \"@patternfly/react-core\";\nimport type { CheckboxProps as PFCheckboxProps } from \"@patternfly/react-core\";\n\nexport type CheckboxProps = Omit<PFCheckboxProps, \"ref\">;\n\nexport function Checkbox(props: CheckboxProps) {\n  return <PFCheckbox {...props} />;\n}",
+      "examples": [
+        {
+          "name": "Checkbox",
+          "source": "/**\n * Checkbox — a two- or three-state boolean control.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport { Checkbox } from \"@golden-passport/ds-patternfly\";\n\nexport function States() {\n  const [checked, setChecked] = useState(true);\n\n  return (\n    <div style={{ display: \"grid\", gap: 12 }}>\n      <Checkbox id=\"cb-1\" label=\"Default\" isChecked={checked} onChange={(_, v) => setChecked(v)} />\n      <Checkbox id=\"cb-2\" label=\"Disabled\" isDisabled isChecked={false} onChange={() => {}} />\n      <Checkbox id=\"cb-3\" label=\"Disabled + checked\" isDisabled isChecked onChange={() => {}} />\n      <Checkbox\n        id=\"cb-4\"\n        label=\"Indeterminate (parent of mixed children)\"\n        isChecked={null}\n        onChange={() => {}}\n      />\n    </div>\n  );\n}\n\nexport function WithDescription() {\n  const [checked, setChecked] = useState(true);\n\n  return (\n    <Checkbox\n      id=\"cb-5\"\n      label=\"Send weekly summary\"\n      description=\"A digest of activity from the last 7 days.\"\n      isChecked={checked}\n      onChange={(_, v) => setChecked(v)}\n    />\n  );\n}\n\nexport function MultiSelectGroup() {\n  const [email, setEmail] = useState(true);\n  const [sms, setSms] = useState(false);\n\n  return (\n    <fieldset style={{ border: \"none\", margin: 0, padding: 0 }}>\n      <legend style={{ padding: 0, marginBottom: 8, color: \"var(--gp-color-text-regular)\" }}>\n        Notify me about\n      </legend>\n      <div style={{ display: \"grid\", gap: 8 }}>\n        <Checkbox id=\"cb-6\" label=\"Email\" isChecked={email} onChange={(_, v) => setEmail(v)} />\n        <Checkbox id=\"cb-7\" label=\"SMS\" isChecked={sms} onChange={(_, v) => setSms(v)} />\n      </div>\n    </fieldset>\n  );\n}\n\nexport default function CheckboxExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <States />\n      <WithDescription />\n      <MultiSelectGroup />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "components-forms-date-and-time",
@@ -1474,7 +1541,8 @@
         "ds-patternfly"
       ],
       "storybookUrl": "/?path=/story/components-forms-date-and-time-calendarmonth--overview",
-      "import": "import { CalendarMonth } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { CalendarMonth } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS CalendarMonth — PatternFly 6 CalendarMonth under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's CalendarMonth is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { CalendarMonth as PFCalendarMonth } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type CalendarMonthProps = ComponentPropsWithoutRef<typeof PFCalendarMonth>;\n\nexport function CalendarMonth(props: CalendarMonthProps) {\n  return <PFCalendarMonth {...props} />;\n}"
     },
     {
       "id": "components-forms-date-and-time-datepicker",
@@ -1493,7 +1561,8 @@
         "ds-patternfly"
       ],
       "storybookUrl": "/?path=/story/components-forms-date-and-time-datepicker--overview",
-      "import": "import { DatePicker } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { DatePicker } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS DatePicker — PatternFly 6 DatePicker under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's DatePicker (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { DatePicker as PFDatePicker } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type DatePickerProps = ComponentPropsWithoutRef<typeof PFDatePicker>;\n\nexport const DatePicker: ForwardRefExoticComponent<\n  DatePickerProps & RefAttributes<ComponentRef<typeof PFDatePicker>>\n> = forwardRef<ComponentRef<typeof PFDatePicker>, DatePickerProps>(\n  function DatePicker(props, ref) {\n    return <PFDatePicker ref={ref} {...props} />;\n  },\n);"
     },
     {
       "id": "components-forms-date-and-time-datetimepicker",
@@ -1548,7 +1617,8 @@
         "ds-patternfly"
       ],
       "storybookUrl": "/?path=/story/components-forms-date-and-time-timepicker--overview",
-      "import": "import { TimePicker } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { TimePicker } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS TimePicker — PatternFly 6 TimePicker under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's TimePicker is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { TimePicker as PFTimePicker } from \"@patternfly/react-core\";\nimport type { TimePickerProps as PFTimePickerProps } from \"@patternfly/react-core\";\n\nexport type TimePickerProps = Omit<PFTimePickerProps, \"ref\">;\n\nexport function TimePicker(props: TimePickerProps) {\n  return <PFTimePicker {...props} />;\n}"
     },
     {
       "id": "components-forms-form",
@@ -1565,7 +1635,14 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-forms-form--overview",
-      "import": "import { Form } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Form } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Form — PatternFly 6 Form under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's Form (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { Form as PFForm } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type FormProps = ComponentPropsWithoutRef<typeof PFForm>;\n\nexport const Form: ForwardRefExoticComponent<\n  FormProps & RefAttributes<ComponentRef<typeof PFForm>>\n> = forwardRef<ComponentRef<typeof PFForm>, FormProps>(\n  function Form(props, ref) {\n    return <PFForm ref={ref} {...props} />;\n  },\n);\n\nexport {\n  ActionGroup,\n  FormGroup,\n  FormGroupLabelHelp,\n  FormHelperText,\n  FormSection,\n} from \"@patternfly/react-core\";",
+      "examples": [
+        {
+          "name": "Form",
+          "source": "/**\n * Form — the container that organizes form fields with consistent spacing.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  ActionGroup,\n  Button,\n  Form,\n  FormGroup,\n  FormHelperText,\n  FormSection,\n  HelperText,\n  HelperTextItem,\n  TextInput,\n} from \"@golden-passport/ds-patternfly\";\n\nexport function Anatomy() {\n  const [name, setName] = useState(\"\");\n\n  return (\n    <Form\n      onSubmit={(e) => {\n        e.preventDefault();\n      }}\n    >\n      <FormSection title=\"Profile\">\n        <FormGroup label=\"Full name\" isRequired fieldId=\"name\">\n          <TextInput\n            id=\"name\"\n            value={name}\n            onChange={(_, v) => setName(v)}\n            aria-describedby=\"name-helper\"\n          />\n          <FormHelperText>\n            <HelperText id=\"name-helper\">\n              <HelperTextItem>Visible on your profile.</HelperTextItem>\n            </HelperText>\n          </FormHelperText>\n        </FormGroup>\n      </FormSection>\n      <ActionGroup>\n        <Button type=\"submit\" variant=\"primary\">Save</Button>\n        <Button variant=\"link\">Cancel</Button>\n      </ActionGroup>\n    </Form>\n  );\n}\n\nexport default function FormExample() {\n  return <Anatomy />;\n}"
+        }
+      ]
     },
     {
       "id": "components-forms-formselect",
@@ -1582,7 +1659,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-forms-formselect--overview",
-      "import": "import { FormSelect } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { FormSelect } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS FormSelect — PatternFly 6 FormSelect under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's FormSelect is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { FormSelect as PFFormSelect } from \"@patternfly/react-core\";\nimport type { FormSelectProps as PFFormSelectProps } from \"@patternfly/react-core\";\n\nexport type FormSelectProps = Omit<PFFormSelectProps, \"ref\">;\n\nexport function FormSelect(props: FormSelectProps) {\n  return <PFFormSelect {...props} />;\n}\n\nexport {\n  FormSelectOption,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-forms-helpertext",
@@ -1599,7 +1677,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-forms-helpertext--overview",
-      "import": "import { HelperText } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { HelperText } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS HelperText — PatternFly 6 HelperText under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's HelperText is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { HelperText as PFHelperText } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type HelperTextProps = ComponentPropsWithoutRef<typeof PFHelperText>;\n\nexport function HelperText(props: HelperTextProps) {\n  return <PFHelperText {...props} />;\n}\n\nexport {\n  HelperTextItem,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-forms-inline-edit",
@@ -1634,7 +1713,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-forms-inputgroup--overview",
-      "import": "import { InputGroup } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { InputGroup } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS InputGroup — PatternFly 6 InputGroup under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's InputGroup (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { InputGroup as PFInputGroup } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type InputGroupProps = ComponentPropsWithoutRef<typeof PFInputGroup>;\n\nexport const InputGroup: ForwardRefExoticComponent<\n  InputGroupProps & RefAttributes<ComponentRef<typeof PFInputGroup>>\n> = forwardRef<ComponentRef<typeof PFInputGroup>, InputGroupProps>(\n  function InputGroup(props, ref) {\n    return <PFInputGroup ref={ref} {...props} />;\n  },\n);\n\nexport {\n  InputGroupItem,\n  InputGroupText,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-forms-numberinput",
@@ -1651,7 +1731,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-forms-numberinput--overview",
-      "import": "import { NumberInput } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { NumberInput } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS NumberInput — PatternFly 6 NumberInput under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's NumberInput is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { NumberInput as PFNumberInput } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type NumberInputProps = ComponentPropsWithoutRef<typeof PFNumberInput>;\n\nexport function NumberInput(props: NumberInputProps) {\n  return <PFNumberInput {...props} />;\n}"
     },
     {
       "id": "components-forms-radio",
@@ -1668,7 +1749,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-forms-radio--overview",
-      "import": "import { Radio } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Radio } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Radio — PatternFly 6 Radio under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's Radio is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Radio as PFRadio } from \"@patternfly/react-core\";\nimport type { RadioProps as PFRadioProps } from \"@patternfly/react-core\";\n\nexport type RadioProps = Omit<PFRadioProps, \"ref\">;\n\nexport function Radio(props: RadioProps) {\n  return <PFRadio {...props} />;\n}"
     },
     {
       "id": "components-forms-searchinput",
@@ -1685,7 +1767,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-forms-searchinput--overview",
-      "import": "import { SearchInput } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { SearchInput } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS SearchInput — PatternFly 6 SearchInput under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's SearchInput (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { SearchInput as PFSearchInput } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type SearchInputProps = ComponentPropsWithoutRef<typeof PFSearchInput>;\n\nexport const SearchInput: ForwardRefExoticComponent<\n  SearchInputProps & RefAttributes<ComponentRef<typeof PFSearchInput>>\n> = forwardRef<ComponentRef<typeof PFSearchInput>, SearchInputProps>(\n  function SearchInput(props, ref) {\n    return <PFSearchInput ref={ref} {...props} />;\n  },\n);"
     },
     {
       "id": "components-forms-slider",
@@ -1702,7 +1785,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-forms-slider--overview",
-      "import": "import { Slider } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Slider } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Slider — PatternFly 6 Slider under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Slider is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Slider as PFSlider } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type SliderProps = ComponentPropsWithoutRef<typeof PFSlider>;\n\nexport function Slider(props: SliderProps) {\n  return <PFSlider {...props} />;\n}"
     },
     {
       "id": "components-forms-switch",
@@ -1719,7 +1803,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-forms-switch--overview",
-      "import": "import { Switch } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Switch } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Switch — PatternFly 6 Switch under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's Switch is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Switch as PFSwitch } from \"@patternfly/react-core\";\nimport type { SwitchProps as PFSwitchProps } from \"@patternfly/react-core\";\n\nexport type SwitchProps = Omit<PFSwitchProps, \"ref\">;\n\nexport function Switch(props: SwitchProps) {\n  return <PFSwitch {...props} />;\n}"
     },
     {
       "id": "components-forms-textarea",
@@ -1736,7 +1821,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-forms-textarea--overview",
-      "import": "import { TextArea } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { TextArea } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS TextArea — PatternFly 6 TextArea under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's TextArea (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { TextArea as PFTextArea } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type TextAreaProps = ComponentPropsWithoutRef<typeof PFTextArea>;\n\nexport const TextArea: ForwardRefExoticComponent<\n  TextAreaProps & RefAttributes<ComponentRef<typeof PFTextArea>>\n> = forwardRef<ComponentRef<typeof PFTextArea>, TextAreaProps>(\n  function TextArea(props, ref) {\n    return <PFTextArea ref={ref} {...props} />;\n  },\n);"
     },
     {
       "id": "components-forms-textinput",
@@ -1753,7 +1839,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-forms-textinput--overview",
-      "import": "import { TextInput } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { TextInput } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS TextInput — PatternFly 6 TextInput under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's TextInput (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { TextInput as PFTextInput } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type TextInputProps = ComponentPropsWithoutRef<typeof PFTextInput>;\n\nexport const TextInput: ForwardRefExoticComponent<\n  TextInputProps & RefAttributes<ComponentRef<typeof PFTextInput>>\n> = forwardRef<ComponentRef<typeof PFTextInput>, TextInputProps>(\n  function TextInput(props, ref) {\n    return <PFTextInput ref={ref} {...props} />;\n  },\n);"
     },
     {
       "id": "components-forms-textinputgroup",
@@ -1770,7 +1857,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-forms-textinputgroup--overview",
-      "import": "import { TextInputGroup } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { TextInputGroup } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS TextInputGroup — PatternFly 6 TextInputGroup under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's TextInputGroup is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { TextInputGroup as PFTextInputGroup } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type TextInputGroupProps = ComponentPropsWithoutRef<typeof PFTextInputGroup>;\n\nexport function TextInputGroup(props: TextInputGroupProps) {\n  return <PFTextInputGroup {...props} />;\n}\n\nexport {\n  TextInputGroupMain,\n  TextInputGroupUtilities,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-forms-togglegroup",
@@ -1787,7 +1875,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-forms-togglegroup--overview",
-      "import": "import { ToggleGroup } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { ToggleGroup } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS ToggleGroup — PatternFly 6 ToggleGroup under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's ToggleGroup is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { ToggleGroup as PFToggleGroup } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type ToggleGroupProps = ComponentPropsWithoutRef<typeof PFToggleGroup>;\n\nexport function ToggleGroup(props: ToggleGroupProps) {\n  return <PFToggleGroup {...props} />;\n}\n\nexport {\n  ToggleGroupItem,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-hero",
@@ -1803,7 +1892,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-hero--overview",
-      "import": "import { Hero } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Hero } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Hero — PatternFly 6 Hero under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Hero is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Hero as PFHero } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type HeroProps = ComponentPropsWithoutRef<typeof PFHero>;\n\nexport function Hero(props: HeroProps) {\n  return <PFHero {...props} />;\n}"
     },
     {
       "id": "components-hint",
@@ -1819,7 +1909,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-hint--overview",
-      "import": "import { Hint } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Hint } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Hint — PatternFly 6 Hint under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Hint is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Hint as PFHint } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type HintProps = ComponentPropsWithoutRef<typeof PFHint>;\n\nexport function Hint(props: HintProps) {\n  return <PFHint {...props} />;\n}\n\nexport {\n  HintBody,\n  HintFooter,\n  HintTitle,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-hyperlink",
@@ -1835,7 +1926,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-hyperlink--overview",
-      "import": "import { Hyperlink } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Hyperlink } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "import {\n  forwardRef,\n  type AnchorHTMLAttributes,\n  type CSSProperties,\n  type ReactNode,\n} from \"react\";\n\nexport interface HyperlinkProps\n  extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, \"target\" | \"rel\"> {\n  /** The link text. Required — anchors must have an accessible name. */\n  children: ReactNode;\n  /** Destination URL. Required. */\n  href: string;\n  /**\n   * Where to open the link. When set to `\"_blank\"`, the component automatically\n   * adds `rel=\"noopener noreferrer\"` for safety and an icon + screen reader\n   * announcement for the new-tab behaviour.\n   */\n  target?: AnchorHTMLAttributes<HTMLAnchorElement>[\"target\"];\n  /**\n   * Custom rel value. Merged with security defaults when `target=\"_blank\"`.\n   * Pass `\"noopener noreferrer\"` yourself if you want to suppress the auto-merge.\n   */\n  rel?: string;\n  /**\n   * Visible style. `\"default\"` underlines on hover; `\"underline\"` always\n   * underlines. Use `\"underline\"` for inline links inside prose so they stand\n   * out from surrounding text without colour alone.\n   */\n  variant?: \"default\" | \"underline\";\n  /**\n   * Drop the new-tab icon even when `target=\"_blank\"`. Use sparingly — the\n   * icon is the visual signal that the link will open elsewhere. The screen\n   * reader announcement still fires.\n   */\n  hideExternalIcon?: boolean;\n  /**\n   * Translated string read by assistive tech when the link opens in a new\n   * tab. Default `\"(opens in a new tab)\"`. Provided as a prop so consumer\n   * apps can localise it.\n   */\n  newTabLabel?: string;\n}\n\nconst baseStyle: CSSProperties = {\n  // Anchor colour now flows from the theme dial (`--gp-anchor-color`),\n  // which the brand root sets to the focus-ring colour by default.\n  // Fallback chain keeps any consumer that still defines the legacy\n  // `--gp-color-text-link` working.\n  color: \"var(--gp-anchor-color, var(--gp-color-text-link, #0066cc))\",\n  // Underline at rest — link colour alone may not provide 3:1 contrast\n  // against surrounding text in every brand. WCAG 1.4.1 / axe's\n  // link-in-text-block rule passes either via colour contrast OR a\n  // non-colour distinguisher (underline). Underline by default works in\n  // every brand without per-brand contrast tuning.\n  textDecoration: \"underline\",\n  textUnderlineOffset: \"0.2em\",\n  fontFamily: \"var(--gp-font-body, var(--gp-font-family, inherit))\",\n};\n\nconst underlineStyle: CSSProperties = {\n  textDecoration: \"underline\",\n  textUnderlineOffset: \"0.2em\",\n};\n\nconst externalIconStyle: CSSProperties = {\n  display: \"inline-block\",\n  marginInlineStart: \"0.25em\",\n  width: \"0.85em\",\n  height: \"0.85em\",\n  verticalAlign: \"-0.1em\",\n  fill: \"currentColor\",\n};\n\n/**\n * Inline-friendly hyperlink wrapping a real `<a>`. Use it for navigation\n * (changing URL, jumping between views, opening external sites). For an\n * action that doesn't change URL (open dialog, save, delete), use `Button`\n * with `variant=\"link\"` instead.\n *\n * Picks up the brand's blue link tokens (`--gp-color-text-link` /\n * `--gp-color-text-link-hover`) so colour matches the rest of the link\n * surface across the app.\n *\n * When `target=\"_blank\"`:\n *  - Appends `rel=\"noopener noreferrer\"` for security (unless explicitly\n *    overridden via `rel`).\n *  - Renders a small external-link icon next to the label (suppress with\n *    `hideExternalIcon`).\n *  - Adds a screen reader-only \"(opens in a new tab)\" announcement so AT\n *    users hear the navigation behaviour.\n */\nexport const Hyperlink = forwardRef<HTMLAnchorElement, HyperlinkProps>(\n  function Hyperlink(\n    {\n      children,\n      href,\n      target,\n      rel,\n      variant = \"default\",\n      hideExternalIcon = false,\n      newTabLabel = \"(opens in a new tab)\",\n      style,\n      onMouseEnter,\n      onMouseLeave,\n      onFocus,\n      onBlur,\n      ...rest\n    },\n    ref,\n  ) {\n    const isExternal = target === \"_blank\";\n    // Merge security defaults with caller-provided rel; de-dupe tokens.\n    const mergedRel = isExternal\n      ? Array.from(new Set([...(rel ?? \"\").split(/\\s+/), \"noopener\", \"noreferrer\"]))\n          .filter(Boolean)\n          .join(\" \")\n      : rel;\n\n    const composedStyle: CSSProperties = {\n      ...baseStyle,\n      ...(variant === \"underline\" ? underlineStyle : null),\n      ...style,\n    };\n\n    // Hover/focus styling without a stylesheet — swap the colour token via\n    // inline style. Underline is always on (a11y baseline) so no decoration\n    // toggle here — only the colour shifts on interaction.\n    const setHoverColor = (el: HTMLAnchorElement) => {\n      el.style.color = \"var(--gp-color-text-link-hover, #004080)\";\n    };\n    const resetColor = (el: HTMLAnchorElement) => {\n      el.style.color = composedStyle.color as string;\n    };\n\n    return (\n      <a\n        ref={ref}\n        href={href}\n        {...(isExternal ? { target: \"_blank\" } : target ? { target } : {})}\n        {...(mergedRel ? { rel: mergedRel } : {})}\n        style={composedStyle}\n        onMouseEnter={(e) => {\n          setHoverColor(e.currentTarget);\n          onMouseEnter?.(e);\n        }}\n        onMouseLeave={(e) => {\n          resetColor(e.currentTarget);\n          onMouseLeave?.(e);\n        }}\n        onFocus={(e) => {\n          setHoverColor(e.currentTarget);\n          onFocus?.(e);\n        }}\n        onBlur={(e) => {\n          resetColor(e.currentTarget);\n          onBlur?.(e);\n        }}\n        {...rest}\n      >\n        {children}\n        {isExternal && !hideExternalIcon ? (\n          <svg\n            aria-hidden=\"true\"\n            focusable=\"false\"\n            viewBox=\"0 0 16 16\"\n            style={externalIconStyle}\n          >\n            <path d=\"M9 2h5v5h-1.5V4.56L7.06 10 6 8.94 11.44 3.5H9V2zM3 4h4v1.5H4.5v6h6V9H12v4H3V4z\" />\n          </svg>\n        ) : null}\n        {isExternal ? (\n          <span\n            // Visually hidden but readable by AT — same technique as PF6's\n            // pf-v6-u-screen-reader utility (which we bundle), but inlined\n            // here so the component works even if the consumer hasn't\n            // imported the lib's stylesheet.\n            style={{\n              position: \"absolute\",\n              width: 1,\n              height: 1,\n              padding: 0,\n              margin: -1,\n              overflow: \"hidden\",\n              clipPath: \"inset(50%)\",\n              whiteSpace: \"nowrap\",\n              border: 0,\n            }}\n          >\n            {\" \"}\n            {newTabLabel}\n          </span>\n        ) : null}\n      </a>\n    );\n  },\n);"
     },
     {
       "id": "components-icon",
@@ -1851,7 +1943,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-icon--overview",
-      "import": "import { Icon } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Icon } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Icon — PatternFly 6 Icon under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Icon is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Icon as PFIcon } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type IconProps = ComponentPropsWithoutRef<typeof PFIcon>;\n\nexport function Icon(props: IconProps) {\n  return <PFIcon {...props} />;\n}"
     },
     {
       "id": "components-jump-links",
@@ -1884,7 +1977,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-label--overview",
-      "import": "import { Label } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Label } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Label — PatternFly 6 Label under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Label is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Label as PFLabel } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type LabelProps = ComponentPropsWithoutRef<typeof PFLabel>;\n\nexport function Label(props: LabelProps) {\n  return <PFLabel {...props} />;\n}\n\nexport {\n  LabelGroup,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-list",
@@ -1900,7 +1994,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-list--overview",
-      "import": "import { List } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { List } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS List — PatternFly 6 List under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's List is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { List as PFList } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type ListProps = ComponentPropsWithoutRef<typeof PFList>;\n\nexport function List(props: ListProps) {\n  return <PFList {...props} />;\n}\n\nexport {\n  ListComponent,\n  ListItem,\n  ListVariant,\n  OrderType,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-loginpage",
@@ -1916,7 +2011,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-loginpage--overview",
-      "import": "import { LoginPage } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { LoginPage } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS LoginPage — PatternFly 6 LoginPage under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's LoginPage is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { LoginPage as PFLoginPage } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type LoginPageProps = ComponentPropsWithoutRef<typeof PFLoginPage>;\n\nexport function LoginPage(props: LoginPageProps) {\n  return <PFLoginPage {...props} />;\n}\n\nexport {\n  LoginFooterItem,\n  LoginForm,\n  LoginMainFooterBandItem,\n  LoginMainFooterLinksItem,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-masthead",
@@ -1932,7 +2028,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-masthead--overview",
-      "import": "import { Masthead } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Masthead } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Masthead — PatternFly 6 Masthead under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Masthead is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Masthead as PFMasthead } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type MastheadProps = ComponentPropsWithoutRef<typeof PFMasthead>;\n\nexport function Masthead(props: MastheadProps) {\n  return <PFMasthead {...props} />;\n}\n\nexport {\n  MastheadBrand,\n  MastheadContent,\n  MastheadLogo,\n  MastheadMain,\n  MastheadToggle,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-menu-application-launcher",
@@ -2003,7 +2100,14 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-menu-dropdown--overview",
-      "import": "import { Dropdown } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Dropdown } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Dropdown — PatternFly 6 Dropdown under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's Dropdown (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { Dropdown as PFDropdown } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type DropdownProps = ComponentPropsWithoutRef<typeof PFDropdown>;\n\nexport const Dropdown: ForwardRefExoticComponent<\n  DropdownProps & RefAttributes<ComponentRef<typeof PFDropdown>>\n> = forwardRef<ComponentRef<typeof PFDropdown>, DropdownProps>(\n  function Dropdown(props, ref) {\n    return <PFDropdown ref={ref} {...props} />;\n  },\n);\n\nexport {\n  DropdownGroup,\n  DropdownItem,\n  DropdownList,\n} from \"@patternfly/react-core\";",
+      "examples": [
+        {
+          "name": "Dropdown",
+          "source": "/**\n * Dropdown — a menu of actions opened by a trigger.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport type { Ref } from \"react\";\nimport {\n  Divider,\n  Dropdown,\n  DropdownGroup,\n  DropdownItem,\n  DropdownList,\n  MenuToggle,\n  type MenuToggleElement,\n} from \"@golden-passport/ds-patternfly\";\nimport { EllipsisVIcon } from \"@patternfly/react-icons\";\n\nexport function Basic() {\n  const [isOpen, setIsOpen] = useState(false);\n\n  return (\n    <Dropdown\n      isOpen={isOpen}\n      onSelect={() => setIsOpen(false)}\n      onOpenChange={setIsOpen}\n      ouiaId=\"BasicDropdown\"\n      shouldFocusToggleOnSelect\n      toggle={(toggleRef: Ref<MenuToggleElement>) => (\n        <MenuToggle\n          ref={toggleRef}\n          onClick={() => setIsOpen((o) => !o)}\n          isExpanded={isOpen}\n        >\n          Actions\n        </MenuToggle>\n      )}\n    >\n      <DropdownList>\n        <DropdownItem value=\"run\">Run</DropdownItem>\n        <DropdownItem value=\"duplicate\">Duplicate</DropdownItem>\n        <DropdownItem value=\"archive\" isDisabled>Archive</DropdownItem>\n        <Divider component=\"li\" key=\"sep\" />\n        <DropdownItem value=\"delete\">Delete</DropdownItem>\n      </DropdownList>\n    </Dropdown>\n  );\n}\n\nexport function KebabToggle() {\n  const [isOpen, setIsOpen] = useState(false);\n\n  return (\n    <Dropdown\n      isOpen={isOpen}\n      onSelect={() => setIsOpen(false)}\n      onOpenChange={setIsOpen}\n      shouldFocusToggleOnSelect\n      toggle={(toggleRef) => (\n        <MenuToggle\n          ref={toggleRef}\n          aria-label=\"Row actions\"\n          variant=\"plain\"\n          onClick={() => setIsOpen((o) => !o)}\n          isExpanded={isOpen}\n          icon={<EllipsisVIcon />}\n        />\n      )}\n    >\n      <DropdownList>\n        <DropdownItem>Edit</DropdownItem>\n        <DropdownItem>Duplicate</DropdownItem>\n        <Divider component=\"li\" />\n        <DropdownItem>Delete</DropdownItem>\n      </DropdownList>\n    </Dropdown>\n  );\n}\n\nexport function Grouped() {\n  const [isOpen, setIsOpen] = useState(false);\n\n  return (\n    <Dropdown\n      isOpen={isOpen}\n      onSelect={() => setIsOpen(false)}\n      onOpenChange={setIsOpen}\n      shouldFocusToggleOnSelect\n      toggle={(toggleRef) => (\n        <MenuToggle\n          ref={toggleRef}\n          onClick={() => setIsOpen((o) => !o)}\n          isExpanded={isOpen}\n        >\n          Quick switch\n        </MenuToggle>\n      )}\n    >\n      <DropdownGroup label=\"Workspaces\">\n        <DropdownList>\n          <DropdownItem>Acme</DropdownItem>\n          <DropdownItem>Beta Lab</DropdownItem>\n        </DropdownList>\n      </DropdownGroup>\n      <Divider />\n      <DropdownGroup label=\"Recent runs\">\n        <DropdownList>\n          <DropdownItem>onboarding-flow #1284</DropdownItem>\n          <DropdownItem>build-pipeline #1283</DropdownItem>\n        </DropdownList>\n      </DropdownGroup>\n    </Dropdown>\n  );\n}\n\nexport function WithDescriptions() {\n  const [isOpen, setIsOpen] = useState(false);\n\n  return (\n    <Dropdown\n      isOpen={isOpen}\n      onSelect={() => setIsOpen(false)}\n      onOpenChange={setIsOpen}\n      toggle={(toggleRef) => (\n        <MenuToggle\n          ref={toggleRef}\n          onClick={() => setIsOpen((o) => !o)}\n          isExpanded={isOpen}\n        >\n          Run options\n        </MenuToggle>\n      )}\n    >\n      <DropdownList>\n        <DropdownItem description=\"Use the latest commit on main\">\n          Run now\n        </DropdownItem>\n        <DropdownItem description=\"Trigger after the current run completes\">\n          Queue run\n        </DropdownItem>\n        <DropdownItem\n          description=\"Pin to a specific commit\"\n          isAriaDisabled\n          tooltipProps={{ content: \"Available on the Pro plan\" }}\n        >\n          Run pinned\n        </DropdownItem>\n      </DropdownList>\n    </Dropdown>\n  );\n}\n\nexport default function DropdownExample() {\n  return (\n    <div style={{ display: \"flex\", gap: 24, flexWrap: \"wrap\", alignItems: \"center\" }}>\n      <Basic />\n      <KebabToggle />\n      <Grouped />\n      <WithDescriptions />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "components-menu-menu",
@@ -2019,7 +2123,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-menu-menu--overview",
-      "import": "import { Menu } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Menu } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Menu — PatternFly 6 Menu under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's Menu (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { Menu as PFMenu } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type MenuProps = ComponentPropsWithoutRef<typeof PFMenu>;\n\nexport const Menu: ForwardRefExoticComponent<\n  MenuProps & RefAttributes<ComponentRef<typeof PFMenu>>\n> = forwardRef<ComponentRef<typeof PFMenu>, MenuProps>(\n  function Menu(props, ref) {\n    return <PFMenu ref={ref} {...props} />;\n  },\n);\n\nexport {\n  MenuContent,\n  MenuFooter,\n  MenuGroup,\n  MenuItem,\n  MenuItemAction,\n  MenuList,\n  MenuSearch,\n  MenuSearchInput,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-menu-menu-toggle",
@@ -2071,7 +2176,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-menu-select--overview",
-      "import": "import { Select } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Select } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Select — PatternFly 6 Select under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's Select (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { Select as PFSelect } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type SelectProps = ComponentPropsWithoutRef<typeof PFSelect>;\n\nexport const Select: ForwardRefExoticComponent<\n  SelectProps & RefAttributes<ComponentRef<typeof PFSelect>>\n> = forwardRef<ComponentRef<typeof PFSelect>, SelectProps>(\n  function Select(props, ref) {\n    return <PFSelect ref={ref} {...props} />;\n  },\n);\n\nexport {\n  SelectGroup,\n  SelectList,\n  SelectOption,\n} from \"@patternfly/react-core\";\n\nexport type {\n  SelectOptionProps,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-modal",
@@ -2087,7 +2193,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-modal--overview",
-      "import": "import { Modal } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Modal } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Modal — PatternFly 6 Modal under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's Modal is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Modal as PFModal } from \"@patternfly/react-core\";\nimport type { ModalProps as PFModalProps } from \"@patternfly/react-core\";\n\nexport type ModalProps = Omit<PFModalProps, \"ref\">;\n\nexport function Modal(props: ModalProps) {\n  return <PFModal {...props} />;\n}\n\nexport {\n  ModalBody,\n  ModalFooter,\n  ModalHeader,\n  ModalVariant,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-navigation",
@@ -2118,7 +2225,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-notificationbadge--overview",
-      "import": "import { NotificationBadge } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { NotificationBadge } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS NotificationBadge — PatternFly 6 NotificationBadge under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's NotificationBadge is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { NotificationBadge as PFNotificationBadge } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type NotificationBadgeProps = ComponentPropsWithoutRef<typeof PFNotificationBadge>;\n\nexport function NotificationBadge(props: NotificationBadgeProps) {\n  return <PFNotificationBadge {...props} />;\n}\n\nexport {\n  NotificationBadgeVariant,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-notificationdrawer",
@@ -2134,7 +2242,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-notificationdrawer--overview",
-      "import": "import { NotificationDrawer } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { NotificationDrawer } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS NotificationDrawer — PatternFly 6 NotificationDrawer under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's NotificationDrawer (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { NotificationDrawer as PFNotificationDrawer } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type NotificationDrawerProps = ComponentPropsWithoutRef<typeof PFNotificationDrawer>;\n\nexport const NotificationDrawer: ForwardRefExoticComponent<\n  NotificationDrawerProps & RefAttributes<ComponentRef<typeof PFNotificationDrawer>>\n> = forwardRef<ComponentRef<typeof PFNotificationDrawer>, NotificationDrawerProps>(\n  function NotificationDrawer(props, ref) {\n    return <PFNotificationDrawer ref={ref} {...props} />;\n  },\n);\n\nexport {\n  NotificationDrawerBody,\n  NotificationDrawerHeader,\n  NotificationDrawerList,\n  NotificationDrawerListItem,\n  NotificationDrawerListItemBody,\n  NotificationDrawerListItemHeader,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-overflowmenu",
@@ -2150,7 +2259,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-overflowmenu--overview",
-      "import": "import { OverflowMenu } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { OverflowMenu } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS OverflowMenu — PatternFly 6 OverflowMenu under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's OverflowMenu is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { OverflowMenu as PFOverflowMenu } from \"@patternfly/react-core\";\nimport type { OverflowMenuProps as PFOverflowMenuProps } from \"@patternfly/react-core\";\n\nexport type OverflowMenuProps = Omit<PFOverflowMenuProps, \"ref\">;\n\nexport function OverflowMenu(props: OverflowMenuProps) {\n  return <PFOverflowMenu {...props} />;\n}\n\nexport {\n  OverflowMenuContent,\n  OverflowMenuControl,\n  OverflowMenuDropdownItem,\n  OverflowMenuGroup,\n  OverflowMenuItem,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-page",
@@ -2166,7 +2276,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-page--overview",
-      "import": "import { Page } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Page } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Page — PatternFly 6 Page under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's Page is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Page as PFPage } from \"@patternfly/react-core\";\nimport type { PageProps as PFPageProps } from \"@patternfly/react-core\";\n\nexport type PageProps = Omit<PFPageProps, \"ref\">;\n\nexport function Page(props: PageProps) {\n  return <PFPage {...props} />;\n}\n\nexport {\n  PageSection,\n  PageSidebar,\n  PageSidebarBody,\n  PageToggleButton,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-pagination",
@@ -2182,7 +2293,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-pagination--overview",
-      "import": "import { Pagination } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Pagination } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Pagination — PatternFly 6 Pagination under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Pagination is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Pagination as PFPagination } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type PaginationProps = ComponentPropsWithoutRef<typeof PFPagination>;\n\nexport function Pagination(props: PaginationProps) {\n  return <PFPagination {...props} />;\n}\n\nexport {\n  PaginationVariant,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-panel",
@@ -2198,7 +2310,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-panel--overview",
-      "import": "import { Panel } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Panel } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Panel — PatternFly 6 Panel under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's Panel (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { Panel as PFPanel } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type PanelProps = ComponentPropsWithoutRef<typeof PFPanel>;\n\nexport const Panel: ForwardRefExoticComponent<\n  PanelProps & RefAttributes<ComponentRef<typeof PFPanel>>\n> = forwardRef<ComponentRef<typeof PFPanel>, PanelProps>(\n  function Panel(props, ref) {\n    return <PFPanel ref={ref} {...props} />;\n  },\n);\n\nexport {\n  PanelFooter,\n  PanelHeader,\n  PanelMain,\n  PanelMainBody,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-popover",
@@ -2214,7 +2327,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-popover--overview",
-      "import": "import { Popover } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Popover } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Popover — PatternFly 6 Popover under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Popover is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Popover as PFPopover } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type PopoverProps = ComponentPropsWithoutRef<typeof PFPopover>;\n\nexport function Popover(props: PopoverProps) {\n  return <PFPopover {...props} />;\n}"
     },
     {
       "id": "components-progress",
@@ -2230,7 +2344,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-progress--overview",
-      "import": "import { Progress } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Progress } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Progress — PatternFly 6 Progress under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's Progress is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Progress as PFProgress } from \"@patternfly/react-core\";\nimport type { ProgressProps as PFProgressProps } from \"@patternfly/react-core\";\n\nexport type ProgressProps = Omit<PFProgressProps, \"ref\">;\n\nexport function Progress(props: ProgressProps) {\n  return <PFProgress {...props} />;\n}\n\nexport {\n  ProgressMeasureLocation,\n  ProgressSize,\n  ProgressVariant,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-progressstepper",
@@ -2246,7 +2361,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-progressstepper--overview",
-      "import": "import { ProgressStepper } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { ProgressStepper } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS ProgressStepper — PatternFly 6 ProgressStepper under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's ProgressStepper is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { ProgressStepper as PFProgressStepper } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type ProgressStepperProps = ComponentPropsWithoutRef<typeof PFProgressStepper>;\n\nexport function ProgressStepper(props: ProgressStepperProps) {\n  return <PFProgressStepper {...props} />;\n}\n\nexport {\n  ProgressStep,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-sidebar",
@@ -2262,7 +2378,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-sidebar--overview",
-      "import": "import { Sidebar } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Sidebar } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Sidebar — PatternFly 6 Sidebar under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Sidebar is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Sidebar as PFSidebar } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type SidebarProps = ComponentPropsWithoutRef<typeof PFSidebar>;\n\nexport function Sidebar(props: SidebarProps) {\n  return <PFSidebar {...props} />;\n}\n\nexport {\n  SidebarContent,\n  SidebarPanel,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-simplelist",
@@ -2278,7 +2395,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-simplelist--overview",
-      "import": "import { SimpleList } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { SimpleList } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS SimpleList — PatternFly 6 SimpleList under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's SimpleList is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { SimpleList as PFSimpleList } from \"@patternfly/react-core\";\nimport type { SimpleListProps as PFSimpleListProps } from \"@patternfly/react-core\";\n\nexport type SimpleListProps = Omit<PFSimpleListProps, \"ref\">;\n\nexport function SimpleList(props: SimpleListProps) {\n  return <PFSimpleList {...props} />;\n}\n\nexport {\n  SimpleListGroup,\n  SimpleListItem,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-skeleton",
@@ -2294,7 +2412,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-skeleton--overview",
-      "import": "import { Skeleton } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Skeleton } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Skeleton — PatternFly 6 Skeleton under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Skeleton is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Skeleton as PFSkeleton } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type SkeletonProps = ComponentPropsWithoutRef<typeof PFSkeleton>;\n\nexport function Skeleton(props: SkeletonProps) {\n  return <PFSkeleton {...props} />;\n}"
     },
     {
       "id": "components-skiptocontent",
@@ -2325,7 +2444,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-spinner--overview",
-      "import": "import { Spinner } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Spinner } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Spinner — PatternFly 6 Spinner under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Spinner is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Spinner as PFSpinner } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type SpinnerProps = ComponentPropsWithoutRef<typeof PFSpinner>;\n\nexport function Spinner(props: SpinnerProps) {\n  return <PFSpinner {...props} />;\n}"
     },
     {
       "id": "components-table",
@@ -2341,7 +2461,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-table--overview",
-      "import": "import { Table } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Table } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Table — PatternFly 6 Table under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's Table (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { Table as PFTable } from \"@patternfly/react-table\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type TableProps = ComponentPropsWithoutRef<typeof PFTable>;\n\nexport const Table: ForwardRefExoticComponent<\n  TableProps & RefAttributes<ComponentRef<typeof PFTable>>\n> = forwardRef<ComponentRef<typeof PFTable>, TableProps>(\n  function Table(props, ref) {\n    return <PFTable ref={ref} {...props} />;\n  },\n);\n\nexport {\n  ActionsColumn,\n  Tbody,\n  Td,\n  Th,\n  Thead,\n  Tr,\n} from \"@patternfly/react-table\";\n\nexport type {\n  ISortBy,\n} from \"@patternfly/react-table\";"
     },
     {
       "id": "components-tabs",
@@ -2357,7 +2478,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-tabs--overview",
-      "import": "import { Tabs } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Tabs } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Tabs — PatternFly 6 Tabs under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's Tabs is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Tabs as PFTabs } from \"@patternfly/react-core\";\nimport type { TabsProps as PFTabsProps } from \"@patternfly/react-core\";\n\nexport type TabsProps = Omit<PFTabsProps, \"ref\">;\n\nexport function Tabs(props: TabsProps) {\n  return <PFTabs {...props} />;\n}\n\nexport {\n  Tab,\n  TabAction,\n  TabContent,\n  TabContentBody,\n  TabTitleIcon,\n  TabTitleText,\n  TabsComponent,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-timestamp",
@@ -2373,7 +2495,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-timestamp--overview",
-      "import": "import { Timestamp } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Timestamp } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Timestamp — PatternFly 6 Timestamp under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Timestamp is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Timestamp as PFTimestamp } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type TimestampProps = ComponentPropsWithoutRef<typeof PFTimestamp>;\n\nexport function Timestamp(props: TimestampProps) {\n  return <PFTimestamp {...props} />;\n}\n\nexport {\n  TimestampFormat,\n  TimestampTooltipVariant,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-title",
@@ -2389,7 +2512,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-title--overview",
-      "import": "import { Title } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Title } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Title — PatternFly 6 Title under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Title is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Title as PFTitle } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type TitleProps = ComponentPropsWithoutRef<typeof PFTitle>;\n\nexport function Title(props: TitleProps) {\n  return <PFTitle {...props} />;\n}"
     },
     {
       "id": "components-toolbar",
@@ -2405,7 +2529,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-toolbar--overview",
-      "import": "import { Toolbar } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Toolbar } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Toolbar — PatternFly 6 Toolbar under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's Toolbar is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Toolbar as PFToolbar } from \"@patternfly/react-core\";\nimport type { ToolbarProps as PFToolbarProps } from \"@patternfly/react-core\";\n\nexport type ToolbarProps = Omit<PFToolbarProps, \"ref\">;\n\nexport function Toolbar(props: ToolbarProps) {\n  return <PFToolbar {...props} />;\n}\n\nexport {\n  ToolbarContent,\n  ToolbarFilter,\n  ToolbarGroup,\n  ToolbarItem,\n  ToolbarToggleGroup,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-tooltip",
@@ -2421,7 +2546,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-tooltip--overview",
-      "import": "import { Tooltip } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Tooltip } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Tooltip — PatternFly 6 Tooltip under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Tooltip is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Tooltip as PFTooltip } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type TooltipProps = ComponentPropsWithoutRef<typeof PFTooltip>;\n\nexport function Tooltip(props: TooltipProps) {\n  return <PFTooltip {...props} />;\n}"
     },
     {
       "id": "components-treeview",
@@ -2437,7 +2563,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-treeview--overview",
-      "import": "import { TreeView } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { TreeView } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS TreeView — PatternFly 6 TreeView under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's TreeView is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { TreeView as PFTreeView } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type TreeViewProps = ComponentPropsWithoutRef<typeof PFTreeView>;\n\nexport function TreeView(props: TreeViewProps) {\n  return <PFTreeView {...props} />;\n}\n\nexport type {\n  TreeViewDataItem,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-truncate",
@@ -2453,7 +2580,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-truncate--overview",
-      "import": "import { Truncate } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Truncate } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Truncate — PatternFly 6 Truncate under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's Truncate (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { Truncate as PFTruncate } from \"@patternfly/react-core\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type TruncateProps = ComponentPropsWithoutRef<typeof PFTruncate>;\n\nexport const Truncate: ForwardRefExoticComponent<\n  TruncateProps & RefAttributes<ComponentRef<typeof PFTruncate>>\n> = forwardRef<ComponentRef<typeof PFTruncate>, TruncateProps>(\n  function Truncate(props, ref) {\n    return <PFTruncate ref={ref} {...props} />;\n  },\n);\n\nexport {\n  TruncatePosition,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "components-wizard",
@@ -2469,7 +2597,8 @@
         "src"
       ],
       "storybookUrl": "/?path=/story/components-wizard--overview",
-      "import": "import { Wizard } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Wizard } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Wizard — PatternFly 6 Wizard under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref: PF6's Wizard is a plain function component (nothing to forward).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Wizard as PFWizard } from \"@patternfly/react-core\";\nimport type { ComponentPropsWithoutRef } from \"react\";\n\nexport type WizardProps = ComponentPropsWithoutRef<typeof PFWizard>;\n\nexport function Wizard(props: WizardProps) {\n  return <PFWizard {...props} />;\n}\n\nexport {\n  WizardStep,\n} from \"@patternfly/react-core\";\n\nexport type {\n  WizardStepType,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "extensions",
@@ -2628,7 +2757,8 @@
         "dataviewtable"
       ],
       "storybookUrl": "/?path=/story/extensions-data-view-table--overview",
-      "import": "import { Table } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Table } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Table — PatternFly 6 Table under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * Refs forward to PF6's Table (a forwardRef component).\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { forwardRef } from \"react\";\nimport { Table as PFTable } from \"@patternfly/react-table\";\nimport type {\n  ComponentPropsWithoutRef,\n  ComponentRef,\n  ForwardRefExoticComponent,\n  RefAttributes,\n} from \"react\";\n\nexport type TableProps = ComponentPropsWithoutRef<typeof PFTable>;\n\nexport const Table: ForwardRefExoticComponent<\n  TableProps & RefAttributes<ComponentRef<typeof PFTable>>\n> = forwardRef<ComponentRef<typeof PFTable>, TableProps>(\n  function Table(props, ref) {\n    return <PFTable ref={ref} {...props} />;\n  },\n);\n\nexport {\n  ActionsColumn,\n  Tbody,\n  Td,\n  Th,\n  Thead,\n  Tr,\n} from \"@patternfly/react-table\";\n\nexport type {\n  ISortBy,\n} from \"@patternfly/react-table\";"
     },
     {
       "id": "extensions-data-view-toolbar",
@@ -2647,7 +2777,8 @@
         "dataviewtoolbar"
       ],
       "storybookUrl": "/?path=/story/extensions-data-view-toolbar--overview",
-      "import": "import { Toolbar } from \"@golden-passport/ds-patternfly\";"
+      "import": "import { Toolbar } from \"@golden-passport/ds-patternfly\";",
+      "componentSource": "/**\n * DS Toolbar — PatternFly 6 Toolbar under the Golden Passport dials.\n * Thin wrapper: the dial CSS (src/styles) already brands it; add DS\n * defaults here when the design system diverges from stock PF6.\n * No ref forwarded: PF6's Toolbar is a class component — its ref is the class instance, not a DOM node. Use PF's innerRef-style props where provided.\n * Generated by scripts/gen-pf-wrappers.mjs — hand-maintained after that.\n */\nimport { Toolbar as PFToolbar } from \"@patternfly/react-core\";\nimport type { ToolbarProps as PFToolbarProps } from \"@patternfly/react-core\";\n\nexport type ToolbarProps = Omit<PFToolbarProps, \"ref\">;\n\nexport function Toolbar(props: ToolbarProps) {\n  return <PFToolbar {...props} />;\n}\n\nexport {\n  ToolbarContent,\n  ToolbarFilter,\n  ToolbarGroup,\n  ToolbarItem,\n  ToolbarToggleGroup,\n} from \"@patternfly/react-core\";"
     },
     {
       "id": "extensions-log-viewer",
@@ -3037,7 +3168,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/layouts-stack--overview"
+      "storybookUrl": "/?path=/story/layouts-stack--overview",
+      "examples": [
+        {
+          "name": "Stack",
+          "source": "/**\n * Stack — vertical layout where children stack top-to-bottom and exactly one\n * item can be marked isFilled to consume remaining vertical space.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { Stack, StackItem } from \"@golden-passport/ds-patternfly\";\n\n// Shaded placeholder block so the layout regions are visible in the demo.\n// In a real app these are your header / footer / row contents.\nfunction Box({ label }: { label: string }) {\n  return (\n    <div\n      style={{\n        background: \"var(--gp-color-brand-default)\",\n        color: \"var(--gp-color-brand-on)\",\n        padding: \"12px 16px\",\n        borderRadius: \"var(--gp-radius-sm)\",\n        fontSize: 14,\n        textAlign: \"center\",\n      }}\n    >\n      {label}\n    </div>\n  );\n}\n\nexport function PageChrome() {\n  return (\n    <Stack hasGutter style={{ height: \"100%\" }}>\n      <StackItem><Box label=\"header\" /></StackItem>\n      <StackItem isFilled>\n        <div\n          style={{\n            background: \"var(--gp-color-bg-primary-default)\",\n            border: \"1px solid var(--gp-color-border-subtle)\",\n            borderRadius: \"var(--gp-radius-sm)\",\n            padding: 24,\n            height: \"100%\",\n            color: \"var(--gp-color-text-regular)\",\n          }}\n        >\n          body — fills remaining height\n        </div>\n      </StackItem>\n      <StackItem><Box label=\"footer\" /></StackItem>\n    </Stack>\n  );\n}\n\nexport function VerticalList() {\n  return (\n    <Stack hasGutter>\n      <StackItem><Box label=\"row 1\" /></StackItem>\n      <StackItem><Box label=\"row 2\" /></StackItem>\n      <StackItem><Box label=\"row 3\" /></StackItem>\n    </Stack>\n  );\n}\n\nexport default function StackExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <div style={{ height: 320 }}>\n        <PageChrome />\n      </div>\n      <VerticalList />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "patterns",

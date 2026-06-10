@@ -62,6 +62,10 @@ Rules:
   state inside the region's function.
 - NO StoryKit/DemoKit imports, NO ThemeProvider, no fetches; realistic
   inline data.
+- **DOM ids must derive from `useId()`** (`const id = useId();` then
+  `id={`${id}-name`}`, same for `fieldId`, `aria-describedby`, radio
+  `name` groups). The story renders each region once AND again inside the
+  Full example composition — hardcoded ids fail axe's duplicate-id-aria.
 - Default export composes the regions (zero props). For demos that need a
   tall positioned stage or other story-only scaffolding, the default export
   provides a minimal equivalent inside the file.
@@ -95,17 +99,20 @@ Per demo Section, replace the `Card > div > DemoFrame + CodeBlock` cluster:
 - Keep `height` demos working via `<Example height={…}>` (forwards to
   DemoFrame).
 - Add ONE "Full example" section after the demo sections (before
-  Configuration/Accessibility):
+  Configuration/Accessibility). It is SOURCE-ONLY — no children — because
+  the sections above are already the live render; rendering the whole
+  composition a second time duplicates ids/landmarks and fails axe:
 
 ```tsx
 <Section title="Full example" description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog.">
   <Card>
-    <Example source={badgeExampleSrc} fileName="Badge.example.tsx">
-      <BadgeExample />
-    </Example>
+    <Example source={badgeExampleSrc} fileName="Badge.example.tsx" />
   </Card>
 </Section>
 ```
+
+(Don't import the example's default export in the story at all — only the
+named region exports.)
 
 - If the story has a "Props" section with a bare PropsTable, convert it to
   `<ConfigurationSection importStatement={…} componentSource={…}

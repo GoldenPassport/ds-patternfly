@@ -9,7 +9,7 @@ import {
   ThemingPointer,
 } from "../_kit/StoryKit.js";
 import { PropsTable } from "../_kit/DemoKit.js";
-import DropdownExample, {
+import {
   Basic,
   KebabToggle,
   Grouped,
@@ -143,9 +143,7 @@ export const Overview: StoryObj = {
         description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
       >
         <Card>
-          <Example source={dropdownExampleSrc} fileName="Dropdown.example.tsx">
-            <DropdownExample />
-          </Example>
+          <Example source={dropdownExampleSrc} fileName="Dropdown.example.tsx" />
         </Card>
       </Section>
 
