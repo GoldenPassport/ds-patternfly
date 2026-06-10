@@ -19,4 +19,5 @@ export {
   ToolbarFilter,
   ToolbarGroup,
   ToolbarItem,
+  ToolbarToggleGroup,
 } from "@patternfly/react-core";

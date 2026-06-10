@@ -5,7 +5,7 @@ import {
   Toolbar,
   ToolbarContent,
   ToolbarItem,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import {
   Table,
   Tbody,
@@ -13,7 +13,7 @@ import {
   Th,
   Thead,
   Tr,
-} from "@patternfly/react-table";
+} from "@golden-passport/ds-patternfly";
 import BulkSelect, { BulkSelectValue } from "@patternfly/react-component-groups/dist/dynamic/BulkSelect";
 import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";

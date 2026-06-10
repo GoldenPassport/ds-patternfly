@@ -224,7 +224,7 @@ export const Overview: StoryObj = {
                 <code>sm</code> / <code>md</code> / <code>lg</code>{" "}
                 modifier props.
               </p>
-              <CodeBlock label="Example: a feature card grid that responds to viewport width">{`import { Grid, GridItem } from "@patternfly/react-core";
+              <CodeBlock label="Example: a feature card grid that responds to viewport width">{`import { Grid, GridItem } from "@golden-passport/ds-patternfly";
 
 <Grid hasGutter>
   {features.map((f) => (

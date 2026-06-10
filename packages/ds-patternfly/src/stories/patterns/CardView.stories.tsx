@@ -12,7 +12,7 @@ import {
   Toolbar,
   ToolbarContent,
   ToolbarItem,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import { CubeIcon } from "@patternfly/react-icons";
 import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../_kit/StoryKit.js";
 import { DemoFrame } from "../_kit/DemoKit.js";

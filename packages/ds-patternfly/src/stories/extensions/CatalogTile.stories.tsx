@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Gallery, GalleryItem, Button } from "@patternfly/react-core";
+import { Gallery, GalleryItem, Button } from "@golden-passport/ds-patternfly";
 import {
   CatalogTile,
   CatalogTileBadge,

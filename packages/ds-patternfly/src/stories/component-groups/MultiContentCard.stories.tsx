@@ -19,7 +19,7 @@ import {
   ListItem,
   MenuToggle,
   type MenuToggleElement,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import MultiContentCard from "@patternfly/react-component-groups/dist/dynamic/MultiContentCard";
 import {
   ArrowRightIcon,

@@ -7,7 +7,7 @@ import {
   DropdownList,
   MenuToggle,
   type MenuToggleElement,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";

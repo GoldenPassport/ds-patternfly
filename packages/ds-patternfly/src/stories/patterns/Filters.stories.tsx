@@ -16,7 +16,7 @@ import {
   ToolbarGroup,
   ToolbarItem,
   ToolbarToggleGroup,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import { FilterIcon } from "@patternfly/react-icons";
 import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 import { DemoFrame } from "../_kit/DemoKit.js";

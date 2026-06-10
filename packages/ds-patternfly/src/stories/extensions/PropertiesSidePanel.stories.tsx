@@ -3,7 +3,7 @@ import {
   PropertiesSidePanel,
   PropertyItem,
 } from "@patternfly/react-catalog-view-extension";
-import { Button } from "@patternfly/react-core";
+import { Button } from "@golden-passport/ds-patternfly";
 import "@patternfly/react-catalog-view-extension/dist/css/react-catalog-view-extension.css";
 import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";

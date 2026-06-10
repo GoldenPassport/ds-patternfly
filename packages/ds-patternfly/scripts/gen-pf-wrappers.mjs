@@ -1,16 +1,20 @@
 #!/usr/bin/env node
 /**
  * One-time scaffold: per-component DS wrapper files for every PatternFly 6
- * component the component stories document.
+ * component the stories document.
  *
- * For each PF family (Button, Card, Masthead, …) used by
- * `src/stories/components/**`, emits `src/components/<Family>.tsx`:
+ * For each PF family (Button, Card, Table, …) used anywhere under
+ * `src/stories/`, emits `src/components/<Family>.tsx`:
  *   - a thin wrapper for the primary component (same name as the family) —
  *     the home for future DS defaults,
  *   - plain re-exports for the family's other used members (sub-components,
  *     enums) and used types,
  * plus `src/components/pf.ts` (barrel of all family files + a catch-all of
  * unmapped symbols) which `src/components/index.ts` re-exports.
+ *
+ * Families resolve across all wrapped PF packages (PACKAGES below) — e.g.
+ * Table lives in @patternfly/react-table; every wrapped package must be a
+ * peerDependency + tsup external.
  *
  * Run once and commit (`node scripts/gen-pf-wrappers.mjs`). Files are
  * hand-maintained afterwards — the script REFUSES to overwrite an existing
@@ -31,10 +35,18 @@ import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "..");
-const STORIES = join(root, "src", "stories", "components");
-const PF_ESM = join(root, "node_modules", "@patternfly", "react-core", "dist", "esm");
+const STORIES = join(root, "src", "stories");
 const OUT_DIR = join(root, "src", "components");
 const FORCE = process.argv.includes("--force");
+
+// PF packages whose components get DS wrappers. Order matters: first
+// package to declare a symbol owns it.
+const PACKAGES = [
+  { name: "@patternfly/react-core", kinds: ["components", "layouts"] },
+  { name: "@patternfly/react-table", kinds: ["components"] },
+];
+const esmRoot = (pkg) =>
+  join(root, "node_modules", ...pkg.name.split("/"), "dist", "esm");
 
 // ---------- 1. collect symbols the stories import from react-core ----------
 
@@ -47,21 +59,26 @@ function walk(dir, files = []) {
   return files;
 }
 
-// Stories import either from react-core directly (pre-wrapper stories) or
-// from the DS package itself (post-switch). Scan both: react-core symbols
-// MUST end up in the DS surface (unmapped ones error into pf-misc), while
+// Stories import either from a PF package directly (pre-wrapper stories)
+// or from the DS package itself (post-switch). Scan both: PF symbols MUST
+// end up in the DS surface (unmapped ones error into pf-misc), while
 // DS-package symbols only count when they map back to a PF family (DS-own
 // exports like Shell/AiAssistant are not PF re-exports).
 const usedValues = new Set();
 const usedTypes = new Set();
 const dsSourced = new Set();
 
+const pkgAlternation = PACKAGES.map((p) =>
+  p.name.replace(/[/@]/g, "\\$&"),
+).join("|");
 for (const file of walk(STORIES)) {
   const src = readFileSync(file, "utf8");
   // Brace-free capture so spans inside CodeBlock template strings can't
   // bridge unrelated text into a match.
-  const re =
-    /import\s+(type\s+)?\{([^{}]*)\}\s*from\s*"(@patternfly\/react-core|@golden-passport\/ds-patternfly)";/g;
+  const re = new RegExp(
+    `import\\s+(type\\s+)?\\{([^{}]*)\\}\\s*from\\s*"(${pkgAlternation}|@golden-passport\\/ds-patternfly)";`,
+    "g",
+  );
   let m;
   while ((m = re.exec(src))) {
     const isTypeImport = Boolean(m[1]);
@@ -86,6 +103,8 @@ for (const t of [...usedTypes]) if (usedValues.has(t)) usedTypes.delete(t);
 
 /** family name → Set of exported identifiers (values + types mixed). */
 const familyExports = new Map();
+/** family name → owning PF package name. */
+const familyPkg = new Map();
 /** symbol → family (first family wins; PF families don't overlap). */
 const symbolFamily = new Map();
 /**
@@ -96,12 +115,16 @@ const symbolFamily = new Map();
  */
 const componentKind = new Map();
 
-function indexFamilies(kindDir) {
-  const base = join(PF_ESM, kindDir);
+function indexFamilies(pkg, kindDir) {
+  const base = join(esmRoot(pkg), kindDir);
   if (!existsSync(base)) return;
   for (const family of readdirSync(base)) {
     const dir = join(base, family);
     if (!statSync(dir).isDirectory()) continue;
+    if (familyExports.has(family) && familyPkg.get(family) !== pkg.name) {
+      continue; // first package to declare a family owns it
+    }
+    familyPkg.set(family, pkg.name);
     const names = familyExports.get(family) ?? new Set();
     for (const f of walk(dir, []).filter((p) => p.endsWith(".d.ts"))) {
       const dts = readFileSync(f, "utf8");
@@ -135,8 +158,9 @@ function indexFamilies(kindDir) {
     }
   }
 }
-indexFamilies("components");
-indexFamilies("layouts");
+for (const pkg of PACKAGES) {
+  for (const kindDir of pkg.kinds) indexFamilies(pkg, kindDir);
+}
 
 // ---------- 3. group used symbols per family ----------
 
@@ -192,6 +216,7 @@ for (const [family, { values, types }] of [...plan.entries()].sort()) {
     continue;
   }
 
+  const pkgName = familyPkg.get(family);
   const hasPrimary = familyExports.get(family)?.has(family);
   const rest = [...values].filter((v) => v !== family).sort();
   const restTypes = [...types].sort();
@@ -227,8 +252,8 @@ for (const [family, { values, types }] of [...plan.entries()].sort()) {
       // the instance, not a DOM node; PF's innerRef-style props pass
       // through as ordinary props.
       lines.push(
-        `import { ${family} as PF${family} } from "@patternfly/react-core";`,
-        `import type { ${family}Props as PF${family}Props } from "@patternfly/react-core";`,
+        `import { ${family} as PF${family} } from "${pkgName}";`,
+        `import type { ${family}Props as PF${family}Props } from "${pkgName}";`,
         ``,
         `export type ${family}Props = Omit<PF${family}Props, "ref">;`,
         ``,
@@ -243,7 +268,7 @@ for (const [family, { values, types }] of [...plan.entries()].sort()) {
         ? "ComponentProps, ComponentPropsWithoutRef"
         : "ComponentPropsWithoutRef";
       lines.push(
-        `import { ${family} as PF${family} } from "@patternfly/react-core";`,
+        `import { ${family} as PF${family} } from "${pkgName}";`,
         `import type { ${typeImports} } from "react";`,
         ``,
         `export type ${family}Props = ComponentPropsWithoutRef<typeof PF${family}>;`,
@@ -259,7 +284,7 @@ for (const [family, { values, types }] of [...plan.entries()].sort()) {
       // a type name PF doesn't export from its package root (TS4023).
       lines.push(
         `import { forwardRef } from "react";`,
-        `import { ${family} as PF${family} } from "@patternfly/react-core";`,
+        `import { ${family} as PF${family} } from "${pkgName}";`,
         `import type {`,
         `  ComponentPropsWithoutRef,`,
         `  ComponentRef,`,
@@ -284,7 +309,7 @@ for (const [family, { values, types }] of [...plan.entries()].sort()) {
       ``,
       `export {`,
       ...rest.map((v) => `  ${v},`),
-      `} from "@patternfly/react-core";`,
+      `} from "${pkgName}";`,
     );
   }
   if (restTypes.length) {
@@ -292,7 +317,7 @@ for (const [family, { values, types }] of [...plan.entries()].sort()) {
       ``,
       `export type {`,
       ...restTypes.map((t) => `  ${t},`),
-      `} from "@patternfly/react-core";`,
+      `} from "${pkgName}";`,
     );
   }
   writeFileSync(outPath, lines.join("\n") + "\n");

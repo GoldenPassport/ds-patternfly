@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Skeleton } from "@patternfly/react-core";
+import { Skeleton } from "@golden-passport/ds-patternfly";
 import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 import { DemoFrame } from "../_kit/DemoKit.js";
 

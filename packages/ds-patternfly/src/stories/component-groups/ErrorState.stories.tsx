@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button } from "@patternfly/react-core";
+import { Button } from "@golden-passport/ds-patternfly";
 import ErrorState from "@patternfly/react-component-groups/dist/dynamic/ErrorState";
 import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";

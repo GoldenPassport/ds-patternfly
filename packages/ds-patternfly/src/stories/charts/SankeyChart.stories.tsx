@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Label } from "@patternfly/react-core";
+import { Label } from "@golden-passport/ds-patternfly";
 import { Charts } from "@patternfly/react-charts/echarts";
 import * as echarts from "echarts/core";
 import { SankeyChart } from "echarts/charts";

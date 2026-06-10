@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Bullseye } from "@patternfly/react-core";
+import { Bullseye } from "@golden-passport/ds-patternfly";
 import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 import { Box, DemoFrame, PropsTable } from "./_layoutKit.js";
 
@@ -38,7 +38,7 @@ export const Overview: StoryObj = {
       <Section title="Code">
         <Card>
           <div style={{ padding: 24 }}>
-            <CodeBlock>{`import { Bullseye } from "@patternfly/react-core";
+            <CodeBlock>{`import { Bullseye } from "@golden-passport/ds-patternfly";
 
 <Bullseye>
   <EmptyState>...</EmptyState>

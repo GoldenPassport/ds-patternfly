@@ -56,7 +56,7 @@ import {
   ToolbarContent,
   ToolbarFilter,
   ToolbarItem,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import EllipsisVIcon from "@patternfly/react-icons/dist/esm/icons/ellipsis-v-icon";
 import TrashIcon from "@patternfly/react-icons/dist/esm/icons/trash-icon";
 import FilterIcon from "@patternfly/react-icons/dist/esm/icons/filter-icon";

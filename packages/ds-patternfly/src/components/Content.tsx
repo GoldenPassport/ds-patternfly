@@ -13,3 +13,7 @@ export type ContentProps = ComponentPropsWithoutRef<typeof PFContent>;
 export function Content(props: ContentProps) {
   return <PFContent {...props} />;
 }
+
+export {
+  ContentVariants,
+} from "@patternfly/react-core";

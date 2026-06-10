@@ -8,7 +8,7 @@ import {
   Thead,
   Tr,
   type ISortBy,
-} from "@patternfly/react-table";
+} from "@golden-passport/ds-patternfly";
 import {
   Button,
   Label,

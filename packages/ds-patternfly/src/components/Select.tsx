@@ -29,3 +29,7 @@ export {
   SelectList,
   SelectOption,
 } from "@patternfly/react-core";
+
+export type {
+  SelectOptionProps,
+} from "@patternfly/react-core";

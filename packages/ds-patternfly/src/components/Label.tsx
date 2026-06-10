@@ -13,3 +13,7 @@ export type LabelProps = ComponentPropsWithoutRef<typeof PFLabel>;
 export function Label(props: LabelProps) {
   return <PFLabel {...props} />;
 }
+
+export {
+  LabelGroup,
+} from "@patternfly/react-core";

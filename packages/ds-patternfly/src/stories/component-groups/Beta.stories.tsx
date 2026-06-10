@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Label, LabelGroup } from "@patternfly/react-core";
+import { Label, LabelGroup } from "@golden-passport/ds-patternfly";
 import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 

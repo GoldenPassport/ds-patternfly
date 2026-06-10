@@ -32,7 +32,7 @@ export const Overview: StoryObj = {
               <code>@patternfly/react-core</code> alongside the lib&apos;s own
               components and theme provider.
             </p>
-            <CodeBlock>{`import { Bullseye, Flex, Gallery, Grid, Level, Split, Stack } from "@patternfly/react-core";`}</CodeBlock>
+            <CodeBlock>{`import { Bullseye, Flex, Gallery, Grid, Level, Split, Stack } from "@golden-passport/ds-patternfly";`}</CodeBlock>
           </div>
         </Card>
       </Section>

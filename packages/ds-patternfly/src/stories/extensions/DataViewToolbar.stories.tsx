@@ -6,7 +6,7 @@ import {
   DataViewTextFilter,
   useDataViewPagination,
 } from "@patternfly/react-data-view";
-import { Button, Pagination } from "@patternfly/react-core";
+import { Button, Pagination } from "@golden-passport/ds-patternfly";
 import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 

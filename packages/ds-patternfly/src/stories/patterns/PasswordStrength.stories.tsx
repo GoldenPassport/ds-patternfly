@@ -7,7 +7,7 @@ import {
   ProgressMeasureLocation,
   ProgressSize,
   TextInput,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 import { DemoFrame } from "../_kit/DemoKit.js";
 

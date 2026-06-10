@@ -17,7 +17,7 @@ import {
   TabContentBody,
   TabTitleText,
   Tabs,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import { CubesIcon, EllipsisVIcon } from "@patternfly/react-icons";
 import PageHeader from "@patternfly/react-component-groups/dist/dynamic/PageHeader";
 import { useState } from "react";

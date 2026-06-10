@@ -18,4 +18,5 @@ export {
   AlertActionCloseButton,
   AlertActionLink,
   AlertGroup,
+  AlertVariant,
 } from "@patternfly/react-core";

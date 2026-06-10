@@ -12,6 +12,7 @@ export default defineConfig({
     "react-dom",
     "@patternfly/react-core",
     "@patternfly/react-icons",
+    "@patternfly/react-table",
   ],
   treeshake: true,
 });

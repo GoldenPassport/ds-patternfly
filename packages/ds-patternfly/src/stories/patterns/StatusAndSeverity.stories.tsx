@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Label } from "@patternfly/react-core";
+import { Label } from "@golden-passport/ds-patternfly";
 import {
   Table,
   Tbody,
@@ -7,7 +7,7 @@ import {
   Th,
   Thead,
   Tr,
-} from "@patternfly/react-table";
+} from "@golden-passport/ds-patternfly";
 import { Severity } from "@patternfly/react-component-groups/dist/dynamic/Severity";
 import { Status } from "@patternfly/react-component-groups/dist/dynamic/Status";
 import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";

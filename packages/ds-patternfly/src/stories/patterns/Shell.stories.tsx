@@ -29,7 +29,7 @@ import {
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import {
   ArrowUpIcon,
   EllipsisVIcon,

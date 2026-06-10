@@ -60,7 +60,7 @@ export const Overview: StoryObj = {
         <Card>
           <div style={{ padding: 24 }}>
             <CodeBlock>{`import { LogViewer, LogViewerSearch } from "@patternfly/react-log-viewer";
-import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import { Toolbar, ToolbarContent, ToolbarItem } from "@golden-passport/ds-patternfly";
 
 <LogViewer
   data={logText}

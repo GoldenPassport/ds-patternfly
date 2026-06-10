@@ -12,7 +12,7 @@ import {
   GridItem,
   Label,
   Progress,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import {
   ArrowDownIcon,
   ArrowUpIcon,

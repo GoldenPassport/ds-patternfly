@@ -2340,7 +2340,8 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/components-table--overview"
+      "storybookUrl": "/?path=/story/components-table--overview",
+      "import": "import { Table } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "components-tabs",
@@ -2626,7 +2627,8 @@
         "src",
         "dataviewtable"
       ],
-      "storybookUrl": "/?path=/story/extensions-data-view-table--overview"
+      "storybookUrl": "/?path=/story/extensions-data-view-table--overview",
+      "import": "import { Table } from \"@golden-passport/ds-patternfly\";"
     },
     {
       "id": "extensions-data-view-toolbar",

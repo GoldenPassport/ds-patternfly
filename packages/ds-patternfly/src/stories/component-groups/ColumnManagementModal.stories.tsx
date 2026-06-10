@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button } from "@patternfly/react-core";
+import { Button } from "@golden-passport/ds-patternfly";
 import ColumnManagementModal, {
   type ColumnManagementModalColumn,
 } from "@patternfly/react-component-groups/dist/dynamic/ColumnManagementModal";

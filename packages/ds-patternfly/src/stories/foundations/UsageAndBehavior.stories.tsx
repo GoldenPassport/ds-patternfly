@@ -6,7 +6,7 @@ import {
   Switch,
   Form,
   FormGroup,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
 import { useState } from "react";
 import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 

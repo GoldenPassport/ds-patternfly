@@ -4,7 +4,7 @@ import {
   DataViewTable,
   useDataViewSelection,
 } from "@patternfly/react-data-view";
-import { Label } from "@patternfly/react-core";
+import { Label } from "@golden-passport/ds-patternfly";
 import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
 

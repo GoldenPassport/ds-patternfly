@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Grid, GridItem } from "@patternfly/react-core";
+import { Grid, GridItem } from "@golden-passport/ds-patternfly";
 import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
 import { Box, DemoFrame, PropsTable } from "./_layoutKit.js";
 

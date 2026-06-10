@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Gallery, GalleryItem } from "@patternfly/react-core";
+import { Gallery, GalleryItem } from "@golden-passport/ds-patternfly";
 import {
   CatalogTile,
   CatalogTileBadge,

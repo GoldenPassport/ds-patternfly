@@ -56,7 +56,6 @@ import {
   PanelMain,
   PanelMainBody,
   SearchInput,
-  SkipToContent,
   Tab,
   Tabs,
   TabsComponent,
@@ -70,12 +69,15 @@ import {
   ToolbarItem,
   Title,
   Tooltip,
-} from "@patternfly/react-core";
+} from "@golden-passport/ds-patternfly";
+// PF6's own SkipToContent (href/onClick API) — the DS exports its own
+// SkipToContent (targetId/label) under the same name.
+import { SkipToContent } from "@patternfly/react-core";
 import AngleLeftIcon from "@patternfly/react-icons/dist/esm/icons/angle-left-icon";
 import AngleRightIcon from "@patternfly/react-icons/dist/esm/icons/angle-right-icon";
 import BarsIcon from "@patternfly/react-icons/dist/esm/icons/bars-icon";
 import PaperPlaneIcon from "@patternfly/react-icons/dist/esm/icons/paper-plane-icon";
-import { ActionsColumn } from "@patternfly/react-table";
+import { ActionsColumn } from "@golden-passport/ds-patternfly";
 import { DataViewToolbar } from "@patternfly/react-data-view/dist/dynamic/DataViewToolbar";
 import { DataViewTextFilter } from "@patternfly/react-data-view/dist/dynamic/DataViewTextFilter";
 import { DataViewTable } from "@patternfly/react-data-view/dist/dynamic/DataViewTable";
