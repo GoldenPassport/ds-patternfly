@@ -1,46 +1,27 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  Button,
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
-  Popover,
-} from "@golden-passport/ds-patternfly";
-import { OutlinedQuestionCircleIcon, ServerIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+  FoundationPage,
+  Section,
+  Card,
+  Example,
+  ThemingPointer,
+} from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  DefaultVertical,
+  Horizontal,
+  TwoColumn,
+  Compact,
+  TermHelpPopover,
+  IconsOnTerms,
+} from "../../examples/components/DescriptionList.example.js";
+import descriptionListExampleSrc from "../../examples/components/DescriptionList.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/DescriptionList",
   parameters: { layout: "padded" },
 };
 export default meta;
-
-const Facts = () => (
-  <>
-    <DescriptionListGroup>
-      <DescriptionListTerm>Name</DescriptionListTerm>
-      <DescriptionListDescription>onboarding-flow</DescriptionListDescription>
-    </DescriptionListGroup>
-    <DescriptionListGroup>
-      <DescriptionListTerm>Workspace</DescriptionListTerm>
-      <DescriptionListDescription>
-        <a href="#">acme-platform</a>
-      </DescriptionListDescription>
-    </DescriptionListGroup>
-    <DescriptionListGroup>
-      <DescriptionListTerm>Status</DescriptionListTerm>
-      <DescriptionListDescription>Idle · last run 2h ago</DescriptionListDescription>
-    </DescriptionListGroup>
-    <DescriptionListGroup>
-      <DescriptionListTerm>Owner</DescriptionListTerm>
-      <DescriptionListDescription>
-        <Button variant="link" isInline>mary@acme.dev</Button>
-      </DescriptionListDescription>
-    </DescriptionListGroup>
-  </>
-);
 
 export const Overview: StoryObj = {
   render: () => (
@@ -61,23 +42,13 @@ export const Overview: StoryObj = {
         description="Default layout — terms stacked above their descriptions in a single column. Each pair gets DescriptionListGroup → DescriptionListTerm + DescriptionListDescription."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <DescriptionList aria-label="Vertical default">
-                <Facts />
-              </DescriptionList>
-            </DemoFrame>
-            <CodeBlock>{`<DescriptionList aria-label="Workflow facts">
-  <DescriptionListGroup>
-    <DescriptionListTerm>Name</DescriptionListTerm>
-    <DescriptionListDescription>onboarding-flow</DescriptionListDescription>
-  </DescriptionListGroup>
-  <DescriptionListGroup>
-    <DescriptionListTerm>Status</DescriptionListTerm>
-    <DescriptionListDescription>Idle · last run 2h ago</DescriptionListDescription>
-  </DescriptionListGroup>
-</DescriptionList>`}</CodeBlock>
-          </div>
+          <Example
+            source={descriptionListExampleSrc}
+            region="DefaultVertical"
+            fileName="DescriptionList.example.tsx"
+          >
+            <DefaultVertical />
+          </Example>
         </Card>
       </Section>
 
@@ -86,13 +57,13 @@ export const Overview: StoryObj = {
         description="isHorizontal puts the term and description side-by-side. The most common layout for detail-screen attribute panels."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <DescriptionList isHorizontal aria-label="Horizontal">
-                <Facts />
-              </DescriptionList>
-            </DemoFrame>
-          </div>
+          <Example
+            source={descriptionListExampleSrc}
+            region="Horizontal"
+            fileName="DescriptionList.example.tsx"
+          >
+            <Horizontal />
+          </Example>
         </Card>
       </Section>
 
@@ -101,18 +72,13 @@ export const Overview: StoryObj = {
         description="columnModifier sets the number of columns at each breakpoint. Use { default: '2Col' } for two columns; combine breakpoints to flip from one column on mobile to two on desktop."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <DescriptionList
-                isHorizontal
-                columnModifier={{ default: "1Col", lg: "2Col" }}
-                aria-label="Two-column horizontal"
-              >
-                <Facts />
-                <Facts />
-              </DescriptionList>
-            </DemoFrame>
-          </div>
+          <Example
+            source={descriptionListExampleSrc}
+            region="TwoColumn"
+            fileName="DescriptionList.example.tsx"
+          >
+            <TwoColumn />
+          </Example>
         </Card>
       </Section>
 
@@ -121,13 +87,13 @@ export const Overview: StoryObj = {
         description="isCompact tightens row padding — pair with isHorizontal for dense detail panels."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <DescriptionList isHorizontal isCompact aria-label="Compact horizontal">
-                <Facts />
-              </DescriptionList>
-            </DemoFrame>
-          </div>
+          <Example
+            source={descriptionListExampleSrc}
+            region="Compact"
+            fileName="DescriptionList.example.tsx"
+          >
+            <Compact />
+          </Example>
         </Card>
       </Section>
 
@@ -136,38 +102,13 @@ export const Overview: StoryObj = {
         description="Wrap DescriptionListTerm in a Popover trigger for inline term help — explains a non-obvious attribute without polluting the description with a help paragraph."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <DescriptionList isHorizontal aria-label="With help">
-                <DescriptionListGroup>
-                  <DescriptionListTerm>
-                    <Popover
-                      headerContent={<div>What is a workspace?</div>}
-                      bodyContent={
-                        <div>
-                          A workspace groups related projects and shares
-                          credentials, secrets, and team members.
-                        </div>
-                      }
-                    >
-                      <Button
-                        variant="plain"
-                        aria-label="More info on workspace"
-                        style={{ padding: 0, marginInlineEnd: 4 }}
-                        icon={<OutlinedQuestionCircleIcon />}
-                      />
-                    </Popover>
-                    Workspace
-                  </DescriptionListTerm>
-                  <DescriptionListDescription>acme-platform</DescriptionListDescription>
-                </DescriptionListGroup>
-                <DescriptionListGroup>
-                  <DescriptionListTerm>Region</DescriptionListTerm>
-                  <DescriptionListDescription>us-east-1</DescriptionListDescription>
-                </DescriptionListGroup>
-              </DescriptionList>
-            </DemoFrame>
-          </div>
+          <Example
+            source={descriptionListExampleSrc}
+            region="TermHelpPopover"
+            fileName="DescriptionList.example.tsx"
+          >
+            <TermHelpPopover />
+          </Example>
         </Card>
       </Section>
 
@@ -176,20 +117,25 @@ export const Overview: StoryObj = {
         description="Pass icon to DescriptionListTerm for a leading glyph — useful when the same term type repeats across panels (resource type icon, capability icon)."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <DescriptionList isHorizontal aria-label="With icons">
-                <DescriptionListGroup>
-                  <DescriptionListTerm icon={<ServerIcon />}>Cluster</DescriptionListTerm>
-                  <DescriptionListDescription>prod-east-1</DescriptionListDescription>
-                </DescriptionListGroup>
-                <DescriptionListGroup>
-                  <DescriptionListTerm icon={<ServerIcon />}>Region</DescriptionListTerm>
-                  <DescriptionListDescription>us-east-1</DescriptionListDescription>
-                </DescriptionListGroup>
-              </DescriptionList>
-            </DemoFrame>
-          </div>
+          <Example
+            source={descriptionListExampleSrc}
+            region="IconsOnTerms"
+            fileName="DescriptionList.example.tsx"
+          >
+            <IconsOnTerms />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example
+            source={descriptionListExampleSrc}
+            fileName="DescriptionList.example.tsx"
+          />
         </Card>
       </Section>
 

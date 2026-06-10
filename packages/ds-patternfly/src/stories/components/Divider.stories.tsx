@@ -1,7 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Divider } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import {
+  Horizontal,
+  Vertical,
+  Inset,
+} from "../../examples/components/Divider.example.js";
+import dividerExampleSrc from "../../examples/components/Divider.example.tsx?raw";
+import dividerComponentSrc from "../../components/Divider.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Divider",
@@ -23,83 +34,71 @@ export const Overview: StoryObj = {
     >
       <Section title="Horizontal (default)">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "grid", gap: 16, color: "var(--gp-color-text-regular)" }}>
-                <div>Section above</div>
-                <Divider />
-                <div>Section below</div>
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<Divider />`}</CodeBlock>
-          </div>
+          <Example
+            source={dividerExampleSrc}
+            region="Horizontal"
+            fileName="Divider.example.tsx"
+          >
+            <Horizontal />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Vertical" description="Use orientation prop and place inside a flex/grid container.">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 16,
-                  color: "var(--gp-color-text-regular)",
-                  height: 60,
-                }}
-              >
-                <span>Left</span>
-                <Divider orientation={{ default: "vertical" }} />
-                <span>Middle</span>
-                <Divider orientation={{ default: "vertical" }} />
-                <span>Right</span>
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<Divider orientation={{ default: "vertical" }} />`}</CodeBlock>
-          </div>
+          <Example
+            source={dividerExampleSrc}
+            region="Vertical"
+            fileName="Divider.example.tsx"
+          >
+            <Vertical />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Inset" description="Indent the divider from the container edges per breakpoint.">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ color: "var(--gp-color-text-regular)" }}>
-                Section above
-                <Divider inset={{ default: "insetMd", md: "insetXl" }} />
-                Section below
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={dividerExampleSrc}
+            region="Inset"
+            fileName="Divider.example.tsx"
+          >
+            <Inset />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "component",
-                  type: '"hr" | "li" | "div"',
-                  description: 'Rendered tag. Use "li" inside menus, "div" only when neither hr nor li are semantically appropriate.',
-                },
-                {
-                  name: "orientation",
-                  type: '{ default?: "horizontal" | "vertical", sm?, md?, lg?, xl?, "2xl"? }',
-                  description: "Per-breakpoint orientation. Vertical dividers need a flex/grid parent with explicit height.",
-                },
-                {
-                  name: "inset",
-                  type: '{ default?: "insetNone" | "insetXs" | ... | "inset3xl", per breakpoint }',
-                  description: "Indent from the start/end edges of the parent.",
-                },
-              ]}
-            />
-          </div>
+          <Example source={dividerExampleSrc} fileName="Divider.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Divider } from "@golden-passport/ds-patternfly";'}
+        componentSource={dividerComponentSrc}
+        componentFileName="Divider.tsx"
+        rows={[
+          {
+            name: "component",
+            type: '"hr" | "li" | "div"',
+            description: 'Rendered tag. Use "li" inside menus, "div" only when neither hr nor li are semantically appropriate.',
+          },
+          {
+            name: "orientation",
+            type: '{ default?: "horizontal" | "vertical", sm?, md?, lg?, xl?, "2xl"? }',
+            description: "Per-breakpoint orientation. Vertical dividers need a flex/grid parent with explicit height.",
+          },
+          {
+            name: "inset",
+            type: '{ default?: "insetNone" | "insetXs" | ... | "inset3xl", per breakpoint }',
+            description: "Indent from the start/end edges of the parent.",
+          },
+        ]}
+      />
 
       <Section
         title="When to use it"

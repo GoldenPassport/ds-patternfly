@@ -1,19 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  Button,
-  ButtonVariant,
-  Flex,
-  FlexItem,
-  Hero,
-  Title,
-} from "@golden-passport/ds-patternfly";
-import {
   FoundationPage,
   Section,
   Card,
-  CodeBlock,
+  ConfigurationSection,
+  Example,
 } from "../_kit/StoryKit.js";
-import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  Basic as BasicHero,
+  ContrastSafeGradient,
+  NarrowBody as NarrowBodyHero,
+} from "../../examples/components/Hero.example.js";
+import heroExampleSrc from "../../examples/components/Hero.example.tsx?raw";
+import heroComponentSrc from "../../components/Hero.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Hero",
@@ -52,73 +51,13 @@ export const Basic: StoryObj = {
         description="Plain Hero — no image, no gradient, default body width. Acts as a wide container with PF6's hero padding and centring."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <Hero>
-              {/* Centre everything — title, paragraph, button row.
-                  - Outer wrapper: flex column with alignItems center
-                    so each child (title, p, CTA row) centres on the
-                    cross axis.
-                  - `textAlign: center` on the wrapper handles inline
-                    content (the paragraph wraps centred).
-                  - The CTA row is its own inner flex with
-                    justifyContent center so primary + link buttons
-                    sit symmetrically around the column centre.
-                  - `marginInline: auto` on the paragraph guarantees
-                    its constrained maxWidth ends up centred inside
-                    the column. */}
-              <Flex
-                direction={{ default: "column" }}
-                alignItems={{ default: "alignItemsCenter" }}
-                justifyContent={{ default: "justifyContentCenter" }}
-                spaceItems={{ default: "spaceItemsMd" }}
-                style={{ textAlign: "center", width: "100%" }}
-              >
-                <FlexItem>
-                  <Title headingLevel="h1" size="3xl">
-                    Welcome to Golden Passport
-                  </Title>
-                </FlexItem>
-                <FlexItem>
-                  <p
-                    style={{
-                      color: "var(--gp-color-text-subtle)",
-                      maxWidth: "32rem",
-                      marginInline: "auto",
-                    }}
-                  >
-                    Brandable design-system primitives built on
-                    PatternFly 6 — wired into your BPM, automation,
-                    and ops workflows.
-                  </p>
-                </FlexItem>
-                <FlexItem>
-                  <Flex
-                    spaceItems={{ default: "spaceItemsSm" }}
-                    justifyContent={{ default: "justifyContentCenter" }}
-                    alignItems={{ default: "alignItemsCenter" }}
-                  >
-                    <FlexItem>
-                      <Button variant={ButtonVariant.primary}>
-                        Get started
-                      </Button>
-                    </FlexItem>
-                    <FlexItem>
-                      <Button variant={ButtonVariant.link}>
-                        View on GitHub
-                      </Button>
-                    </FlexItem>
-                  </Flex>
-                </FlexItem>
-              </Flex>
-            </Hero>
-            <CodeBlock>{`import { Hero } from "@golden-passport/ds-patternfly";
-
-<Hero>
-  <Title headingLevel="h1" size="3xl">Welcome to Golden Passport</Title>
-  <p>Brandable design-system primitives built on PatternFly 6 …</p>
-  <Button variant="primary">Get started</Button>
-</Hero>`}</CodeBlock>
-          </div>
+          <Example
+            source={heroExampleSrc}
+            region="Basic"
+            fileName="Hero.example.tsx"
+          >
+            <BasicHero />
+          </Example>
         </Card>
       </Section>
     </FoundationPage>
@@ -149,82 +88,20 @@ export const WithGradient: StoryObj = {
         description="Keep all three stops within one tonal band (here: surface tones with a soft brand accent) and let the text use the mode-aware regular text colour. Because the brand stop is mixed heavily toward the surface, the dark-on-light / light-on-dark text stays above AA across the whole gradient."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <Hero
-              gradientLight={{
-                stop1: "var(--gp-color-bg-secondary-default, #f3ede1)",
-                stop2: "var(--gp-color-bg-secondary-hover, #e6dcc8)",
-                // Brand accent pulled ~75% toward the surface so the
-                // gradient stays light enough for dark text everywhere.
-                stop3:
-                  "color-mix(in srgb, var(--gp-color-brand-default, #7d572a) 25%, var(--gp-color-bg-secondary-default, #f3ede1))",
-              }}
-              gradientDark={{
-                stop1: "var(--gp-color-bg-primary-default, #1a1611)",
-                stop2: "var(--gp-color-bg-secondary-default, #26211c)",
-                stop3:
-                  "color-mix(in srgb, var(--gp-color-brand-default, #7d572a) 30%, var(--gp-color-bg-primary-default, #1a1611))",
-              }}
-            >
-              <Flex
-                direction={{ default: "column" }}
-                alignItems={{ default: "alignItemsCenter" }}
-                justifyContent={{ default: "justifyContentCenter" }}
-                spaceItems={{ default: "spaceItemsMd" }}
-                style={{ textAlign: "center", width: "100%" }}
-              >
-                <FlexItem>
-                  <Title
-                    headingLevel="h1"
-                    size="3xl"
-                    style={{ color: "var(--gp-color-text-regular)" }}
-                  >
-                    Build on a brandable foundation
-                  </Title>
-                </FlexItem>
-                <FlexItem>
-                  <p
-                    style={{
-                      color: "var(--gp-color-text-regular)",
-                      maxWidth: "32rem",
-                      marginInline: "auto",
-                    }}
-                  >
-                    The gradient reads as a branded entrance, but the copy
-                    stays legible in both light and dark mode because the
-                    stops never stray outside a contrasting tonal band.
-                  </p>
-                </FlexItem>
-                <FlexItem>
-                  <Button variant={ButtonVariant.primary}>Get started</Button>
-                </FlexItem>
-              </Flex>
-            </Hero>
-            <CodeBlock>{`<Hero
-  gradientLight={{
-    stop1: "var(--gp-color-bg-secondary-default)",
-    stop2: "var(--gp-color-bg-secondary-hover)",
-    // brand accent pulled toward the surface so the gradient
-    // stays light enough for dark text across every stop
-    stop3: "color-mix(in srgb, var(--gp-color-brand-default) 25%, var(--gp-color-bg-secondary-default))",
-  }}
-  gradientDark={{
-    stop1: "var(--gp-color-bg-primary-default)",
-    stop2: "var(--gp-color-bg-secondary-default)",
-    stop3: "color-mix(in srgb, var(--gp-color-brand-default) 30%, var(--gp-color-bg-primary-default))",
-  }}
->
-  {/* mode-aware text colour contrasts with both ends of the band */}
-  <Title style={{ color: "var(--gp-color-text-regular)" }}>…</Title>
-</Hero>`}</CodeBlock>
-            <p style={{ margin: 0, color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
-              Want a vivid full-brand gradient instead? Drop a scrim — a
-              semi-opaque <code>--gp-color-bg-primary-default</code> layer
-              between the gradient and the text — and verify the result
-              with a contrast checker against the lightest and darkest
-              points of the gradient.
-            </p>
-          </div>
+          <Example
+            source={heroExampleSrc}
+            region="ContrastSafeGradient"
+            fileName="Hero.example.tsx"
+          >
+            <ContrastSafeGradient />
+          </Example>
+          <p style={{ margin: "0 16px 16px", color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
+            Want a vivid full-brand gradient instead? Drop a scrim — a
+            semi-opaque <code>--gp-color-bg-primary-default</code> layer
+            between the gradient and the text — and verify the result
+            with a contrast checker against the lightest and darkest
+            points of the gradient.
+          </p>
         </Card>
       </Section>
     </FoundationPage>
@@ -255,90 +132,72 @@ export const NarrowBody: StoryObj = {
         description="bodyMaxWidth=42rem keeps the prose readable on a 1920px+ display."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <Hero bodyMaxWidth="42rem">
-              <Flex
-                direction={{ default: "column" }}
-                spaceItems={{ default: "spaceItemsMd" }}
-              >
-                <FlexItem>
-                  <Title headingLevel="h1" size="2xl">
-                    Design system, not framework
-                  </Title>
-                </FlexItem>
-                <FlexItem>
-                  <p style={{ lineHeight: 1.6 }}>
-                    Drop the lib into an existing PatternFly 6 app
-                    and every form control, popover, and elevated
-                    surface picks up your brand without per-component
-                    overrides. Bump a dial; the whole app rebrands.
-                  </p>
-                </FlexItem>
-                <FlexItem>
-                  <Button variant={ButtonVariant.secondary}>
-                    Read the migration guide
-                  </Button>
-                </FlexItem>
-              </Flex>
-            </Hero>
-            <CodeBlock>{`<Hero bodyMaxWidth="42rem">
-  <Title headingLevel="h1" size="2xl">Design system, not framework</Title>
-  <p>Drop the lib into an existing PatternFly 6 app …</p>
-</Hero>`}</CodeBlock>
-          </div>
+          <Example
+            source={heroExampleSrc}
+            region="NarrowBody"
+            fileName="Hero.example.tsx"
+          >
+            <NarrowBodyHero />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Most-used props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "children",
-                  type: "ReactNode",
-                  description: "Hero content. Compose with Title + paragraph + CTA Buttons; nothing is auto-styled.",
-                },
-                {
-                  name: "backgroundSrcLight",
-                  type: "string",
-                  description: "Image URL for light-mode background. Layered behind the optional gradient.",
-                },
-                {
-                  name: "backgroundSrcDark",
-                  type: "string",
-                  description: "Image URL for dark-mode background. Swapped via PF6's data-mode root attribute.",
-                },
-                {
-                  name: "gradientLight",
-                  type: "{ stop1, stop2, stop3 }",
-                  description: "Three-stop CSS gradient for light mode. Any valid CSS colour values; use brand tokens for theme-aware results. Contrast caveat: a gradient's luminance changes across its span, so check the text colour against the lightest AND darkest stop — keep stops in one tonal band (or add a scrim) so the copy stays above WCAG AA everywhere. See the 'With gradient' story.",
-                },
-                {
-                  name: "gradientDark",
-                  type: "{ stop1, stop2, stop3 }",
-                  description: "Dark-mode equivalent of gradientLight. Same contrast caveat — verify text contrast against every stop, not just stop1.",
-                },
-                {
-                  name: "bodyWidth",
-                  type: "string",
-                  description: "Override the body width (e.g. '32rem'). Use for visual control without a max constraint.",
-                },
-                {
-                  name: "bodyMaxWidth",
-                  type: "string",
-                  description: "Max-width cap on the body. Keeps prose readable on very wide viewports.",
-                },
-                {
-                  name: "isGlass",
-                  type: "boolean",
-                  description: "@beta Apply glassmorphic styling when the glass theme is active.",
-                },
-              ]}
-            />
-          </div>
+          <Example source={heroExampleSrc} fileName="Hero.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Hero } from "@golden-passport/ds-patternfly";'}
+        componentSource={heroComponentSrc}
+        componentFileName="Hero.tsx"
+        rows={[
+          {
+            name: "children",
+            type: "ReactNode",
+            description: "Hero content. Compose with Title + paragraph + CTA Buttons; nothing is auto-styled.",
+          },
+          {
+            name: "backgroundSrcLight",
+            type: "string",
+            description: "Image URL for light-mode background. Layered behind the optional gradient.",
+          },
+          {
+            name: "backgroundSrcDark",
+            type: "string",
+            description: "Image URL for dark-mode background. Swapped via PF6's data-mode root attribute.",
+          },
+          {
+            name: "gradientLight",
+            type: "{ stop1, stop2, stop3 }",
+            description: "Three-stop CSS gradient for light mode. Any valid CSS colour values; use brand tokens for theme-aware results. Contrast caveat: a gradient's luminance changes across its span, so check the text colour against the lightest AND darkest stop — keep stops in one tonal band (or add a scrim) so the copy stays above WCAG AA everywhere. See the 'With gradient' story.",
+          },
+          {
+            name: "gradientDark",
+            type: "{ stop1, stop2, stop3 }",
+            description: "Dark-mode equivalent of gradientLight. Same contrast caveat — verify text contrast against every stop, not just stop1.",
+          },
+          {
+            name: "bodyWidth",
+            type: "string",
+            description: "Override the body width (e.g. '32rem'). Use for visual control without a max constraint.",
+          },
+          {
+            name: "bodyMaxWidth",
+            type: "string",
+            description: "Max-width cap on the body. Keeps prose readable on very wide viewports.",
+          },
+          {
+            name: "isGlass",
+            type: "boolean",
+            description: "@beta Apply glassmorphic styling when the glass theme is active.",
+          },
+        ]}
+      />
 
       <Section title="When to use Hero vs PageSection">
         <Card>

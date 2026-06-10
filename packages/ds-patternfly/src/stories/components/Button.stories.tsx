@@ -1,101 +1,26 @@
-import { useState, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button, FormSelect, FormSelectOption } from "@golden-passport/ds-patternfly";
 import {
-  CogIcon,
-  EllipsisVIcon,
-  PencilAltIcon,
-  PlusIcon,
-  TimesIcon,
-  TrashIcon,
-} from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+  ThemingPointer,
+} from "../_kit/StoryKit.js";
+import {
+  Variants,
+  States,
+  IconButtons,
+  BorderRadius,
+} from "../../examples/components/Button.example.js";
+import buttonExampleSrc from "../../examples/components/Button.example.tsx?raw";
+import buttonComponentSrc from "../../components/Button.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Button",
   parameters: { layout: "padded" },
 };
 export default meta;
-
-const VARIANTS = ["primary", "secondary", "tertiary", "danger", "warning", "link", "plain"] as const;
-
-/**
- * Border-radius presets used by the configurable demo below. PF6 ships
- * no `shape` prop on Button, so the override lands as an inline style
- * (the value applies to text + icon-only buttons alike).
- */
-const RADIUS_PRESETS = {
-  none:    { label: "None (0)",                value: "0" },
-  default: { label: "Default (brand dial)",    value: "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))" },
-  rounded: { label: "Rounded (8px)",           value: "8px" },
-  strong:  { label: "Strong (12px)",           value: "12px" },
-  pill:    { label: "Pill (999px)",            value: "999px" },
-} as const;
-type RadiusKey = keyof typeof RADIUS_PRESETS;
-
-function BorderRadiusDemo() {
-  const [shape, setShape] = useState<RadiusKey>("default");
-  const radius = RADIUS_PRESETS[shape].value;
-  const textStyle: CSSProperties = { borderRadius: radius };
-  // Icon-only buttons need a square aspect so the chosen radius reads
-  // as a true circle / pill instead of an ellipse.
-  const iconOnlyStyle: CSSProperties = {
-    borderRadius: radius,
-    aspectRatio: "1",
-    paddingInline: 0,
-  };
-  return (
-    <div style={{ display: "grid", gap: 12 }}>
-      <label style={{ display: "grid", gap: 4, fontSize: 13, maxWidth: 240 }}>
-        Shape
-        <FormSelect
-          id="btn-radius-shape"
-          value={shape}
-          onChange={(_e, v) => setShape(v as RadiusKey)}
-          aria-label="Border radius preset"
-        >
-          {(Object.keys(RADIUS_PRESETS) as RadiusKey[]).map((k) => (
-            <FormSelectOption key={k} value={k} label={RADIUS_PRESETS[k].label} />
-          ))}
-        </FormSelect>
-      </label>
-      <DemoFrame>
-        <div style={{ display: "grid", gap: 12 }}>
-          {/* Text buttons */}
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-            <Button variant="primary"   style={textStyle}>Primary</Button>
-            <Button variant="secondary" style={textStyle}>Secondary</Button>
-            <Button variant="tertiary"  style={textStyle}>Tertiary</Button>
-            <Button variant="danger"    style={textStyle}>Danger</Button>
-          </div>
-          {/* Icon + text */}
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-            <Button variant="primary" icon={<PlusIcon />}      style={textStyle}>Add</Button>
-            <Button variant="secondary" icon={<PencilAltIcon />} style={textStyle}>Edit</Button>
-            <Button variant="danger" icon={<TrashIcon />}     style={textStyle}>Delete</Button>
-          </div>
-          {/* Icon-only variants (square aspect, has background/border) */}
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-            <Button variant="primary"   aria-label="Add"      icon={<PlusIcon />}       style={iconOnlyStyle} />
-            <Button variant="secondary" aria-label="Edit"     icon={<PencilAltIcon />} style={iconOnlyStyle} />
-            <Button variant="tertiary"  aria-label="Settings" icon={<CogIcon />}       style={iconOnlyStyle} />
-            <Button variant="danger"    aria-label="Delete"   icon={<TrashIcon />}     style={iconOnlyStyle} />
-          </div>
-          {/* Icon-only plain — the radius shows on hover/focus
-              backgrounds (PF6 paints a hover halo behind the glyph). */}
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-            <Button variant="plain" aria-label="Edit"         icon={<PencilAltIcon />} style={iconOnlyStyle} />
-            <Button variant="plain" aria-label="Settings"     icon={<CogIcon />}       style={iconOnlyStyle} />
-            <Button variant="plain" aria-label="Delete"       icon={<TrashIcon />}     style={iconOnlyStyle} />
-            <Button variant="plain" aria-label="More actions" icon={<EllipsisVIcon />} style={iconOnlyStyle} />
-            <Button variant="plain" aria-label="Close"        icon={<TimesIcon />}     style={iconOnlyStyle} />
-          </div>
-        </div>
-      </DemoFrame>
-    </div>
-  );
-}
 
 export const Overview: StoryObj = {
   render: () => (
@@ -112,39 +37,25 @@ export const Overview: StoryObj = {
     >
       <Section title="Variants" description="Each variant signals a different action priority.">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                {VARIANTS.map((v) => (
-                  <Button key={v} variant={v}>
-                    {v}
-                  </Button>
-                ))}
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<Button variant="primary">Save</Button>
-<Button variant="secondary">Cancel</Button>
-<Button variant="danger">Delete</Button>
-<Button variant="link">Learn more</Button>`}</CodeBlock>
-          </div>
+          <Example
+            source={buttonExampleSrc}
+            region="Variants"
+            fileName="Button.example.tsx"
+          >
+            <Variants />
+          </Example>
         </Card>
       </Section>
 
       <Section title="States">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-                <Button>Default</Button>
-                <Button isDisabled>Disabled</Button>
-                <Button isAriaDisabled>aria-disabled</Button>
-                <Button isLoading spinnerAriaLabel="Saving">
-                  Loading
-                </Button>
-                <Button isBlock>Block (full width)</Button>
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={buttonExampleSrc}
+            region="States"
+            fileName="Button.example.tsx"
+          >
+            <States />
+          </Example>
         </Card>
       </Section>
 
@@ -153,72 +64,13 @@ export const Overview: StoryObj = {
         description="Icon-only buttons need an aria-label (the icon is decorative, the label is the announced name). Pair with `variant='plain'` for toolbar / table-row glyph buttons; keep a text variant for primary CTAs even when an icon's involved."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "grid", gap: 16 }}>
-                {/* Icon + text — the common CTA pattern. icon prop puts
-                    the glyph on the leading edge; pass `iconPosition`
-                    to swap it to the trailing edge. */}
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-                  <Button variant="primary" icon={<PlusIcon />}>
-                    Add resource
-                  </Button>
-                  <Button variant="secondary" icon={<PencilAltIcon />}>
-                    Edit
-                  </Button>
-                  <Button variant="danger" icon={<TrashIcon />}>
-                    Delete
-                  </Button>
-                </div>
-                {/* Icon-only with background / border, rendered circular.
-                    PF6 ships no `circular` variant on Button, so override
-                    inline: `border-radius: 50%`, `aspect-ratio: 1`, and
-                    zero inline padding so the icon centres in a square. */}
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-                  {(() => {
-                    const round: CSSProperties = {
-                      borderRadius: "50%",
-                      aspectRatio: "1",
-                      paddingInline: 0,
-                    };
-                    return (
-                      <>
-                        <Button variant="primary"   aria-label="Add resource" icon={<PlusIcon />}       style={round} />
-                        <Button variant="secondary" aria-label="Edit"         icon={<PencilAltIcon />} style={round} />
-                        <Button variant="tertiary"  aria-label="Settings"     icon={<CogIcon />}       style={round} />
-                        <Button variant="danger"    aria-label="Delete"       icon={<TrashIcon />}     style={round} />
-                      </>
-                    );
-                  })()}
-                </div>
-                {/* Icon-only plain buttons — the canonical toolbar /
-                    table-row pattern. The icon goes in `icon`, NOT as
-                    children; that triggers PF6's icon-only sizing. */}
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-                  <Button variant="plain" aria-label="Edit" icon={<PencilAltIcon />} />
-                  <Button variant="plain" aria-label="Settings" icon={<CogIcon />} />
-                  <Button variant="plain" aria-label="Delete" icon={<TrashIcon />} />
-                  <Button variant="plain" aria-label="More actions" icon={<EllipsisVIcon />} />
-                  <Button variant="plain" aria-label="Close" icon={<TimesIcon />} />
-                </div>
-                {/* PF6 `isSettings` shorthand bakes in the cog icon but
-                    does NOT inject an aria-label — still your job. */}
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-                  <Button variant="plain" isSettings aria-label="Settings" />
-                </div>
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`{/* Icon + text */}
-<Button variant="primary" icon={<PlusIcon />}>Add resource</Button>
-<Button variant="danger" icon={<TrashIcon />}>Delete</Button>
-
-{/* Icon-only — aria-label is required (icon is decorative). */}
-<Button variant="plain" aria-label="Edit" icon={<PencilAltIcon />} />
-<Button variant="plain" aria-label="More actions" icon={<EllipsisVIcon />} />
-
-{/* Shorthand variants — PF6 bakes in icon + aria-label. */}
-<Button variant="plain" isSettings />`}</CodeBlock>
-          </div>
+          <Example
+            source={buttonExampleSrc}
+            region="IconButtons"
+            fileName="Button.example.tsx"
+          >
+            <IconButtons />
+          </Example>
         </Card>
       </Section>
 
@@ -227,92 +79,87 @@ export const Overview: StoryObj = {
         description="PF6 ships no `shape` prop on Button — pick a radius preset (none / default / rounded / strong / pill) and the value lands on each demo button via inline style. `Default` reads the brand-root `--gp-radius-control` dial so this preview matches the rest of the DS. Apply the same approach in your app via the dial for a global shape change."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <BorderRadiusDemo />
-            <CodeBlock>{`<Button variant="primary" style={{ borderRadius: 999 }}>Pill</Button>
-
-{/* Icon-only — pair with aspect-ratio: 1 + paddingInline: 0 so
-    the chosen radius reads as a true circle / pill. */}
-<Button
-  variant="primary"
-  aria-label="Add"
-  icon={<PlusIcon />}
-  style={{ borderRadius: "50%", aspectRatio: 1, paddingInline: 0 }}
-/>
-
-{/* Theme-wide via the PF6 token: */}
-:where([data-brand="rounded"]) {
-  --pf-v6-c-button--BorderRadius: 12px;
-}`}</CodeBlock>
-          </div>
+          <Example
+            source={buttonExampleSrc}
+            region="BorderRadius"
+            fileName="Button.example.tsx"
+          >
+            <BorderRadius />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Most-used props" description="Full prop surface in the PatternFly docs.">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "variant",
-                  type: '"primary" | "secondary" | "tertiary" | "danger" | "warning" | "link" | "plain" | "control" | "stateful"',
-                  description: "Visual style indicating action priority. Default: primary.",
-                },
-                {
-                  name: "isDisabled",
-                  type: "boolean",
-                  description: "Sets the native HTML disabled attribute. Removes the button from the tab order.",
-                },
-                {
-                  name: "isAriaDisabled",
-                  type: "boolean",
-                  description: "Communicates disabled state via aria-disabled. Stays focusable — better for tooltips explaining why the action is unavailable.",
-                },
-                {
-                  name: "isLoading",
-                  type: "boolean",
-                  description: "Replaces label with a spinner. Pair with spinnerAriaLabel.",
-                },
-                {
-                  name: "spinnerAriaLabel",
-                  type: "string",
-                  description: "Accessible label for the loading spinner. Required when isLoading is true.",
-                },
-                {
-                  name: "isBlock",
-                  type: "boolean",
-                  description: "Stretches the button to fill its container's width.",
-                },
-                {
-                  name: "isInline",
-                  type: "boolean",
-                  description: 'For variant="link" — drops button padding so the link sits inline with surrounding text.',
-                },
-                {
-                  name: "icon",
-                  type: "ReactNode",
-                  description: "Icon rendered alongside the label. Use iconPosition to control placement.",
-                },
-                {
-                  name: "iconPosition",
-                  type: '"start" | "end" | "left" | "right"',
-                  description: "Logical-property placement preferred (start/end) — respects RTL.",
-                },
-                {
-                  name: "component",
-                  type: "ElementType",
-                  description: 'Render as a different element. Use "a" with href to make a link styled as a button.',
-                },
-                {
-                  name: "type",
-                  type: '"button" | "submit" | "reset"',
-                  description: "Native HTML type. Inside a Form, default is submit — set explicitly to avoid surprise submits.",
-                },
-              ]}
-            />
-          </div>
+          <Example source={buttonExampleSrc} fileName="Button.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Button } from "@golden-passport/ds-patternfly";'}
+        componentSource={buttonComponentSrc}
+        componentFileName="Button.tsx"
+        rows={[
+          {
+            name: "variant",
+            type: '"primary" | "secondary" | "tertiary" | "danger" | "warning" | "link" | "plain" | "control" | "stateful"',
+            description: "Visual style indicating action priority. Default: primary.",
+          },
+          {
+            name: "isDisabled",
+            type: "boolean",
+            description: "Sets the native HTML disabled attribute. Removes the button from the tab order.",
+          },
+          {
+            name: "isAriaDisabled",
+            type: "boolean",
+            description: "Communicates disabled state via aria-disabled. Stays focusable — better for tooltips explaining why the action is unavailable.",
+          },
+          {
+            name: "isLoading",
+            type: "boolean",
+            description: "Replaces label with a spinner. Pair with spinnerAriaLabel.",
+          },
+          {
+            name: "spinnerAriaLabel",
+            type: "string",
+            description: "Accessible label for the loading spinner. Required when isLoading is true.",
+          },
+          {
+            name: "isBlock",
+            type: "boolean",
+            description: "Stretches the button to fill its container's width.",
+          },
+          {
+            name: "isInline",
+            type: "boolean",
+            description: 'For variant="link" — drops button padding so the link sits inline with surrounding text.',
+          },
+          {
+            name: "icon",
+            type: "ReactNode",
+            description: "Icon rendered alongside the label. Use iconPosition to control placement.",
+          },
+          {
+            name: "iconPosition",
+            type: '"start" | "end" | "left" | "right"',
+            description: "Logical-property placement preferred (start/end) — respects RTL.",
+          },
+          {
+            name: "component",
+            type: "ElementType",
+            description: 'Render as a different element. Use "a" with href to make a link styled as a button.',
+          },
+          {
+            name: "type",
+            type: '"button" | "submit" | "reset"',
+            description: "Native HTML type. Inside a Form, default is submit — set explicitly to avoid surprise submits.",
+          },
+        ]}
+      />
 
       <Section
         title="Accessibility"

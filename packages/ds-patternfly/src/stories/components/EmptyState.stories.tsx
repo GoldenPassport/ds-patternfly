@@ -1,20 +1,20 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  Button,
-  EmptyState,
-  EmptyStateActions,
-  EmptyStateBody,
-  EmptyStateFooter,
-  Spinner,
-} from "@golden-passport/ds-patternfly";
+  FoundationPage,
+  Section,
+  Card,
+  Example,
+  ThemingPointer,
+} from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 import {
-  CubesIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-  SearchIcon,
-} from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+  Basic,
+  NoResults,
+  Loading,
+  WithStatus,
+  Sizes,
+} from "../../examples/components/EmptyState.example.js";
+import emptyStateExampleSrc from "../../examples/components/EmptyState.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/EmptyState",
@@ -53,44 +53,13 @@ export const Overview: StoryObj = {
         description="Icon + title + body + a primary action that lets the user populate the list. Use this shape when the collection has never had anything in it (first-run / empty workspace)."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <EmptyState
-                titleText="No projects yet"
-                headingLevel="h2"
-                icon={CubesIcon}
-              >
-                <EmptyStateBody>
-                  Projects collect related workflows and resources.
-                  Create your first one to get started.
-                </EmptyStateBody>
-                <EmptyStateFooter>
-                  <EmptyStateActions>
-                    <Button variant="primary">Create project</Button>
-                  </EmptyStateActions>
-                  <EmptyStateActions>
-                    <Button variant="link">Import from template</Button>
-                    <Button variant="link">View documentation</Button>
-                  </EmptyStateActions>
-                </EmptyStateFooter>
-              </EmptyState>
-            </DemoFrame>
-            <CodeBlock>{`<EmptyState titleText="No projects yet" headingLevel="h2" icon={CubesIcon}>
-  <EmptyStateBody>
-    Projects collect related workflows and resources. Create your first one
-    to get started.
-  </EmptyStateBody>
-  <EmptyStateFooter>
-    <EmptyStateActions>
-      <Button variant="primary">Create project</Button>
-    </EmptyStateActions>
-    <EmptyStateActions>
-      <Button variant="link">Import from template</Button>
-      <Button variant="link">View documentation</Button>
-    </EmptyStateActions>
-  </EmptyStateFooter>
-</EmptyState>`}</CodeBlock>
-          </div>
+          <Example
+            source={emptyStateExampleSrc}
+            region="Basic"
+            fileName="EmptyState.example.tsx"
+          >
+            <Basic />
+          </Example>
         </Card>
       </Section>
 
@@ -99,25 +68,13 @@ export const Overview: StoryObj = {
         description="Different shape from the first-run empty state — the user already had data and filtered it away. Surface a clear escape ('Clear filters') as the primary action; the icon is a search/filter glyph, not the collection's identity icon."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <EmptyState
-                titleText="No matching tasks"
-                headingLevel="h2"
-                icon={SearchIcon}
-              >
-                <EmptyStateBody>
-                  No tasks match the current filters. Try clearing some
-                  filters or broadening the search.
-                </EmptyStateBody>
-                <EmptyStateFooter>
-                  <EmptyStateActions>
-                    <Button variant="link">Clear all filters</Button>
-                  </EmptyStateActions>
-                </EmptyStateFooter>
-              </EmptyState>
-            </DemoFrame>
-          </div>
+          <Example
+            source={emptyStateExampleSrc}
+            region="NoResults"
+            fileName="EmptyState.example.tsx"
+          >
+            <NoResults />
+          </Example>
         </Card>
       </Section>
 
@@ -126,15 +83,13 @@ export const Overview: StoryObj = {
         description="Pass a Spinner as the icon for an in-flight loader empty state. Use when the surrounding view doesn't already show a different loading affordance and the wait is long enough to need orientation."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <EmptyState
-                titleText="Loading"
-                headingLevel="h2"
-                icon={Spinner}
-              />
-            </DemoFrame>
-          </div>
+          <Example
+            source={emptyStateExampleSrc}
+            region="Loading"
+            fileName="EmptyState.example.tsx"
+          >
+            <Loading />
+          </Example>
         </Card>
       </Section>
 
@@ -143,40 +98,13 @@ export const Overview: StoryObj = {
         description="status drives a tinted icon background for success / warning / danger / info / custom. Use for end-state confirmations or error states where the colour cue helps."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <EmptyState
-                status="danger"
-                titleText="Couldn't load tasks"
-                headingLevel="h2"
-                icon={ExclamationCircleIcon}
-              >
-                <EmptyStateBody>
-                  The server returned an error. Retry the request, or check
-                  the run logs for details.
-                </EmptyStateBody>
-                <EmptyStateFooter>
-                  <EmptyStateActions>
-                    <Button variant="primary">Retry</Button>
-                    <Button variant="link">View logs</Button>
-                  </EmptyStateActions>
-                </EmptyStateFooter>
-              </EmptyState>
-            </DemoFrame>
-            <DemoFrame>
-              <EmptyState
-                status="warning"
-                titleText="Partial results"
-                headingLevel="h2"
-                icon={ExclamationTriangleIcon}
-              >
-                <EmptyStateBody>
-                  Some sources returned no data. Showing what loaded
-                  successfully.
-                </EmptyStateBody>
-              </EmptyState>
-            </DemoFrame>
-          </div>
+          <Example
+            source={emptyStateExampleSrc}
+            region="WithStatus"
+            fileName="EmptyState.example.tsx"
+          >
+            <WithStatus />
+          </Example>
         </Card>
       </Section>
 
@@ -185,29 +113,22 @@ export const Overview: StoryObj = {
         description="variant controls the overall scale (xs / sm / lg / xl). Default works for full-page placeholders; use sm inside Drawer / Popover / Card; xs for inline empty rows."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-            <DemoFrame>
-              <EmptyState
-                variant="xs"
-                titleText="Inline empty"
-                headingLevel="h4"
-              >
-                <EmptyStateBody>For empty rows in a list.</EmptyStateBody>
-              </EmptyState>
-            </DemoFrame>
-            <DemoFrame>
-              <EmptyState
-                variant="sm"
-                titleText="Compact empty"
-                headingLevel="h4"
-                icon={CubesIcon}
-              >
-                <EmptyStateBody>
-                  For empty Drawers / Cards / Popovers.
-                </EmptyStateBody>
-              </EmptyState>
-            </DemoFrame>
-          </div>
+          <Example
+            source={emptyStateExampleSrc}
+            region="Sizes"
+            fileName="EmptyState.example.tsx"
+          >
+            <Sizes />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={emptyStateExampleSrc} fileName="EmptyState.example.tsx" />
         </Card>
       </Section>
 

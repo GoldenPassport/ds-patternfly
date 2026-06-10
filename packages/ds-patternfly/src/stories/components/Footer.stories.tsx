@@ -1,8 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { PageSection } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
-import { AcmeLogo } from "../_kit/AcmeLogo.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import {
+  Compact,
+  MultiColumn,
+  BuildInfo,
+} from "../../examples/components/Footer.example.js";
+import footerExampleSrc from "../../examples/components/Footer.example.tsx?raw";
+import pageComponentSrc from "../../components/Page.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Footer",
@@ -52,40 +62,13 @@ export const Overview: StoryObj = {
         description="Single-row footer with copyright on the left and inline link group on the right. Default for the lib's Shell — see Layouts → Shell."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <PageSection component="footer" variant="secondary">
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 16,
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    color: "var(--gp-color-text-subtle)",
-                    fontSize: 13,
-                  }}
-                >
-                  <span>© 2026 Acme — Internal build · v1.4.2</span>
-                  <span style={{ display: "inline-flex", gap: 16 }}>
-                    <a href="#" style={{ color: "inherit" }}>Privacy</a>
-                    <a href="#" style={{ color: "inherit" }}>Terms</a>
-                    <a href="#" style={{ color: "inherit" }}>Status</a>
-                  </span>
-                </div>
-              </PageSection>
-            </DemoFrame>
-            <CodeBlock>{`<PageSection component="footer" variant="secondary">
-  <div style={{ display: "flex", justifyContent: "space-between" }}>
-    <span>© 2026 Acme — v1.4.2</span>
-    <span style={{ display: "inline-flex", gap: 16 }}>
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
-      <a href="/status">Status</a>
-    </span>
-  </div>
-</PageSection>`}</CodeBlock>
-          </div>
+          <Example
+            source={footerExampleSrc}
+            region="Compact"
+            fileName="Footer.example.tsx"
+          >
+            <Compact />
+          </Example>
         </Card>
       </Section>
 
@@ -94,131 +77,13 @@ export const Overview: StoryObj = {
         description="Four-column grid with link lists + brand. Use on public landing pages, docs sites, marketing surfaces. The Gallery is intentionally responsive — columns stack on narrow viewports."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <PageSection component="footer" variant="secondary">
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-                    gap: 32,
-                    color: "var(--gp-color-text-regular)",
-                  }}
-                >
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <AcmeLogo />
-                    <p
-                      style={{
-                        margin: 0,
-                        color: "var(--gp-color-text-subtle)",
-                        fontSize: 13,
-                        lineHeight: 1.55,
-                      }}
-                    >
-                      The workflow engine behind 1,200+ enterprise teams.
-                    </p>
-                  </div>
-                  {[
-                    {
-                      title: "Product",
-                      links: ["Overview", "Pricing", "Roadmap", "Changelog"],
-                    },
-                    {
-                      title: "Developers",
-                      links: ["Docs", "API reference", "Status", "Releases"],
-                    },
-                    {
-                      title: "Company",
-                      links: ["About", "Careers", "Blog", "Contact"],
-                    },
-                  ].map((col) => (
-                    <nav key={col.title} aria-label={col.title}>
-                      <h2
-                        style={{
-                          fontSize: 13,
-                          fontWeight: 700,
-                          letterSpacing: 0.4,
-                          textTransform: "uppercase",
-                          margin: "0 0 12px",
-                          color: "var(--gp-color-text-subtle)",
-                        }}
-                      >
-                        {col.title}
-                      </h2>
-                      <ul
-                        style={{
-                          listStyle: "none",
-                          padding: 0,
-                          margin: 0,
-                          display: "grid",
-                          gap: 8,
-                        }}
-                      >
-                        {col.links.map((link) => (
-                          <li key={link}>
-                            <a
-                              href="#"
-                              style={{
-                                color: "var(--gp-color-text-regular)",
-                                fontSize: 14,
-                                textDecoration: "none",
-                              }}
-                            >
-                              {link}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </nav>
-                  ))}
-                </div>
-                <div
-                  style={{
-                    marginTop: 24,
-                    paddingTop: 16,
-                    borderTop: "1px solid var(--gp-color-border-subtle)",
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "space-between",
-                    gap: 12,
-                    color: "var(--gp-color-text-subtle)",
-                    fontSize: 13,
-                  }}
-                >
-                  <span>© 2026 Acme, Inc. All rights reserved.</span>
-                  <span style={{ display: "inline-flex", gap: 16 }}>
-                    <a href="#" style={{ color: "inherit" }}>Privacy</a>
-                    <a href="#" style={{ color: "inherit" }}>Terms</a>
-                    <a href="#" style={{ color: "inherit" }}>Cookies</a>
-                  </span>
-                </div>
-              </PageSection>
-            </DemoFrame>
-            <CodeBlock>{`<PageSection component="footer" variant="secondary">
-  <div style={{
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-    gap: 32,
-  }}>
-    <div>
-      <Brand src="/logo.svg" alt="Acme" />
-      <p>Short product blurb.</p>
-    </div>
-
-    <nav aria-label="Product">
-      <h2>Product</h2>
-      <ul>{/* link list */}</ul>
-    </nav>
-
-    {/* … further nav columns … */}
-  </div>
-
-  <div style={{ marginTop: 24, paddingTop: 16, borderTop: "1px solid …" }}>
-    <span>© 2026 Acme, Inc.</span>
-    <span>{/* legal links */}</span>
-  </div>
-</PageSection>`}</CodeBlock>
-          </div>
+          <Example
+            source={footerExampleSrc}
+            region="MultiColumn"
+            fileName="Footer.example.tsx"
+          >
+            <MultiColumn />
+          </Example>
         </Card>
       </Section>
 
@@ -227,106 +92,57 @@ export const Overview: StoryObj = {
         description="Left side carries deployment metadata (env, version, last deployed); right side carries support / runbook links. Status dot uses the brand-token surface colours so it follows the active theme."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <PageSection component="footer" variant="secondary">
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 16,
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    color: "var(--gp-color-text-subtle)",
-                    fontSize: 13,
-                  }}
-                >
-                  <span style={{ display: "inline-flex", gap: 16, alignItems: "center" }}>
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        gap: 6,
-                        alignItems: "center",
-                      }}
-                    >
-                      <span
-                        aria-hidden="true"
-                        style={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: "50%",
-                          background: "var(--gp-color-status-success-bg, #3e8635)",
-                        }}
-                      />
-                      <span>Production</span>
-                    </span>
-                    <span>·</span>
-                    <span>
-                      <strong>v1.4.2</strong>{" "}
-                      <code style={{ fontSize: 12 }}>(3f1a2b9)</code>
-                    </span>
-                    <span>·</span>
-                    <span>Deployed 2h ago</span>
-                  </span>
-                  <span style={{ display: "inline-flex", gap: 16 }}>
-                    <a href="#" style={{ color: "inherit" }}>Runbooks</a>
-                    <a href="#" style={{ color: "inherit" }}>Slack #ops</a>
-                    <a href="#" style={{ color: "inherit" }}>Status page</a>
-                  </span>
-                </div>
-              </PageSection>
-            </DemoFrame>
-            <CodeBlock>{`<PageSection component="footer" variant="secondary">
-  <div style={{ display: "flex", justifyContent: "space-between" }}>
-    <span style={{ display: "inline-flex", gap: 16, alignItems: "center" }}>
-      <span aria-hidden style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--gp-color-status-success-bg)" }} />
-      <span>Production</span>
-      <span>·</span>
-      <span><strong>v1.4.2</strong> <code>(3f1a2b9)</code></span>
-      <span>·</span>
-      <span>Deployed 2h ago</span>
-    </span>
-    <span>{/* support links */}</span>
-  </div>
-</PageSection>`}</CodeBlock>
-          </div>
+          <Example
+            source={footerExampleSrc}
+            region="BuildInfo"
+            fileName="Footer.example.tsx"
+          >
+            <BuildInfo />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Most-used PageSection props for footers">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: 'component="footer"',
-                  type: "ElementType",
-                  description:
-                    "Render the section as a <footer> element. Required for landmark semantics.",
-                },
-                {
-                  name: 'variant="secondary"',
-                  type: '"default" | "secondary"',
-                  description:
-                    "Tones the bg to the alt surface so the footer reads as separate from the content above.",
-                },
-                {
-                  name: "padding",
-                  type: "BreakpointObject<'padding' | 'noPadding'>",
-                  description:
-                    "Override the section's padding per breakpoint when the footer needs to bleed edge-to-edge.",
-                },
-                {
-                  name: "isFilled",
-                  type: "boolean",
-                  description:
-                    "Off by default for footers — you don't want it stretching to fill remaining height.",
-                },
-              ]}
-            />
-          </div>
+          <Example source={footerExampleSrc} fileName="Footer.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { PageSection } from "@golden-passport/ds-patternfly";'}
+        componentSource={pageComponentSrc}
+        componentFileName="Page.tsx"
+        description="How to import PageSection and the props most used for footers."
+        rows={[
+          {
+            name: 'component="footer"',
+            type: "ElementType",
+            description:
+              "Render the section as a <footer> element. Required for landmark semantics.",
+          },
+          {
+            name: 'variant="secondary"',
+            type: '"default" | "secondary"',
+            description:
+              "Tones the bg to the alt surface so the footer reads as separate from the content above.",
+          },
+          {
+            name: "padding",
+            type: "BreakpointObject<'padding' | 'noPadding'>",
+            description:
+              "Override the section's padding per breakpoint when the footer needs to bleed edge-to-edge.",
+          },
+          {
+            name: "isFilled",
+            type: "boolean",
+            description:
+              "Off by default for footers — you don't want it stretching to fill remaining height.",
+          },
+        ]}
+      />
 
       <Section title="Accessibility">
         <Card>

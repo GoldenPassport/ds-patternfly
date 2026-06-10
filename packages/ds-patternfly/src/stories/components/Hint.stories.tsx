@@ -1,8 +1,20 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Hint, HintBody, HintFooter, HintTitle } from "@golden-passport/ds-patternfly";
-import { Hyperlink } from "../../components/Hyperlink.js";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+  ThemingPointer,
+} from "../_kit/StoryKit.js";
+import {
+  TitleBodyFooter,
+  ExternalDocsLink,
+  InlineLink,
+  BodyOnly,
+} from "../../examples/components/Hint.example.js";
+import hintExampleSrc from "../../examples/components/Hint.example.tsx?raw";
+import hintComponentSrc from "../../components/Hint.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Hint",
@@ -27,34 +39,13 @@ export const Overview: StoryObj = {
         description='HintFooter links use the Hyperlink component (lib-shipped) — universal blue, always-underlined, target="_blank" auto-adds rel security defaults + an external-link icon + an AT "(opens in a new tab)" announcement. Use Hyperlink for navigation; reserve Button variant="link" for actions that don&apos;t change URL.'
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Hint>
-                <HintTitle>New: bulk task assignment</HintTitle>
-                <HintBody>
-                  Select multiple tasks in the list and use the toolbar to
-                  assign them all at once.
-                </HintBody>
-                <HintFooter>
-                  <Hyperlink href="/docs/bulk-assignment">
-                    Read the docs
-                  </Hyperlink>
-                </HintFooter>
-              </Hint>
-            </DemoFrame>
-            <CodeBlock>{`import { Hyperlink } from "@golden-passport/ds-patternfly";
-
-<Hint>
-  <HintTitle>New: bulk task assignment</HintTitle>
-  <HintBody>
-    Select multiple tasks in the list and use the toolbar to
-    assign them all at once.
-  </HintBody>
-  <HintFooter>
-    <Hyperlink href="/docs/bulk-assignment">Read the docs</Hyperlink>
-  </HintFooter>
-</Hint>`}</CodeBlock>
-          </div>
+          <Example
+            source={hintExampleSrc}
+            region="TitleBodyFooter"
+            fileName="Hint.example.tsx"
+          >
+            <TitleBodyFooter />
+          </Example>
         </Card>
       </Section>
 
@@ -63,97 +54,76 @@ export const Overview: StoryObj = {
         description='target="_blank" — Hyperlink auto-adds rel="noopener noreferrer", a small external-link icon, and a screen-reader "(opens in a new tab)" announcement. Same component, four security/a11y defaults consumers reliably forget on raw <a>.'
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Hint>
-                <HintTitle>Tip — keyboard shortcuts</HintTitle>
-                <HintBody>
-                  Press <kbd>?</kbd> anywhere to open the full shortcut
-                  reference.
-                </HintBody>
-                <HintFooter>
-                  <Hyperlink
-                    href="https://www.patternfly.org/components/hint"
-                    target="_blank"
-                  >
-                    Hint component reference
-                  </Hyperlink>
-                </HintFooter>
-              </Hint>
-            </DemoFrame>
-            <CodeBlock>{`<Hint>
-  <HintTitle>Tip — keyboard shortcuts</HintTitle>
-  <HintBody>Press <kbd>?</kbd> anywhere to open the full shortcut reference.</HintBody>
-  <HintFooter>
-    <Hyperlink href="https://www.patternfly.org/components/hint" target="_blank">
-      Hint component reference
-    </Hyperlink>
-  </HintFooter>
-</Hint>`}</CodeBlock>
-          </div>
+          <Example
+            source={hintExampleSrc}
+            region="ExternalDocsLink"
+            fileName="Hint.example.tsx"
+          >
+            <ExternalDocsLink />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Inline link in the body" description="Hyperlink works inline inside HintBody prose.">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Hint>
-                <HintBody>
-                  Tip: hold Shift to select a range of tasks. See the{" "}
-                  <Hyperlink href="/docs/selection">
-                    selection model
-                  </Hyperlink>{" "}
-                  for the full keyboard reference.
-                </HintBody>
-              </Hint>
-            </DemoFrame>
-          </div>
+          <Example
+            source={hintExampleSrc}
+            region="InlineLink"
+            fileName="Hint.example.tsx"
+          >
+            <InlineLink />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Body only" description="Drop the title and footer for a one-line nudge.">
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <Hint>
-                <HintBody>Tip: hold Shift to select a range of tasks.</HintBody>
-              </Hint>
-            </DemoFrame>
-          </div>
+          <Example
+            source={hintExampleSrc}
+            region="BodyOnly"
+            fileName="Hint.example.tsx"
+          >
+            <BodyOnly />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Composition">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "Hint",
-                  type: "container",
-                  description: "Wraps the hint surface. Pass actions prop to add a top-right action button (e.g. dismiss).",
-                },
-                {
-                  name: "HintTitle",
-                  type: "child",
-                  description: "Optional emphasized headline at the top of the hint.",
-                },
-                {
-                  name: "HintBody",
-                  type: "child",
-                  description: "Required. The hint's main message.",
-                },
-                {
-                  name: "HintFooter",
-                  type: "child",
-                  description: "Optional bottom row. For navigation links use the lib's Hyperlink component (handles rel security, external icon, and AT announcements). For actions that don't change URL, use Button variant=\"link\".",
-                },
-              ]}
-            />
-          </div>
+          <Example source={hintExampleSrc} fileName="Hint.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Hint, HintTitle, HintBody, HintFooter, Hyperlink } from "@golden-passport/ds-patternfly";'}
+        componentSource={hintComponentSrc}
+        componentFileName="Hint.tsx"
+        rows={[
+          {
+            name: "Hint",
+            type: "container",
+            description: "Wraps the hint surface. Pass actions prop to add a top-right action button (e.g. dismiss).",
+          },
+          {
+            name: "HintTitle",
+            type: "child",
+            description: "Optional emphasized headline at the top of the hint.",
+          },
+          {
+            name: "HintBody",
+            type: "child",
+            description: "Required. The hint's main message.",
+          },
+          {
+            name: "HintFooter",
+            type: "child",
+            description: "Optional bottom row. For navigation links use the lib's Hyperlink component (handles rel security, external icon, and AT announcements). For actions that don't change URL, use Button variant=\"link\".",
+          },
+        ]}
+      />
 
       <Section
         title="Accessibility"

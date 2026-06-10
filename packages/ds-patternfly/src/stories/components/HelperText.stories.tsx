@@ -1,7 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { HelperText, HelperTextItem } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  CodeBlock,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  SingleHelper,
+  ValidationStates,
+} from "../../examples/components/HelperText.example.js";
+import helperTextExampleSrc from "../../examples/components/HelperText.example.tsx?raw";
+import helperTextComponentSrc from "../../components/HelperText.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/HelperText",
@@ -25,31 +37,25 @@ export const Overview: StoryObj = {
     >
       <Section title="Single helper">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <HelperText>
-                <HelperTextItem>Use 8 or more characters.</HelperTextItem>
-              </HelperText>
-            </DemoFrame>
-            <CodeBlock>{`<HelperText>
-  <HelperTextItem>Use 8 or more characters.</HelperTextItem>
-</HelperText>`}</CodeBlock>
-          </div>
+          <Example
+            source={helperTextExampleSrc}
+            region="SingleHelper"
+            fileName="HelperText.example.tsx"
+          >
+            <SingleHelper />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Validation states">
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <HelperText>
-                <HelperTextItem variant="default">Default state</HelperTextItem>
-                <HelperTextItem variant="success">Looks good</HelperTextItem>
-                <HelperTextItem variant="warning">Could be stronger</HelperTextItem>
-                <HelperTextItem variant="error">Required</HelperTextItem>
-              </HelperText>
-            </DemoFrame>
-          </div>
+          <Example
+            source={helperTextExampleSrc}
+            region="ValidationStates"
+            fileName="HelperText.example.tsx"
+          >
+            <ValidationStates />
+          </Example>
         </Card>
       </Section>
 
@@ -75,20 +81,26 @@ export const Overview: StoryObj = {
         </Card>
       </Section>
 
-      <Section title="HelperText props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                { name: "component", type: '"div" | "ul"', description: 'Container type. Use "ul" when you have multiple items, "div" for a single inline message.' },
-                { name: "id", type: "string", description: "ID to reference from the form field's aria-describedby." },
-                { name: "isLiveRegion", type: "boolean", description: "Marks the container as aria-live=\"polite\" so updates are announced." },
-                { name: "aria-label", type: "string", description: 'Required when component="ul" — labels the list for screen readers.' },
-              ]}
-            />
-          </div>
+          <Example source={helperTextExampleSrc} fileName="HelperText.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { HelperText, HelperTextItem } from "@golden-passport/ds-patternfly";'}
+        componentSource={helperTextComponentSrc}
+        componentFileName="HelperText.tsx"
+        rows={[
+          { name: "component", type: '"div" | "ul"', description: 'Container type. Use "ul" when you have multiple items, "div" for a single inline message.' },
+          { name: "id", type: "string", description: "ID to reference from the form field's aria-describedby." },
+          { name: "isLiveRegion", type: "boolean", description: "Marks the container as aria-live=\"polite\" so updates are announced." },
+          { name: "aria-label", type: "string", description: 'Required when component="ul" — labels the list for screen readers.' },
+        ]}
+      />
 
       <Section title="HelperTextItem props">
         <Card>

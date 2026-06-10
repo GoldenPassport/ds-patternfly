@@ -1,5 +1,11 @@
 /**
- * DatePicker — a text input paired with a popover calendar.
+ * DateTimePicker — paired DatePicker + TimePicker under one FormGroup.
+ *
+ * PF6 doesn't ship a single "date and time" component — the recommended
+ * pattern is two paired controls: a date input and a time input,
+ * side-by-side. This file carries the full lib date-picker recipe
+ * (LibDatePicker + CalendarPanel + responsive Popover/BottomSheet shell)
+ * so the example is self-contained.
  *
  * App-entry setup (one time, e.g. main.tsx):
  *   import "@patternfly/react-core/dist/styles/base.css"; // PF6 base FIRST
@@ -13,12 +19,11 @@ import {
   ButtonVariant,
   CalendarMonth,
   FormGroup,
-  HelperText,
-  HelperTextItem,
   InputGroup,
   InputGroupItem,
   Popover,
   TextInput,
+  TimePicker,
 } from "../../_lib.js";
 import {
   AngleLeftIcon,
@@ -30,7 +35,7 @@ import {
 // Element ids derive from useId() so any number of instances can coexist
 // on one page without duplicate-id clashes.
 
-// ---------- Date helpers used across the demos ----------
+// ---------- Date helpers ----------
 
 // Default display format: DD/MM/YYYY (rest-of-world convention).
 // US-style is MM/DD/YYYY — switchable via the formats demo below.
@@ -42,36 +47,6 @@ const parseDDMMYYYY = (s: string): Date => {
   if (!m) return new Date("invalid");
   return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
 };
-const fmtMMDDYYYY = (d: Date) =>
-  `${pad(d.getMonth() + 1)}/${pad(d.getDate())}/${d.getFullYear()}`;
-const parseMMDDYYYY = (s: string): Date => {
-  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (!m) return new Date("invalid");
-  return new Date(Number(m[3]), Number(m[1]) - 1, Number(m[2]));
-};
-const fmtISO = (d: Date) =>
-  `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-const parseISO = (s: string): Date => {
-  const m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-  if (!m) return new Date("invalid");
-  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-};
-
-// French month names — illustrates i18n month-list customization.
-const monthsFR = [
-  "janvier",
-  "février",
-  "mars",
-  "avril",
-  "mai",
-  "juin",
-  "juillet",
-  "août",
-  "septembre",
-  "octobre",
-  "novembre",
-  "décembre",
-];
 
 /**
  * Tracks a `(max-width: …)` match. Re-evaluates on resize so the lib
@@ -279,115 +254,6 @@ function CalendarPopout({
     >
       {children}
     </Popover>
-  );
-}
-
-/**
- * Default-section date picker — adapts between Popover (md+ desktop)
- * and a bottom-anchored Sheet (below md, mobile/touch). Same
- * CalendarPanel runs in both shells.
- */
-function DefaultDatePicker({
-  id,
-  value,
-  onChange,
-}: {
-  id: string;
-  value: string;
-  onChange: (next: string) => void;
-}) {
-  const isMobile = useMobileViewport();
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const parsed = parseDDMMYYYY(value);
-  const valid = !Number.isNaN(parsed.getTime());
-
-  const calendar = (
-    <CalendarPanel
-      {...(valid ? { date: parsed } : {})}
-      onChange={(d) => {
-        onChange(fmtDDMMYYYY(d));
-        if (isMobile) setSheetOpen(false);
-      }}
-    />
-  );
-
-  const triggerStyle = {
-    borderRadius:
-      "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))",
-    aspectRatio: "1",
-    paddingInline: 0,
-  } as const;
-
-  return (
-    <>
-      <InputGroup style={{ maxWidth: 240 }}>
-        <InputGroupItem isFill>
-          <TextInput
-            id={id}
-            value={value}
-            onChange={(_e, v) => onChange(v)}
-            placeholder="DD/MM/YYYY"
-            aria-label="Due date"
-          />
-        </InputGroupItem>
-        <InputGroupItem>
-          {isMobile ? (
-            <Button
-              variant={ButtonVariant.tertiary}
-              aria-label="Open date picker"
-              icon={<CalendarAltIcon />}
-              onClick={() => setSheetOpen(true)}
-              style={triggerStyle}
-            />
-          ) : (
-            <Popover
-              headerContent="Pick a date"
-              bodyContent={calendar}
-              hasAutoWidth
-              showClose={false}
-              // Preferred position is bottom-end (popover right edge
-              // aligned with the trigger so the caret sits under the
-              // calendar button). `flipBehavior` lists every fallback
-              // Popper should try when the preferred edge runs out of
-              // viewport room — both block-axis (top/bottom) and
-              // inline-axis (-start/-end) variants. Popper picks the
-              // first that fits.
-              position="bottom-end"
-              flipBehavior={[
-                "bottom-end",
-                "bottom",
-                "bottom-start",
-                "top-end",
-                "top",
-                "top-start",
-              ]}
-              // Keep at least 8px clear of every viewport edge as the
-              // popover slides toward a corner. Default would let the
-              // popover hug the edge.
-              distance={8}
-              appendTo={() => document.body}
-              elementToFocus=".pf-v6-c-calendar-month__date.pf-m-selected, .pf-v6-c-calendar-month__date.pf-m-current"
-            >
-              <Button
-                variant={ButtonVariant.tertiary}
-                aria-label="Open date picker"
-                icon={<CalendarAltIcon />}
-                style={triggerStyle}
-              />
-            </Popover>
-          )}
-        </InputGroupItem>
-      </InputGroup>
-      {isMobile && (
-        <BottomSheet
-          open={sheetOpen}
-          onClose={() => setSheetOpen(false)}
-          ariaLabel="Pick a date"
-        >
-          {calendar}
-        </BottomSheet>
-      )}
-    </>
   );
 }
 
@@ -854,251 +720,27 @@ function LibDatePicker({
   );
 }
 
-// #region Default
-export function Default() {
+// #region SideBySide
+export function SideBySide() {
   const id = useId();
-  const [v, setV] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
 
   return (
-    <FormGroup label="Due date" fieldId={id} isRequired>
-      <DefaultDatePicker id={id} value={v} onChange={setV} />
-    </FormGroup>
-  );
-}
-// #endregion
-
-// #region CustomCTA
-export function CustomCTA() {
-  const [primaryDate, setPrimaryDate] = useState<Date>(new Date());
-  const [secondaryDate, setSecondaryDate] = useState<Date>(new Date());
-  const [linkDate, setLinkDate] = useState<Date>(new Date());
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        gap: 16,
-        flexWrap: "wrap",
-        alignItems: "center",
-      }}
-    >
-      {/* Primary — strongest CTA. CalendarPopout handles
-          the responsive shell (Popover on desktop, bottom
-          Sheet on mobile) + the three-view CalendarPanel. */}
-      <div>
-        <CalendarPopout date={primaryDate} onChange={setPrimaryDate}>
-          <Button variant="primary" icon={<CalendarAltIcon />}>
-            Schedule
-          </Button>
-        </CalendarPopout>
-        <div
-          style={{
-            marginTop: 8,
-            fontSize: 14,
-            color: "var(--gp-color-text-subtle)",
-          }}
-        >
-          {primaryDate.toLocaleDateString()}
-        </div>
-      </div>
-
-      {/* Secondary / outline. */}
-      <div>
-        <CalendarPopout date={secondaryDate} onChange={setSecondaryDate}>
-          <Button variant="secondary" icon={<CalendarAltIcon />}>
-            Choose date
-          </Button>
-        </CalendarPopout>
-        <div
-          style={{
-            marginTop: 8,
-            fontSize: 14,
-            color: "var(--gp-color-text-subtle)",
-          }}
-        >
-          {secondaryDate.toLocaleDateString()}
-        </div>
-      </div>
-
-      {/* Link / inline. */}
-      <div>
-        <CalendarPopout date={linkDate} onChange={setLinkDate}>
-          <Button variant="link" icon={<CalendarAltIcon />}>
-            Set deadline
-          </Button>
-        </CalendarPopout>
-        <div
-          style={{
-            marginTop: 8,
-            fontSize: 14,
-            color: "var(--gp-color-text-subtle)",
-          }}
-        >
-          {linkDate.toLocaleDateString()}
-        </div>
-      </div>
-    </div>
-  );
-}
-// #endregion
-
-// #region FormatVariants
-export function FormatVariants() {
-  const id = useId();
-  const [usDate, setUsDate] = useState("");
-  const [isoDate, setIsoDate] = useState("");
-
-  return (
-    <div style={{ display: "grid", gap: 12 }}>
-      <FormGroup label="US — MM/DD/YYYY" fieldId={`${id}-us`}>
-        <LibDatePicker
-          id={`${id}-us`}
-          value={usDate}
-          onChange={setUsDate}
-          dateFormat={fmtMMDDYYYY}
-          dateParse={parseMMDDYYYY}
-          placeholder="MM/DD/YYYY"
-          ariaLabel="US format date"
-          buttonAriaLabel="Open date picker"
-        />
-      </FormGroup>
-      <FormGroup label="ISO — YYYY-MM-DD" fieldId={`${id}-iso`}>
-        <LibDatePicker
-          id={`${id}-iso`}
-          value={isoDate}
-          onChange={setIsoDate}
-          dateFormat={fmtISO}
-          dateParse={parseISO}
-          placeholder="YYYY-MM-DD"
-          ariaLabel="ISO format date"
-          buttonAriaLabel="Open date picker"
-        />
-      </FormGroup>
-    </div>
-  );
-}
-// #endregion
-
-// #region MinMax
-export function MinMax() {
-  const id = useId();
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const [v, setV] = useState("");
-
-  return (
-    <FormGroup
-      label="Booking — today through 30 days out"
-      fieldId={id}
-      isRequired
-    >
-      <LibDatePicker
-        id={id}
-        value={v}
-        onChange={setV}
-        ariaLabel="Booking date"
-        buttonAriaLabel="Open date picker"
-        validators={[
-          (date) =>
-            date >= today &&
-            date.getTime() <= today.getTime() + 30 * 24 * 60 * 60 * 1000,
-        ]}
-      />
-    </FormGroup>
-  );
-}
-// #endregion
-
-// #region ExcludedDates
-export function ExcludedDates() {
-  const id = useId();
-  const [v, setV] = useState("");
-
-  return (
-    <FormGroup label="Available booking dates" fieldId={id} isRequired>
-      <LibDatePicker
-        id={id}
-        value={v}
-        onChange={setV}
-        ariaLabel="Booking date (excluded list)"
-        buttonAriaLabel="Open date picker"
-        validators={[
-          // Set-membership check on YYYY-MM-DD strings — O(1)
-          // per cell, fast on large lists. Returning `false`
-          // disables the cell in the calendar.
-          (date) => {
-            const excluded = new Set([
-              "2026-01-01", // New Year's Day
-              "2026-01-26", // OOO
-              "2026-04-03", // Good Friday
-              "2026-04-06", // Easter Monday
-              "2026-12-25", // Christmas Day
-              "2026-12-26", // Boxing Day
-            ]);
-            const iso = `${date.getFullYear()}-${pad(
-              date.getMonth() + 1,
-            )}-${pad(date.getDate())}`;
-            return !excluded.has(iso);
-          },
-        ]}
-      />
-    </FormGroup>
-  );
-}
-// #endregion
-
-// #region DateRange
-export function DateRange() {
-  const id = useId();
-  const [rangeStart, setRangeStart] = useState("");
-  const [rangeEnd, setRangeEnd] = useState("");
-
-  return (
-    <FormGroup label="Trip dates" fieldId={id} isRequired>
-      <div
-        style={{
-          display: "flex",
-          gap: 12,
-          alignItems: "center",
-          flexWrap: "wrap",
-        }}
-      >
+    <FormGroup label="Schedule for" isRequired fieldId={id}>
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
         <LibDatePicker
           id={id}
-          value={rangeStart}
-          onChange={setRangeStart}
-          placeholder="From"
-          ariaLabel="Trip start date"
-          buttonAriaLabel="Open start date picker"
+          value={date}
+          onChange={setDate}
+          ariaLabel="Schedule date"
+          buttonAriaLabel="Open date picker"
         />
-        <span
-          style={{
-            color: "var(--gp-color-text-subtle)",
-            fontFamily: "var(--gp-font-family)",
-          }}
-        >
-          to
-        </span>
-        <LibDatePicker
-          value={rangeEnd}
-          onChange={setRangeEnd}
-          placeholder="To"
-          ariaLabel="Trip end date"
-          buttonAriaLabel="Open end date picker"
-          validators={[
-            (date) => {
-              if (!rangeStart) return true;
-              const start = parseDDMMYYYY(rangeStart);
-              if (Number.isNaN(start.getTime())) return true;
-              return date >= start;
-            },
-          ]}
-          // Highlight the span between start and the cell
-          // hovered/selected on the end picker.
-          {...(rangeStart &&
-          !Number.isNaN(parseDDMMYYYY(rangeStart).getTime())
-            ? { rangeStart: parseDDMMYYYY(rangeStart) }
-            : {})}
+        <TimePicker
+          time={time}
+          onChange={(_, v) => setTime(v)}
+          is24Hour
+          stepMinutes={15}
         />
       </div>
     </FormGroup>
@@ -1106,92 +748,6 @@ export function DateRange() {
 }
 // #endregion
 
-// #region I18n
-export function I18n() {
-  const id = useId();
-  const [v, setV] = useState("");
-
-  return (
-    <FormGroup label="Date — French month names" fieldId={id}>
-      {/* prev/nextMonthAriaLabel live on CalendarMonth, not
-          DatePicker — PF6 v6 doesn't pass them through, so
-          they'd leak to the DOM as unknown attrs. Leave the
-          defaults in place; consumers needing fully-translated
-          arrows should build a custom Button + Popover +
-          CalendarMonth (see the "Custom CTA" recipe). */}
-      <LibDatePicker
-        id={id}
-        value={v}
-        onChange={setV}
-        placeholder="JJ/MM/AAAA"
-        ariaLabel="Date (français)"
-        buttonAriaLabel="Ouvrir le sélecteur de date"
-        monthFormat={(d) => monthsFR[d.getMonth()] ?? ""}
-        locale="fr-FR"
-      />
-    </FormGroup>
-  );
-}
-// #endregion
-
-// #region PopoverEscape
-export function PopoverEscape() {
-  const id = useId();
-  const [v, setV] = useState("");
-
-  return (
-    <FormGroup label="Date — popover escapes the card" fieldId={id}>
-      <LibDatePicker
-        id={id}
-        value={v}
-        onChange={setV}
-        ariaLabel="Escape demo"
-        buttonAriaLabel="Open date picker"
-      />
-    </FormGroup>
-  );
-}
-// #endregion
-
-// #region WithValidation
-export function WithValidation() {
-  const id = useId();
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const [v, setV] = useState("");
-
-  return (
-    <FormGroup label="Future date only" fieldId={id}>
-      <LibDatePicker
-        id={id}
-        value={v}
-        onChange={setV}
-        ariaLabel="Future date"
-        buttonAriaLabel="Open date picker"
-        validators={[(date) => date >= today]}
-      />
-      <HelperText>
-        <HelperTextItem>
-          Past dates are disabled in the calendar and rejected on the input.
-        </HelperTextItem>
-      </HelperText>
-    </FormGroup>
-  );
-}
-// #endregion
-
-export default function DatePickerExample() {
-  return (
-    <div style={{ display: "grid", gap: 24 }}>
-      <Default />
-      <CustomCTA />
-      <FormatVariants />
-      <MinMax />
-      <ExcludedDates />
-      <DateRange />
-      <I18n />
-      <PopoverEscape />
-      <WithValidation />
-    </div>
-  );
+export default function DateTimePickerExample() {
+  return <SideBySide />;
 }

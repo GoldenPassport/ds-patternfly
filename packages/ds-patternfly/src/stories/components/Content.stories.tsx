@@ -1,7 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Content } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+  ThemingPointer,
+} from "../_kit/StoryKit.js";
+import {
+  CommonElements,
+  SingleElementForm,
+} from "../../examples/components/Content.example.js";
+import contentExampleSrc from "../../examples/components/Content.example.tsx?raw";
+import contentComponentSrc from "../../components/Content.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Content",
@@ -24,66 +35,59 @@ export const Overview: StoryObj = {
     >
       <Section title="Common elements">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Content>
-                <p>
-                  This is a paragraph inside <code>Content</code>. Long-form
-                  prose gets the right line-height, paragraph spacing, and
-                  link color automatically.
-                </p>
-                <ul>
-                  <li>List items get consistent bullet styling…</li>
-                  <li>…and consistent spacing.</li>
-                </ul>
-                <blockquote>Blockquotes get an accent edge.</blockquote>
-              </Content>
-            </DemoFrame>
-            <CodeBlock>{`<Content>
-  <p>Long-form prose with consistent typography.</p>
-  <ul>
-    <li>List items styled automatically</li>
-  </ul>
-</Content>`}</CodeBlock>
-          </div>
+          <Example
+            source={contentExampleSrc}
+            region="CommonElements"
+            fileName="Content.example.tsx"
+          >
+            <CommonElements />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Single-element form" description="Pass component to render Content as a specific tag.">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Content component="p">A standalone styled paragraph.</Content>
-            </DemoFrame>
-          </div>
+          <Example
+            source={contentExampleSrc}
+            region="SingleElementForm"
+            fileName="Content.example.tsx"
+          >
+            <SingleElementForm />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "component",
-                  type: '"h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "a" | "small" | "blockquote" | "pre" | "hr" | "ul" | "ol" | "dl" | "li" | "dt" | "dd"',
-                  description: "When set, renders Content as that single element with PatternFly styling. When omitted, renders a wrapper around mixed children.",
-                },
-                {
-                  name: "isVisitedLink",
-                  type: "boolean",
-                  description: "For component=\"a\" — visually mark a link as visited.",
-                },
-                {
-                  name: "isEditorial",
-                  type: "boolean",
-                  description: "Tighter spacing variant for editorial layouts.",
-                },
-              ]}
-            />
-          </div>
+          <Example source={contentExampleSrc} fileName="Content.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Content } from "@golden-passport/ds-patternfly";'}
+        componentSource={contentComponentSrc}
+        componentFileName="Content.tsx"
+        rows={[
+          {
+            name: "component",
+            type: '"h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "a" | "small" | "blockquote" | "pre" | "hr" | "ul" | "ol" | "dl" | "li" | "dt" | "dd"',
+            description: "When set, renders Content as that single element with PatternFly styling. When omitted, renders a wrapper around mixed children.",
+          },
+          {
+            name: "isVisitedLink",
+            type: "boolean",
+            description: "For component=\"a\" — visually mark a link as visited.",
+          },
+          {
+            name: "isEditorial",
+            type: "boolean",
+            description: "Tighter spacing variant for editorial layouts.",
+          },
+        ]}
+      />
 
       <Section
         title="When to use it"

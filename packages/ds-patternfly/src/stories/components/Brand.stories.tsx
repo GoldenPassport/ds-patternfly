@@ -1,50 +1,26 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Brand } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
-import { AcmeLogo } from "../_kit/AcmeLogo.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  Default as DefaultBrand,
+  ResponsiveHeights,
+  ResponsiveArtDirection,
+  LightDarkVariants,
+} from "../../examples/components/Brand.example.js";
+import brandExampleSrc from "../../examples/components/Brand.example.tsx?raw";
+import brandComponentSrc from "../../components/Brand.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Brand",
   parameters: { layout: "padded" },
 };
 export default meta;
-
-// Inline SVGs stand in for the four asset files the canonical PF6 pattern
-// imports (PF-HorizontalLogo-Color, PF-HorizontalLogo-Reverse,
-// PF-IconLogo-color, PF-IconLogo-Reverse). In a real consumer app these
-// would be `import pfLogo from "./assets/…svg"` etc.
-const svg = (markup: string) =>
-  "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(markup);
-
-// Logomark-only (the "picture" — no wordmark). Used at narrow viewports
-// where horizontal room is scarce.
-const acmeIcon = svg(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-    <circle cx="20" cy="20" r="20" fill="#0066cc"/>
-    <path d="M11 28 L20 10 L29 28 M14.5 22 L25.5 22" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  </svg>`,
-);
-// Dark-theme variant — same Acme identity (blue circle, white chevron)
-// so the brand mark stays consistent across themes. Only the wordmark
-// text colour flips to a light grey for readability on dark surfaces.
-const acmeIconDark = acmeIcon;
-// Logomark + wordmark. The same mark plus the "Acme" name beside it.
-// Used at md+ where there's room for both.
-const acmeWide = svg(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40">
-    <circle cx="20" cy="20" r="20" fill="#0066cc"/>
-    <path d="M11 28 L20 10 L29 28 M14.5 22 L25.5 22" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    <text x="52" y="27" fill="#0a0a0a" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">Acme</text>
-  </svg>`,
-);
-const acmeWideDark = svg(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40">
-    <circle cx="20" cy="20" r="20" fill="#0066cc"/>
-    <path d="M11 28 L20 10 L29 28 M14.5 22 L25.5 22" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    <text x="52" y="27" fill="#f5f5f5" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">Acme</text>
-  </svg>`,
-);
 
 export const Overview: StoryObj = {
   render: () => (
@@ -66,15 +42,13 @@ export const Overview: StoryObj = {
     >
       <Section title="Default">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              {/* AcmeLogo picks the wordmark colour from the active
-                  ThemeProvider mode so the logo stays readable when the
-                  Storybook toolbar flips to dark. */}
-              <AcmeLogo />
-            </DemoFrame>
-            <CodeBlock>{`<Brand src="/logo.svg" alt="Acme" heights={{ default: "32px" }} />`}</CodeBlock>
-          </div>
+          <Example
+            source={brandExampleSrc}
+            region="Default"
+            fileName="Brand.example.tsx"
+          >
+            <DefaultBrand />
+          </Example>
         </Card>
       </Section>
 
@@ -83,16 +57,13 @@ export const Overview: StoryObj = {
         description="Smaller on mobile, larger on desktop. Width is computed from the SVG's aspect ratio."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <AcmeLogo />
-            </DemoFrame>
-            <CodeBlock>{`<Brand
-  src="/logo.svg"
-  alt="Acme"
-  heights={{ default: "24px", md: "32px", lg: "40px" }}
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={brandExampleSrc}
+            region="ResponsiveHeights"
+            fileName="Brand.example.tsx"
+          >
+            <ResponsiveHeights />
+          </Example>
         </Card>
       </Section>
 
@@ -101,27 +72,13 @@ export const Overview: StoryObj = {
         description="The PF6 canonical pattern: pass <source> children with media queries to swap the image at different breakpoints — full logo on wide screens, icon-only mark on narrow ones. `widths` drives the rendered size per breakpoint."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <AcmeLogo />
-            </DemoFrame>
-            <CodeBlock>{`import { Brand } from "@golden-passport/ds-patternfly";
-import pfLogo   from "../../assets/PF-HorizontalLogo-Color.svg";
-import pfLogoSm from "../../assets/PF-IconLogo-color.svg";
-
-<Brand
-  src={pfLogo}
-  alt="Acme"
-  widths={{ default: "40px", sm: "60px", md: "220px" }}
->
-  <source media="(min-width: 1200px)" srcSet={pfLogo} />
-  <source media="(min-width: 992px)"  srcSet={pfLogo} />
-  <source media="(min-width: 768px)"  srcSet={pfLogo} />
-  <source media="(min-width: 576px)"  srcSet={pfLogoSm} />
-  <source media="(min-width: 320px)"  srcSet={pfLogoSm} />
-  <source                              srcSet={pfLogo} />
-</Brand>`}</CodeBlock>
-          </div>
+          <Example
+            source={brandExampleSrc}
+            region="ResponsiveArtDirection"
+            fileName="Brand.example.tsx"
+          >
+            <ResponsiveArtDirection />
+          </Example>
         </Card>
       </Section>
 
@@ -130,112 +87,57 @@ import pfLogoSm from "../../assets/PF-IconLogo-color.svg";
         description="Render both variants and let CSS show the right one for the active theme. Pair with this design system's ThemeProvider mode prop (light / dark) or any prefers-color-scheme media query."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 32, alignItems: "center", flexWrap: "wrap" }}>
-                <div>
-                  <div style={{ fontSize: 12, color: "var(--gp-color-text-subtle)", marginBottom: 8 }}>
-                    Light theme variant
-                  </div>
-                  <div style={{ padding: 12, background: "#fff", borderRadius: 6, display: "inline-block" }}>
-                    <Brand
-                      src={acmeWide}
-                      alt="Acme"
-                      widths={{ default: "40px", sm: "60px", md: "180px" }}
-                    >
-                      <source media="(min-width: 576px)" srcSet={acmeWide} />
-                      <source srcSet={acmeIcon} />
-                    </Brand>
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: 12, color: "var(--gp-color-text-subtle)", marginBottom: 8 }}>
-                    Dark theme variant
-                  </div>
-                  <div style={{ padding: 12, background: "#0a0a0a", borderRadius: 6, display: "inline-block" }}>
-                    <Brand
-                      src={acmeWideDark}
-                      alt="Acme"
-                      widths={{ default: "40px", sm: "60px", md: "180px" }}
-                    >
-                      <source media="(min-width: 576px)" srcSet={acmeWideDark} />
-                      <source srcSet={acmeIconDark} />
-                    </Brand>
-                  </div>
-                </div>
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`import pfLogo       from "../../assets/PF-HorizontalLogo-Color.svg";
-import pfLogoDark   from "../../assets/PF-HorizontalLogo-Reverse.svg";
-import pfLogoSm     from "../../assets/PF-IconLogo-color.svg";
-import pfLogoSmDark from "../../assets/PF-IconLogo-Reverse.svg";
-
-// Wrapper classes are visibility-toggled by your theme stylesheet:
-//   .show-light { display: var(--theme-light-display, block); }
-//   .show-dark  { display: var(--theme-dark-display,  none); }
-// with [data-mode="dark"] flipping the two vars.
-
-<>
-  <div className="show-light">
-    <Brand src={pfLogo} alt="Acme" widths={{ default: "40px", sm: "60px", md: "220px" }}>
-      <source media="(min-width: 1200px)" srcSet={pfLogo} />
-      <source media="(min-width: 992px)"  srcSet={pfLogo} />
-      <source media="(min-width: 768px)"  srcSet={pfLogo} />
-      <source media="(min-width: 576px)"  srcSet={pfLogoSm} />
-      <source media="(min-width: 320px)"  srcSet={pfLogoSm} />
-      <source                              srcSet={pfLogo} />
-    </Brand>
-  </div>
-  <div className="show-dark">
-    <Brand src={pfLogoDark} alt="Acme" widths={{ default: "40px", sm: "60px", md: "220px" }}>
-      <source media="(min-width: 1200px)" srcSet={pfLogoDark} />
-      <source media="(min-width: 992px)"  srcSet={pfLogoDark} />
-      <source media="(min-width: 768px)"  srcSet={pfLogoDark} />
-      <source media="(min-width: 576px)"  srcSet={pfLogoSmDark} />
-      <source media="(min-width: 320px)"  srcSet={pfLogoSmDark} />
-      <source                              srcSet={pfLogoDark} />
-    </Brand>
-  </div>
-</>`}</CodeBlock>
-          </div>
+          <Example
+            source={brandExampleSrc}
+            region="LightDarkVariants"
+            fileName="Brand.example.tsx"
+          >
+            <LightDarkVariants />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "src",
-                  type: "string",
-                  description: "Logo image URL. SVG strongly preferred for resolution independence. Used as the <img> fallback inside the <picture> Brand renders.",
-                },
-                {
-                  name: "alt",
-                  type: "string",
-                  description: 'Required. The brand name (e.g. "Acme"). Empty only when the brand is decorative — rare.',
-                },
-                {
-                  name: "widths",
-                  type: "{ default?: string, sm?: string, md?: string, lg?: string, xl?: string, '2xl'?: string }",
-                  description: "Per-breakpoint rendered width. Use when the logo is taller than wide or you want to drive sizing by width (the PF6 canonical responsive pattern).",
-                },
-                {
-                  name: "heights",
-                  type: "Same shape as widths",
-                  description: "Per-breakpoint rendered height. Width is computed from aspect ratio. Use for horizontal logos where height is the controlling dimension.",
-                },
-                {
-                  name: "children",
-                  type: "<source media=… srcSet=… /> elements",
-                  description: "Optional. Forwarded into a <picture> element — the browser picks the first <source> whose media query matches. Use for art-direction (icon vs full logo per breakpoint).",
-                },
-              ]}
-            />
-          </div>
+          <Example source={brandExampleSrc} fileName="Brand.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Brand } from "@golden-passport/ds-patternfly";'}
+        componentSource={brandComponentSrc}
+        componentFileName="Brand.tsx"
+        rows={[
+          {
+            name: "src",
+            type: "string",
+            description: "Logo image URL. SVG strongly preferred for resolution independence. Used as the <img> fallback inside the <picture> Brand renders.",
+          },
+          {
+            name: "alt",
+            type: "string",
+            description: 'Required. The brand name (e.g. "Acme"). Empty only when the brand is decorative — rare.',
+          },
+          {
+            name: "widths",
+            type: "{ default?: string, sm?: string, md?: string, lg?: string, xl?: string, '2xl'?: string }",
+            description: "Per-breakpoint rendered width. Use when the logo is taller than wide or you want to drive sizing by width (the PF6 canonical responsive pattern).",
+          },
+          {
+            name: "heights",
+            type: "Same shape as widths",
+            description: "Per-breakpoint rendered height. Width is computed from aspect ratio. Use for horizontal logos where height is the controlling dimension.",
+          },
+          {
+            name: "children",
+            type: "<source media=… srcSet=… /> elements",
+            description: "Optional. Forwarded into a <picture> element — the browser picks the first <source> whose media query matches. Use for art-direction (icon vs full logo per breakpoint).",
+          },
+        ]}
+      />
 
       <Section
         title="Accessibility (per PF6)"

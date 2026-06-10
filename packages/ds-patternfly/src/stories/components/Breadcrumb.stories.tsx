@@ -1,11 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  Breadcrumb,
-  BreadcrumbHeading,
-  BreadcrumbItem,
-} from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+  FoundationPage,
+  Section,
+  Card,
+  CodeBlock,
+  ConfigurationSection,
+  Example,
+  ThemingPointer,
+} from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  Default as DefaultBreadcrumb,
+  WithHeading,
+  WithoutHomeLink,
+} from "../../examples/components/Breadcrumb.example.js";
+import breadcrumbExampleSrc from "../../examples/components/Breadcrumb.example.tsx?raw";
+import breadcrumbComponentSrc from "../../components/Breadcrumb.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Breadcrumb",
@@ -42,24 +52,13 @@ export const Overview: StoryObj = {
         description="The last BreadcrumbItem gets isActive — it renders as static text with aria-current='page' instead of a link."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Breadcrumb ouiaId="DefaultBreadcrumb">
-                <BreadcrumbItem to="#">Workspaces</BreadcrumbItem>
-                <BreadcrumbItem to="#">Acme</BreadcrumbItem>
-                <BreadcrumbItem to="#">Projects</BreadcrumbItem>
-                <BreadcrumbItem to="#" isActive>
-                  Onboarding flow
-                </BreadcrumbItem>
-              </Breadcrumb>
-            </DemoFrame>
-            <CodeBlock>{`<Breadcrumb ouiaId="DefaultBreadcrumb">
-  <BreadcrumbItem to="/workspaces">Workspaces</BreadcrumbItem>
-  <BreadcrumbItem to="/workspaces/acme">Acme</BreadcrumbItem>
-  <BreadcrumbItem to="/workspaces/acme/projects">Projects</BreadcrumbItem>
-  <BreadcrumbItem to="#" isActive>Onboarding flow</BreadcrumbItem>
-</Breadcrumb>`}</CodeBlock>
-          </div>
+          <Example
+            source={breadcrumbExampleSrc}
+            region="Default"
+            fileName="Breadcrumb.example.tsx"
+          >
+            <DefaultBreadcrumb />
+          </Example>
         </Card>
       </Section>
 
@@ -68,15 +67,13 @@ export const Overview: StoryObj = {
         description="BreadcrumbHeading swaps the last item for an h1, doubling the trail as the page heading. Use one or the other — not both."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <Breadcrumb>
-                <BreadcrumbItem to="#">Settings</BreadcrumbItem>
-                <BreadcrumbItem to="#">Team</BreadcrumbItem>
-                <BreadcrumbHeading>Permissions</BreadcrumbHeading>
-              </Breadcrumb>
-            </DemoFrame>
-          </div>
+          <Example
+            source={breadcrumbExampleSrc}
+            region="WithHeading"
+            fileName="Breadcrumb.example.tsx"
+          >
+            <WithHeading />
+          </Example>
         </Card>
       </Section>
 
@@ -85,17 +82,13 @@ export const Overview: StoryObj = {
         description="Omit to/href on the first BreadcrumbItem to render the section root as plain text — useful when the section lives at a parent route that isn't a meaningful destination."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <Breadcrumb>
-                <BreadcrumbItem>Section home</BreadcrumbItem>
-                <BreadcrumbItem to="#">Section title</BreadcrumbItem>
-                <BreadcrumbItem to="#" isActive>
-                  Section landing
-                </BreadcrumbItem>
-              </Breadcrumb>
-            </DemoFrame>
-          </div>
+          <Example
+            source={breadcrumbExampleSrc}
+            region="WithoutHomeLink"
+            fileName="Breadcrumb.example.tsx"
+          >
+            <WithoutHomeLink />
+          </Example>
         </Card>
       </Section>
 
@@ -124,6 +117,15 @@ export const Overview: StoryObj = {
         </Card>
       </Section>
 
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={breadcrumbExampleSrc} fileName="Breadcrumb.example.tsx" />
+        </Card>
+      </Section>
+
       <Section title="Composition">
         <Card>
           <div style={{ padding: 24 }}>
@@ -138,22 +140,19 @@ export const Overview: StoryObj = {
         </Card>
       </Section>
 
-      <Section title="Most-used props">
-        <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                { name: "BreadcrumbItem.to / href", type: "string", description: "Renders as <a>. Use href for plain links; replace with router Link via render prop in apps." },
-                { name: "BreadcrumbItem.isActive", type: "boolean", description: "Marks the current page — gets aria-current='page' and is not rendered as a link." },
-                { name: "BreadcrumbItem.component", type: 'ElementType | "button" | "a"', description: "Render as a custom element (e.g. 'button' for click-only crumbs)." },
-                { name: "BreadcrumbItem.render", type: "(props) => ReactNode", description: "Render-prop alternative — best for router Links that need their own props." },
-                { name: "BreadcrumbItem.isDropdown", type: "boolean", description: "Treat the item as a dropdown trigger (typically wrapping a Dropdown for collapsed-segment patterns)." },
-                { name: "Breadcrumb.ouiaId", type: "string", description: "Stable test selector. Sets data-ouia-component-id on the breadcrumb." },
-              ]}
-            />
-          </div>
-        </Card>
-      </Section>
+      <ConfigurationSection
+        importStatement={'import { Breadcrumb, BreadcrumbItem, BreadcrumbHeading } from "@golden-passport/ds-patternfly";'}
+        componentSource={breadcrumbComponentSrc}
+        componentFileName="Breadcrumb.tsx"
+        rows={[
+          { name: "BreadcrumbItem.to / href", type: "string", description: "Renders as <a>. Use href for plain links; replace with router Link via render prop in apps." },
+          { name: "BreadcrumbItem.isActive", type: "boolean", description: "Marks the current page — gets aria-current='page' and is not rendered as a link." },
+          { name: "BreadcrumbItem.component", type: 'ElementType | "button" | "a"', description: "Render as a custom element (e.g. 'button' for click-only crumbs)." },
+          { name: "BreadcrumbItem.render", type: "(props) => ReactNode", description: "Render-prop alternative — best for router Links that need their own props." },
+          { name: "BreadcrumbItem.isDropdown", type: "boolean", description: "Treat the item as a dropdown trigger (typically wrapping a Dropdown for collapsed-segment patterns)." },
+          { name: "Breadcrumb.ouiaId", type: "string", description: "Stable test selector. Sets data-ouia-component-id on the breadcrumb." },
+        ]}
+      />
 
       <Section title="Accessibility">
         <Card>
