@@ -1,45 +1,26 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useState } from "react";
 import {
-  Avatar,
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownList,
-  Masthead,
-  MastheadBrand,
-  MastheadContent,
-  MastheadLogo,
-  MastheadMain,
-  MastheadToggle,
-  MenuToggle,
-  type MenuToggleElement,
   Nav,
   NavItem,
   NavList,
-  OverflowMenu,
-  OverflowMenuContent,
-  OverflowMenuControl,
-  OverflowMenuGroup,
-  OverflowMenuItem,
   Page,
   PageSection,
   PageSidebar,
   PageSidebarBody,
-  PageToggleButton,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
 } from "@golden-passport/ds-patternfly";
-import { BellIcon, CogIcon, EllipsisVIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { FoundationPage, Section, Card, CodeBlock, Example } from "../_kit/StoryKit.js";
 import {
-  DemoFrame,
   PropsTable,
   sidenavDrawerCss,
   useBlockPushClickClose,
 } from "../_kit/DemoKit.js";
-import { AcmeLogo } from "../_kit/AcmeLogo.js";
+import {
+  BasicMasthead,
+  StackedMasthead,
+  HeaderSurface,
+  Inset,
+} from "../../examples/components/Masthead.example.js";
+import mastheadExampleSrc from "../../examples/components/Masthead.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Masthead",
@@ -63,18 +44,6 @@ const meta: Meta = {
 };
 export default meta;
 
-// Inline-SVG avatar (Acme brand blue) so the masthead profile menu is
-// asset-free. Initials centred via dominant-baseline.
-const AVATAR_SRC =
-  "data:image/svg+xml;utf8," +
-  encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'>` +
-      `<circle cx='20' cy='20' r='20' fill='#0066cc'/>` +
-      `<text x='20' y='20' text-anchor='middle' dominant-baseline='central' ` +
-      `font-family='-apple-system,Segoe UI,sans-serif' font-size='15' ` +
-      `font-weight='600' fill='white'>AF</text></svg>`,
-  );
-
 // Tiny sidebar nav so the masthead toggle has something to drive. The
 // sidebar/sidenav behaviour itself (push vs overlay, breakpoints,
 // full-height drawers, glass) lives in Components/Page — these demos keep
@@ -91,90 +60,7 @@ function DemoSidebarNav({ label }: { label: string }) {
   );
 }
 
-// Two header-surface treatments for a "unified surface" shell — the flat
-// sidebar + content layout documented in Components/Page → "Unified surface".
-// The sidebar, content and page all share ONE flat background; the only
-// question is how the header meets that body:
-//   • "flat"   — the masthead shares the same surface, no divider (seamless).
-//   • "lifted" — the masthead floats above the flat body via a 1px bottom
-//                border + soft shadow (the treatment used in the Page example),
-//                so the header still reads as distinct chrome.
-function UnifiedHeaderVariant({ variant }: { variant: "flat" | "lifted" }) {
-  const lifted = variant === "lifted";
-  const id = `unified-header-${variant}`;
-  const css = `
-    #${id} {
-      background: var(--gp-color-bg-primary-default);
-      border: 1px solid var(--gp-color-border-subtle);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    /* Sidebar + content + header all share the one flat surface. */
-    #${id} .pf-v6-c-masthead {
-      background: var(--gp-color-bg-primary-default);
-      ${
-        lifted
-          ? `border-block-end: 1px solid var(--gp-color-border-subtle);
-             box-shadow: 0 2px 6px rgb(0 0 0 / 0.12);`
-          : `border-block-end: none; box-shadow: none;`
-      }
-    }
-  `;
-  return (
-    <div style={{ display: "grid", gap: 8 }}>
-      <span style={{ fontWeight: 600, color: "var(--gp-color-text-regular)" }}>
-        {lifted ? "Lifted header" : "Flat header"}
-      </span>
-      <div id={id}>
-        <style dangerouslySetInnerHTML={{ __html: css }} />
-        <Masthead id={`${id}-masthead`} display={{ default: "inline" }}>
-          <MastheadMain>
-            <MastheadBrand>
-              <MastheadLogo component="a" href="#">
-                <AcmeLogo />
-              </MastheadLogo>
-            </MastheadBrand>
-          </MastheadMain>
-          <MastheadContent>
-            <span style={{ color: "var(--gp-color-text-subtle)" }}>Actions</span>
-          </MastheadContent>
-        </Masthead>
-        <div style={{ display: "flex", minHeight: 150 }}>
-          <div style={{ width: 150, padding: 12 }}>
-            <Nav aria-label={`${variant} unified-header demo nav`}>
-              <NavList>
-                <NavItem itemId={0} isActive>Dashboard</NavItem>
-                <NavItem itemId={1}>Workflows</NavItem>
-                <NavItem itemId={2}>Reports</NavItem>
-              </NavList>
-            </Nav>
-          </div>
-          <div
-            style={{
-              flex: 1,
-              padding: 16,
-              color: "var(--gp-color-text-subtle)",
-            }}
-          >
-            Sidebar + content share one flat surface.
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function OverviewStory() {
-  // Basic demo: the masthead utility icons live in an OverflowMenu that
-  // collapses to this kebab dropdown below the breakpoint.
-  const [isUtilityKebabOpen, setIsUtilityKebabOpen] = useState(false);
-  // Basic demo: top-right user avatar + profile dropdown.
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-
-  // Display-variants demo: controlled stacked-masthead sidebar (restored to
-  // the committed form — uses sidenavDrawerCss for push/overlay).
-  const [stackOpen, setStackOpen] = useState(true);
-
   // The masthead demos mount a managed Page so the hamburger toggles a real
   // sidebar. Inside the DemoFrame the Page is narrower than PF6's xl push
   // threshold while the viewport is wider, so PF6 paints push but would
@@ -200,11 +86,11 @@ function OverviewStory() {
         </>
       }
     >
-      {/* The Display variants demo (restored to its committed form) drives
-          its own push/overlay sidebar CSS via sidenavDrawerCss. The glass
-          rule gives the demo frames a branded page background so the
-          frosted masthead has something to show through — a flat dark
-          backdrop makes the (correctly translucent) frost read as opaque. */}
+      {/* The Display variants demo drives its own push/overlay sidebar CSS
+          via sidenavDrawerCss. The glass rule gives the demo frames a
+          branded page background so the frosted masthead has something to
+          show through — a flat dark backdrop makes the (correctly
+          translucent) frost read as opaque. */}
       <style
         dangerouslySetInnerHTML={{
           __html: [
@@ -260,136 +146,16 @@ function OverviewStory() {
               </li>
             </ul>
             <div id="basic-masthead-demo">
-              <DemoFrame height={320}>
+              <Example
+                source={mastheadExampleSrc}
+                region="BasicMasthead"
+                fileName="Masthead.example.tsx"
+                height={320}
+              >
                 <Page
                   isManagedSidebar
                   defaultManagedSidebarIsOpen
-                  masthead={
-                    <Masthead id="basic-masthead" display={{ default: "inline" }}>
-                      <MastheadMain>
-                        <MastheadToggle>
-                          <PageToggleButton
-                            isHamburgerButton
-                            aria-label="Global navigation"
-                            id="basic-masthead-toggle"
-                          />
-                        </MastheadToggle>
-                        <MastheadBrand>
-                          <MastheadLogo component="a" href="#">
-                            <AcmeLogo />
-                          </MastheadLogo>
-                        </MastheadBrand>
-                      </MastheadMain>
-                      <MastheadContent>
-                        <Toolbar isStatic id="basic-masthead-toolbar">
-                          <ToolbarContent>
-                            <ToolbarItem align={{ default: "alignEnd" }}>
-                              {/* OverflowMenu shows the utility icons inline
-                                  above md; below md they collapse into the
-                                  3-dot kebab dropdown (OverflowMenuControl). */}
-                              <OverflowMenu breakpoint="md">
-                                <OverflowMenuContent>
-                                  <OverflowMenuGroup groupType="icon">
-                                    <OverflowMenuItem>
-                                      <Button
-                                        variant="plain"
-                                        aria-label="Notifications"
-                                        icon={<BellIcon />}
-                                      />
-                                    </OverflowMenuItem>
-                                    <OverflowMenuItem>
-                                      <Button
-                                        variant="plain"
-                                        aria-label="Settings"
-                                        icon={<CogIcon />}
-                                      />
-                                    </OverflowMenuItem>
-                                  </OverflowMenuGroup>
-                                </OverflowMenuContent>
-                                <OverflowMenuControl>
-                                  <Dropdown
-                                    isOpen={isUtilityKebabOpen}
-                                    onSelect={() => setIsUtilityKebabOpen(false)}
-                                    onOpenChange={(open: boolean) =>
-                                      setIsUtilityKebabOpen(open)
-                                    }
-                                    popperProps={{ position: "right" }}
-                                    toggle={(
-                                      toggleRef: React.Ref<MenuToggleElement>,
-                                    ) => (
-                                      <MenuToggle
-                                        ref={toggleRef}
-                                        aria-label="More actions"
-                                        variant="plain"
-                                        isExpanded={isUtilityKebabOpen}
-                                        onClick={() =>
-                                          setIsUtilityKebabOpen((v) => !v)
-                                        }
-                                        icon={<EllipsisVIcon />}
-                                      />
-                                    )}
-                                  >
-                                    <DropdownList>
-                                      <DropdownItem icon={<BellIcon />}>
-                                        Notifications
-                                      </DropdownItem>
-                                      <DropdownItem icon={<CogIcon />}>
-                                        Settings
-                                      </DropdownItem>
-                                    </DropdownList>
-                                  </Dropdown>
-                                </OverflowMenuControl>
-                              </OverflowMenu>
-                            </ToolbarItem>
-                            {/* Top-right user avatar + profile dropdown. */}
-                            <ToolbarItem>
-                              <Dropdown
-                                isOpen={isUserMenuOpen}
-                                onSelect={() => setIsUserMenuOpen(false)}
-                                onOpenChange={(open: boolean) =>
-                                  setIsUserMenuOpen(open)
-                                }
-                                popperProps={{ position: "right" }}
-                                toggle={(
-                                  toggleRef: React.Ref<MenuToggleElement>,
-                                ) => (
-                                  <MenuToggle
-                                    ref={toggleRef}
-                                    aria-label="User menu"
-                                    variant="plain"
-                                    className="gp-user-menu-toggle"
-                                    isExpanded={isUserMenuOpen}
-                                    onClick={() =>
-                                      setIsUserMenuOpen((v) => !v)
-                                    }
-                                    icon={
-                                      // alt="" — the visible name beside it
-                                      // is the accessible label; a duplicate
-                                      // alt trips axe image-redundant-alt.
-                                      <Avatar src={AVATAR_SRC} alt="" size="md" />
-                                    }
-                                  >
-                                    {/* Name hides below the masthead mobile
-                                        breakpoint → the toggle collapses to
-                                        just the avatar. */}
-                                    <span className="gp-masthead-username">
-                                      Aliyah Frazier
-                                    </span>
-                                  </MenuToggle>
-                                )}
-                              >
-                                <DropdownList>
-                                  <DropdownItem>My profile</DropdownItem>
-                                  <DropdownItem>User management</DropdownItem>
-                                  <DropdownItem>Logout</DropdownItem>
-                                </DropdownList>
-                              </Dropdown>
-                            </ToolbarItem>
-                          </ToolbarContent>
-                        </Toolbar>
-                      </MastheadContent>
-                    </Masthead>
-                  }
+                  masthead={<BasicMasthead />}
                   sidebar={
                     <PageSidebar id="basic-masthead-sidebar">
                       <PageSidebarBody>
@@ -404,56 +170,8 @@ function OverviewStory() {
                     </span>
                   </PageSection>
                 </Page>
-              </DemoFrame>
+              </Example>
             </div>
-            <CodeBlock>{`<Masthead display={{ default: "inline" }}>
-  <MastheadMain>
-    <MastheadToggle>
-      <PageToggleButton isHamburgerButton aria-label="Global navigation" />
-    </MastheadToggle>
-    <MastheadBrand>
-      <MastheadLogo component="a" href="/">{/* logo */}</MastheadLogo>
-    </MastheadBrand>
-  </MastheadMain>
-  <MastheadContent>
-    <Toolbar isStatic>
-      <ToolbarContent>
-        <ToolbarItem align={{ default: "alignEnd" }}>
-          <OverflowMenu breakpoint="md">
-            <OverflowMenuContent>
-              <OverflowMenuGroup groupType="icon">
-                <OverflowMenuItem>{/* Bell button */}</OverflowMenuItem>
-                <OverflowMenuItem>{/* Cog button */}</OverflowMenuItem>
-              </OverflowMenuGroup>
-            </OverflowMenuContent>
-            <OverflowMenuControl>{/* kebab Dropdown */}</OverflowMenuControl>
-          </OverflowMenu>
-        </ToolbarItem>
-        <ToolbarItem>
-          {/* user avatar + profile dropdown */}
-          <Dropdown
-            isOpen={open}
-            onOpenChange={setOpen}
-            toggle={(ref) => (
-              <MenuToggle ref={ref} variant="plain" isExpanded={open}
-                onClick={() => setOpen(v => !v)}
-                icon={<Avatar src={avatarSrc} alt="" size="md" />}>
-                {/* hides on mobile → avatar-only */}
-                <span className="gp-masthead-username">Aliyah Frazier</span>
-              </MenuToggle>
-            )}
-          >
-            <DropdownList>
-              <DropdownItem>My profile</DropdownItem>
-              <DropdownItem>User management</DropdownItem>
-              <DropdownItem>Logout</DropdownItem>
-            </DropdownList>
-          </Dropdown>
-        </ToolbarItem>
-      </ToolbarContent>
-    </Toolbar>
-  </MastheadContent>
-</Masthead>`}</CodeBlock>
           </div>
         </Card>
       </Section>
@@ -465,35 +183,18 @@ function OverviewStory() {
         <Card>
           <div style={{ padding: 24, display: "grid", gap: 16 }}>
             <div id="stack-masthead-demo">
-              <DemoFrame height={340}>
+              <Example
+                source={mastheadExampleSrc}
+                region="StackedMasthead"
+                fileName="Masthead.example.tsx"
+                height={340}
+              >
                 <Page
-                  masthead={
-                    <Masthead id="stack-masthead" display={{ default: "stack" }}>
-                      <MastheadMain>
-                        <MastheadToggle>
-                          <PageToggleButton
-                            isHamburgerButton
-                            aria-label="Global navigation"
-                            isSidebarOpen={stackOpen}
-                            onSidebarToggle={() => setStackOpen((v) => !v)}
-                            id="stack-masthead-toggle"
-                          />
-                        </MastheadToggle>
-                        <MastheadBrand>
-                          <MastheadLogo component="a" href="#">
-                            <AcmeLogo />
-                          </MastheadLogo>
-                        </MastheadBrand>
-                      </MastheadMain>
-                      <MastheadContent>
-                        <span style={{ color: "var(--gp-color-text-subtle)" }}>
-                          Stacked content row
-                        </span>
-                      </MastheadContent>
-                    </Masthead>
-                  }
+                  isManagedSidebar
+                  defaultManagedSidebarIsOpen
+                  masthead={<StackedMasthead />}
                   sidebar={
-                    <PageSidebar isSidebarOpen={stackOpen} id="stack-masthead-sidebar">
+                    <PageSidebar id="stack-masthead-sidebar">
                       <PageSidebarBody>
                         <DemoSidebarNav label="Stack masthead demo" />
                       </PageSidebarBody>
@@ -507,7 +208,7 @@ function OverviewStory() {
                     </span>
                   </PageSection>
                 </Page>
-              </DemoFrame>
+              </Example>
             </div>
             <CodeBlock>{`<Masthead display={{ default: "stack", lg: "inline" }}>
   {/* stack on small viewports, inline on lg+ */}
@@ -536,18 +237,16 @@ function OverviewStory() {
         }
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 24 }}>
-            <div
-              style={{
-                display: "grid",
-                gap: 24,
-                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-              }}
+          <div style={{ display: "grid", gap: 24 }}>
+            <Example
+              source={mastheadExampleSrc}
+              region="HeaderSurface"
+              fileName="Masthead.example.tsx"
             >
-              <UnifiedHeaderVariant variant="flat" />
-              <UnifiedHeaderVariant variant="lifted" />
-            </div>
-            <CodeBlock label="Header surface treatment (scope to your shell root)">{`/* Unified surface: sidebar + content + page share one flat bg */
+              <HeaderSurface />
+            </Example>
+            <div style={{ padding: "0 24px 24px" }}>
+              <CodeBlock label="Header surface treatment (scope to your shell root)">{`/* Unified surface: sidebar + content + page share one flat bg */
 .app-shell .pf-v6-c-page__sidebar,
 .app-shell .pf-v6-c-page__main,
 .app-shell .pf-v6-c-page__main-container {
@@ -565,6 +264,7 @@ function OverviewStory() {
   border-block-end: 1px solid var(--gp-color-border-subtle);
   box-shadow: 0 2px 6px rgb(0 0 0 / 0.12);
 }`}</CodeBlock>
+            </div>
           </div>
         </Card>
       </Section>
@@ -574,27 +274,14 @@ function OverviewStory() {
         description="inset adds horizontal padding inside the masthead. Pair with Toolbar inset to keep alignment consistent across the header."
       >
         <Card>
-          <div id="inset-masthead-demo" style={{ padding: 24 }}>
-            <DemoFrame>
-              <Masthead
-                id="inset-masthead"
-                display={{ default: "inline" }}
-                inset={{ default: "insetSm" }}
-              >
-                <MastheadMain>
-                  <MastheadBrand>
-                    <MastheadLogo component="a" href="#">
-                      <AcmeLogo />
-                    </MastheadLogo>
-                  </MastheadBrand>
-                </MastheadMain>
-                <MastheadContent>
-                  <span style={{ color: "var(--gp-color-text-subtle)" }}>
-                    inset=&quot;insetSm&quot;
-                  </span>
-                </MastheadContent>
-              </Masthead>
-            </DemoFrame>
+          <div id="inset-masthead-demo">
+            <Example
+              source={mastheadExampleSrc}
+              region="Inset"
+              fileName="Masthead.example.tsx"
+            >
+              <Inset />
+            </Example>
           </div>
         </Card>
       </Section>
@@ -614,6 +301,15 @@ import { Brand } from "@golden-passport/ds-patternfly";
   </MastheadLogo>
 </MastheadBrand>`}</CodeBlock>
           </div>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={mastheadExampleSrc} fileName="Masthead.example.tsx" />
         </Card>
       </Section>
 

@@ -1,30 +1,26 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarPanel,
-} from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+  FoundationPage,
+  Section,
+  Card,
+  CodeBlock,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  Basic,
+  StickyPanel,
+  RightAnchoredGutter,
+} from "../../examples/components/Sidebar.example.js";
+import sidebarExampleSrc from "../../examples/components/Sidebar.example.tsx?raw";
+import sidebarComponentSrc from "../../components/Sidebar.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Sidebar",
   parameters: { layout: "padded" },
 };
 export default meta;
-
-const filler = (
-  <>
-    <p style={{ marginTop: 0 }}>
-      The main content area expands to fill remaining width.
-    </p>
-    <p>Resize the window to see the panel keep its share.</p>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-      dapibus nulla id augue dictum commodo.
-    </p>
-  </>
-);
 
 export const Overview: StoryObj = {
   render: () => (
@@ -46,42 +42,14 @@ export const Overview: StoryObj = {
         description="A two-column flex layout. Panel sits on the leading edge by default; content takes the remaining width."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={220}>
-              <Sidebar>
-                <SidebarPanel
-                  style={{
-                    background: "var(--gp-color-bg-secondary-default)",
-                    padding: 16,
-                  }}
-                >
-                  <strong style={{ color: "var(--gp-color-text-regular)" }}>
-                    Filters
-                  </strong>
-                  <ul
-                    style={{
-                      margin: 8,
-                      padding: 0,
-                      listStyle: "none",
-                      color: "var(--gp-color-text-subtle)",
-                      lineHeight: 1.8,
-                    }}
-                  >
-                    <li>Status</li>
-                    <li>Owner</li>
-                    <li>Created date</li>
-                  </ul>
-                </SidebarPanel>
-                <SidebarContent style={{ padding: 16, color: "var(--gp-color-text-subtle)" }}>
-                  {filler}
-                </SidebarContent>
-              </Sidebar>
-            </DemoFrame>
-            <CodeBlock>{`<Sidebar>
-  <SidebarPanel>{/* Filter rail / settings menu / TOC */}</SidebarPanel>
-  <SidebarContent>{/* Main content — flexes to fill */}</SidebarContent>
-</Sidebar>`}</CodeBlock>
-          </div>
+          <Example
+            source={sidebarExampleSrc}
+            region="Basic"
+            fileName="Sidebar.example.tsx"
+            height={220}
+          >
+            <Basic />
+          </Example>
         </Card>
       </Section>
 
@@ -90,29 +58,14 @@ export const Overview: StoryObj = {
         description="variant='sticky' pins the panel to the viewport while content scrolls. Add tabIndex on the Sidebar so keyboard users can scroll the content region."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame height={220}>
-              <Sidebar style={{ height: "100%", overflow: "auto" }} tabIndex={0}>
-                <SidebarPanel
-                  variant="sticky"
-                  style={{
-                    background: "var(--gp-color-bg-secondary-default)",
-                    padding: 16,
-                  }}
-                >
-                  <strong style={{ color: "var(--gp-color-text-regular)" }}>
-                    Sticky filters
-                  </strong>
-                </SidebarPanel>
-                <SidebarContent style={{ padding: 16, color: "var(--gp-color-text-subtle)" }}>
-                  <p style={{ marginTop: 0 }}>Scroll me!</p>
-                  {Array.from({ length: 12 }).map((_, i) => (
-                    <p key={i}>Row {i + 1} — content keeps scrolling.</p>
-                  ))}
-                </SidebarContent>
-              </Sidebar>
-            </DemoFrame>
-          </div>
+          <Example
+            source={sidebarExampleSrc}
+            region="StickyPanel"
+            fileName="Sidebar.example.tsx"
+            height={220}
+          >
+            <StickyPanel />
+          </Example>
         </Card>
       </Section>
 
@@ -121,25 +74,14 @@ export const Overview: StoryObj = {
         description="isPanelRight flips the panel to the trailing edge (right in LTR). hasGutter adds space between panel and content."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame height={220}>
-              <Sidebar isPanelRight hasGutter>
-                <SidebarPanel
-                  style={{
-                    background: "var(--gp-color-bg-secondary-default)",
-                    padding: 16,
-                  }}
-                >
-                  <strong style={{ color: "var(--gp-color-text-regular)" }}>
-                    Side notes
-                  </strong>
-                </SidebarPanel>
-                <SidebarContent style={{ padding: 16, color: "var(--gp-color-text-subtle)" }}>
-                  {filler}
-                </SidebarContent>
-              </Sidebar>
-            </DemoFrame>
-          </div>
+          <Example
+            source={sidebarExampleSrc}
+            region="RightAnchoredGutter"
+            fileName="Sidebar.example.tsx"
+            height={220}
+          >
+            <RightAnchoredGutter />
+          </Example>
         </Card>
       </Section>
 
@@ -159,6 +101,15 @@ export const Overview: StoryObj = {
         </Card>
       </Section>
 
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={sidebarExampleSrc} fileName="Sidebar.example.tsx" />
+        </Card>
+      </Section>
+
       <Section title="Composition">
         <Card>
           <div style={{ padding: 24 }}>
@@ -173,18 +124,22 @@ export const Overview: StoryObj = {
         </Card>
       </Section>
 
+      <ConfigurationSection
+        importStatement={'import { Sidebar, SidebarPanel, SidebarContent } from "@golden-passport/ds-patternfly";'}
+        componentSource={sidebarComponentSrc}
+        componentFileName="Sidebar.tsx"
+        rows={[
+          { name: "orientation", type: '"vertical" | "horizontal"', description: "Default vertical (panel on the side). Horizontal puts the panel above content for narrow viewports." },
+          { name: "isPanelRight", type: "boolean", description: "Render the panel on the trailing edge (right in LTR) instead of the leading edge." },
+          { name: "hasGutter", type: "boolean", description: "Adds spacing between panel and content." },
+          { name: "tabIndex", type: "number", description: "Make the Sidebar wrapper focusable (typically 0) so keyboard users can scroll a height-bounded variant." },
+        ]}
+      />
+
       <Section title="Most-used Sidebar props">
         <Card>
           <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                { name: "orientation", type: '"vertical" | "horizontal"', description: "Default vertical (panel on the side). Horizontal puts the panel above content for narrow viewports." },
-                { name: "isPanelRight", type: "boolean", description: "Render the panel on the trailing edge (right in LTR) instead of the leading edge." },
-                { name: "hasGutter", type: "boolean", description: "Adds spacing between panel and content." },
-                { name: "tabIndex", type: "number", description: "Make the Sidebar wrapper focusable (typically 0) so keyboard users can scroll a height-bounded variant." },
-              ]}
-            />
-            <p style={{ marginTop: 16, marginBottom: 0, color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
+            <p style={{ margin: 0, color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
               <strong>SidebarPanel.variant:</strong>{" "}
               <code>&quot;default&quot;</code> scrolls with the page;{" "}
               <code>&quot;sticky&quot;</code> pins to the viewport.

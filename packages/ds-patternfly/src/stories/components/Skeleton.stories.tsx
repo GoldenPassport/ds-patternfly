@@ -1,7 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Skeleton } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import {
+  CommonShapes,
+  CardPlaceholder,
+} from "../../examples/components/Skeleton.example.js";
+import skeletonExampleSrc from "../../examples/components/Skeleton.example.tsx?raw";
+import skeletonComponentSrc from "../../components/Skeleton.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Skeleton",
@@ -24,81 +34,69 @@ export const Overview: StoryObj = {
     >
       <Section title="Common shapes">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "grid", gap: 12 }}>
-                <Skeleton width="40%" screenreaderText="Loading title" />
-                <Skeleton width="100%" />
-                <Skeleton width="100%" />
-                <Skeleton width="80%" />
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<Skeleton width="40%" screenreaderText="Loading title" />
-<Skeleton width="100%" />`}</CodeBlock>
-          </div>
+          <Example
+            source={skeletonExampleSrc}
+            region="CommonShapes"
+            fileName="Skeleton.example.tsx"
+          >
+            <CommonShapes />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Card placeholder" description="A skeleton that mirrors the shape of the loaded UI.">
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div
-                style={{
-                  border: "1px solid var(--gp-color-border-subtle)",
-                  borderRadius: "var(--gp-radius-md)",
-                  padding: 16,
-                  display: "grid",
-                  gap: 12,
-                  background: "var(--gp-color-bg-primary-default)",
-                }}
-              >
-                <Skeleton shape="circle" width="48px" height="48px" screenreaderText="Loading avatar" />
-                <Skeleton width="60%" />
-                <Skeleton width="100%" />
-                <Skeleton width="100%" />
-                <Skeleton width="40%" />
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={skeletonExampleSrc}
+            region="CardPlaceholder"
+            fileName="Skeleton.example.tsx"
+          >
+            <CardPlaceholder />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "width",
-                  type: "string",
-                  description: 'Width as a CSS value ("100%", "200px", "40%").',
-                },
-                {
-                  name: "height",
-                  type: "string",
-                  description: 'Height. Defaults to text line-height — set explicitly for non-text shapes.',
-                },
-                {
-                  name: "shape",
-                  type: '"square" | "circle"',
-                  description: "Default is a rounded rectangle. Use circle for avatar placeholders.",
-                },
-                {
-                  name: "fontSize",
-                  type: '"sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl"',
-                  description: "Match the height of a known text size — Skeleton sizes accordingly.",
-                },
-                {
-                  name: "screenreaderText",
-                  type: "string",
-                  description: 'Optional AT-only label. Use sparingly — see accessibility notes.',
-                },
-              ]}
-            />
-          </div>
+          <Example source={skeletonExampleSrc} fileName="Skeleton.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Skeleton } from "@golden-passport/ds-patternfly";'}
+        componentSource={skeletonComponentSrc}
+        componentFileName="Skeleton.tsx"
+        rows={[
+          {
+            name: "width",
+            type: "string",
+            description: 'Width as a CSS value ("100%", "200px", "40%").',
+          },
+          {
+            name: "height",
+            type: "string",
+            description: 'Height. Defaults to text line-height — set explicitly for non-text shapes.',
+          },
+          {
+            name: "shape",
+            type: '"square" | "circle"',
+            description: "Default is a rounded rectangle. Use circle for avatar placeholders.",
+          },
+          {
+            name: "fontSize",
+            type: '"sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl"',
+            description: "Match the height of a known text size — Skeleton sizes accordingly.",
+          },
+          {
+            name: "screenreaderText",
+            type: "string",
+            description: 'Optional AT-only label. Use sparingly — see accessibility notes.',
+          },
+        ]}
+      />
 
       <Section
         title="Accessibility"

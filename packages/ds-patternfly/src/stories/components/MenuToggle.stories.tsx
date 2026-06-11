@@ -1,12 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  MenuToggle,
-  MenuToggleAction,
-  MenuToggleCheckbox,
-} from "@golden-passport/ds-patternfly";
-import { CogIcon, EllipsisVIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+  FoundationPage,
+  Section,
+  Card,
+  Example,
+  ThemingPointer,
+} from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  Variants,
+  States,
+  SizesAndFullWidth,
+  WithIcon,
+  SplitButtonAction,
+  SplitButtonCheckbox,
+} from "../../examples/components/MenuToggle.example.js";
+import menuToggleExampleSrc from "../../examples/components/MenuToggle.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Menu/Menu toggle",
@@ -34,20 +43,13 @@ export const Overview: StoryObj = {
         description="default / primary / secondary / plain. Plain drops the chrome — use for icon-only kebab triggers in toolbars and card headers."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
-                <MenuToggle>Default</MenuToggle>
-                <MenuToggle variant="primary">Primary</MenuToggle>
-                <MenuToggle variant="secondary">Secondary</MenuToggle>
-                <MenuToggle variant="plain" aria-label="Kebab" icon={<EllipsisVIcon />} />
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<MenuToggle>Default</MenuToggle>
-<MenuToggle variant="primary">Primary</MenuToggle>
-<MenuToggle variant="secondary">Secondary</MenuToggle>
-<MenuToggle variant="plain" aria-label="Kebab" icon={<EllipsisVIcon />} />`}</CodeBlock>
-          </div>
+          <Example
+            source={menuToggleExampleSrc}
+            region="Variants"
+            fileName="MenuToggle.example.tsx"
+          >
+            <Variants />
+          </Example>
         </Card>
       </Section>
 
@@ -56,15 +58,13 @@ export const Overview: StoryObj = {
         description="isExpanded mirrors the open state of the menu it controls; isDisabled greys it out. PF6 sets aria-expanded automatically."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
-                <MenuToggle>Idle</MenuToggle>
-                <MenuToggle isExpanded>Expanded</MenuToggle>
-                <MenuToggle isDisabled>Disabled</MenuToggle>
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={menuToggleExampleSrc}
+            region="States"
+            fileName="MenuToggle.example.tsx"
+          >
+            <States />
+          </Example>
         </Card>
       </Section>
 
@@ -73,17 +73,13 @@ export const Overview: StoryObj = {
         description="size='sm' for dense toolbars; isFullWidth stretches the toggle to fill its container — useful for Select inside a form field."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 12 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
-                <MenuToggle size="sm">Small</MenuToggle>
-                <MenuToggle>Default</MenuToggle>
-              </div>
-            </DemoFrame>
-            <DemoFrame>
-              <MenuToggle isFullWidth>Full width</MenuToggle>
-            </DemoFrame>
-          </div>
+          <Example
+            source={menuToggleExampleSrc}
+            region="SizesAndFullWidth"
+            fileName="MenuToggle.example.tsx"
+          >
+            <SizesAndFullWidth />
+          </Example>
         </Card>
       </Section>
 
@@ -92,14 +88,13 @@ export const Overview: StoryObj = {
         description="icon prepends a glyph; pair with a label for context, or pass icon + variant='plain' for an icon-only trigger."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                <MenuToggle icon={<CogIcon />}>Settings</MenuToggle>
-                <MenuToggle variant="plain" aria-label="Settings" icon={<CogIcon />} />
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={menuToggleExampleSrc}
+            region="WithIcon"
+            fileName="MenuToggle.example.tsx"
+          >
+            <WithIcon />
+          </Example>
         </Card>
       </Section>
 
@@ -108,29 +103,13 @@ export const Overview: StoryObj = {
         description="splitButtonItems creates a two-part toggle: a primary action button on the left + a chevron toggle on the right. Use when one action is overwhelmingly common but a menu of related actions is useful too."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                <MenuToggle
-                  splitButtonItems={[
-                    <MenuToggleAction id="split-action-default" key="action" aria-label="Run">
-                      Run
-                    </MenuToggleAction>,
-                  ]}
-                  aria-label="Run with options"
-                />
-                <MenuToggle
-                  variant="primary"
-                  splitButtonItems={[
-                    <MenuToggleAction id="split-action-primary" key="action" aria-label="Deploy">
-                      Deploy
-                    </MenuToggleAction>,
-                  ]}
-                  aria-label="Deploy with options"
-                />
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={menuToggleExampleSrc}
+            region="SplitButtonAction"
+            fileName="MenuToggle.example.tsx"
+          >
+            <SplitButtonAction />
+          </Example>
         </Card>
       </Section>
 
@@ -139,20 +118,22 @@ export const Overview: StoryObj = {
         description="splitButtonItems can also hold a MenuToggleCheckbox — the canonical 'select all' header for tables / grids. The chevron then opens a sub-menu (deselect-all, select-page, etc)."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <MenuToggle
-                splitButtonItems={[
-                  <MenuToggleCheckbox
-                    id="split-checkbox-id"
-                    key="split-checkbox"
-                    aria-label="Select all"
-                  />,
-                ]}
-                aria-label="Selection menu"
-              />
-            </DemoFrame>
-          </div>
+          <Example
+            source={menuToggleExampleSrc}
+            region="SplitButtonCheckbox"
+            fileName="MenuToggle.example.tsx"
+          >
+            <SplitButtonCheckbox />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={menuToggleExampleSrc} fileName="MenuToggle.example.tsx" />
         </Card>
       </Section>
 

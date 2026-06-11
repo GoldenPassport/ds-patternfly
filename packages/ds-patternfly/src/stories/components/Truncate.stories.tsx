@@ -1,16 +1,26 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Truncate, TruncatePosition } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import {
+  Default,
+  Middle,
+  Start,
+  MaxCharacters,
+  CustomTooltipPosition,
+} from "../../examples/components/Truncate.example.js";
+import truncateExampleSrc from "../../examples/components/Truncate.example.tsx?raw";
+import truncateComponentSrc from "../../components/Truncate.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Truncate",
   parameters: { layout: "padded" },
 };
 export default meta;
-
-const longString =
-  "redhat_logo_black_and_white_reversed_simple_with_fedora_container.zip";
 
 export const Overview: StoryObj = {
   render: () => (
@@ -30,16 +40,13 @@ export const Overview: StoryObj = {
         description="Wrap a string in a width-constrained container; Truncate clips it with an ellipsis when the rendered width exceeds the container, and surfaces the full value as a tooltip."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ width: 280, color: "var(--gp-color-text-regular)" }}>
-                <Truncate content={longString} />
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<div style={{ width: 280 }}>
-  <Truncate content="redhat_logo_black_and_white_reversed_simple_with_fedora_container.zip" />
-</div>`}</CodeBlock>
-          </div>
+          <Example
+            source={truncateExampleSrc}
+            region="Default"
+            fileName="Truncate.example.tsx"
+          >
+            <Default />
+          </Example>
         </Card>
       </Section>
 
@@ -48,17 +55,13 @@ export const Overview: StoryObj = {
         description="position='middle' clips the centre and preserves the start + end of the string. Best for filenames where both the prefix and the file extension carry meaning."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ width: 280, color: "var(--gp-color-text-regular)" }}>
-                <Truncate
-                  content={longString}
-                  position={TruncatePosition.middle}
-                  trailingNumChars={10}
-                />
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={truncateExampleSrc}
+            region="Middle"
+            fileName="Truncate.example.tsx"
+          >
+            <Middle />
+          </Example>
         </Card>
       </Section>
 
@@ -67,16 +70,13 @@ export const Overview: StoryObj = {
         description="position='start' clips the beginning and preserves the tail — useful for paths and breadcrumb-style strings where the most meaningful segment is at the end."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ width: 280, color: "var(--gp-color-text-regular)" }}>
-                <Truncate
-                  content="/var/log/acme/workflow/run-12834/step-validate-input.log"
-                  position={TruncatePosition.start}
-                />
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={truncateExampleSrc}
+            region="Start"
+            fileName="Truncate.example.tsx"
+          >
+            <Start />
+          </Example>
         </Card>
       </Section>
 
@@ -85,21 +85,13 @@ export const Overview: StoryObj = {
         description="maxCharsDisplayed forces a character-count truncation (instead of width-based). Use when the ellipsis must trigger consistently regardless of font / container width — e.g. ids in dense rows."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ display: "grid", gap: 8, color: "var(--gp-color-text-regular)" }}>
-                <div>
-                  End: <Truncate maxCharsDisplayed={15} content={longString} />
-                </div>
-                <div>
-                  Middle: <Truncate maxCharsDisplayed={15} position={TruncatePosition.middle} content={longString} />
-                </div>
-                <div>
-                  Start: <Truncate maxCharsDisplayed={15} position={TruncatePosition.start} content={longString} />
-                </div>
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={truncateExampleSrc}
+            region="MaxCharacters"
+            fileName="Truncate.example.tsx"
+          >
+            <MaxCharacters />
+          </Example>
         </Card>
       </Section>
 
@@ -108,31 +100,37 @@ export const Overview: StoryObj = {
         description="tooltipPosition lets you anchor the auto-tooltip somewhere other than top — useful when the truncated text sits near the edge of the viewport."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ width: 280, color: "var(--gp-color-text-regular)" }}>
-                <Truncate content={longString} tooltipPosition="right" />
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={truncateExampleSrc}
+            region="CustomTooltipPosition"
+            fileName="Truncate.example.tsx"
+          >
+            <CustomTooltipPosition />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Most-used props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                { name: "content", type: "string", description: "The full string. Required." },
-                { name: "position", type: '"end" | "middle" | "start"', description: "Where the ellipsis goes. end = default (filename style); middle = preserve both sides (ids); start = preserve tail (paths, breadcrumbs)." },
-                { name: "trailingNumChars", type: "number", description: "When position='middle', how many trailing characters to preserve. Default 7." },
-                { name: "maxCharsDisplayed", type: "number", description: "Force character-count truncation (overrides the width-based behaviour). Use when consistency across rows matters more than packing the available width." },
-                { name: "tooltipPosition", type: '"auto" | "top" | "bottom" | "left" | "right" | ...', description: "Where the auto-tooltip anchors (default 'top')." },
-              ]}
-            />
-          </div>
+          <Example source={truncateExampleSrc} fileName="Truncate.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Truncate, TruncatePosition } from "@golden-passport/ds-patternfly";'}
+        componentSource={truncateComponentSrc}
+        componentFileName="Truncate.tsx"
+        rows={[
+          { name: "content", type: "string", description: "The full string. Required." },
+          { name: "position", type: '"end" | "middle" | "start"', description: "Where the ellipsis goes. end = default (filename style); middle = preserve both sides (ids); start = preserve tail (paths, breadcrumbs)." },
+          { name: "trailingNumChars", type: "number", description: "When position='middle', how many trailing characters to preserve. Default 7." },
+          { name: "maxCharsDisplayed", type: "number", description: "Force character-count truncation (overrides the width-based behaviour). Use when consistency across rows matters more than packing the available width." },
+          { name: "tooltipPosition", type: '"auto" | "top" | "bottom" | "left" | "right" | ...', description: "Where the auto-tooltip anchors (default 'top')." },
+        ]}
+      />
 
       <Section title="When to use">
         <Card>

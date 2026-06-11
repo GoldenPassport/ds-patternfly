@@ -1,15 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Title } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+  ThemingPointer,
+} from "../_kit/StoryKit.js";
+import { Sizes } from "../../examples/components/Title.example.js";
+import titleExampleSrc from "../../examples/components/Title.example.tsx?raw";
+import titleComponentSrc from "../../components/Title.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Title",
   parameters: { layout: "padded" },
 };
 export default meta;
-
-const SIZES = ["4xl", "3xl", "2xl", "xl", "lg", "md"] as const;
 
 export const Overview: StoryObj = {
   render: () => (
@@ -25,47 +31,47 @@ export const Overview: StoryObj = {
     >
       <Section title="Sizes" description="All shown at heading level h2 so the visual size varies independently.">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "grid", gap: 12 }}>
-                {SIZES.map((s) => (
-                  <Title key={s} headingLevel="h2" size={s}>
-                    {s} — The quick brown fox
-                  </Title>
-                ))}
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<Title headingLevel="h1" size="2xl">Page title</Title>
-<Title headingLevel="h2" size="xl">Section title</Title>`}</CodeBlock>
-          </div>
+          <Example
+            source={titleExampleSrc}
+            region="Sizes"
+            fileName="Title.example.tsx"
+          >
+            <Sizes />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "headingLevel",
-                  type: '"h1" | "h2" | "h3" | "h4" | "h5" | "h6"',
-                  description: "Required. The semantic heading level — controls the document outline.",
-                },
-                {
-                  name: "size",
-                  type: '"md" | "lg" | "xl" | "2xl" | "3xl" | "4xl"',
-                  description: "Visual size, independent of headingLevel. Defaults to a size matching the level.",
-                },
-                {
-                  name: "children",
-                  type: "ReactNode",
-                  description: "The heading text.",
-                },
-              ]}
-            />
-          </div>
+          <Example source={titleExampleSrc} fileName="Title.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Title } from "@golden-passport/ds-patternfly";'}
+        componentSource={titleComponentSrc}
+        componentFileName="Title.tsx"
+        rows={[
+          {
+            name: "headingLevel",
+            type: '"h1" | "h2" | "h3" | "h4" | "h5" | "h6"',
+            description: "Required. The semantic heading level — controls the document outline.",
+          },
+          {
+            name: "size",
+            type: '"md" | "lg" | "xl" | "2xl" | "3xl" | "4xl"',
+            description: "Visual size, independent of headingLevel. Defaults to a size matching the level.",
+          },
+          {
+            name: "children",
+            type: "ReactNode",
+            description: "The heading text.",
+          },
+        ]}
+      />
 
       <Section
         title="Accessibility"

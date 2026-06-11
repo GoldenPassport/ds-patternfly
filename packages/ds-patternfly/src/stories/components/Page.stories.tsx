@@ -33,7 +33,20 @@ import {
   ToolbarItem,
 } from "@golden-passport/ds-patternfly";
 import { TimesIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../_kit/StoryKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card as DocCard,
+  CodeBlock,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import {
+  SlotProps,
+  CenteredWidthLimited,
+} from "../../examples/components/Page.example.js";
+import pageExampleSrc from "../../examples/components/Page.example.tsx?raw";
+import pageComponentSrc from "../../components/Page.tsx?raw";
 import {
   DemoFrame,
   PropsTable,
@@ -849,27 +862,6 @@ export const Overview: StoryObj = {
       </PageSidebar>
     );
 
-    // Slot props demo — uses Page.breadcrumb + Page.banner directly
-    const slotsMasthead = (
-      <Masthead display={{ default: "inline" }}>
-        <MastheadMain>
-          <MastheadBrand>
-            <MastheadLogo href="#" component="a">
-              {brandLogo}
-            </MastheadLogo>
-          </MastheadBrand>
-        </MastheadMain>
-        <MastheadContent>
-          <span style={{ color: "var(--gp-color-text-subtle)" }}>
-            Header content
-          </span>
-        </MastheadContent>
-      </Masthead>
-    );
-
-    // Centered + width-limited demo
-    const centeredMasthead = slotsMasthead;
-
     return (
       <FoundationPage
         title="Page"
@@ -1077,56 +1069,14 @@ const sidebar = (
           description="Page exposes named slots for content that lives between the masthead and the main scroll area. Pass a Breadcrumb directly to Page.breadcrumb — Page wraps it in PageBreadcrumb + PageBody automatically. Same for horizontalSubnav. Banner content sits above the breadcrumb."
         >
           <DocCard>
-            <div style={{ padding: 24, display: "grid", gap: 16 }}>
-              <div id="ds-page-slots-demo">
-              <DemoFrame height={300}>
-                <Page
-                  masthead={slotsMasthead}
-                  banner={
-                    <div
-                      style={{
-                        padding: "8px 16px",
-                        background: "var(--gp-color-status-info-bg)",
-                        color: "var(--gp-color-status-info-text)",
-                      }}
-                    >
-                      Banner content — global notice / status strip
-                    </div>
-                  }
-                  breadcrumb={
-                    <Breadcrumb>
-                      <BreadcrumbItem to="#">Workspaces</BreadcrumbItem>
-                      <BreadcrumbItem to="#">Acme</BreadcrumbItem>
-                      <BreadcrumbItem isActive>Onboarding</BreadcrumbItem>
-                    </Breadcrumb>
-                  }
-                  isContentFilled
-                >
-                  <PageSection aria-labelledby="slots-h1" isFilled>
-                    <Title headingLevel="h1" id="slots-h1">
-                      Onboarding
-                    </Title>
-                  </PageSection>
-                </Page>
-              </DemoFrame>
-              </div>
-              <CodeBlock>{`<Page
-  masthead={<Masthead>...</Masthead>}
-  banner={<NoticeBar>System update tonight at 23:00 UTC</NoticeBar>}
-  breadcrumb={
-    <Breadcrumb>
-      <BreadcrumbItem to="/workspaces">Workspaces</BreadcrumbItem>
-      <BreadcrumbItem to="/workspaces/acme">Acme</BreadcrumbItem>
-      <BreadcrumbItem isActive>Onboarding</BreadcrumbItem>
-    </Breadcrumb>
-  }
-  horizontalSubnav={<Nav variant="horizontal-subnav">{/* sub-tabs */}</Nav>}
-  isBreadcrumbWidthLimited
-  isBreadcrumbGrouped /* group breadcrumb + horizontalSubnav into one PageGroup */
->
-  <PageSection><Title headingLevel="h1">Page heading</Title></PageSection>
-</Page>`}</CodeBlock>
-            </div>
+            <Example
+              source={pageExampleSrc}
+              region="SlotProps"
+              fileName="Page.example.tsx"
+              height={300}
+            >
+              <SlotProps />
+            </Example>
           </DocCard>
         </Section>
 
@@ -1135,28 +1085,14 @@ const sidebar = (
           description="isWidthLimited caps a PageSection at the page-section width token; pair with isCenterAligned to centre the limited content in the main column. Useful for marketing pages, settings forms, focused single-column reading layouts."
         >
           <DocCard>
-            <div style={{ padding: 24 }}>
-              <div id="ds-page-centered-demo">
-              <DemoFrame height={260}>
-                <Page masthead={centeredMasthead}>
-                  <PageSection
-                    isWidthLimited
-                    isCenterAligned
-                    aria-label="Centered content"
-                  >
-                    <Card>
-                      <CardBody>
-                        When the main area is wider than the section&rsquo;s
-                        max-width, <code>isCenterAligned</code> centres the
-                        content. The card here just makes the boundary
-                        visible — it isn&rsquo;t required.
-                      </CardBody>
-                    </Card>
-                  </PageSection>
-                </Page>
-              </DemoFrame>
-              </div>
-            </div>
+            <Example
+              source={pageExampleSrc}
+              region="CenteredWidthLimited"
+              fileName="Page.example.tsx"
+              height={260}
+            >
+              <CenteredWidthLimited />
+            </Example>
           </DocCard>
         </Section>
 
@@ -1309,6 +1245,15 @@ const sidebar = (
           </DocCard>
         </Section>
 
+        <Section
+          title="Full example"
+          description="The complete example file behind the converted demos above — composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+        >
+          <DocCard>
+            <Example source={pageExampleSrc} fileName="Page.example.tsx" />
+          </DocCard>
+        </Section>
+
         <Section title="Composition">
           <DocCard>
             <div style={{ padding: 24 }}>
@@ -1328,12 +1273,12 @@ const sidebar = (
           </DocCard>
         </Section>
 
-        <Section title="Most-used Page props">
-          <DocCard>
-            <div style={{ padding: 24 }}>
-              <PropsTable
-                rows={[
-                  { name: "masthead", type: "ReactNode", description: "Top-bar content." },
+        <ConfigurationSection
+          importStatement={'import { Page, PageSection, PageSidebar, PageSidebarBody, PageToggleButton } from "@golden-passport/ds-patternfly";'}
+          componentSource={pageComponentSrc}
+          componentFileName="Page.tsx"
+          rows={[
+            { name: "masthead", type: "ReactNode", description: "Top-bar content." },
                   { name: "sidebar", type: "ReactNode", description: "Side-panel content. Pass null for sidebar-less layouts." },
                   { name: "banner", type: "ReactNode", description: "Slot rendered above the breadcrumb / main — system status strips, beta tags, environment markers." },
                   { name: "breadcrumb", type: "ReactNode", description: "Slot for a Breadcrumb. Page wraps it in PageBreadcrumb + PageBody automatically." },
@@ -1356,11 +1301,8 @@ const sidebar = (
                   { name: "skipToContent", type: "ReactElement", description: "First focusable element. Use the lib's SkipToContent component." },
                   { name: "onPageResize", type: "(event, { mobileView, windowSize }) => void", description: "Fires on viewport resize — useful for closing the sidebar on transition to mobile." },
                   { name: "getBreakpoint / getVerticalBreakpoint", type: "(width|height) => 'default'|'sm'|...|'2xl'", description: "Override the breakpoint mapping used for responsive class hooks." },
-                ]}
-              />
-            </div>
-          </DocCard>
-        </Section>
+          ]}
+        />
 
         <Section title="Most-used PageSection props">
           <DocCard>

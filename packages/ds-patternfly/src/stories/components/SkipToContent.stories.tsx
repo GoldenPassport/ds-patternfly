@@ -1,15 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-// PF6's own SkipToContent (href/onClick API). The DS exports its own
-// SkipToContent (targetId/label, see src/a11y/SkipToContent.tsx) under the
-// same name — this story documents the PF6 primitive it builds on.
-import { SkipToContent } from "@patternfly/react-core";
 import {
   FoundationPage,
   Section,
   Card,
-  CodeBlock,
+  ConfigurationSection,
+  Example,
 } from "../_kit/StoryKit.js";
-import { PropsTable } from "../_kit/DemoKit.js";
+// PF6's own SkipToContent (href/onClick API). The DS exports its own
+// SkipToContent (targetId/label, see src/a11y/SkipToContent.tsx) under the
+// same name — this story documents the PF6 primitive it builds on.
+import { TryIt } from "../../examples/components/SkipToContent.example.js";
+import skipToContentExampleSrc from "../../examples/components/SkipToContent.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/SkipToContent",
@@ -60,100 +61,51 @@ export const Basic: StoryObj = {
           }
         `}</style>
         <Card>
-          <div
-            style={{
-              padding: 24,
-              display: "grid",
-              gap: 16,
-            }}
+          <Example
+            source={skipToContentExampleSrc}
+            region="TryIt"
+            fileName="SkipToContent.example.tsx"
           >
-            <div
-              style={{
-                position: "relative",
-                border: "1px dashed var(--gp-color-border-subtle)",
-                borderRadius: 6,
-                padding: 24,
-                minHeight: 160,
-              }}
-            >
-              <SkipToContent
-                onClick={(e) => {
-                  e.preventDefault();
-                  document
-                    .getElementById("skip-demo-main")
-                    ?.focus();
-                }}
-                href="#skip-demo-main"
-              >
-                Skip to content
-              </SkipToContent>
-              <p style={{ marginTop: 0 }}>
-                <strong>Mock page chrome.</strong> Press <kbd>Tab</kbd>{" "}
-                to surface the skip link.
-              </p>
-              <main
-                id="skip-demo-main"
-                tabIndex={-1}
-                className="gp-skip-demo-main"
-                style={{
-                  marginTop: 16,
-                  padding: 16,
-                  background: "var(--gp-color-bg-secondary-default)",
-                  borderRadius: 6,
-                  outline: "none",
-                }}
-              >
-                <h2 style={{ marginTop: 0 }}>Main content</h2>
-                <p>
-                  The skip link sets focus here so AT users don&apos;t
-                  have to crawl through the masthead and side nav on
-                  every page load.
-                </p>
-              </main>
-            </div>
-            <CodeBlock>{`<SkipToContent
-  onClick={(e) => {
-    e.preventDefault();
-    document.getElementById("main")?.focus();
-  }}
-  href="#main"
->
-  Skip to content
-</SkipToContent>
-…
-<main id="main" tabIndex={-1}>…</main>`}</CodeBlock>
-          </div>
+            <TryIt />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Most-used props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "href",
-                  type: "string",
-                  description:
-                    "Fragment ID of the target element (e.g. '#main'). Even with onClick, set this so right-click + native browser behaviour still works.",
-                },
-                {
-                  name: "onClick",
-                  type: "(e: MouseEvent<HTMLDivElement>) => void",
-                  description:
-                    "Call preventDefault() and move focus imperatively. Native fragment-jump scrolls but does NOT focus the target — the click handler is what makes the link useful for keyboard users.",
-                },
-                {
-                  name: "children",
-                  type: "ReactNode",
-                  description:
-                    "Link text. Conventionally 'Skip to content' / 'Skip to main content' — keep it short, screen-reader users hear it announced first.",
-                },
-              ]}
-            />
-          </div>
+          <Example
+            source={skipToContentExampleSrc}
+            fileName="SkipToContent.example.tsx"
+          />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { SkipToContent } from "@patternfly/react-core";'}
+        rows={[
+          {
+            name: "href",
+            type: "string",
+            description:
+              "Fragment ID of the target element (e.g. '#main'). Even with onClick, set this so right-click + native browser behaviour still works.",
+          },
+          {
+            name: "onClick",
+            type: "(e: MouseEvent<HTMLDivElement>) => void",
+            description:
+              "Call preventDefault() and move focus imperatively. Native fragment-jump scrolls but does NOT focus the target — the click handler is what makes the link useful for keyboard users.",
+          },
+          {
+            name: "children",
+            type: "ReactNode",
+            description:
+              "Link text. Conventionally 'Skip to content' / 'Skip to main content' — keep it short, screen-reader users hear it announced first.",
+          },
+        ]}
+      />
 
       <Section title="Where it lives in this design system">
         <Card>

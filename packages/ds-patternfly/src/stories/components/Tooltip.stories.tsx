@@ -1,7 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button, Tooltip } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+  ThemingPointer,
+} from "../_kit/StoryKit.js";
+import { Basic, Positions } from "../../examples/components/Tooltip.example.js";
+import tooltipExampleSrc from "../../examples/components/Tooltip.example.tsx?raw";
+import tooltipComponentSrc from "../../components/Tooltip.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Tooltip",
@@ -24,87 +32,79 @@ export const Overview: StoryObj = {
     >
       <Section title="Basic">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Tooltip content="Saves the current draft">
-                <Button>Save</Button>
-              </Tooltip>
-            </DemoFrame>
-            <CodeBlock>{`<Tooltip content="Saves the current draft">
-  <Button>Save</Button>
-</Tooltip>`}</CodeBlock>
-          </div>
+          <Example
+            source={tooltipExampleSrc}
+            region="Basic"
+            fileName="Tooltip.example.tsx"
+          >
+            <Basic />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Positions" description="Set position when the default (top) collides with viewport edges.">
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
-                <Tooltip content="On top" position="top">
-                  <Button variant="secondary">Top</Button>
-                </Tooltip>
-                <Tooltip content="On the right" position="right">
-                  <Button variant="secondary">Right</Button>
-                </Tooltip>
-                <Tooltip content="On the bottom" position="bottom">
-                  <Button variant="secondary">Bottom</Button>
-                </Tooltip>
-                <Tooltip content="On the left" position="left">
-                  <Button variant="secondary">Left</Button>
-                </Tooltip>
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={tooltipExampleSrc}
+            region="Positions"
+            fileName="Tooltip.example.tsx"
+          >
+            <Positions />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "content",
-                  type: "ReactNode",
-                  description: "Required. The tooltip text. Keep short — one phrase, no full sentences.",
-                },
-                {
-                  name: "children",
-                  type: "ReactElement",
-                  description: "Single trigger element. Must be focusable for keyboard users to see the tooltip.",
-                },
-                {
-                  name: "position",
-                  type: '"top" | "bottom" | "left" | "right" | "auto" | "top-start" | "top-end" | ...',
-                  description: 'Default "top". "auto" flips when the tooltip would overflow the viewport.',
-                },
-                {
-                  name: "aria",
-                  type: '"describedby" | "labelledby" | "none"',
-                  description: 'How AT references the tooltip. Default "describedby" — the trigger is named by its own content, the tooltip provides supplemental description.',
-                },
-                {
-                  name: "trigger",
-                  type: '"mouseenter focus" | "manual" | etc.',
-                  description: "Default mouseenter+focus. Manual lets you control isVisible imperatively.",
-                },
-                {
-                  name: "isVisible",
-                  type: "boolean",
-                  description: "For trigger=\"manual\" — control visibility from app state.",
-                },
-                {
-                  name: "entryDelay / exitDelay",
-                  type: "number",
-                  description: "Milliseconds before show/hide. Default ~300ms entry. Don't reduce below 100ms.",
-                },
-              ]}
-            />
-          </div>
+          <Example source={tooltipExampleSrc} fileName="Tooltip.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Tooltip } from "@golden-passport/ds-patternfly";'}
+        componentSource={tooltipComponentSrc}
+        componentFileName="Tooltip.tsx"
+        rows={[
+          {
+            name: "content",
+            type: "ReactNode",
+            description: "Required. The tooltip text. Keep short — one phrase, no full sentences.",
+          },
+          {
+            name: "children",
+            type: "ReactElement",
+            description: "Single trigger element. Must be focusable for keyboard users to see the tooltip.",
+          },
+          {
+            name: "position",
+            type: '"top" | "bottom" | "left" | "right" | "auto" | "top-start" | "top-end" | ...',
+            description: 'Default "top". "auto" flips when the tooltip would overflow the viewport.',
+          },
+          {
+            name: "aria",
+            type: '"describedby" | "labelledby" | "none"',
+            description: 'How AT references the tooltip. Default "describedby" — the trigger is named by its own content, the tooltip provides supplemental description.',
+          },
+          {
+            name: "trigger",
+            type: '"mouseenter focus" | "manual" | etc.',
+            description: "Default mouseenter+focus. Manual lets you control isVisible imperatively.",
+          },
+          {
+            name: "isVisible",
+            type: "boolean",
+            description: "For trigger=\"manual\" — control visibility from app state.",
+          },
+          {
+            name: "entryDelay / exitDelay",
+            type: "number",
+            description: "Milliseconds before show/hide. Default ~300ms entry. Don't reduce below 100ms.",
+          },
+        ]}
+      />
 
       <Section
         title="Accessibility"

@@ -1,15 +1,20 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Spinner } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import { Sizes } from "../../examples/components/Spinner.example.js";
+import spinnerExampleSrc from "../../examples/components/Spinner.example.tsx?raw";
+import spinnerComponentSrc from "../../components/Spinner.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Spinner",
   parameters: { layout: "padded" },
 };
 export default meta;
-
-const SIZES = ["sm", "md", "lg", "xl"] as const;
 
 export const Overview: StoryObj = {
   render: () => (
@@ -26,57 +31,57 @@ export const Overview: StoryObj = {
     >
       <Section title="Sizes">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-                {SIZES.map((s) => (
-                  <div key={s} style={{ textAlign: "center", color: "var(--gp-color-text-regular)" }}>
-                    <Spinner size={s} aria-label={`Loading (${s})`} />
-                    <div style={{ fontSize: 12, marginTop: 8 }}>{s}</div>
-                  </div>
-                ))}
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<Spinner size="md" aria-label="Loading" />`}</CodeBlock>
-          </div>
+          <Example
+            source={spinnerExampleSrc}
+            region="Sizes"
+            fileName="Spinner.example.tsx"
+          >
+            <Sizes />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "size",
-                  type: '"sm" | "md" | "lg" | "xl"',
-                  description: "Visual size. Default md.",
-                },
-                {
-                  name: "diameter",
-                  type: "string",
-                  description: 'Override size with an explicit value (e.g. "60px"). Prefer named sizes.',
-                },
-                {
-                  name: "aria-label",
-                  type: "string",
-                  description: "Required when the spinner stands alone. Tells AT what's loading.",
-                },
-                {
-                  name: "aria-valuetext",
-                  type: "string",
-                  description: "Optional richer status (e.g. \"Saving draft\").",
-                },
-                {
-                  name: "isInline",
-                  type: "boolean",
-                  description: "Inline-flex display — aligns with surrounding text baseline.",
-                },
-              ]}
-            />
-          </div>
+          <Example source={spinnerExampleSrc} fileName="Spinner.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Spinner } from "@golden-passport/ds-patternfly";'}
+        componentSource={spinnerComponentSrc}
+        componentFileName="Spinner.tsx"
+        rows={[
+          {
+            name: "size",
+            type: '"sm" | "md" | "lg" | "xl"',
+            description: "Visual size. Default md.",
+          },
+          {
+            name: "diameter",
+            type: "string",
+            description: 'Override size with an explicit value (e.g. "60px"). Prefer named sizes.',
+          },
+          {
+            name: "aria-label",
+            type: "string",
+            description: "Required when the spinner stands alone. Tells AT what's loading.",
+          },
+          {
+            name: "aria-valuetext",
+            type: "string",
+            description: "Optional richer status (e.g. \"Saving draft\").",
+          },
+          {
+            name: "isInline",
+            type: "boolean",
+            description: "Inline-flex display — aligns with surrounding text baseline.",
+          },
+        ]}
+      />
 
       <Section
         title="Accessibility"

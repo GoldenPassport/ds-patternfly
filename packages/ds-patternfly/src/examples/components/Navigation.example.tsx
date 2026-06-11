@@ -8,6 +8,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useState } from "react";
+import type { CSSProperties } from "react";
 import {
   Nav,
   NavExpandable,
@@ -262,6 +263,9 @@ export function Horizontal() {
 // #region BackgroundOpacity
 export function BackgroundOpacity() {
   const [active, setActive] = useState<string | number>(0);
+  // --gp-nav-bg-opacity — default (fully opaque): 1
+  //   soft wash:   0.15 — 0.25
+  //   tinted hint: 0.08 — 0.12
   return (
     <Nav
       aria-label="Soft fill"
@@ -270,7 +274,7 @@ export function BackgroundOpacity() {
         {
           width: 240,
           "--gp-nav-bg-opacity": 0.18,
-        } as React.CSSProperties
+        } as CSSProperties
       }
     >
       <NavList>
@@ -296,6 +300,10 @@ export function BackgroundOpacity() {
 // #region NakedStyling
 export function NakedStyling() {
   const [active, setActive] = useState<string | number>(0);
+  // gp-nav-naked state cues:
+  //   idle   — subtle text colour
+  //   hover  — regular text colour (darken)
+  //   active — regular text colour + bold weight, no background
   return (
     <Nav
       className="gp-nav-naked"

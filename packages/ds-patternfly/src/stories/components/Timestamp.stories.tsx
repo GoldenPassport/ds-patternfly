@@ -1,19 +1,26 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  Timestamp,
-  TimestampFormat,
-  TimestampTooltipVariant,
-} from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import {
+  Default,
+  FormatVariations,
+  WithSuffix,
+  WithTooltip,
+  CustomContent,
+} from "../../examples/components/Timestamp.example.js";
+import timestampExampleSrc from "../../examples/components/Timestamp.example.tsx?raw";
+import timestampComponentSrc from "../../components/Timestamp.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Timestamp",
   parameters: { layout: "padded" },
 };
 export default meta;
-
-const fixed = new Date("2026-04-21T14:30:25");
 
 export const Overview: StoryObj = {
   render: () => (
@@ -34,16 +41,13 @@ export const Overview: StoryObj = {
         description="With no props, Timestamp renders the current time in the user's locale + timezone. shouldDisplayUTC switches to UTC."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "grid", gap: 8, color: "var(--gp-color-text-regular)" }}>
-                <Timestamp />
-                <Timestamp shouldDisplayUTC />
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<Timestamp />                  // local time
-<Timestamp shouldDisplayUTC /> // UTC time`}</CodeBlock>
-          </div>
+          <Example
+            source={timestampExampleSrc}
+            region="Default"
+            fileName="Timestamp.example.tsx"
+          >
+            <Default />
+          </Example>
         </Card>
       </Section>
 
@@ -52,17 +56,13 @@ export const Overview: StoryObj = {
         description="dateFormat + timeFormat each accept TimestampFormat.full / long / medium / short. Mix & match for the right level of detail per surface (compact in tables, full in audit logs)."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ display: "grid", gap: 8, color: "var(--gp-color-text-regular)" }}>
-                <Timestamp date={fixed} dateFormat={TimestampFormat.full} timeFormat={TimestampFormat.full} />
-                <Timestamp date={fixed} dateFormat={TimestampFormat.full} />
-                <Timestamp date={fixed} timeFormat={TimestampFormat.full} />
-                <Timestamp date={fixed} dateFormat={TimestampFormat.medium} timeFormat={TimestampFormat.short} />
-                <Timestamp date={fixed} dateFormat={TimestampFormat.short} timeFormat={TimestampFormat.short} />
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={timestampExampleSrc}
+            region="FormatVariations"
+            fileName="Timestamp.example.tsx"
+          >
+            <FormatVariations />
+          </Example>
         </Card>
       </Section>
 
@@ -71,18 +71,13 @@ export const Overview: StoryObj = {
         description="displaySuffix appends a label after the formatted time — useful for explicit timezone markers or context labels."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ color: "var(--gp-color-text-regular)" }}>
-                <Timestamp
-                  date={fixed}
-                  dateFormat={TimestampFormat.medium}
-                  timeFormat={TimestampFormat.short}
-                  displaySuffix="UTC"
-                />
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={timestampExampleSrc}
+            region="WithSuffix"
+            fileName="Timestamp.example.tsx"
+          >
+            <WithSuffix />
+          </Example>
         </Card>
       </Section>
 
@@ -91,23 +86,13 @@ export const Overview: StoryObj = {
         description="tooltip enables a hover/focus tooltip — TimestampTooltipVariant.default shows the full UTC time, .custom lets you supply your own content, omit the prop entirely to skip the tooltip."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ display: "grid", gap: 8, color: "var(--gp-color-text-regular)" }}>
-                <Timestamp
-                  date={fixed}
-                  tooltip={{ variant: TimestampTooltipVariant.default }}
-                />
-                <Timestamp
-                  date={fixed}
-                  tooltip={{
-                    variant: TimestampTooltipVariant.default,
-                    suffix: "Coordinated Universal Time (UTC)",
-                  }}
-                />
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={timestampExampleSrc}
+            region="WithTooltip"
+            fileName="Timestamp.example.tsx"
+          >
+            <WithTooltip />
+          </Example>
         </Card>
       </Section>
 
@@ -116,40 +101,41 @@ export const Overview: StoryObj = {
         description="children replace the rendered timestamp text — pair with tooltip={{ variant: 'default' }} to keep the full time as a hover affordance. Useful for relative formats: '2h ago', 'just now', 'yesterday'."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ color: "var(--gp-color-text-regular)" }}>
-                <Timestamp
-                  date={fixed}
-                  tooltip={{ variant: TimestampTooltipVariant.default }}
-                >
-                  2 hours ago
-                </Timestamp>
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={timestampExampleSrc}
+            region="CustomContent"
+            fileName="Timestamp.example.tsx"
+          >
+            <CustomContent />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Most-used props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                { name: "date", type: "Date | string | number", description: "The timestamp to render. Omit for the current time." },
-                { name: "dateFormat", type: '"full" | "long" | "medium" | "short" (TimestampFormat)', description: "How the date portion formats. Omit to suppress the date." },
-                { name: "timeFormat", type: '"full" | "long" | "medium" | "short" (TimestampFormat)', description: "How the time portion formats. Omit to suppress the time." },
-                { name: "shouldDisplayUTC", type: "boolean", description: "Render in UTC instead of the user's local timezone." },
-                { name: "displaySuffix", type: "string", description: "Trailing label appended to the rendered string ('UTC', 'US Eastern', etc.)." },
-                { name: "customFormat", type: "Intl.DateTimeFormatOptions", description: "Bypass the dateFormat/timeFormat presets — pass an Intl options object directly." },
-                { name: "locale", type: "string", description: "Override the user's default locale (e.g. 'en-GB' for d/m/y order)." },
-                { name: "tooltip", type: "{ variant: TimestampTooltipVariant; suffix?: string; content?: ReactNode }", description: "Hover tooltip. variant='default' shows the canonical full timestamp; pass content for fully custom tooltip body." },
-                { name: "children", type: "ReactNode", description: "Replace the rendered timestamp string — use for relative formats ('2h ago')." },
-              ]}
-            />
-          </div>
+          <Example source={timestampExampleSrc} fileName="Timestamp.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Timestamp, TimestampFormat, TimestampTooltipVariant } from "@golden-passport/ds-patternfly";'}
+        componentSource={timestampComponentSrc}
+        componentFileName="Timestamp.tsx"
+        rows={[
+          { name: "date", type: "Date | string | number", description: "The timestamp to render. Omit for the current time." },
+          { name: "dateFormat", type: '"full" | "long" | "medium" | "short" (TimestampFormat)', description: "How the date portion formats. Omit to suppress the date." },
+          { name: "timeFormat", type: '"full" | "long" | "medium" | "short" (TimestampFormat)', description: "How the time portion formats. Omit to suppress the time." },
+          { name: "shouldDisplayUTC", type: "boolean", description: "Render in UTC instead of the user's local timezone." },
+          { name: "displaySuffix", type: "string", description: "Trailing label appended to the rendered string ('UTC', 'US Eastern', etc.)." },
+          { name: "customFormat", type: "Intl.DateTimeFormatOptions", description: "Bypass the dateFormat/timeFormat presets — pass an Intl options object directly." },
+          { name: "locale", type: "string", description: "Override the user's default locale (e.g. 'en-GB' for d/m/y order)." },
+          { name: "tooltip", type: "{ variant: TimestampTooltipVariant; suffix?: string; content?: ReactNode }", description: "Hover tooltip. variant='default' shows the canonical full timestamp; pass content for fully custom tooltip body." },
+          { name: "children", type: "ReactNode", description: "Replace the rendered timestamp string — use for relative formats ('2h ago')." },
+        ]}
+      />
 
       <Section title="When to use">
         <Card>

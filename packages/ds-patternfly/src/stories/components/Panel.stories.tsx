@@ -1,14 +1,20 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  Panel,
-  PanelHeader,
-  PanelMain,
-  PanelMainBody,
-  PanelFooter,
-  Button,
-} from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock, ThemingPointer } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+  ThemingPointer,
+} from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  Basic,
+  Variants,
+  Scrollable,
+} from "../../examples/components/Panel.example.js";
+import panelExampleSrc from "../../examples/components/Panel.example.tsx?raw";
+import panelComponentSrc from "../../components/Panel.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Panel",
@@ -30,22 +36,6 @@ const meta: Meta = {
 };
 export default meta;
 
-const filler = (
-  <>
-    <p style={{ marginTop: 0 }}>
-      Panels are surface containers for grouping related content. The
-      header, body, and footer slots are all optional — drop the ones
-      you don&rsquo;t need.
-    </p>
-    <p>
-      Use the <code>variant</code> prop to differentiate elevation
-      (raised, bordered, secondary). For scrollable content, set
-      <code>isScrollable</code> on the panel and <code>maxHeight</code>{" "}
-      on the main slot.
-    </p>
-  </>
-);
-
 export const Overview: StoryObj = {
   render: () => (
     <FoundationPage
@@ -66,32 +56,13 @@ export const Overview: StoryObj = {
         description="Panel → PanelMain → PanelMainBody. Header and footer are optional."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Panel>
-                <PanelHeader>
-                  <strong>Recent activity</strong>
-                </PanelHeader>
-                <PanelMain>
-                  <PanelMainBody>{filler}</PanelMainBody>
-                </PanelMain>
-                <PanelFooter>
-                  <Button variant="link" isInline>
-                    View all
-                  </Button>
-                </PanelFooter>
-              </Panel>
-            </DemoFrame>
-            <CodeBlock>{`<Panel>
-  <PanelHeader>Recent activity</PanelHeader>
-  <PanelMain>
-    <PanelMainBody>{/* content */}</PanelMainBody>
-  </PanelMain>
-  <PanelFooter>
-    <Button variant="link" isInline>View all</Button>
-  </PanelFooter>
-</Panel>`}</CodeBlock>
-          </div>
+          <Example
+            source={panelExampleSrc}
+            region="Basic"
+            fileName="Panel.example.tsx"
+          >
+            <Basic />
+          </Example>
         </Card>
       </Section>
 
@@ -100,35 +71,13 @@ export const Overview: StoryObj = {
         description="raised, bordered, and secondary tweak the surface — pick the one that matches your hierarchy. Default is flush, no border, no shadow."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "grid", gap: 16 }}>
-                <Panel variant="raised">
-                  <PanelMain>
-                    <PanelMainBody>
-                      <strong>Raised</strong> — drop shadow, sits above the
-                      background.
-                    </PanelMainBody>
-                  </PanelMain>
-                </Panel>
-                <Panel variant="bordered">
-                  <PanelMain>
-                    <PanelMainBody>
-                      <strong>Bordered</strong> — outline only, no shadow.
-                    </PanelMainBody>
-                  </PanelMain>
-                </Panel>
-                <Panel variant="secondary">
-                  <PanelMain>
-                    <PanelMainBody>
-                      <strong>Secondary</strong> — tinted background for
-                      lower-priority groupings.
-                    </PanelMainBody>
-                  </PanelMain>
-                </Panel>
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={panelExampleSrc}
+            region="Variants"
+            fileName="Panel.example.tsx"
+          >
+            <Variants />
+          </Example>
         </Card>
       </Section>
 
@@ -137,25 +86,22 @@ export const Overview: StoryObj = {
         description="isScrollable + maxHeight constrains the body so long content scrolls inside the panel rather than the page."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <Panel variant="bordered" isScrollable>
-                <PanelHeader>
-                  <strong>Event log</strong>
-                </PanelHeader>
-                <PanelMain maxHeight="180px">
-                  <PanelMainBody>
-                    {Array.from({ length: 20 }).map((_, i) => (
-                      <p key={i} style={{ margin: "6px 0" }}>
-                        {new Date(Date.now() - i * 60_000).toISOString()} —
-                        event #{1000 - i} processed
-                      </p>
-                    ))}
-                  </PanelMainBody>
-                </PanelMain>
-              </Panel>
-            </DemoFrame>
-          </div>
+          <Example
+            source={panelExampleSrc}
+            region="Scrollable"
+            fileName="Panel.example.tsx"
+          >
+            <Scrollable />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={panelExampleSrc} fileName="Panel.example.tsx" />
         </Card>
       </Section>
 
@@ -175,16 +121,20 @@ export const Overview: StoryObj = {
         </Card>
       </Section>
 
+      <ConfigurationSection
+        importStatement={'import { Panel, PanelHeader, PanelMain, PanelMainBody, PanelFooter } from "@golden-passport/ds-patternfly";'}
+        componentSource={panelComponentSrc}
+        componentFileName="Panel.tsx"
+        rows={[
+          { name: "variant", type: '"raised" | "bordered" | "secondary"', description: "Surface treatment. Default = flush, no chrome." },
+          { name: "isScrollable", type: "boolean", description: "Adds the scrollable styling. Pair with PanelMain.maxHeight to bound the scroll region." },
+        ]}
+      />
+
       <Section title="Most-used Panel props">
         <Card>
           <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                { name: "variant", type: '"raised" | "bordered" | "secondary"', description: "Surface treatment. Default = flush, no chrome." },
-                { name: "isScrollable", type: "boolean", description: "Adds the scrollable styling. Pair with PanelMain.maxHeight to bound the scroll region." },
-              ]}
-            />
-            <p style={{ marginTop: 16, marginBottom: 0, color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
+            <p style={{ margin: 0, color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
               <strong>PanelMain.maxHeight</strong> is a CSS length string
               (e.g. <code>&quot;240px&quot;</code>, <code>&quot;30vh&quot;</code>).
               Without it, the panel grows to fit its content.

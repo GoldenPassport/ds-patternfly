@@ -1,15 +1,28 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Label } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import {
+  GenericInfoLabels,
+  StatusVariants,
+  ColorPalette,
+  Variants,
+  OutlinedLabels,
+  CompactLabels,
+  Removable,
+} from "../../examples/components/Label.example.js";
+import labelExampleSrc from "../../examples/components/Label.example.tsx?raw";
+import labelComponentSrc from "../../components/Label.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Label",
   parameters: { layout: "padded" },
 };
 export default meta;
-
-const COLORS = ["blue", "teal", "green", "orange", "purple", "red", "orangered", "grey", "yellow"] as const;
 
 export const Overview: StoryObj = {
   render: () => (
@@ -30,38 +43,25 @@ export const Overview: StoryObj = {
         description='For neutral, informational tags ("Beta", "Draft", "New"), lead with status="info" rather than picking from the color palette. The info coloring carries semantic intent and stays consistent across brands.'
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <Label status="info">Beta</Label>
-                <Label status="info">Draft</Label>
-                <Label status="info">New</Label>
-                <Label status="info">Preview</Label>
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`// Default for any neutral, informational tag
-<Label status="info">Beta</Label>
-<Label status="info">Draft</Label>`}</CodeBlock>
-          </div>
+          <Example
+            source={labelExampleSrc}
+            region="GenericInfoLabels"
+            fileName="Label.example.tsx"
+          >
+            <GenericInfoLabels />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Status variants" description="Status-themed labels carry semantic meaning. Reach for these before the color palette.">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <Label status="info">Info</Label>
-                <Label status="success">Success</Label>
-                <Label status="warning">Warning</Label>
-                <Label status="danger">Danger</Label>
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<Label status="info">In review</Label>
-<Label status="success">Approved</Label>
-<Label status="warning">Action needed</Label>
-<Label status="danger">Failed</Label>`}</CodeBlock>
-          </div>
+          <Example
+            source={labelExampleSrc}
+            region="StatusVariants"
+            fileName="Label.example.tsx"
+          >
+            <StatusVariants />
+          </Example>
         </Card>
       </Section>
 
@@ -70,30 +70,25 @@ export const Overview: StoryObj = {
         description="Use the color palette only when status doesn't fit — distinct categories, project tags, or user-assigned labels where the meaning lives in the text and the color is just a category index."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {COLORS.map((c) => (
-                  <Label key={c} color={c}>
-                    {c}
-                  </Label>
-                ))}
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={labelExampleSrc}
+            region="ColorPalette"
+            fileName="Label.example.tsx"
+          >
+            <ColorPalette />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Variants" description="Outline vs filled.">
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 8 }}>
-                <Label variant="outline">Outline</Label>
-                <Label variant="filled" color="blue">Filled</Label>
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={labelExampleSrc}
+            region="Variants"
+            fileName="Label.example.tsx"
+          >
+            <Variants />
+          </Example>
         </Card>
       </Section>
 
@@ -102,27 +97,13 @@ export const Overview: StoryObj = {
         description="A less prominent label style — a tinted outline instead of a filled background. Reach for it when filled labels read too heavy, or to separate non-clickable tags from clickable ones. Works with both status and the color palette."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <Label variant="outline" status="info">Info</Label>
-                <Label variant="outline" status="success">Success</Label>
-                <Label variant="outline" status="warning">Warning</Label>
-                <Label variant="outline" status="danger">Danger</Label>
-              </div>
-            </DemoFrame>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {COLORS.map((c) => (
-                  <Label key={c} variant="outline" color={c}>
-                    {c}
-                  </Label>
-                ))}
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<Label variant="outline" status="success">Approved</Label>
-<Label variant="outline" color="blue">Engineering</Label>`}</CodeBlock>
-          </div>
+          <Example
+            source={labelExampleSrc}
+            region="OutlinedLabels"
+            fileName="Label.example.tsx"
+          >
+            <OutlinedLabels />
+          </Example>
         </Card>
       </Section>
 
@@ -131,103 +112,84 @@ export const Overview: StoryObj = {
         description="Smaller padding for space-constrained surfaces — table cells, toolbar chips, or a Beta / preview tag beside a title. Pass isCompact; it composes with status, color, outline, icons, and onClose."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div
-                style={{
-                  display: "flex",
-                  gap: 8,
-                  flexWrap: "wrap",
-                  alignItems: "center",
-                }}
-              >
-                <Label isCompact status="info">Info</Label>
-                <Label isCompact status="success">Success</Label>
-                <Label isCompact color="blue">Blue</Label>
-                <Label isCompact variant="outline" color="blue">Outline</Label>
-                <Label
-                  isCompact
-                  color="grey"
-                  onClose={() => {}}
-                  closeBtnAriaLabel="Remove tag"
-                >
-                  Removable
-                </Label>
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<Label isCompact status="success">Approved</Label>
-<Label isCompact variant="outline" color="blue">Engineering</Label>`}</CodeBlock>
-          </div>
+          <Example
+            source={labelExampleSrc}
+            region="CompactLabels"
+            fileName="Label.example.tsx"
+          >
+            <CompactLabels />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Removable" description="Pass onClose to make the label dismissible.">
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 8 }}>
-                <Label color="blue" onClose={() => {}} closeBtnAriaLabel="Remove engineering filter">
-                  Engineering
-                </Label>
-                <Label color="blue" onClose={() => {}} closeBtnAriaLabel="Remove design filter">
-                  Design
-                </Label>
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={labelExampleSrc}
+            region="Removable"
+            fileName="Label.example.tsx"
+          >
+            <Removable />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "color",
-                  type: '"blue" | "teal" | "green" | "orange" | "purple" | "red" | "orangered" | "grey" | "yellow"',
-                  description: "Category color. Pick one color per category and reuse it consistently across the app.",
-                },
-                {
-                  name: "variant",
-                  type: '"outline" | "filled"',
-                  description: "Filled draws attention; outline is the standard tag look.",
-                },
-                {
-                  name: "status",
-                  type: '"success" | "warning" | "danger" | "info" | "custom"',
-                  description: "Semantic status — overrides color and adds the matching status icon.",
-                },
-                {
-                  name: "icon",
-                  type: "ReactNode",
-                  description: "Leading icon. Combine with a brand glyph or a status icon.",
-                },
-                {
-                  name: "onClose",
-                  type: "(event) => void",
-                  description: "Adds a close button. closeBtnAriaLabel is required when set.",
-                },
-                {
-                  name: "closeBtnAriaLabel",
-                  type: "string",
-                  description: 'Accessible label for the close button. Required with onClose. Include the label content for context: "Remove Engineering".',
-                },
-                {
-                  name: "isCompact",
-                  type: "boolean",
-                  description: "Smaller padding for dense surfaces (table cells, toolbar chips).",
-                },
-                {
-                  name: "href",
-                  type: "string",
-                  description: "Make the label a link (renders as anchor).",
-                },
-              ]}
-            />
-          </div>
+          <Example source={labelExampleSrc} fileName="Label.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Label } from "@golden-passport/ds-patternfly";'}
+        componentSource={labelComponentSrc}
+        componentFileName="Label.tsx"
+        rows={[
+          {
+            name: "color",
+            type: '"blue" | "teal" | "green" | "orange" | "purple" | "red" | "orangered" | "grey" | "yellow"',
+            description: "Category color. Pick one color per category and reuse it consistently across the app.",
+          },
+          {
+            name: "variant",
+            type: '"outline" | "filled"',
+            description: "Filled draws attention; outline is the standard tag look.",
+          },
+          {
+            name: "status",
+            type: '"success" | "warning" | "danger" | "info" | "custom"',
+            description: "Semantic status — overrides color and adds the matching status icon.",
+          },
+          {
+            name: "icon",
+            type: "ReactNode",
+            description: "Leading icon. Combine with a brand glyph or a status icon.",
+          },
+          {
+            name: "onClose",
+            type: "(event) => void",
+            description: "Adds a close button. closeBtnAriaLabel is required when set.",
+          },
+          {
+            name: "closeBtnAriaLabel",
+            type: "string",
+            description: 'Accessible label for the close button. Required with onClose. Include the label content for context: "Remove Engineering".',
+          },
+          {
+            name: "isCompact",
+            type: "boolean",
+            description: "Smaller padding for dense surfaces (table cells, toolbar chips).",
+          },
+          {
+            name: "href",
+            type: "string",
+            description: "Make the label a link (renders as anchor).",
+          },
+        ]}
+      />
 
       <Section
         title="Picking color vs status"

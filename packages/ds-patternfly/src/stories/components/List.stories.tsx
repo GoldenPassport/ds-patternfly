@@ -1,12 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { List, ListComponent, ListItem, ListVariant, OrderType } from "@golden-passport/ds-patternfly";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 import {
-  BookOpenIcon,
-  DesktopIcon,
-  KeyIcon,
-} from "@patternfly/react-icons";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+  Unordered,
+  Ordered,
+  Inline,
+  Plain,
+  WithIcons,
+  WithHorizontalRules,
+} from "../../examples/components/List.example.js";
+import listExampleSrc from "../../examples/components/List.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/List",
@@ -31,20 +34,13 @@ export const Overview: StoryObj = {
     >
       <Section title="Unordered (default)">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <List>
-                <ListItem>Authenticate with the API</ListItem>
-                <ListItem>Create a workflow definition</ListItem>
-                <ListItem>Trigger a run from the dashboard</ListItem>
-              </List>
-            </DemoFrame>
-            <CodeBlock>{`<List>
-  <ListItem>First</ListItem>
-  <ListItem>Second</ListItem>
-  <ListItem>Third</ListItem>
-</List>`}</CodeBlock>
-          </div>
+          <Example
+            source={listExampleSrc}
+            region="Unordered"
+            fileName="List.example.tsx"
+          >
+            <Unordered />
+          </Example>
         </Card>
       </Section>
 
@@ -53,18 +49,13 @@ export const Overview: StoryObj = {
         description="component='ol' renders as an ordered list. type sets the marker style — pick a meaningful one when the order itself communicates something (e.g. lower-roman for sub-steps in a numbered procedure)."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <List
-                component={ListComponent.ol}
-                type={OrderType.number}
-              >
-                <ListItem>Authenticate with the API.</ListItem>
-                <ListItem>Create a workflow definition.</ListItem>
-                <ListItem>Trigger a run from the dashboard.</ListItem>
-              </List>
-            </DemoFrame>
-          </div>
+          <Example
+            source={listExampleSrc}
+            region="Ordered"
+            fileName="List.example.tsx"
+          >
+            <Ordered />
+          </Example>
         </Card>
       </Section>
 
@@ -73,16 +64,13 @@ export const Overview: StoryObj = {
         description="variant='inline' lays items horizontally with comma-style separation (no bullets). Use for inline sequences in body copy — tags, breadcrumb-like trails, or comma-separated metadata."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <List variant={ListVariant.inline}>
-                <ListItem>built</ListItem>
-                <ListItem>tested</ListItem>
-                <ListItem>deployed</ListItem>
-                <ListItem>verified</ListItem>
-              </List>
-            </DemoFrame>
-          </div>
+          <Example
+            source={listExampleSrc}
+            region="Inline"
+            fileName="List.example.tsx"
+          >
+            <Inline />
+          </Example>
         </Card>
       </Section>
 
@@ -91,15 +79,13 @@ export const Overview: StoryObj = {
         description="isPlain strips the marker column. Use as the base for icon-led item lists, or for stacks of full-width content that don't read as bullets."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <List isPlain>
-                <ListItem>One</ListItem>
-                <ListItem>Two</ListItem>
-                <ListItem>Three</ListItem>
-              </List>
-            </DemoFrame>
-          </div>
+          <Example
+            source={listExampleSrc}
+            region="Plain"
+            fileName="List.example.tsx"
+          >
+            <Plain />
+          </Example>
         </Card>
       </Section>
 
@@ -108,15 +94,13 @@ export const Overview: StoryObj = {
         description="Combine isPlain + per-item icon for a clean icon-led list — a common detail-screen pattern (capabilities, requirements, included features)."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <List isPlain>
-                <ListItem icon={<BookOpenIcon />}>Read-the-docs onboarding</ListItem>
-                <ListItem icon={<KeyIcon />}>API token rotation</ListItem>
-                <ListItem icon={<DesktopIcon />}>Workspace dashboard</ListItem>
-              </List>
-            </DemoFrame>
-          </div>
+          <Example
+            source={listExampleSrc}
+            region="WithIcons"
+            fileName="List.example.tsx"
+          >
+            <WithIcons />
+          </Example>
         </Card>
       </Section>
 
@@ -125,15 +109,22 @@ export const Overview: StoryObj = {
         description="isBordered adds a divider between each item — useful for changelogs, activity feeds, or settings rows where each item is a substantial block."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <List isPlain isBordered>
-                <ListItem>v2.4.0 — Workflow retries with exponential back-off.</ListItem>
-                <ListItem>v2.3.0 — Schedule windows and cooldowns.</ListItem>
-                <ListItem>v2.2.0 — Per-step environment overrides.</ListItem>
-              </List>
-            </DemoFrame>
-          </div>
+          <Example
+            source={listExampleSrc}
+            region="WithHorizontalRules"
+            fileName="List.example.tsx"
+          >
+            <WithHorizontalRules />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={listExampleSrc} fileName="List.example.tsx" />
         </Card>
       </Section>
 
