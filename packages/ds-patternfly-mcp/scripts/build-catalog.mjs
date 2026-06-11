@@ -260,7 +260,13 @@ function main() {
 
   // Auto-attach example files by path mirroring:
   // src/examples/<area>/<Name>.example.tsx ↔ src/stories/<area>/<Name>.stories.tsx
-  // (manifest-declared examples are already on the item; don't duplicate).
+  // (manifest-declared examples are already on the item; don't duplicate,
+  // and don't report them as orphans — the manifest is their pairing).
+  const manifestExampleFiles = new Set(
+    Object.values(MANIFEST)
+      .flatMap((cur) => cur?.examples ?? [])
+      .map((e) => e.file),
+  );
   let attached = 0;
   const orphans = [];
   for (const exRel of walkExamples(join(LIB_ROOT, "src", "examples"))) {
@@ -269,7 +275,7 @@ function main() {
       .replace(/\.example\.tsx$/, ".stories.tsx");
     const item = byStoryPath.get(storyRel);
     if (!item) {
-      orphans.push(exRel);
+      if (!manifestExampleFiles.has(exRel)) orphans.push(exRel);
       continue;
     }
     const example = readExample({ file: exRel });
