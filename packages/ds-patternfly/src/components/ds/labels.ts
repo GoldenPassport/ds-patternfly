@@ -96,3 +96,36 @@ export const bulkSelectToolbarEnLabels: BulkSelectToolbarLabels = {
 export function withCount(label: string, n: number): string {
   return label.replace(/\{count\}/g, String(n));
 }
+
+export interface FormScaffoldLabels {
+  /** Submit button text. */
+  submit: string;
+  /** Cancel button text. */
+  cancel: string;
+}
+
+export const formScaffoldEnLabels: FormScaffoldLabels = {
+  submit: "Save",
+  cancel: "Cancel",
+};
+
+export interface AppHeaderLabels {
+  /** Accessible name for the sidebar toggle (hamburger) button. */
+  toggleNav: string;
+}
+
+export const appHeaderEnLabels: AppHeaderLabels = {
+  toggleNav: "Toggle navigation",
+};
+
+export interface ConfirmModalLabels {
+  /** Confirm (primary) button text. */
+  confirm: string;
+  /** Cancel button text. */
+  cancel: string;
+}
+
+export const confirmModalEnLabels: ConfirmModalLabels = {
+  confirm: "Confirm",
+  cancel: "Cancel",
+};

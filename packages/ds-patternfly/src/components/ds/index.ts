@@ -47,7 +47,46 @@ export type {
 export { ListManager } from "./ListManager.js";
 export type { ListManagerProps } from "./ListManager.js";
 
-// Label contracts + English defaults
+// Chrome — app header & footer
+export { AppHeader, appHeaderEnLabels } from "./AppHeader.js";
+export type { AppHeaderProps, AppHeaderLabels } from "./AppHeader.js";
+export { AppFooter } from "./AppFooter.js";
+export type { AppFooterProps, FooterLinkGroup } from "./AppFooter.js";
+
+// Data display
+export { DataTable } from "./DataTable.js";
+export type { DataTableProps, DataTableColumn } from "./DataTable.js";
+export { CardGrid } from "./CardGrid.js";
+export type { CardGridProps } from "./CardGrid.js";
+
+// Feedback & overlays
+export { ConfirmModal, confirmModalEnLabels } from "./ConfirmModal.js";
+export type { ConfirmModalProps, ConfirmModalLabels } from "./ConfirmModal.js";
+export { StatusPanel } from "./StatusPanel.js";
+export type { StatusPanelProps, StatusPanelVariant } from "./StatusPanel.js";
+
+// Forms — validated fields + scaffold, with composable validation utils
+export { ValidatedTextField } from "./ValidatedTextField.js";
+export type { ValidatedTextFieldProps } from "./ValidatedTextField.js";
+export { ValidatedTextArea } from "./ValidatedTextArea.js";
+export type { ValidatedTextAreaProps } from "./ValidatedTextArea.js";
+export { ValidatedSelect } from "./ValidatedSelect.js";
+export type { ValidatedSelectProps, SelectChoice } from "./ValidatedSelect.js";
+export { FormScaffold, formScaffoldEnLabels } from "./FormScaffold.js";
+export type { FormScaffoldProps, FormScaffoldLabels } from "./FormScaffold.js";
+export {
+  required,
+  minLength,
+  maxLength,
+  pattern,
+  email,
+  runValidators,
+  useFieldValidation,
+} from "./validation.js";
+export type { Validator, ValidationState, UseFieldValidation } from "./validation.js";
+
+// Label contracts + English defaults (ConfirmModal/AppHeader/FormScaffold
+// label exports live with their components above).
 export {
   shellEnLabels,
   primaryDetailLayoutEnLabels,
