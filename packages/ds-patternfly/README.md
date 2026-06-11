@@ -64,6 +64,7 @@ wrappers when nothing fits.
 
 | Component | Category | What it does | Import |
 | --- | --- | --- | --- |
+| `CompassShell` | Layouts | the full-viewport PatternFly Compass page frame: a header band, an optional left nav rail (`sidebarStart`) and right rail (`sidebarEnd`), the main content, and a docked footer (the `CompassMessageBar` slot — e.g. | `import { CompassShell } from "@golden-passport/ds-patternfly"` |
 | `DashboardShell` | Layouts | the page scaffold for an ops dashboard: a titled header band (title + optional description + right-aligned actions/toolbar) over a padded content region you fill with a KPI strip, charts, and status cards (a `Gallery` + `Grid` of `Card`s). | `import { DashboardShell } from "@golden-passport/ds-patternfly"` |
 | `PrimaryDetailLayout` | Layouts | Two-pane Primary–Detail layout (modeled on patternfly.org/patterns/primary-detail). | `import { PrimaryDetailLayout } from "@golden-passport/ds-patternfly"` |
 | `Shell` | Layouts | Top-level application shell: SkipToContent + Masthead + (optional) Sidebar + main. | `import { Shell } from "@golden-passport/ds-patternfly"` |

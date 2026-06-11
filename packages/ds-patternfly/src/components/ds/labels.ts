@@ -109,6 +109,15 @@ export const formScaffoldEnLabels: FormScaffoldLabels = {
   cancel: "Cancel",
 };
 
+export interface CompassShellLabels {
+  /** "Skip to main content" link text. */
+  skipToContent: string;
+}
+
+export const compassShellEnLabels: CompassShellLabels = {
+  skipToContent: "Skip to content",
+};
+
 export interface AppHeaderLabels {
   /** Accessible name for the sidebar toggle (hamburger) button. */
   toggleNav: string;

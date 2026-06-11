@@ -27,6 +27,7 @@ const CATEGORY = {
   Shell: "Layouts",
   PrimaryDetailLayout: "Layouts",
   DashboardShell: "Layouts",
+  CompassShell: "Layouts",
   PageHeader: "Navigation",
   AppHeader: "Navigation",
   AppFooter: "Navigation",

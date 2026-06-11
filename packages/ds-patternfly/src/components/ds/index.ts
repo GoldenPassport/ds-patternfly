@@ -10,6 +10,8 @@ export { PrimaryDetailLayout } from "./PrimaryDetailLayout.js";
 export type { PrimaryDetailLayoutProps } from "./PrimaryDetailLayout.js";
 export { DashboardShell } from "./DashboardShell.js";
 export type { DashboardShellProps } from "./DashboardShell.js";
+export { CompassShell, compassShellEnLabels } from "./CompassShell.js";
+export type { CompassShellProps, CompassShellLabels } from "./CompassShell.js";
 
 // AI
 export {

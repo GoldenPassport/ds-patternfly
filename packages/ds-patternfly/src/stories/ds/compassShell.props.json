@@ -1,0 +1,15 @@
+{
+  "import": "import { CompassShell, compassShellEnLabels } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "labels", "type": "CompassShellLabels", "default": "compassShellEnLabels", "description": "Chrome text — the SkipToContent link label." },
+    { "name": "header", "type": "ReactNode", "required": true, "description": "Top header band — typically a CompassHeader wrapping a Masthead/brand + nav + profile." },
+    { "name": "children", "type": "ReactNode", "required": true, "description": "Main content. Wrapped in the focusable SkipToContent target." },
+    { "name": "sidebarStart", "type": "ReactNode", "description": "Left navigation rail (e.g. a vertical Nav)." },
+    { "name": "sidebarEnd", "type": "ReactNode", "description": "Right (secondary) rail — filters, context, help." },
+    { "name": "footer", "type": "ReactNode", "description": "Docked footer — the CompassMessageBar slot (search / AI prompt bar)." },
+    { "name": "drawer", "type": "ReactNode", "description": "Mobile-nav drawer panel; when set, Compass renders the slide-in drawer." },
+    { "name": "isDrawerOpen", "type": "boolean", "description": "Controlled open state for the mobile-nav drawer." },
+    { "name": "onDrawerOpenChange", "type": "(open: boolean) => void", "description": "Fired when the drawer requests opening (the masthead hamburger)." },
+    { "name": "mainContentId", "type": "string", "description": "Id for the main-content region (SkipToContent target). Defaults to a generated id." }
+  ]
+}

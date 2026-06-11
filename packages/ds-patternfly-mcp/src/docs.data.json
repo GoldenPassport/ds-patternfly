@@ -644,7 +644,7 @@
       ],
       "storybookUrl": "/?path=/story/building-blocks-feedback-statuspanel--overview",
       "layer": "ds",
-      "componentSource": "import type { ComponentType, ReactNode } from \"react\";\nimport {\n  EmptyState,\n  EmptyStateActions,\n  EmptyStateBody,\n  EmptyStateFooter,\n} from \"../base/index.js\";\nimport CubesIcon from \"@patternfly/react-icons/dist/esm/icons/cubes-icon\";\nimport ExclamationCircleIcon from \"@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon\";\nimport LockIcon from \"@patternfly/react-icons/dist/esm/icons/lock-icon\";\nimport WrenchIcon from \"@patternfly/react-icons/dist/esm/icons/wrench-icon\";\n\nexport type StatusPanelVariant =\n  | \"empty\"\n  | \"error\"\n  | \"unauthorized\"\n  | \"maintenance\";\n\nconst VARIANTS: Record<\n  StatusPanelVariant,\n  { icon: ComponentType; iconColor?: string }\n> = {\n  empty: { icon: CubesIcon },\n  error: {\n    icon: ExclamationCircleIcon,\n    iconColor: \"var(--pf-t--global--icon--color--status--danger--default, #c9190b)\",\n  },\n  unauthorized: { icon: LockIcon },\n  maintenance: {\n    icon: WrenchIcon,\n    iconColor: \"var(--pf-t--global--icon--color--status--warning--default, #f0ab00)\",\n  },\n};\n\n/**\n * StatusPanel — the one lego block for every full-panel \"state\" screen:\n * empty results, an error, unauthorized access, or maintenance. Pick a\n * `variant` (drives a sensible default icon + accent), set the title/body,\n * and add primary/secondary actions. Composes the base EmptyState family.\n */\nexport interface StatusPanelProps {\n  /** Which state this represents — sets the default icon + accent. */\n  variant: StatusPanelVariant;\n  /** Headline. */\n  title: ReactNode;\n  /** Explanatory body text. */\n  children?: ReactNode;\n  /** Override the variant's default icon. */\n  icon?: ComponentType;\n  /** Primary action (e.g. \"Create\", \"Retry\", \"Sign in\"). */\n  primaryAction?: ReactNode;\n  /** Secondary actions (links / buttons). */\n  secondaryActions?: ReactNode;\n  /** EmptyState sizing. */\n  size?: \"sm\" | \"lg\" | \"xl\";\n}\n\nexport function StatusPanel({\n  variant,\n  title,\n  children,\n  icon,\n  primaryAction,\n  secondaryActions,\n  size,\n}: StatusPanelProps) {\n  const v = VARIANTS[variant];\n  const titleText = typeof title === \"string\" ? title : \"\";\n  return (\n    <EmptyState\n      titleText={titleText || title}\n      headingLevel=\"h2\"\n      icon={icon ?? v.icon}\n      {...(size ? { variant: size } : {})}\n      {...(v.iconColor ? { iconProps: { style: { color: v.iconColor } } } : {})}\n    >\n      {children ? <EmptyStateBody>{children}</EmptyStateBody> : null}\n      {primaryAction || secondaryActions ? (\n        <EmptyStateFooter>\n          {primaryAction ? (\n            <EmptyStateActions>{primaryAction}</EmptyStateActions>\n          ) : null}\n          {secondaryActions ? (\n            <EmptyStateActions>{secondaryActions}</EmptyStateActions>\n          ) : null}\n        </EmptyStateFooter>\n      ) : null}\n    </EmptyState>\n  );\n}",
+      "componentSource": "import type { ComponentType, ReactNode } from \"react\";\nimport {\n  EmptyState,\n  EmptyStateActions,\n  EmptyStateBody,\n  EmptyStateFooter,\n} from \"../base/index.js\";\nimport CubesIcon from \"@patternfly/react-icons/dist/esm/icons/cubes-icon\";\nimport ExclamationCircleIcon from \"@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon\";\nimport LockIcon from \"@patternfly/react-icons/dist/esm/icons/lock-icon\";\nimport WrenchIcon from \"@patternfly/react-icons/dist/esm/icons/wrench-icon\";\n\nexport type StatusPanelVariant =\n  | \"empty\"\n  | \"error\"\n  | \"unauthorized\"\n  | \"maintenance\";\n\n// PF6 EmptyState colours the icon via its `status` prop (\"danger\" |\n// \"warning\" | \"success\" | \"info\"); plain states leave it default.\nconst VARIANTS: Record<\n  StatusPanelVariant,\n  { icon: ComponentType; status?: \"danger\" | \"warning\" }\n> = {\n  empty: { icon: CubesIcon },\n  error: { icon: ExclamationCircleIcon, status: \"danger\" },\n  unauthorized: { icon: LockIcon },\n  maintenance: { icon: WrenchIcon, status: \"warning\" },\n};\n\n/**\n * StatusPanel — the one lego block for every full-panel \"state\" screen:\n * empty results, an error, unauthorized access, or maintenance. Pick a\n * `variant` (drives a sensible default icon + accent), set the title/body,\n * and add primary/secondary actions. Composes the base EmptyState family.\n */\nexport interface StatusPanelProps {\n  /** Which state this represents — sets the default icon + accent. */\n  variant: StatusPanelVariant;\n  /** Headline. */\n  title: ReactNode;\n  /** Explanatory body text. */\n  children?: ReactNode;\n  /** Override the variant's default icon. */\n  icon?: ComponentType;\n  /** Primary action (e.g. \"Create\", \"Retry\", \"Sign in\"). */\n  primaryAction?: ReactNode;\n  /** Secondary actions (links / buttons). */\n  secondaryActions?: ReactNode;\n  /** EmptyState sizing. */\n  size?: \"sm\" | \"lg\" | \"xl\";\n}\n\nexport function StatusPanel({\n  variant,\n  title,\n  children,\n  icon,\n  primaryAction,\n  secondaryActions,\n  size,\n}: StatusPanelProps) {\n  const v = VARIANTS[variant];\n  const titleText = typeof title === \"string\" ? title : \"\";\n  return (\n    <EmptyState\n      titleText={titleText || title}\n      headingLevel=\"h2\"\n      icon={icon ?? v.icon}\n      {...(size ? { variant: size } : {})}\n      {...(v.status ? { status: v.status } : {})}\n    >\n      {children ? <EmptyStateBody>{children}</EmptyStateBody> : null}\n      {primaryAction || secondaryActions ? (\n        <EmptyStateFooter>\n          {primaryAction ? (\n            <EmptyStateActions>{primaryAction}</EmptyStateActions>\n          ) : null}\n          {secondaryActions ? (\n            <EmptyStateActions>{secondaryActions}</EmptyStateActions>\n          ) : null}\n        </EmptyStateFooter>\n      ) : null}\n    </EmptyState>\n  );\n}",
       "import": "import { StatusPanel } from \"@golden-passport/ds-patternfly\";",
       "props": [
         {
@@ -1026,6 +1026,92 @@
         {
           "name": "ValidatedTextField",
           "source": "/**\n * ValidatedTextField — a labelled, validated single-line text field. Fully\n * controlled: own the `value`, update it from `onChange`, and pass composable\n * `validators` (required, minLength, email, …) from the lib. Errors surface on\n * blur by default and the PF `validated` state + message are derived for you.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  ValidatedTextField,\n  required,\n  minLength,\n  email,\n} from \"@golden-passport/ds-patternfly\";\n\nexport function Basic() {\n  const [value, setValue] = useState(\"\");\n\n  return (\n    <ValidatedTextField\n      label=\"Display name\"\n      value={value}\n      onChange={setValue}\n      placeholder=\"e.g. Ada Lovelace\"\n      helperText=\"The name shown on your public profile.\"\n    />\n  );\n}\n\nexport function WithValidation() {\n  const [name, setName] = useState(\"\");\n  const [address, setAddress] = useState(\"\");\n\n  return (\n    <div style={{ display: \"grid\", gap: 16 }}>\n      <ValidatedTextField\n        label=\"Username\"\n        value={name}\n        onChange={setName}\n        isRequired\n        validators={[required(\"Username is required\"), minLength(3)]}\n        helperText=\"At least 3 characters.\"\n      />\n      <ValidatedTextField\n        label=\"Email address\"\n        type=\"email\"\n        value={address}\n        onChange={setAddress}\n        isRequired\n        validators={[required(\"Email is required\"), email()]}\n        placeholder=\"you@example.com\"\n        helperText=\"We'll only use this for account recovery.\"\n      />\n    </div>\n  );\n}\n\nexport default function ValidatedTextFieldExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Basic />\n      <WithValidation />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-layouts-compassshell",
+      "kind": "ds",
+      "title": "CompassShell",
+      "breadcrumb": "Building blocks/Layouts/CompassShell",
+      "summary": "The full-viewport PatternFly Compass page frame — a header band, an optional left nav rail and right rail, the main content, and a docked message-bar footer (the CompassMessageBar slot, e.g. an AiAssistant bar). Wraps PF6 Compass with a SkipToContent link, a focusable main-content target, and controlled mobile-nav draw",
+      "tags": [
+        "building",
+        "blocks",
+        "layouts",
+        "compassshell",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-layouts-compassshell--overview",
+      "layer": "ds",
+      "componentSource": "import { useId, type ReactNode } from \"react\";\nimport { Compass } from \"../base/index.js\";\nimport { SkipToContent } from \"../../a11y/SkipToContent.js\";\nimport { type CompassShellLabels, compassShellEnLabels } from \"./labels.js\";\n\nexport type { CompassShellLabels } from \"./labels.js\";\nexport { compassShellEnLabels } from \"./labels.js\";\n\n/**\n * CompassShell — the full-viewport PatternFly Compass page frame: a header\n * band, an optional left nav rail (`sidebarStart`) and right rail\n * (`sidebarEnd`), the main content, and a docked footer (the\n * `CompassMessageBar` slot — e.g. an `AiAssistant` bar). Wraps PF6's Compass\n * with a SkipToContent link and a focusable main-content target wired up for\n * you, plus controlled mobile-nav drawer plumbing.\n *\n * Every region is a `ReactNode` slot you fill — compose the base\n * `CompassHeader` / `CompassNavMain` / `CompassMessageBar` (and a Masthead)\n * into them. For a simpler masthead + sidebar + content layout, use `Shell`.\n */\nexport interface CompassShellProps {\n  /** Required. Provide via `compassShellEnLabels` or your translations. */\n  labels?: CompassShellLabels;\n  /** Top header band — typically a `CompassHeader` wrapping a `Masthead`. */\n  header: ReactNode;\n  /** Left navigation rail. */\n  sidebarStart?: ReactNode;\n  /** Right (secondary) rail — filters, context, help. */\n  sidebarEnd?: ReactNode;\n  /** Main content. Wrapped in the focusable SkipToContent target. */\n  children: ReactNode;\n  /** Docked footer — the `CompassMessageBar` slot (search / AI prompt bar). */\n  footer?: ReactNode;\n  /** Mobile-nav drawer panel; when set, Compass renders the slide-in drawer. */\n  drawer?: ReactNode;\n  /** Controlled open state for the mobile-nav drawer. */\n  isDrawerOpen?: boolean;\n  /** Fired when the drawer requests opening (the masthead hamburger). */\n  onDrawerOpenChange?: (open: boolean) => void;\n  /** Id for the main-content region (SkipToContent target). */\n  mainContentId?: string;\n}\n\nexport function CompassShell({\n  labels = compassShellEnLabels,\n  header,\n  sidebarStart,\n  sidebarEnd,\n  children,\n  footer,\n  drawer,\n  isDrawerOpen,\n  onDrawerOpenChange,\n  mainContentId,\n}: CompassShellProps) {\n  const generatedId = useId();\n  const mainId = mainContentId ?? `${generatedId}-main`;\n\n  return (\n    <>\n      <SkipToContent targetId={mainId} label={labels.skipToContent} />\n      <Compass\n        header={header}\n        main={\n          <div id={mainId} tabIndex={-1}>\n            {children}\n          </div>\n        }\n        {...(sidebarStart\n          ? { sidebarStart, isSidebarStartExpanded: true }\n          : {})}\n        {...(sidebarEnd ? { sidebarEnd, isSidebarEndExpanded: true } : {})}\n        {...(footer ? { footer } : {})}\n        {...(drawer\n          ? {\n              drawerContent: drawer,\n              drawerProps: {\n                isExpanded: !!isDrawerOpen,\n                position: \"start\",\n                onExpand: () => onDrawerOpenChange?.(true),\n              },\n            }\n          : {})}\n      />\n    </>\n  );\n}",
+      "import": "import { CompassShell, compassShellEnLabels } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "labels",
+          "type": "CompassShellLabels",
+          "default": "compassShellEnLabels",
+          "description": "Chrome text — the SkipToContent link label."
+        },
+        {
+          "name": "header",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Top header band — typically a CompassHeader wrapping a Masthead/brand + nav + profile."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Main content. Wrapped in the focusable SkipToContent target."
+        },
+        {
+          "name": "sidebarStart",
+          "type": "ReactNode",
+          "description": "Left navigation rail (e.g. a vertical Nav)."
+        },
+        {
+          "name": "sidebarEnd",
+          "type": "ReactNode",
+          "description": "Right (secondary) rail — filters, context, help."
+        },
+        {
+          "name": "footer",
+          "type": "ReactNode",
+          "description": "Docked footer — the CompassMessageBar slot (search / AI prompt bar)."
+        },
+        {
+          "name": "drawer",
+          "type": "ReactNode",
+          "description": "Mobile-nav drawer panel; when set, Compass renders the slide-in drawer."
+        },
+        {
+          "name": "isDrawerOpen",
+          "type": "boolean",
+          "description": "Controlled open state for the mobile-nav drawer."
+        },
+        {
+          "name": "onDrawerOpenChange",
+          "type": "(open: boolean) => void",
+          "description": "Fired when the drawer requests opening (the masthead hamburger)."
+        },
+        {
+          "name": "mainContentId",
+          "type": "string",
+          "description": "Id for the main-content region (SkipToContent target). Defaults to a generated id."
+        }
+      ],
+      "usage": "CompassShell is the full-viewport PatternFly Compass page frame: a header band, an optional left nav rail (sidebarStart) and right rail (sidebarEnd), the main content (children), and a docked footer (the CompassMessageBar slot — e.g. an AiAssistant bar). Wraps PF6 Compass with a SkipToContent link + focusable main-content target + controlled mobile-nav drawer plumbing (drawer / isDrawerOpen / onDrawerOpenChange). Compose the base CompassHeader / CompassMessageBar / Nav into the slots. For a simpler masthead + sidebar + content layout, use Shell.",
+      "keyTokens": [
+        "--gp-glass-surface-fill",
+        "--gp-color-bg-secondary-default"
+      ],
+      "examples": [
+        {
+          "name": "CompassShell",
+          "source": "/**\n * CompassShell — the full-viewport Compass page frame: header band, left nav\n * rail, main content, a docked message-bar footer, and a controlled mobile\n * nav drawer. Compose the base CompassHeader / CompassMessageBar / Nav into\n * the slots.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useId, useState } from \"react\";\nimport {\n  Button,\n  CompassHeader,\n  CompassMessageBar,\n  Content,\n  Card,\n  CardBody,\n  CardTitle,\n  CardHeader,\n  CompassShell,\n  DrawerActions,\n  DrawerCloseButton,\n  DrawerHead,\n  DrawerPanelBody,\n  DrawerPanelContent,\n  Nav,\n  NavItem,\n  NavList,\n  SearchInput,\n} from \"@golden-passport/ds-patternfly\";\nimport BarsIcon from \"@patternfly/react-icons/dist/esm/icons/bars-icon\";\n\nconst NAV = [\"Overview\", \"Integrations\", \"Pipelines\", \"Settings\"];\n\nexport function AppFrame() {\n  const uid = useId();\n  const [active, setActive] = useState(\"Overview\");\n  const [drawerOpen, setDrawerOpen] = useState(false);\n\n  const navRail = (\n    <Nav aria-label=\"Primary\">\n      <NavList>\n        {NAV.map((item) => (\n          <NavItem\n            key={item}\n            itemId={item}\n            isActive={active === item}\n            onClick={() => setActive(item)}\n          >\n            {item}\n          </NavItem>\n        ))}\n      </NavList>\n    </Nav>\n  );\n\n  return (\n    <CompassShell\n      mainContentId={`${uid}-main`}\n      header={\n        <CompassHeader\n          logo={\n            <a href=\"#\" aria-label=\"Acme home\">\n              <strong style={{ fontSize: \"1.125rem\" }}>Acme Cloud</strong>\n            </a>\n          }\n          nav={\n            <Button\n              variant=\"plain\"\n              aria-label=\"Open navigation\"\n              icon={<BarsIcon />}\n              onClick={() => setDrawerOpen(true)}\n              className=\"pf-v6-u-display-none-on-md\"\n            />\n          }\n          profile={<span>Aliyah Frazier</span>}\n        />\n      }\n      sidebarStart={navRail}\n      footer={\n        <CompassMessageBar>\n          <SearchInput\n            aria-label=\"Ask or search\"\n            placeholder=\"Ask or search…\"\n          />\n        </CompassMessageBar>\n      }\n      drawer={\n        <DrawerPanelContent>\n          <DrawerHead>\n            <span>Navigation</span>\n            <DrawerActions>\n              <DrawerCloseButton onClick={() => setDrawerOpen(false)} />\n            </DrawerActions>\n          </DrawerHead>\n          <DrawerPanelBody>{navRail}</DrawerPanelBody>\n        </DrawerPanelContent>\n      }\n      isDrawerOpen={drawerOpen}\n      onDrawerOpenChange={setDrawerOpen}\n    >\n      <div style={{ padding: \"1.5rem\" }}>\n        <Content component=\"h1\" style={{ marginBlockStart: 0 }}>\n          {active}\n        </Content>\n        <Content component=\"p\" style={{ color: \"var(--gp-color-text-subtle)\" }}>\n          The Compass frame fills the viewport: brand + nav in the header, the\n          rail on the left, this content area, and the message bar docked\n          below. Pick a nav item; on a narrow viewport the hamburger opens the\n          drawer.\n        </Content>\n        <Card>\n          <CardHeader>\n            <CardTitle>Panel</CardTitle>\n          </CardHeader>\n          <CardBody>Content for “{active}”.</CardBody>\n        </Card>\n      </div>\n    </CompassShell>\n  );\n}\n\nexport default function CompassShellExample() {\n  return <AppFrame />;\n}"
         }
       ]
     },

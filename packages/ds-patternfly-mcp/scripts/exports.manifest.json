@@ -82,5 +82,10 @@
   "building-blocks-layouts-dashboardshell": {
     "propsFile": "src/stories/patterns/dashboardShell.props.json",
     "usage": "DashboardShell is the dashboard page scaffold: a titled header band (title + description + right-aligned actions slot) over a content region you fill with a KPI strip, charts, and status cards (children). Layout + rhythm only — chart libraries (@patternfly/react-charts, ECharts) stay in your app and never enter the design system."
+  },
+  "building-blocks-layouts-compassshell": {
+    "propsFile": "src/stories/ds/compassShell.props.json",
+    "usage": "CompassShell is the full-viewport PatternFly Compass page frame: a header band, an optional left nav rail (sidebarStart) and right rail (sidebarEnd), the main content (children), and a docked footer (the CompassMessageBar slot — e.g. an AiAssistant bar). Wraps PF6 Compass with a SkipToContent link + focusable main-content target + controlled mobile-nav drawer plumbing (drawer / isDrawerOpen / onDrawerOpenChange). Compose the base CompassHeader / CompassMessageBar / Nav into the slots. For a simpler masthead + sidebar + content layout, use Shell.",
+    "keyTokens": ["--gp-glass-surface-fill", "--gp-color-bg-secondary-default"]
   }
 }
