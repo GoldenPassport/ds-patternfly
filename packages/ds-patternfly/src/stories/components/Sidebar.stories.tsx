@@ -14,7 +14,7 @@ import {
   RightAnchoredGutter,
 } from "../../examples/components/Sidebar.example.js";
 import sidebarExampleSrc from "../../examples/components/Sidebar.example.tsx?raw";
-import sidebarComponentSrc from "../../components/Sidebar.tsx?raw";
+import sidebarComponentSrc from "../../components/base/Sidebar.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Sidebar",

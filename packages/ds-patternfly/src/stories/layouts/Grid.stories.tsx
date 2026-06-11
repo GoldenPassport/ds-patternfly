@@ -12,7 +12,7 @@ import {
   ResponsiveSpans,
 } from "../../examples/layouts/Grid.example.js";
 import gridExampleSrc from "../../examples/layouts/Grid.example.tsx?raw";
-import gridComponentSrc from "../../components/Grid.tsx?raw";
+import gridComponentSrc from "../../components/base/Grid.tsx?raw";
 
 const meta: Meta = {
   title: "Layouts/Grid",

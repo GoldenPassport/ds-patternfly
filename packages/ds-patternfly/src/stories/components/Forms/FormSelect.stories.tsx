@@ -9,7 +9,7 @@ import {
 } from "../../_kit/StoryKit.js";
 import { Basic } from "../../../examples/components/Forms/FormSelect.example.js";
 import formSelectExampleSrc from "../../../examples/components/Forms/FormSelect.example.tsx?raw";
-import formSelectComponentSrc from "../../../components/FormSelect.tsx?raw";
+import formSelectComponentSrc from "../../../components/base/FormSelect.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/FormSelect",

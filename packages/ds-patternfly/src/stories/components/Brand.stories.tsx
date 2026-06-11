@@ -14,7 +14,7 @@ import {
   LightDarkVariants,
 } from "../../examples/components/Brand.example.js";
 import brandExampleSrc from "../../examples/components/Brand.example.tsx?raw";
-import brandComponentSrc from "../../components/Brand.tsx?raw";
+import brandComponentSrc from "../../components/base/Brand.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Brand",

@@ -12,7 +12,7 @@ import {
   NarrowBody as NarrowBodyHero,
 } from "../../examples/components/Hero.example.js";
 import heroExampleSrc from "../../examples/components/Hero.example.tsx?raw";
-import heroComponentSrc from "../../components/Hero.tsx?raw";
+import heroComponentSrc from "../../components/base/Hero.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Hero",

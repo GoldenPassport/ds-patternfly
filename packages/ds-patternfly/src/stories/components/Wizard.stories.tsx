@@ -15,7 +15,7 @@ import {
   VisitRequired,
 } from "../../examples/components/Wizard.example.js";
 import wizardExampleSrc from "../../examples/components/Wizard.example.tsx?raw";
-import wizardComponentSrc from "../../components/Wizard.tsx?raw";
+import wizardComponentSrc from "../../components/base/Wizard.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Wizard",

@@ -13,7 +13,7 @@ import {
   FillingRemainingSpace,
 } from "../../examples/layouts/Flex.example.js";
 import flexExampleSrc from "../../examples/layouts/Flex.example.tsx?raw";
-import flexComponentSrc from "../../components/Flex.tsx?raw";
+import flexComponentSrc from "../../components/base/Flex.tsx?raw";
 
 const meta: Meta = {
   title: "Layouts/Flex",

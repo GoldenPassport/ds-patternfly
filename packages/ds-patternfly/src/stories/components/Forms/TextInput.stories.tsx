@@ -13,7 +13,7 @@ import {
   ValidatedStates,
 } from "../../../examples/components/Forms/TextInput.example.js";
 import textInputExampleSrc from "../../../examples/components/Forms/TextInput.example.tsx?raw";
-import textInputComponentSrc from "../../../components/TextInput.tsx?raw";
+import textInputComponentSrc from "../../../components/base/TextInput.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/TextInput",

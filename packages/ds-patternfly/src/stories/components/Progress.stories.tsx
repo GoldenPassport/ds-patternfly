@@ -17,7 +17,7 @@ import {
   WithHelperText,
 } from "../../examples/components/Progress.example.js";
 import progressExampleSrc from "../../examples/components/Progress.example.tsx?raw";
-import progressComponentSrc from "../../components/Progress.tsx?raw";
+import progressComponentSrc from "../../components/base/Progress.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Progress",

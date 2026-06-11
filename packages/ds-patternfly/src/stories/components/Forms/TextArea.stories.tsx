@@ -9,7 +9,7 @@ import {
 } from "../../_kit/StoryKit.js";
 import { Basic, AutoResizing } from "../../../examples/components/Forms/TextArea.example.js";
 import textAreaExampleSrc from "../../../examples/components/Forms/TextArea.example.tsx?raw";
-import textAreaComponentSrc from "../../../components/TextArea.tsx?raw";
+import textAreaComponentSrc from "../../../components/base/TextArea.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/TextArea",

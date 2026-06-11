@@ -16,7 +16,7 @@ import {
   Sticky,
 } from "../../examples/components/Toolbar.example.js";
 import toolbarExampleSrc from "../../examples/components/Toolbar.example.tsx?raw";
-import toolbarComponentSrc from "../../components/Toolbar.tsx?raw";
+import toolbarComponentSrc from "../../components/base/Toolbar.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Toolbar",

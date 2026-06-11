@@ -8,7 +8,7 @@ import {
 } from "../_kit/StoryKit.js";
 import { ListAndDetail } from "../../examples/patterns/PrimaryDetail.example.js";
 import primaryDetailExampleSrc from "../../examples/patterns/PrimaryDetail.example.tsx?raw";
-import primaryDetailComponentSrc from "../../components/PrimaryDetailLayout.tsx?raw";
+import primaryDetailComponentSrc from "../../components/ds/PrimaryDetailLayout.tsx?raw";
 
 const meta: Meta = {
   title: "Patterns/Primary-detail",

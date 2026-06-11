@@ -11,7 +11,7 @@ import {
   ThreeOrMoreItems,
 } from "../../examples/layouts/Level.example.js";
 import levelExampleSrc from "../../examples/layouts/Level.example.tsx?raw";
-import levelComponentSrc from "../../components/Level.tsx?raw";
+import levelComponentSrc from "../../components/base/Level.tsx?raw";
 
 const meta: Meta = {
   title: "Layouts/Level",

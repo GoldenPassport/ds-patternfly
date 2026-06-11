@@ -17,7 +17,7 @@ import {
   Disabled,
 } from "../../examples/components/TextInputGroup.example.js";
 import textInputGroupExampleSrc from "../../examples/components/TextInputGroup.example.tsx?raw";
-import textInputGroupComponentSrc from "../../components/TextInputGroup.tsx?raw";
+import textInputGroupComponentSrc from "../../components/base/TextInputGroup.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/TextInputGroup",

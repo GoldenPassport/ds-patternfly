@@ -11,7 +11,7 @@ import {
   PageToggleButton,
 } from "@patternfly/react-core";
 import { useEffect, useRef, type ReactNode } from "react";
-import { SkipToContent } from "../a11y/SkipToContent.js";
+import { SkipToContent } from "../../a11y/SkipToContent.js";
 import type { ShellLabels } from "./labels.js";
 
 /**

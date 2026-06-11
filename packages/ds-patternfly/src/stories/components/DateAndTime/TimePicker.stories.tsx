@@ -11,7 +11,7 @@ import {
   TwelveHour,
 } from "../../../examples/components/DateAndTime/TimePicker.example.js";
 import timePickerExampleSrc from "../../../examples/components/DateAndTime/TimePicker.example.tsx?raw";
-import timePickerComponentSrc from "../../../components/TimePicker.tsx?raw";
+import timePickerComponentSrc from "../../../components/base/TimePicker.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/Date and time/TimePicker",

@@ -16,7 +16,7 @@ import {
   WithToolbarAndPagination,
 } from "../../examples/components/Table.example.js";
 import tableExampleSrc from "../../examples/components/Table.example.tsx?raw";
-import tableComponentSrc from "../../components/Table.tsx?raw";
+import tableComponentSrc from "../../components/base/Table.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Table",

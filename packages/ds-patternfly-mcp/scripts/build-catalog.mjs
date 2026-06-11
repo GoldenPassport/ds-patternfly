@@ -41,18 +41,23 @@ const MANIFEST = JSON.parse(
   readFileSync(join(here, "exports.manifest.json"), "utf8"),
 );
 
-// Every exported component file (one symbol per file) across components/,
-// recipes/, and patterns/. Catalog entries whose title matches one get an
-// import statement + the file's source embedded (downloadable via the
-// story, served by getGpComponent). name → absolute file path.
+// Every exported component file (one symbol per file) across the two
+// component layers: components/base (thin PF wrappers — reference) and
+// components/ds (the DS "lego block" components — the focus). Catalog
+// entries whose title matches one get an import statement + the file's
+// source embedded (downloadable via the story, served by getGpComponent).
+// name → { file, layer }.
 const COMPONENT_FILES = new Map();
-for (const sub of ["components", "recipes", "patterns"]) {
-  const dir = join(LIB_ROOT, "src", sub);
+for (const layer of ["base", "ds"]) {
+  const dir = join(LIB_ROOT, "src", "components", layer);
   if (!existsSync(dir)) continue;
   for (const f of readdirSync(dir)) {
     if (!f.endsWith(".tsx")) continue;
     const name = f.replace(/\.tsx$/, "");
-    if (!COMPONENT_FILES.has(name)) COMPONENT_FILES.set(name, join(dir, f));
+    // ds wins a name collision (it's the focus); base never overwrites ds.
+    if (!COMPONENT_FILES.has(name) || layer === "ds") {
+      COMPONENT_FILES.set(name, { file: join(dir, f), layer });
+    }
   }
 }
 
@@ -179,19 +184,20 @@ function walkExamples(dir, files = []) {
  * so story and catalog can't drift), usage, keyTokens, embedded examples.
  */
 function enrich(item) {
-  // Auto-rules first: title matches an exported component/recipe/pattern
-  // file → import line + the file's source (served by getGpComponent /
-  // downloadable from the story's Configuration section). The import line
-  // is only auto-set for plain components; recipes/patterns (which may
-  // export extra symbols) get their import from the manifest.
-  const componentFile = COMPONENT_FILES.get(item.title);
-  if (componentFile) {
+  // Auto-rules first: title matches an exported component file → its layer
+  // (base | ds), import line, and the file's source (served by
+  // getGpComponent / downloadable from the story's Configuration section).
+  // The import line is only auto-set for plain components; ds lego blocks
+  // (which may export extra symbols) get their import from the manifest.
+  const hit = COMPONENT_FILES.get(item.title);
+  if (hit) {
     item = {
       ...item,
+      layer: hit.layer,
       ...(item.kind === "component"
         ? { import: `import { ${item.title} } from "${PKG.name}";` }
         : {}),
-      componentSource: readFileSync(componentFile, "utf8").trimEnd(),
+      componentSource: readFileSync(hit.file, "utf8").trimEnd(),
     };
   }
   const cur = MANIFEST[item.id];

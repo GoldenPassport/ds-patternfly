@@ -16,7 +16,7 @@ import {
   ToastGroup,
 } from "../../examples/components/Alert.example.js";
 import alertExampleSrc from "../../examples/components/Alert.example.tsx?raw";
-import alertComponentSrc from "../../components/Alert.tsx?raw";
+import alertComponentSrc from "../../components/base/Alert.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Alert",

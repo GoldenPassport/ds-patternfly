@@ -12,7 +12,7 @@ import {
   TruncatedCounts,
 } from "../../examples/components/Badge.example.js";
 import badgeExampleSrc from "../../examples/components/Badge.example.tsx?raw";
-import badgeComponentSrc from "../../components/Badge.tsx?raw";
+import badgeComponentSrc from "../../components/base/Badge.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Badge",

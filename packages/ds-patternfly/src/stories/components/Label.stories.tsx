@@ -16,7 +16,7 @@ import {
   Removable,
 } from "../../examples/components/Label.example.js";
 import labelExampleSrc from "../../examples/components/Label.example.tsx?raw";
-import labelComponentSrc from "../../components/Label.tsx?raw";
+import labelComponentSrc from "../../components/base/Label.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Label",

@@ -14,7 +14,7 @@ import {
   BodyOnly,
 } from "../../examples/components/Hint.example.js";
 import hintExampleSrc from "../../examples/components/Hint.example.tsx?raw";
-import hintComponentSrc from "../../components/Hint.tsx?raw";
+import hintComponentSrc from "../../components/base/Hint.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Hint",

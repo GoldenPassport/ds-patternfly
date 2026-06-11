@@ -14,7 +14,7 @@ import {
   CustomSteps,
 } from "../../examples/components/Slider.example.js";
 import sliderExampleSrc from "../../examples/components/Slider.example.tsx?raw";
-import sliderComponentSrc from "../../components/Slider.tsx?raw";
+import sliderComponentSrc from "../../components/base/Slider.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/Slider",

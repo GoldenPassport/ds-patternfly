@@ -11,7 +11,7 @@ import {
   FilledMiddle,
 } from "../../examples/layouts/Split.example.js";
 import splitExampleSrc from "../../examples/layouts/Split.example.tsx?raw";
-import splitComponentSrc from "../../components/Split.tsx?raw";
+import splitComponentSrc from "../../components/base/Split.tsx?raw";
 
 const meta: Meta = {
   title: "Layouts/Split",

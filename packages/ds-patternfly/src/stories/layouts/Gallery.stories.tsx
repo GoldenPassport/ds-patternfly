@@ -11,7 +11,7 @@ import {
   PerBreakpointMinWidths,
 } from "../../examples/layouts/Gallery.example.js";
 import galleryExampleSrc from "../../examples/layouts/Gallery.example.tsx?raw";
-import galleryComponentSrc from "../../components/Gallery.tsx?raw";
+import galleryComponentSrc from "../../components/base/Gallery.tsx?raw";
 
 const meta: Meta = {
   title: "Layouts/Gallery",

@@ -15,7 +15,7 @@ import {
   WithoutHomeLink,
 } from "../../examples/components/Breadcrumb.example.js";
 import breadcrumbExampleSrc from "../../examples/components/Breadcrumb.example.tsx?raw";
-import breadcrumbComponentSrc from "../../components/Breadcrumb.tsx?raw";
+import breadcrumbComponentSrc from "../../components/base/Breadcrumb.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Breadcrumb",

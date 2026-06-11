@@ -12,7 +12,7 @@ import {
   GroupedPersistent,
 } from "../../examples/components/OverflowMenu.example.js";
 import overflowMenuExampleSrc from "../../examples/components/OverflowMenu.example.tsx?raw";
-import overflowMenuComponentSrc from "../../components/OverflowMenu.tsx?raw";
+import overflowMenuComponentSrc from "../../components/base/OverflowMenu.tsx?raw";
 
 const meta: Meta = {
   title: "Components/OverflowMenu",

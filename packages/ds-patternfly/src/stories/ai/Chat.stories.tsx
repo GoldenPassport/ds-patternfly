@@ -9,8 +9,8 @@ import {
   Example,
   ThemingPointer,
 } from "../_kit/StoryKit.js";
-import { AiAssistant } from "../../components/AiAssistant.js";
-import type { AiAssistantProps, ChatMsg } from "../../components/AiAssistant.js";
+import { AiAssistant } from "../../components/ds/AiAssistant.js";
+import type { AiAssistantProps, ChatMsg } from "../../components/ds/AiAssistant.js";
 import AssistantInShell from "../../examples/AiAssistant/AssistantInShell.example.js";
 import { ChatBar, AiBorderBar } from "../../examples/ai/Chat.example.js";
 import chatExampleSrc from "../../examples/ai/Chat.example.tsx?raw";

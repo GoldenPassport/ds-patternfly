@@ -17,7 +17,7 @@ import {
   NakedStyling,
 } from "../../examples/components/Navigation.example.js";
 import navigationExampleSrc from "../../examples/components/Navigation.example.tsx?raw";
-import navComponentSrc from "../../components/Nav.tsx?raw";
+import navComponentSrc from "../../components/base/Nav.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Navigation",

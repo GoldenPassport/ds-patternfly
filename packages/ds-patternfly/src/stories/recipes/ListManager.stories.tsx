@@ -9,7 +9,7 @@ import {
 } from "../_kit/StoryKit.js";
 import { ManagedTable } from "../../examples/recipes/ListManager.example.js";
 import listManagerExampleSrc from "../../examples/recipes/ListManager.example.tsx?raw";
-import listManagerComponentSrc from "../../recipes/ListManager.tsx?raw";
+import listManagerComponentSrc from "../../components/ds/ListManager.tsx?raw";
 import propsData from "./listManager.props.json";
 
 const meta: Meta<typeof ListManager> = {

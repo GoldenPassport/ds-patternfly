@@ -18,7 +18,7 @@ import {
   Dynamic,
 } from "../../examples/components/Tabs.example.js";
 import tabsExampleSrc from "../../examples/components/Tabs.example.tsx?raw";
-import tabsComponentSrc from "../../components/Tabs.tsx?raw";
+import tabsComponentSrc from "../../components/base/Tabs.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Tabs",

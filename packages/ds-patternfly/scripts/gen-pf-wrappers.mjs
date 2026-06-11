@@ -36,7 +36,7 @@ import { fileURLToPath } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "..");
 const STORIES = join(root, "src", "stories");
-const OUT_DIR = join(root, "src", "components");
+const OUT_DIR = join(root, "src", "components", "base");
 const FORCE = process.argv.includes("--force");
 
 // PF packages whose components get DS wrappers. Order matters: first

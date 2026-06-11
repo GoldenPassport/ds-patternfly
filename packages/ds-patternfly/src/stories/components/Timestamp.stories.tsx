@@ -14,7 +14,7 @@ import {
   CustomContent,
 } from "../../examples/components/Timestamp.example.js";
 import timestampExampleSrc from "../../examples/components/Timestamp.example.tsx?raw";
-import timestampComponentSrc from "../../components/Timestamp.tsx?raw";
+import timestampComponentSrc from "../../components/base/Timestamp.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Timestamp",

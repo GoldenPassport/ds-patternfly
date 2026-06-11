@@ -8,7 +8,7 @@ import {
 } from "../_kit/StoryKit.js";
 import { Sizes } from "../../examples/components/Spinner.example.js";
 import spinnerExampleSrc from "../../examples/components/Spinner.example.tsx?raw";
-import spinnerComponentSrc from "../../components/Spinner.tsx?raw";
+import spinnerComponentSrc from "../../components/base/Spinner.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Spinner",

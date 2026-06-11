@@ -12,7 +12,7 @@ import {
   Expandable,
 } from "../../examples/components/CodeBlock.example.js";
 import codeBlockExampleSrc from "../../examples/components/CodeBlock.example.tsx?raw";
-import codeBlockComponentSrc from "../../components/CodeBlock.tsx?raw";
+import codeBlockComponentSrc from "../../components/base/CodeBlock.tsx?raw";
 
 const meta: Meta = {
   title: "Components/CodeBlock",

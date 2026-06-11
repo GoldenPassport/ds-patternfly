@@ -13,7 +13,7 @@ import {
   Variants,
 } from "../../examples/components/Hyperlink.example.js";
 import hyperlinkExampleSrc from "../../examples/components/Hyperlink.example.tsx?raw";
-import hyperlinkComponentSrc from "../../components/Hyperlink.tsx?raw";
+import hyperlinkComponentSrc from "../../components/ds/Hyperlink.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Hyperlink",

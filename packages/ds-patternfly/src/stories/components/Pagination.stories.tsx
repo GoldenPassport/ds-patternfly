@@ -15,7 +15,7 @@ import {
   Disabled,
 } from "../../examples/components/Pagination.example.js";
 import paginationExampleSrc from "../../examples/components/Pagination.example.tsx?raw";
-import paginationComponentSrc from "../../components/Pagination.tsx?raw";
+import paginationComponentSrc from "../../components/base/Pagination.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Pagination",

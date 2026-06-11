@@ -12,7 +12,7 @@ import {
   VerticalIconList,
 } from "../../examples/components/ActionList.example.js";
 import actionListExampleSrc from "../../examples/components/ActionList.example.tsx?raw";
-import actionListComponentSrc from "../../components/ActionList.tsx?raw";
+import actionListComponentSrc from "../../components/base/ActionList.tsx?raw";
 
 const meta: Meta = {
   title: "Components/ActionList",

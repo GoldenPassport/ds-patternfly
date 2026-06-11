@@ -13,7 +13,7 @@ import {
   WithTabs,
 } from "../../examples/recipes/PageHeader.example.js";
 import pageHeaderExampleSrc from "../../examples/recipes/PageHeader.example.tsx?raw";
-import pageHeaderComponentSrc from "../../recipes/PageHeader.tsx?raw";
+import pageHeaderComponentSrc from "../../components/ds/PageHeader.tsx?raw";
 import propsData from "./pageHeader.props.json";
 
 const meta: Meta<typeof PageHeader> = {

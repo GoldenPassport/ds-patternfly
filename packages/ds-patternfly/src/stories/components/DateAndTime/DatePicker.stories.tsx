@@ -18,7 +18,7 @@ import {
   WithValidation,
 } from "../../../examples/components/DateAndTime/DatePicker.example.js";
 import datePickerExampleSrc from "../../../examples/components/DateAndTime/DatePicker.example.tsx?raw";
-import datePickerComponentSrc from "../../../components/DatePicker.tsx?raw";
+import datePickerComponentSrc from "../../../components/base/DatePicker.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/Date and time/DatePicker",

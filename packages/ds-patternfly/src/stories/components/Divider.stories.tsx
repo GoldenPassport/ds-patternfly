@@ -12,7 +12,7 @@ import {
   Inset,
 } from "../../examples/components/Divider.example.js";
 import dividerExampleSrc from "../../examples/components/Divider.example.tsx?raw";
-import dividerComponentSrc from "../../components/Divider.tsx?raw";
+import dividerComponentSrc from "../../components/base/Divider.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Divider",

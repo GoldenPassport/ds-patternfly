@@ -41,52 +41,7 @@ export {
   WCAG_AAA_NORMAL,
 } from "./a11y/contrast.js";
 
-// PF6-derived DS components — one thin-wrapper file per PF family
-// (Button, Checkbox, Modal, …), scaffolded by scripts/gen-pf-wrappers.mjs.
-export * from "./components/pf.js";
-
-// Components + label contracts/defaults
-export {
-  Shell,
-  PrimaryDetailLayout,
-  Hyperlink,
-  AiAssistant,
-  shellEnLabels,
-  primaryDetailLayoutEnLabels,
-  aiAssistantEnLabels,
-} from "./components/index.js";
-export type {
-  ShellProps,
-  ShellLabels,
-  PrimaryDetailLayoutProps,
-  PrimaryDetailLayoutLabels,
-  HyperlinkProps,
-  AiAssistantProps,
-  AiAssistantLabels,
-  ChatMsg,
-  ChatPlacement,
-} from "./components/index.js";
-
-// Recipes — composed, configurable building blocks (PageHeader,
-// FilterToolbar, BulkSelectToolbar, ListManager).
-export {
-  PageHeader,
-  FilterToolbar,
-  filterToolbarEnLabels,
-  BulkSelectToolbar,
-  bulkSelectToolbarEnLabels,
-  ListManager,
-} from "./recipes/index.js";
-export type {
-  PageHeaderProps,
-  FilterToolbarProps,
-  FilterDef,
-  FilterToolbarLabels,
-  BulkSelectToolbarProps,
-  BulkSelectToolbarLabels,
-  ListManagerProps,
-} from "./recipes/index.js";
-
-// Patterns — large composed page shells.
-export { DashboardShell } from "./patterns/index.js";
-export type { DashboardShellProps } from "./patterns/index.js";
+// Components — two layers:
+//   base/ — thin PF6 wrappers (the building material)
+//   ds/   — the exported, configurable "lego block" components (the focus)
+export * from "./components/index.js";

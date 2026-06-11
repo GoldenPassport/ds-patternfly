@@ -11,7 +11,7 @@ import {
   CardPlaceholder,
 } from "../../examples/components/Skeleton.example.js";
 import skeletonExampleSrc from "../../examples/components/Skeleton.example.tsx?raw";
-import skeletonComponentSrc from "../../components/Skeleton.tsx?raw";
+import skeletonComponentSrc from "../../components/base/Skeleton.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Skeleton",

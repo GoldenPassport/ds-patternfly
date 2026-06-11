@@ -15,7 +15,7 @@ import {
   DefinitionList,
 } from "../../examples/components/Accordion.example.js";
 import accordionExampleSrc from "../../examples/components/Accordion.example.tsx?raw";
-import accordionComponentSrc from "../../components/Accordion.tsx?raw";
+import accordionComponentSrc from "../../components/base/Accordion.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Accordion",

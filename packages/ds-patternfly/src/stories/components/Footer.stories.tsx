@@ -12,7 +12,7 @@ import {
   BuildInfo,
 } from "../../examples/components/Footer.example.js";
 import footerExampleSrc from "../../examples/components/Footer.example.tsx?raw";
-import pageComponentSrc from "../../components/Page.tsx?raw";
+import pageComponentSrc from "../../components/base/Page.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Footer",

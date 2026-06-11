@@ -11,7 +11,7 @@ import {
   ModalCalendar,
 } from "../../../examples/components/DateAndTime/CalendarMonth.example.js";
 import calendarMonthExampleSrc from "../../../examples/components/DateAndTime/CalendarMonth.example.tsx?raw";
-import calendarMonthComponentSrc from "../../../components/CalendarMonth.tsx?raw";
+import calendarMonthComponentSrc from "../../../components/base/CalendarMonth.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/Date and time/CalendarMonth",

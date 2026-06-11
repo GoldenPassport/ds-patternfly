@@ -15,7 +15,7 @@ import {
   Compact,
 } from "../../examples/components/ProgressStepper.example.js";
 import progressStepperExampleSrc from "../../examples/components/ProgressStepper.example.tsx?raw";
-import progressStepperComponentSrc from "../../components/ProgressStepper.tsx?raw";
+import progressStepperComponentSrc from "../../components/base/ProgressStepper.tsx?raw";
 
 const meta: Meta = {
   title: "Components/ProgressStepper",

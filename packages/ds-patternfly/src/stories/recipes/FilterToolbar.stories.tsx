@@ -9,7 +9,7 @@ import {
 } from "../_kit/StoryKit.js";
 import { SearchFacetsChips } from "../../examples/recipes/FilterToolbar.example.js";
 import filterToolbarExampleSrc from "../../examples/recipes/FilterToolbar.example.tsx?raw";
-import filterToolbarComponentSrc from "../../recipes/FilterToolbar.tsx?raw";
+import filterToolbarComponentSrc from "../../components/ds/FilterToolbar.tsx?raw";
 import propsData from "./filterToolbar.props.json";
 
 const meta: Meta<typeof FilterToolbar> = {

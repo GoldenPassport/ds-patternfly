@@ -12,7 +12,7 @@ import {
   EditableTextContent,
 } from "../../../examples/components/FileUpload/FileUpload.example.js";
 import fileUploadExampleSrc from "../../../examples/components/FileUpload/FileUpload.example.tsx?raw";
-import fileUploadComponentSrc from "../../../components/FileUpload.tsx?raw";
+import fileUploadComponentSrc from "../../../components/base/FileUpload.tsx?raw";
 
 const meta: Meta = {
   title: "Components/File upload/FileUpload",

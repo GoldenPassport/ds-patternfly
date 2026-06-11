@@ -12,7 +12,7 @@ import {
   SingleElementForm,
 } from "../../examples/components/Content.example.js";
 import contentExampleSrc from "../../examples/components/Content.example.tsx?raw";
-import contentComponentSrc from "../../components/Content.tsx?raw";
+import contentComponentSrc from "../../components/base/Content.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Content",

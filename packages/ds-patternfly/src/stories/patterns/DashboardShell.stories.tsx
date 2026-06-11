@@ -9,7 +9,7 @@ import {
 } from "../_kit/StoryKit.js";
 import { OpsDashboard } from "../../examples/patterns/DashboardShell.example.js";
 import dashboardExampleSrc from "../../examples/patterns/DashboardShell.example.tsx?raw";
-import dashboardComponentSrc from "../../patterns/DashboardShell.tsx?raw";
+import dashboardComponentSrc from "../../components/ds/DashboardShell.tsx?raw";
 import propsData from "./dashboardShell.props.json";
 
 const meta: Meta<typeof DashboardShell> = {

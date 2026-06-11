@@ -9,7 +9,7 @@ import {
 } from "../_kit/StoryKit.js";
 import { Sizes } from "../../examples/components/Title.example.js";
 import titleExampleSrc from "../../examples/components/Title.example.tsx?raw";
-import titleComponentSrc from "../../components/Title.tsx?raw";
+import titleComponentSrc from "../../components/base/Title.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Title",

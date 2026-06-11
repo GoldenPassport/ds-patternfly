@@ -8,7 +8,7 @@ import {
 } from "../_kit/StoryKit.js";
 import { LiveDemo } from "../../examples/layouts/Bullseye.example.js";
 import bullseyeExampleSrc from "../../examples/layouts/Bullseye.example.tsx?raw";
-import bullseyeComponentSrc from "../../components/Bullseye.tsx?raw";
+import bullseyeComponentSrc from "../../components/base/Bullseye.tsx?raw";
 
 const meta: Meta = {
   title: "Layouts/Bullseye",

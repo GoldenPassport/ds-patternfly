@@ -8,7 +8,7 @@ import {
 } from "../_kit/StoryKit.js";
 import { Sizes, StatusColors } from "../../examples/components/Icon.example.js";
 import iconExampleSrc from "../../examples/components/Icon.example.tsx?raw";
-import iconComponentSrc from "../../components/Icon.tsx?raw";
+import iconComponentSrc from "../../components/base/Icon.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Icon",

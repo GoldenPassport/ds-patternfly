@@ -34,8 +34,11 @@ import EllipsisVIcon from "@patternfly/react-icons/dist/esm/icons/ellipsis-v-ico
 
 // How long the transient recent-chat popover lingers after the last activity
 // before auto-dismissing. Reset on every new send.
+// TODO: should this have an interface?
+// TODO: make this configurable via props if we get user feedback that the default
 const RECENT_CHAT_AUTOCLOSE_MS = 6000;
 
+// TODO: this is for demo mode only which should have a prop to enable.
 const AI_REPLY =
   "Got it — here's a quick reply. Open History for the whole conversation.";
 

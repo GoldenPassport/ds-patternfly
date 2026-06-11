@@ -14,7 +14,7 @@ import {
   CustomTooltipPosition,
 } from "../../examples/components/Truncate.example.js";
 import truncateExampleSrc from "../../examples/components/Truncate.example.tsx?raw";
-import truncateComponentSrc from "../../components/Truncate.tsx?raw";
+import truncateComponentSrc from "../../components/base/Truncate.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Truncate",

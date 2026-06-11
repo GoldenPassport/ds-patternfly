@@ -13,7 +13,7 @@ import {
   Links,
 } from "../../examples/components/SimpleList.example.js";
 import simpleListExampleSrc from "../../examples/components/SimpleList.example.tsx?raw";
-import simpleListComponentSrc from "../../components/SimpleList.tsx?raw";
+import simpleListComponentSrc from "../../components/base/SimpleList.tsx?raw";
 
 const meta: Meta = {
   title: "Components/SimpleList",

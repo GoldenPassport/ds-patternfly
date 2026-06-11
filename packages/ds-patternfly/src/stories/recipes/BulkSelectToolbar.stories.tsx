@@ -9,7 +9,7 @@ import {
 } from "../_kit/StoryKit.js";
 import { FullPattern } from "../../examples/recipes/BulkSelectToolbar.example.js";
 import bulkExampleSrc from "../../examples/recipes/BulkSelectToolbar.example.tsx?raw";
-import bulkComponentSrc from "../../recipes/BulkSelectToolbar.tsx?raw";
+import bulkComponentSrc from "../../components/ds/BulkSelectToolbar.tsx?raw";
 import propsData from "./bulkSelectToolbar.props.json";
 
 const meta: Meta<typeof BulkSelectToolbar> = {

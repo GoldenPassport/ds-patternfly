@@ -13,7 +13,7 @@ import {
   ValidationStates,
 } from "../../examples/components/HelperText.example.js";
 import helperTextExampleSrc from "../../examples/components/HelperText.example.tsx?raw";
-import helperTextComponentSrc from "../../components/HelperText.tsx?raw";
+import helperTextComponentSrc from "../../components/base/HelperText.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/HelperText",

@@ -15,7 +15,7 @@ import {
   MultiSelectCheckboxes,
 } from "../../examples/components/Select.example.js";
 import selectExampleSrc from "../../examples/components/Select.example.tsx?raw";
-import selectComponentSrc from "../../components/Select.tsx?raw";
+import selectComponentSrc from "../../components/base/Select.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Menu/Select",

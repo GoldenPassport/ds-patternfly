@@ -8,7 +8,7 @@ import {
 } from "../_kit/StoryKit.js";
 import { CustomBlockingOverlay } from "../../examples/components/Backdrop.example.js";
 import backdropExampleSrc from "../../examples/components/Backdrop.example.tsx?raw";
-import backdropComponentSrc from "../../components/Backdrop.tsx?raw";
+import backdropComponentSrc from "../../components/base/Backdrop.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Backdrop",

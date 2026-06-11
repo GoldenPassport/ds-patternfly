@@ -11,7 +11,7 @@ import {
   VerticalList,
 } from "../../examples/layouts/Stack.example.js";
 import stackExampleSrc from "../../examples/layouts/Stack.example.tsx?raw";
-import stackComponentSrc from "../../components/Stack.tsx?raw";
+import stackComponentSrc from "../../components/base/Stack.tsx?raw";
 
 const meta: Meta = {
   title: "Layouts/Stack",

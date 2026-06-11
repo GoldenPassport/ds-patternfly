@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within } from "storybook/test";
 import { Section, Card, Example } from "../_kit/StoryKit.js";
-import { Shell } from "../../components/Shell.js";
-import { shellEnLabels } from "../../components/labels.js";
+import { Shell } from "../../components/ds/Shell.js";
+import { shellEnLabels } from "../../components/ds/labels.js";
 import ShellExample from "../../examples/patterns/Shell.example.js";
 import shellExampleSrc from "../../examples/patterns/Shell.example.tsx?raw";
 

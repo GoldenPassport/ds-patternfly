@@ -14,7 +14,7 @@ import {
   BorderRadius,
 } from "../../examples/components/Button.example.js";
 import buttonExampleSrc from "../../examples/components/Button.example.tsx?raw";
-import buttonComponentSrc from "../../components/Button.tsx?raw";
+import buttonComponentSrc from "../../components/base/Button.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Button",

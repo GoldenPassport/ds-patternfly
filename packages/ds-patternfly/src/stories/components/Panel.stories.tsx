@@ -14,7 +14,7 @@ import {
   Scrollable,
 } from "../../examples/components/Panel.example.js";
 import panelExampleSrc from "../../examples/components/Panel.example.tsx?raw";
-import panelComponentSrc from "../../components/Panel.tsx?raw";
+import panelComponentSrc from "../../components/base/Panel.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Panel",

@@ -16,7 +16,7 @@ import {
   AutoWidthBare,
 } from "../../examples/components/Popover.example.js";
 import popoverExampleSrc from "../../examples/components/Popover.example.tsx?raw";
-import popoverComponentSrc from "../../components/Popover.tsx?raw";
+import popoverComponentSrc from "../../components/base/Popover.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Popover",

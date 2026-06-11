@@ -8,7 +8,7 @@ import {
 } from "../../_kit/StoryKit.js";
 import { DropZoneWithStatus } from "../../../examples/components/FileUpload/MultipleFileUpload.example.js";
 import multipleFileUploadExampleSrc from "../../../examples/components/FileUpload/MultipleFileUpload.example.tsx?raw";
-import multipleFileUploadComponentSrc from "../../../components/MultipleFileUpload.tsx?raw";
+import multipleFileUploadComponentSrc from "../../../components/base/MultipleFileUpload.tsx?raw";
 
 const meta: Meta = {
   title: "Components/File upload/MultipleFileUpload",

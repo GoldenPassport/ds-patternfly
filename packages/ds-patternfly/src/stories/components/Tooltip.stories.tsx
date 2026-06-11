@@ -9,7 +9,7 @@ import {
 } from "../_kit/StoryKit.js";
 import { Basic, Positions } from "../../examples/components/Tooltip.example.js";
 import tooltipExampleSrc from "../../examples/components/Tooltip.example.tsx?raw";
-import tooltipComponentSrc from "../../components/Tooltip.tsx?raw";
+import tooltipComponentSrc from "../../components/base/Tooltip.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Tooltip",

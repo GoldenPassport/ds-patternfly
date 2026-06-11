@@ -14,7 +14,7 @@ import {
   WithSearch,
 } from "../../examples/components/TreeView.example.js";
 import treeViewExampleSrc from "../../examples/components/TreeView.example.tsx?raw";
-import treeViewComponentSrc from "../../components/TreeView.tsx?raw";
+import treeViewComponentSrc from "../../components/base/TreeView.tsx?raw";
 
 const meta: Meta = {
   title: "Components/TreeView",

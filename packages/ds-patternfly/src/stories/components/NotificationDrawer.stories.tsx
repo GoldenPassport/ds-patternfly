@@ -14,7 +14,7 @@ import {
   EmptyDrawer,
 } from "../../examples/components/NotificationDrawer.example.js";
 import notificationDrawerExampleSrc from "../../examples/components/NotificationDrawer.example.tsx?raw";
-import notificationDrawerComponentSrc from "../../components/NotificationDrawer.tsx?raw";
+import notificationDrawerComponentSrc from "../../components/base/NotificationDrawer.tsx?raw";
 
 const meta: Meta = {
   title: "Components/NotificationDrawer",

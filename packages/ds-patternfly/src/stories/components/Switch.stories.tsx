@@ -9,7 +9,7 @@ import {
 } from "../_kit/StoryKit.js";
 import { States } from "../../examples/components/Switch.example.js";
 import switchExampleSrc from "../../examples/components/Switch.example.tsx?raw";
-import switchComponentSrc from "../../components/Switch.tsx?raw";
+import switchComponentSrc from "../../components/base/Switch.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/Switch",

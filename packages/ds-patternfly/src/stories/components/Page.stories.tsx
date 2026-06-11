@@ -46,7 +46,7 @@ import {
   CenteredWidthLimited,
 } from "../../examples/components/Page.example.js";
 import pageExampleSrc from "../../examples/components/Page.example.tsx?raw";
-import pageComponentSrc from "../../components/Page.tsx?raw";
+import pageComponentSrc from "../../components/base/Page.tsx?raw";
 import {
   DemoFrame,
   PropsTable,

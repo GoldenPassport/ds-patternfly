@@ -14,7 +14,7 @@ import {
   Compact,
 } from "../../examples/components/ToggleGroup.example.js";
 import toggleGroupExampleSrc from "../../examples/components/ToggleGroup.example.tsx?raw";
-import toggleGroupComponentSrc from "../../components/ToggleGroup.tsx?raw";
+import toggleGroupComponentSrc from "../../components/base/ToggleGroup.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/ToggleGroup",

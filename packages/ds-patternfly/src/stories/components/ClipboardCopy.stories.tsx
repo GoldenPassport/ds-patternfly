@@ -14,7 +14,7 @@ import {
   InlineCompact,
 } from "../../examples/components/ClipboardCopy.example.js";
 import clipboardCopyExampleSrc from "../../examples/components/ClipboardCopy.example.tsx?raw";
-import clipboardCopyComponentSrc from "../../components/ClipboardCopy.tsx?raw";
+import clipboardCopyComponentSrc from "../../components/base/ClipboardCopy.tsx?raw";
 
 const meta: Meta = {
   title: "Components/ClipboardCopy",

@@ -11,7 +11,7 @@ import {
   Bordered,
 } from "../../examples/components/Avatar.example.js";
 import avatarExampleSrc from "../../examples/components/Avatar.example.tsx?raw";
-import avatarComponentSrc from "../../components/Avatar.tsx?raw";
+import avatarComponentSrc from "../../components/base/Avatar.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Avatar",

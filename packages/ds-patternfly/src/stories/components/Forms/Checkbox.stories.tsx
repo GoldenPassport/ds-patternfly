@@ -13,7 +13,7 @@ import {
   MultiSelectGroup,
 } from "../../../examples/components/Forms/Checkbox.example.js";
 import checkboxExampleSrc from "../../../examples/components/Forms/Checkbox.example.tsx?raw";
-import checkboxComponentSrc from "../../../components/Checkbox.tsx?raw";
+import checkboxComponentSrc from "../../../components/base/Checkbox.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/Checkbox",

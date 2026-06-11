@@ -11,7 +11,7 @@ import {
   PlainBanner,
 } from "../../examples/components/Banner.example.js";
 import bannerExampleSrc from "../../examples/components/Banner.example.tsx?raw";
-import bannerComponentSrc from "../../components/Banner.tsx?raw";
+import bannerComponentSrc from "../../components/base/Banner.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Banner",

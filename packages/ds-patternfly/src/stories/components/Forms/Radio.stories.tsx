@@ -9,7 +9,7 @@ import {
 } from "../../_kit/StoryKit.js";
 import { Group } from "../../../examples/components/Forms/Radio.example.js";
 import radioExampleSrc from "../../../examples/components/Forms/Radio.example.tsx?raw";
-import radioComponentSrc from "../../../components/Radio.tsx?raw";
+import radioComponentSrc from "../../../components/base/Radio.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/Radio",

@@ -13,7 +13,7 @@ import {
   InternalStepperLayout,
 } from "../../examples/components/NumberInput.example.js";
 import numberInputExampleSrc from "../../examples/components/NumberInput.example.tsx?raw";
-import numberInputComponentSrc from "../../components/NumberInput.tsx?raw";
+import numberInputComponentSrc from "../../components/base/NumberInput.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/NumberInput",

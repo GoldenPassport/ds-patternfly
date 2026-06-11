@@ -12,7 +12,7 @@ import {
   ResultsCount,
 } from "../../examples/components/SearchInput.example.js";
 import searchInputExampleSrc from "../../examples/components/SearchInput.example.tsx?raw";
-import searchInputComponentSrc from "../../components/SearchInput.tsx?raw";
+import searchInputComponentSrc from "../../components/base/SearchInput.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/SearchInput",

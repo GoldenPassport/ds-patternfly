@@ -17,7 +17,7 @@ import {
   Expandable,
 } from "../../examples/components/Card.example.js";
 import cardExampleSrc from "../../examples/components/Card.example.tsx?raw";
-import cardComponentSrc from "../../components/Card.tsx?raw";
+import cardComponentSrc from "../../components/base/Card.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Card",

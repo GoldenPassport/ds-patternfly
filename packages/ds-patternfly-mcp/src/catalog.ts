@@ -41,6 +41,12 @@ export interface DocItem {
   tags?: string[];
   keyTokens?: string[];
   import?: string;
+  /**
+   * Which component layer this entry's source belongs to: "base" = thin PF6
+   * wrapper (reference building material), "ds" = a DS "lego block" (the
+   * focus). Set when componentSource is attached.
+   */
+  layer?: "base" | "ds";
   /** Full source of the DS component file (thin PF6 wrapper or DS-own). */
   componentSource?: string;
   /** Props reference for exported components (when curated). */

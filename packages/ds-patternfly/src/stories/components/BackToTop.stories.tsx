@@ -10,7 +10,7 @@ import {
   Default,
 } from "../../examples/components/BackToTop.example.js";
 import backToTopExampleSrc from "../../examples/components/BackToTop.example.tsx?raw";
-import backToTopComponentSrc from "../../components/BackToTop.tsx?raw";
+import backToTopComponentSrc from "../../components/base/BackToTop.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Back to top",

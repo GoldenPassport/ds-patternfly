@@ -10,7 +10,7 @@ import {
 import { PropsTable } from "../../_kit/DemoKit.js";
 import { Anatomy } from "../../../examples/components/Forms/Form.example.js";
 import formExampleSrc from "../../../examples/components/Forms/Form.example.tsx?raw";
-import formComponentSrc from "../../../components/Form.tsx?raw";
+import formComponentSrc from "../../../components/base/Form.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/Form",

@@ -16,7 +16,7 @@ import {
   WithDescriptions,
 } from "../../examples/components/Dropdown.example.js";
 import dropdownExampleSrc from "../../examples/components/Dropdown.example.tsx?raw";
-import dropdownComponentSrc from "../../components/Dropdown.tsx?raw";
+import dropdownComponentSrc from "../../components/base/Dropdown.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Menu/Dropdown",
