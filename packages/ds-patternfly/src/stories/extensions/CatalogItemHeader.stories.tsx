@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { CatalogItemHeader } from "@patternfly/react-catalog-view-extension";
-import { CubeIcon } from "@patternfly/react-icons";
-import "@patternfly/react-catalog-view-extension/dist/css/react-catalog-view-extension.css";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { Default, CustomNodes } from "../../examples/extensions/CatalogItemHeader.example.js";
+import catalogItemHeaderExampleSrc from "../../examples/extensions/CatalogItemHeader.example.tsx?raw";
 
 const meta: Meta = {
   title: "Extensions/Catalog view/Catalog item header",
@@ -28,20 +27,13 @@ export const Overview: StoryObj = {
     >
       <Section title="Default">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <CatalogItemHeader
-                title="Workflow engine"
-                vendor="Provided by Acme"
-                iconClass="fas fa-cube"
-              />
-            </DemoFrame>
-            <CodeBlock>{`<CatalogItemHeader
-  title="Workflow engine"
-  vendor="Provided by Acme"
-  iconClass="fas fa-cube"
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={catalogItemHeaderExampleSrc}
+            region="Default"
+            fileName="CatalogItemHeader.example.tsx"
+          >
+            <Default />
+          </Example>
         </Card>
       </Section>
 
@@ -50,18 +42,22 @@ export const Overview: StoryObj = {
         description="Pass a React node as title / vendor when you need composed content (badges, links, status pills)."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <CatalogItemHeader
-                title={
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                    <CubeIcon /> Workflow engine
-                  </span>
-                }
-                vendor={<a href="#vendor">Acme &rsaquo;</a>}
-              />
-            </DemoFrame>
-          </div>
+          <Example
+            source={catalogItemHeaderExampleSrc}
+            region="CustomNodes"
+            fileName="CatalogItemHeader.example.tsx"
+          >
+            <CustomNodes />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={catalogItemHeaderExampleSrc} fileName="CatalogItemHeader.example.tsx" />
         </Card>
       </Section>
 

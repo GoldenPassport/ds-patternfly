@@ -1,13 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Gallery, GalleryItem } from "@golden-passport/ds-patternfly";
-import {
-  CatalogTile,
-  CatalogTileBadge,
-} from "@patternfly/react-catalog-view-extension";
-import { StarIcon, CubeIcon } from "@patternfly/react-icons";
-import "@patternfly/react-catalog-view-extension/dist/css/react-catalog-view-extension.css";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { TileGrid } from "../../examples/extensions/CatalogView.example.js";
+import catalogViewExampleSrc from "../../examples/extensions/CatalogView.example.tsx?raw";
 
 const meta: Meta = {
   title: "Extensions/Catalog view/Catalog view",
@@ -21,15 +16,6 @@ const meta: Meta = {
   },
 };
 export default meta;
-
-const items = [
-  { id: "wf",     title: "Workflow engine",    vendor: "Acme",    desc: "Trigger and orchestrate jobs across services.", featured: true },
-  { id: "ld",     title: "Log delivery",       vendor: "Acme",    desc: "Stream logs from any source to your data lake." },
-  { id: "ci",     title: "CI runner",          vendor: "Beta Co", desc: "Auto-scaling build agents with caching." },
-  { id: "mon",    title: "Monitoring stack",   vendor: "Gamma",   desc: "Prometheus + Grafana, batteries included." },
-  { id: "sec",    title: "Secrets manager",    vendor: "Acme",    desc: "Rotating credentials with audit log." },
-  { id: "alerts", title: "Incident alerts",    vendor: "Delta",   desc: "Route incidents to the right on-call." },
-];
 
 export const Overview: StoryObj = {
   render: () => (
@@ -52,50 +38,22 @@ export const Overview: StoryObj = {
         description="Pair CatalogTile with a responsive Gallery — each tile is independently focusable and linkable."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Gallery hasGutter minWidths={{ default: "260px" }}>
-                {items.map((it) => (
-                  <GalleryItem key={it.id}>
-                    <CatalogTile
-                      id={it.id}
-                      featured={!!it.featured}
-                      href={`#/${it.id}`}
-                      icon={<CubeIcon style={{ fontSize: 28 }} />}
-                      title={it.title}
-                      vendor={`Provided by ${it.vendor}`}
-                      description={it.desc}
-                      badges={
-                        it.featured
-                          ? [
-                              <CatalogTileBadge key="star" title="Featured">
-                                <StarIcon />
-                              </CatalogTileBadge>,
-                            ]
-                          : []
-                      }
-                    />
-                  </GalleryItem>
-                ))}
-              </Gallery>
-            </DemoFrame>
-            <CodeBlock>{`<Gallery hasGutter minWidths={{ default: "260px" }}>
-  {items.map(it => (
-    <GalleryItem key={it.id}>
-      <CatalogTile
-        id={it.id}
-        featured={it.featured}
-        href={\`#/\${it.id}\`}
-        icon={<CubeIcon />}
-        title={it.title}
-        vendor={\`Provided by \${it.vendor}\`}
-        description={it.desc}
-        badges={it.featured ? [<CatalogTileBadge title="Featured"><StarIcon/></CatalogTileBadge>] : []}
-      />
-    </GalleryItem>
-  ))}
-</Gallery>`}</CodeBlock>
-          </div>
+          <Example
+            source={catalogViewExampleSrc}
+            region="TileGrid"
+            fileName="CatalogView.example.tsx"
+          >
+            <TileGrid />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={catalogViewExampleSrc} fileName="CatalogView.example.tsx" />
         </Card>
       </Section>
 
