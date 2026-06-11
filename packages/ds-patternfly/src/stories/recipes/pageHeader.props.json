@@ -1,0 +1,13 @@
+{
+  "import": "import { PageHeader } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "title", "type": "ReactNode", "required": true, "description": "The page title. Rendered as an <h1>." },
+    { "name": "subtitle", "type": "ReactNode", "description": "Supporting line under the title." },
+    { "name": "icon", "type": "ReactNode", "description": "Leading glyph beside the title (e.g. a 36×36 icon)." },
+    { "name": "status", "type": "ReactNode", "description": "Status slot rendered inline after the title (e.g. a <Label>)." },
+    { "name": "breadcrumb", "type": "ReactNode", "description": "Breadcrumb slot rendered above the title (e.g. a <Breadcrumb>)." },
+    { "name": "actions", "type": "ReactNode", "description": "Right-aligned actions — buttons, a kebab <Dropdown>." },
+    { "name": "tabs", "type": "ReactNode", "description": "Tabs strip rendered below the header (e.g. a <Tabs>)." },
+    { "name": "children", "type": "ReactNode", "description": "Content rendered below the tabs strip." }
+  ]
+}

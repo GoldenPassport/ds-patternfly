@@ -1,0 +1,10 @@
+{
+  "import": "import { ListManager } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "header", "type": "ReactNode", "description": "Header slot (e.g. a <PageHeader>)." },
+    { "name": "toolbar", "type": "ReactNode", "description": "Left side of the toolbar row — a <FilterToolbar> and/or <BulkSelectToolbar>." },
+    { "name": "toolbarEnd", "type": "ReactNode", "description": "Right side of the toolbar row — typically a <Pagination>." },
+    { "name": "children", "type": "ReactNode", "required": true, "description": "The list body — a <Table>, a <Gallery> of cards, an empty state." },
+    { "name": "footer", "type": "ReactNode", "description": "Footer pagination slot, rendered below the body." }
+  ]
+}

@@ -66,3 +66,27 @@ export type {
   ChatMsg,
   ChatPlacement,
 } from "./components/index.js";
+
+// Recipes — composed, configurable building blocks (PageHeader,
+// FilterToolbar, BulkSelectToolbar, ListManager).
+export {
+  PageHeader,
+  FilterToolbar,
+  filterToolbarEnLabels,
+  BulkSelectToolbar,
+  bulkSelectToolbarEnLabels,
+  ListManager,
+} from "./recipes/index.js";
+export type {
+  PageHeaderProps,
+  FilterToolbarProps,
+  FilterDef,
+  FilterToolbarLabels,
+  BulkSelectToolbarProps,
+  BulkSelectToolbarLabels,
+  ListManagerProps,
+} from "./recipes/index.js";
+
+// Patterns — large composed page shells.
+export { DashboardShell } from "./patterns/index.js";
+export type { DashboardShellProps } from "./patterns/index.js";

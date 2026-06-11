@@ -16,5 +16,25 @@
         "description": "The assistant docked in the app Shell: branded masthead + sidebar nav, content stage as the overlay container, and a live async onSend handler."
       }
     ]
+  },
+  "recipes-pageheader": {
+    "propsFile": "src/stories/recipes/pageHeader.props.json",
+    "usage": "PageHeader is the standard top-of-page header recipe: a title row (optional icon + status <Label> + right-aligned actions), an optional subtitle, a breadcrumb slot above, and a tabs strip below. Every region is a ReactNode slot — fill what you need. Built from branded react-core primitives; no labels prop (all text is caller-provided content)."
+  },
+  "recipes-filtertoolbar": {
+    "propsFile": "src/stories/recipes/filterToolbar.props.json",
+    "usage": "FilterToolbar is the fully-controlled filter bar recipe: a search field, faceted multi-select facets (FilterDef[]), removable filter chips, and one-click clear-all. You own searchValue + values and update them from onSearchChange / onChange / onClearAll; chips and clear-all derive from values automatically. Localise chrome text via labels (filterToolbarEnLabels)."
+  },
+  "recipes-bulkselecttoolbar": {
+    "propsFile": "src/stories/recipes/bulkSelectToolbar.props.json",
+    "usage": "BulkSelectToolbar is the controlled 'select many, act on many' recipe: a split checkbox + dropdown (select all / page / none), a derived '{n} selected' status, and bulk actions shown once a selection exists. You own the selection; pass counts + handlers. The split checkbox reflects page-selected / partially-selected state. Localise via labels (bulkSelectToolbarEnLabels)."
+  },
+  "recipes-listmanager": {
+    "propsFile": "src/stories/recipes/listManager.props.json",
+    "usage": "ListManager is the layout-only page scaffold for a managed collection: header slot (PageHeader), a toolbar row (FilterToolbar + BulkSelectToolbar left via `toolbar`, Pagination right via `toolbarEnd`), the list body (children — a Table or Gallery), and a footer pagination slot. It owns the vertical rhythm and toolbar arrangement; you bring the pieces and the data."
+  },
+  "patterns-dashboardshell": {
+    "propsFile": "src/stories/patterns/dashboardShell.props.json",
+    "usage": "DashboardShell is the dashboard page scaffold: a titled header band (title + description + right-aligned actions slot) over a content region you fill with a KPI strip, charts, and status cards (children). Layout + rhythm only — chart libraries (@patternfly/react-charts, ECharts) stay in your app and never enter the design system."
   }
 }

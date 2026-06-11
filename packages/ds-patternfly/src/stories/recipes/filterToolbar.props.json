@@ -1,0 +1,13 @@
+{
+  "import": "import { FilterToolbar, filterToolbarEnLabels } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "labels", "type": "FilterToolbarLabels", "default": "filterToolbarEnLabels", "description": "Chrome text — search placeholder/aria and clear-all button label." },
+    { "name": "searchValue", "type": "string", "description": "Current search text. Omit (with onSearchChange) to hide the search field." },
+    { "name": "onSearchChange", "type": "(value: string) => void", "description": "Fired as the search text changes." },
+    { "name": "filters", "type": "FilterDef[]", "default": "[]", "description": "Faceted filters — each { key, label, options: { value, label }[] }." },
+    { "name": "values", "type": "Record<string, string[]>", "default": "{}", "description": "Selected values per filter key (controlled)." },
+    { "name": "onChange", "type": "(key: string, values: string[]) => void", "description": "Fired when a facet's selection changes." },
+    { "name": "onClearAll", "type": "() => void", "description": "Fired by the search field and PF's clear-all chip control." },
+    { "name": "actions", "type": "ReactNode", "description": "Right-aligned actions (e.g. a primary Create button)." }
+  ]
+}

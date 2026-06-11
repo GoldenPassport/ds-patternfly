@@ -1,0 +1,15 @@
+{
+  "import": "import { BulkSelectToolbar, bulkSelectToolbarEnLabels } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "labels", "type": "BulkSelectToolbarLabels", "default": "bulkSelectToolbarEnLabels", "description": "Chrome text — split-button aria, select all/page/none items ({count} token), selected status." },
+    { "name": "selectedCount", "type": "number", "required": true, "description": "Total rows selected across all pages." },
+    { "name": "totalCount", "type": "number", "required": true, "description": "Total rows available (shown in 'Select all')." },
+    { "name": "pageCount", "type": "number", "description": "Rows on the current page (enables 'Select page')." },
+    { "name": "pageSelected", "type": "boolean", "default": "false", "description": "Whole current page selected — checkbox checked." },
+    { "name": "pagePartiallySelected", "type": "boolean", "default": "false", "description": "Current page partially selected — checkbox indeterminate." },
+    { "name": "onSelectAll", "type": "() => void", "required": true, "description": "Select every row across all pages." },
+    { "name": "onSelectNone", "type": "() => void", "required": true, "description": "Clear the entire selection." },
+    { "name": "onSelectPage", "type": "() => void", "description": "Select every row on the current page." },
+    { "name": "actions", "type": "ReactNode", "description": "Bulk actions, shown only when selectedCount > 0." }
+  ]
+}

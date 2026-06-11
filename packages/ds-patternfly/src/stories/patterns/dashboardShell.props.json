@@ -1,0 +1,9 @@
+{
+  "import": "import { DashboardShell } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "title", "type": "ReactNode", "required": true, "description": "Dashboard title. Rendered as an <h1>." },
+    { "name": "description", "type": "ReactNode", "description": "Supporting line under the title." },
+    { "name": "actions", "type": "ReactNode", "description": "Right-aligned header slot — a date-range picker, refresh button, etc." },
+    { "name": "children", "type": "ReactNode", "required": true, "description": "The dashboard body (KPI gallery, chart grid, status cards). Chart libraries stay in your app." }
+  ]
+}

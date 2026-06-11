@@ -41,14 +41,20 @@ const MANIFEST = JSON.parse(
   readFileSync(join(here, "exports.manifest.json"), "utf8"),
 );
 
-// Every component file in the lib's components/ folder is an exported
-// symbol (one file per component). Catalog entries whose title matches one
-// get an import statement automatically.
-const EXPORTED_COMPONENTS = new Set(
-  readdirSync(join(LIB_ROOT, "src", "components"))
-    .filter((f) => f.endsWith(".tsx"))
-    .map((f) => f.replace(/\.tsx$/, "")),
-);
+// Every exported component file (one symbol per file) across components/,
+// recipes/, and patterns/. Catalog entries whose title matches one get an
+// import statement + the file's source embedded (downloadable via the
+// story, served by getGpComponent). name → absolute file path.
+const COMPONENT_FILES = new Map();
+for (const sub of ["components", "recipes", "patterns"]) {
+  const dir = join(LIB_ROOT, "src", sub);
+  if (!existsSync(dir)) continue;
+  for (const f of readdirSync(dir)) {
+    if (!f.endsWith(".tsx")) continue;
+    const name = f.replace(/\.tsx$/, "");
+    if (!COMPONENT_FILES.has(name)) COMPONENT_FILES.set(name, join(dir, f));
+  }
+}
 
 // ---------- file walker ----------
 
@@ -173,17 +179,19 @@ function walkExamples(dir, files = []) {
  * so story and catalog can't drift), usage, keyTokens, embedded examples.
  */
 function enrich(item) {
-  // Auto-rules first: title matches an exported component file → import
-  // line + the component's source (served by getGpComponent / downloadable
-  // from the story's Configuration section).
-  if (item.kind === "component" && EXPORTED_COMPONENTS.has(item.title)) {
+  // Auto-rules first: title matches an exported component/recipe/pattern
+  // file → import line + the file's source (served by getGpComponent /
+  // downloadable from the story's Configuration section). The import line
+  // is only auto-set for plain components; recipes/patterns (which may
+  // export extra symbols) get their import from the manifest.
+  const componentFile = COMPONENT_FILES.get(item.title);
+  if (componentFile) {
     item = {
       ...item,
-      import: `import { ${item.title} } from "${PKG.name}";`,
-      componentSource: readFileSync(
-        join(LIB_ROOT, "src", "components", `${item.title}.tsx`),
-        "utf8",
-      ).trimEnd(),
+      ...(item.kind === "component"
+        ? { import: `import { ${item.title} } from "${PKG.name}";` }
+        : {}),
+      componentSource: readFileSync(componentFile, "utf8").trimEnd(),
     };
   }
   const cur = MANIFEST[item.id];
