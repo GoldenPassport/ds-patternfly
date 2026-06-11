@@ -1,17 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Label } from "@golden-passport/ds-patternfly";
-import {
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@golden-passport/ds-patternfly";
-import { Severity } from "@patternfly/react-component-groups/dist/dynamic/Severity";
-import { Status } from "@patternfly/react-component-groups/dist/dynamic/Status";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { TriageRow } from "../../examples/patterns/StatusAndSeverity.example.js";
+import statusAndSeverityExampleSrc from "../../examples/patterns/StatusAndSeverity.example.tsx?raw";
 
 const meta: Meta = {
   title: "Patterns/Status and severity",
@@ -21,22 +11,6 @@ const meta: Meta = {
   },
 };
 export default meta;
-
-type Vuln = {
-  id: string;
-  cve: string;
-  severity: "critical" | "important" | "moderate" | "minor" | "none";
-  status: "danger" | "warning" | "success" | "info";
-  statusLabel: string;
-  cluster: string;
-};
-
-const ROWS: Vuln[] = [
-  { id: "1", cve: "CVE-2026-0019", severity: "critical",  status: "danger",  statusLabel: "Unpatched",      cluster: "prod-east-1" },
-  { id: "2", cve: "CVE-2026-0017", severity: "important", status: "warning", statusLabel: "Patch pending",  cluster: "prod-east-1" },
-  { id: "3", cve: "CVE-2026-0012", severity: "moderate",  status: "success", statusLabel: "Patched",        cluster: "stage-eu-2" },
-  { id: "4", cve: "CVE-2026-0008", severity: "minor",     status: "info",    statusLabel: "Accepted risk", cluster: "stage-eu-2" },
-];
 
 export const Overview: StoryObj = {
   render: () => (
@@ -59,39 +33,25 @@ export const Overview: StoryObj = {
         description="Severity glyph + Status icon + descriptive Label, all in one row. Severity sorts ordinally; Status colours the health; Label carries the freeform context."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Table aria-label="Vulnerabilities" variant="compact">
-                <Thead>
-                  <Tr>
-                    <Th>Severity</Th>
-                    <Th>CVE</Th>
-                    <Th>Status</Th>
-                    <Th>Cluster</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {ROWS.map((r) => (
-                    <Tr key={r.id}>
-                      <Td dataLabel="Severity">
-                        <Severity severity={r.severity} label={r.severity[0]!.toUpperCase() + r.severity.slice(1)} />
-                      </Td>
-                      <Td dataLabel="CVE"><strong>{r.cve}</strong></Td>
-                      <Td dataLabel="Status">
-                        <Status status={r.status} label={r.statusLabel} />
-                      </Td>
-                      <Td dataLabel="Cluster">
-                        <Label isCompact>{r.cluster}</Label>
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </DemoFrame>
-            <CodeBlock>{`<Severity severity="critical" label="Critical" />
-<Status   status="danger"    label="Unpatched" />
-<Label isCompact>prod-east-1</Label>`}</CodeBlock>
-          </div>
+          <Example
+            source={statusAndSeverityExampleSrc}
+            region="TriageRow"
+            fileName="StatusAndSeverity.example.tsx"
+          >
+            <TriageRow />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example
+            source={statusAndSeverityExampleSrc}
+            fileName="StatusAndSeverity.example.tsx"
+          />
         </Card>
       </Section>
 

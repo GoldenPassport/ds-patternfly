@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import TagCount from "@patternfly/react-component-groups/dist/dynamic/TagCount";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { Default } from "../../examples/component-groups/TagCount.example.js";
+import tagCountExampleSrc from "../../examples/component-groups/TagCount.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Status and state indicators/Tag count",
@@ -32,16 +33,22 @@ export const Overview: StoryObj = {
     >
       <Section title="Default">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-                <TagCount count={3} onClick={() => alert("show 3 tags")} />
-                <TagCount count={12} onClick={() => alert("show 12 tags")} />
-                <TagCount count={0} isAriaDisabled />
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<TagCount count={3} onClick={openTagsDrawer} />`}</CodeBlock>
-          </div>
+          <Example
+            source={tagCountExampleSrc}
+            region="Default"
+            fileName="TagCount.example.tsx"
+          >
+            <Default />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={tagCountExampleSrc} fileName="TagCount.example.tsx" />
         </Card>
       </Section>
 

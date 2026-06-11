@@ -1,7 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Status } from "@patternfly/react-component-groups/dist/dynamic/Status";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  Plain,
+  PopoverVariant,
+  IconOnly,
+} from "../../examples/component-groups/Status.example.js";
+import statusExampleSrc from "../../examples/component-groups/Status.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Status and state indicators/Status",
@@ -24,18 +29,13 @@ export const Overview: StoryObj = {
     >
       <Section title="Plain (icon + label)">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "grid", gap: 8 }}>
-                <Status status="success" label="Healthy" />
-                <Status status="info"    label="Provisioning" />
-                <Status status="warning" label="Degraded" />
-                <Status status="danger"  label="Failed" />
-                <Status status="custom"  label="Unknown" />
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<Status status="success" label="Healthy" />`}</CodeBlock>
-          </div>
+          <Example
+            source={statusExampleSrc}
+            region="Plain"
+            fileName="Status.example.tsx"
+          >
+            <Plain />
+          </Example>
         </Card>
       </Section>
 
@@ -44,20 +44,13 @@ export const Overview: StoryObj = {
         description="`variant='popover'` makes the label clickable; supply popoverProps with content + headerContent for explanatory detail."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <Status
-                status="danger"
-                label="Failed"
-                variant="popover"
-                popoverProps={{
-                  headerContent: "Why this failed",
-                  bodyContent:
-                    "The container exited with code 137 (OOMKilled). Increase the memory limit and retry.",
-                }}
-              />
-            </DemoFrame>
-          </div>
+          <Example
+            source={statusExampleSrc}
+            region="PopoverVariant"
+            fileName="Status.example.tsx"
+          >
+            <PopoverVariant />
+          </Example>
         </Card>
       </Section>
 
@@ -66,15 +59,22 @@ export const Overview: StoryObj = {
         description="Set `iconOnly` for compact dense surfaces — the label still acts as the accessible name."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 16 }}>
-                <Status status="success" label="Healthy" iconOnly iconTitle="Healthy" />
-                <Status status="warning" label="Degraded" iconOnly iconTitle="Degraded" />
-                <Status status="danger"  label="Failed"  iconOnly iconTitle="Failed" />
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={statusExampleSrc}
+            region="IconOnly"
+            fileName="Status.example.tsx"
+          >
+            <IconOnly />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={statusExampleSrc} fileName="Status.example.tsx" />
         </Card>
       </Section>
 

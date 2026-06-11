@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button, Gallery, GalleryItem } from "@golden-passport/ds-patternfly";
-import { CogIcon, KeyIcon, ShieldAltIcon } from "@patternfly/react-icons";
-import ServiceCard from "@patternfly/react-component-groups/dist/dynamic/ServiceCard";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { Basic } from "../../examples/component-groups/ServiceCard.example.js";
+import serviceCardExampleSrc from "../../examples/component-groups/ServiceCard.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Content containers/Service card",
@@ -26,57 +25,22 @@ export const Overview: StoryObj = {
     >
       <Section title="Basic">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              {/* isFullHeight on every card so a row of mixed-length
-                  cards (Settings is short, Access carries a subtitle +
-                  helper text) lines up at the same height. PF6's
-                  Gallery only stretches cells when its children opt in
-                  via isFullHeight. */}
-              <Gallery hasGutter minWidths={{ default: "240px" }}>
-                <GalleryItem>
-                  <ServiceCard
-                    icon={<CogIcon />}
-                    title="Settings"
-                    description="Configure preferences, notifications, and integrations."
-                    isFullHeight
-                    footer={<Button variant="link" isInline>Open</Button>}
-                  />
-                </GalleryItem>
-                <GalleryItem>
-                  <ServiceCard
-                    icon={<KeyIcon />}
-                    title="Access"
-                    subtitle="Identity & roles"
-                    description="Manage users, groups, and API keys for your workspace."
-                    helperText="3 pending invitations"
-                    isFullHeight
-                    footer={<Button variant="link" isInline>Open</Button>}
-                  />
-                </GalleryItem>
-                <GalleryItem>
-                  <ServiceCard
-                    icon={<ShieldAltIcon />}
-                    title="Security"
-                    description="Audit logs, vulnerabilities, and compliance posture."
-                    isFullHeight
-                    isStacked
-                    footer={<Button variant="link" isInline>Open</Button>}
-                  />
-                </GalleryItem>
-              </Gallery>
-            </DemoFrame>
-            <CodeBlock>{`<Gallery hasGutter minWidths={{ default: "240px" }}>
-  <GalleryItem>
-    <ServiceCard
-      icon={<CogIcon />}
-      title="Settings"
-      description="Configure preferences, notifications, and integrations."
-      footer={<Button variant="link" isInline>Open</Button>}
-    />
-  </GalleryItem>
-</Gallery>`}</CodeBlock>
-          </div>
+          <Example
+            source={serviceCardExampleSrc}
+            region="Basic"
+            fileName="ServiceCard.example.tsx"
+          >
+            <Basic />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={serviceCardExampleSrc} fileName="ServiceCard.example.tsx" />
         </Card>
       </Section>
 

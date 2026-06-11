@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
 import { PropsTable } from "../_kit/DemoKit.js";
+import reactConsoleExampleSrc from "../../examples/extensions/ReactConsole.example.tsx?raw";
 
 const meta: Meta = {
   title: "Extensions/React console",
@@ -30,36 +31,11 @@ export const Overview: StoryObj = {
         description="The picker that lets the user switch between Serial / VNC / Desktop. Wrap one or more console children inside it."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <CodeBlock>{`import {
-  AccessConsoles,
-  SerialConsole,
-  VncConsole,
-  DesktopViewer,
-} from "@patternfly/react-console";
-
-export function VmConsole({ vm }) {
-  return (
-    <AccessConsoles preselectedType="SerialConsole">
-      <SerialConsole
-        type="SerialConsole"
-        onConnect={vm.serial.connect}
-        onDisconnect={vm.serial.disconnect}
-        onData={vm.serial.send}
-        status={vm.serial.status} // 'connected' | 'disconnected' | 'loading'
-      />
-      <VncConsole
-        type="VncConsole"
-        host={vm.vnc.host}
-        port={vm.vnc.port}
-        path={vm.vnc.path}
-        encrypt={vm.vnc.encrypt}
-        credentials={{ password: vm.vnc.password }}
-      />
-    </AccessConsoles>
-  );
-}`}</CodeBlock>
-          </div>
+          <Example
+            source={reactConsoleExampleSrc}
+            region="AccessConsolesWrapper"
+            fileName="ReactConsole.example.tsx"
+          />
         </Card>
       </Section>
 
@@ -68,21 +44,11 @@ export function VmConsole({ vm }) {
         description="Wraps xterm.js. The consumer manages the connection — the component just renders the terminal and forwards user input via onData."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <CodeBlock>{`<SerialConsole
-  onConnect={() => ws.open()}
-  onDisconnect={() => ws.close()}
-  onData={(input) => ws.send(input)}
-  status="connected"
-  cols={80}
-  rows={24}
-  fontFamily="Menlo, Monaco, monospace"
-  fontSize={13}
-  textConnect="Connect"
-  textDisconnect="Disconnect"
-  textReset="Reset"
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={reactConsoleExampleSrc}
+            region="SerialConsoleRecipe"
+            fileName="ReactConsole.example.tsx"
+          />
         </Card>
       </Section>
 
@@ -91,22 +57,23 @@ export function VmConsole({ vm }) {
         description="Wraps noVNC. Pass host / port / path; the component opens the WebSocket and renders the framebuffer in a canvas."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <CodeBlock>{`<VncConsole
-  host="vm-host.example.com"
-  port="6080"
-  path="/websockify"
-  encrypt
-  shared
-  credentials={{ password: "secret" }}
-  textConnect="Connect"
-  textConnecting="Connecting…"
-  textDisconnected="Disconnected"
-  textSendShortcut="Send key"
-  textCtrlAltDel="Ctrl + Alt + Del"
-  consoleContainerId="vnc-container"
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={reactConsoleExampleSrc}
+            region="VncConsoleRecipe"
+            fileName="ReactConsole.example.tsx"
+          />
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the recipes above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example
+            source={reactConsoleExampleSrc}
+            fileName="ReactConsole.example.tsx"
+          />
         </Card>
       </Section>
 

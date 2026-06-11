@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import ResponsiveActions from "@patternfly/react-component-groups/dist/dynamic/ResponsiveActions";
-import ResponsiveAction from "@patternfly/react-component-groups/dist/dynamic/ResponsiveAction";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { PersistentCollapsing } from "../../examples/component-groups/ResponsiveActions.example.js";
+import responsiveActionsExampleSrc from "../../examples/component-groups/ResponsiveActions.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Controls/Responsive actions",
@@ -42,24 +42,22 @@ export const Overview: StoryObj = {
         description="Persistent actions are always visible; non-persistent ones collapse into the kebab below `breakpoint`."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <ResponsiveActions breakpoint="md">
-                <ResponsiveAction isPersistent variant="primary">Run</ResponsiveAction>
-                <ResponsiveAction isPersistent variant="secondary">Logs</ResponsiveAction>
-                <ResponsiveAction variant="tertiary">Edit</ResponsiveAction>
-                <ResponsiveAction variant="tertiary">Disable</ResponsiveAction>
-                <ResponsiveAction variant="tertiary">Delete</ResponsiveAction>
-              </ResponsiveActions>
-            </DemoFrame>
-            <CodeBlock>{`<ResponsiveActions breakpoint="md">
-  <ResponsiveAction isPersistent variant="primary">Run</ResponsiveAction>
-  <ResponsiveAction isPersistent variant="secondary">Logs</ResponsiveAction>
-  <ResponsiveAction variant="tertiary">Edit</ResponsiveAction>
-  <ResponsiveAction variant="tertiary">Disable</ResponsiveAction>
-  <ResponsiveAction variant="tertiary">Delete</ResponsiveAction>
-</ResponsiveActions>`}</CodeBlock>
-          </div>
+          <Example
+            source={responsiveActionsExampleSrc}
+            region="PersistentCollapsing"
+            fileName="ResponsiveActions.example.tsx"
+          >
+            <PersistentCollapsing />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={responsiveActionsExampleSrc} fileName="ResponsiveActions.example.tsx" />
         </Card>
       </Section>
 

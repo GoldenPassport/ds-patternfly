@@ -1,12 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  PropertiesSidePanel,
-  PropertyItem,
-} from "@patternfly/react-catalog-view-extension";
-import { Button } from "@golden-passport/ds-patternfly";
-import "@patternfly/react-catalog-view-extension/dist/css/react-catalog-view-extension.css";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { StandardLayout } from "../../examples/extensions/PropertiesSidePanel.example.js";
+import propertiesSidePanelExampleSrc from "../../examples/extensions/PropertiesSidePanel.example.tsx?raw";
 
 const meta: Meta = {
   title: "Extensions/Catalog view/Properties side panel",
@@ -40,31 +36,25 @@ export const Overview: StoryObj = {
     >
       <Section title="Standard layout">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ maxWidth: 280 }}>
-                <PropertiesSidePanel>
-                  <PropertyItem label="Version"        value="6.4.0" />
-                  <PropertyItem label="Maintainer"     value="Acme" />
-                  <PropertyItem label="Support level"  value="Community" />
-                  <PropertyItem label="Last updated"   value="2026-04-29" />
-                  <PropertyItem
-                    label="Documentation"
-                    value={<a href="#docs">Read the docs ›</a>}
-                  />
-                  <Button variant="primary" isBlock>
-                    Install
-                  </Button>
-                </PropertiesSidePanel>
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<PropertiesSidePanel>
-  <PropertyItem label="Version"       value="6.4.0" />
-  <PropertyItem label="Maintainer"    value="Acme" />
-  <PropertyItem label="Support level" value="Community" />
-  <Button variant="primary" isBlock>Install</Button>
-</PropertiesSidePanel>`}</CodeBlock>
-          </div>
+          <Example
+            source={propertiesSidePanelExampleSrc}
+            region="StandardLayout"
+            fileName="PropertiesSidePanel.example.tsx"
+          >
+            <StandardLayout />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example
+            source={propertiesSidePanelExampleSrc}
+            fileName="PropertiesSidePanel.example.tsx"
+          />
         </Card>
       </Section>
 

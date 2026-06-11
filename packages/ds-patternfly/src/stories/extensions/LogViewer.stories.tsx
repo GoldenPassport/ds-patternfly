@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
 import { PropsTable } from "../_kit/DemoKit.js";
+import logViewerExampleSrc from "../../examples/extensions/LogViewer.example.tsx?raw";
 
 const meta: Meta = {
   title: "Extensions/Log viewer",
@@ -40,16 +41,11 @@ export const Overview: StoryObj = {
         description="Pass `data` (string or string[]) and a height. The component virtualises rows internally."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <CodeBlock>{`import { LogViewer } from "@patternfly/react-log-viewer";
-
-<LogViewer
-  data={logText}
-  hasLineNumbers
-  height={400}
-  theme="dark"
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={logViewerExampleSrc}
+            region="Default"
+            fileName="LogViewer.example.tsx"
+          />
         </Card>
       </Section>
 
@@ -58,26 +54,11 @@ export const Overview: StoryObj = {
         description="Pass a custom toolbar via `toolbar`. Drop LogViewerSearch in the toolbar to add highlight-as-you-type search."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <CodeBlock>{`import { LogViewer, LogViewerSearch } from "@patternfly/react-log-viewer";
-import { Toolbar, ToolbarContent, ToolbarItem } from "@golden-passport/ds-patternfly";
-
-<LogViewer
-  data={logText}
-  hasLineNumbers
-  height={400}
-  theme="dark"
-  toolbar={
-    <Toolbar>
-      <ToolbarContent>
-        <ToolbarItem>
-          <LogViewerSearch placeholder="Search logs" minSearchChars={1} />
-        </ToolbarItem>
-      </ToolbarContent>
-    </Toolbar>
-  }
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={logViewerExampleSrc}
+            region="WithSearchToolbar"
+            fileName="LogViewer.example.tsx"
+          />
         </Card>
       </Section>
 
@@ -86,6 +67,18 @@ import { Toolbar, ToolbarContent, ToolbarItem } from "@golden-passport/ds-patter
           <div style={{ padding: 24 }}>
             <pre style={{ margin: 0, padding: 16, background: "var(--gp-color-bg-secondary-default)", borderRadius: 6, color: "var(--gp-color-text-regular)", fontFamily: "var(--gp-font-family-mono, monospace)", fontSize: 12, lineHeight: 1.5, overflow: "auto" }}>{SAMPLE_LOG}</pre>
           </div>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the recipes above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example
+            source={logViewerExampleSrc}
+            fileName="LogViewer.example.tsx"
+          />
         </Card>
       </Section>
 

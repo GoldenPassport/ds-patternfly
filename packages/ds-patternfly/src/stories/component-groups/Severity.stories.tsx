@@ -1,7 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Severity } from "@patternfly/react-component-groups/dist/dynamic/Severity";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  AllSeverities,
+  IconOnly,
+} from "../../examples/component-groups/Severity.example.js";
+import severityExampleSrc from "../../examples/component-groups/Severity.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Status and state indicators/Severity",
@@ -24,19 +28,13 @@ export const Overview: StoryObj = {
     >
       <Section title="All severities">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "grid", gap: 8 }}>
-                <Severity severity="critical"  label="Critical" />
-                <Severity severity="important" label="Important" />
-                <Severity severity="moderate"  label="Moderate" />
-                <Severity severity="minor"     label="Minor" />
-                <Severity severity="none"      label="None" />
-                <Severity severity="undefined" label="Undefined" />
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<Severity severity="critical" label="Critical" />`}</CodeBlock>
-          </div>
+          <Example
+            source={severityExampleSrc}
+            region="AllSeverities"
+            fileName="Severity.example.tsx"
+          >
+            <AllSeverities />
+          </Example>
         </Card>
       </Section>
 
@@ -45,16 +43,22 @@ export const Overview: StoryObj = {
         description="Set `labelHidden` to render just the glyph (e.g. inside a dense table cell). Pass `label` anyway — it becomes the accessible name."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", gap: 16 }}>
-                <Severity severity="critical"  label="Critical"  labelHidden />
-                <Severity severity="important" label="Important" labelHidden />
-                <Severity severity="moderate"  label="Moderate"  labelHidden />
-                <Severity severity="minor"     label="Minor"     labelHidden />
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={severityExampleSrc}
+            region="IconOnly"
+            fileName="Severity.example.tsx"
+          >
+            <IconOnly />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={severityExampleSrc} fileName="Severity.example.tsx" />
         </Card>
       </Section>
 

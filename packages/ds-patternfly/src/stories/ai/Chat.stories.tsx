@@ -1,18 +1,19 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button } from "@golden-passport/ds-patternfly";
-import PaperPlaneIcon from "@patternfly/react-icons/dist/esm/icons/paper-plane-icon";
 import {
   FoundationPage,
   Section,
   Card,
   CodeBlock,
   ConfigurationSection,
+  Example,
   ThemingPointer,
 } from "../_kit/StoryKit.js";
 import { AiAssistant } from "../../components/AiAssistant.js";
 import type { AiAssistantProps, ChatMsg } from "../../components/AiAssistant.js";
 import AssistantInShell from "../../examples/AiAssistant/AssistantInShell.example.js";
+import { ChatBar, AiBorderBar } from "../../examples/ai/Chat.example.js";
+import chatExampleSrc from "../../examples/ai/Chat.example.tsx?raw";
 import propsData from "./aiAssistant.props.json";
 
 const meta: Meta<typeof AiAssistant> = {
@@ -43,178 +44,10 @@ const seededHistory: ChatMsg[] = [
 ];
 
 /**
- * Example 1 — the bare prompt pill. On send (button or Enter) it flips a
- * "thinking" state that wraps the pill in a soft, pulsating brand glow until
- * the mock response settles (~4s). A polite live region announces the state.
- *
- * Built as a flat div + input + button (not PF6's TextInputGroup, whose nested
- * grid/flex chain fights the pill shape and made the input non-typable).
+ * Examples 1 and 2 (ChatBar / AiBorderBar) live in
+ * src/examples/ai/Chat.example.tsx and are imported above — the story renders
+ * the real recipe components and shows their source byte-identical.
  */
-function ChatBar() {
-  const [isThinking, setIsThinking] = useState(false);
-  const handleSend = () => {
-    setIsThinking(true);
-    setTimeout(() => setIsThinking(false), 4000);
-  };
-  return (
-    <div className={`gp-ai-chatbar${isThinking ? " is-thinking" : ""}`}>
-      <input
-        type="text"
-        placeholder="Send a message…"
-        aria-label="Send a message"
-        className="gp-ai-chatbar__input"
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            handleSend();
-          }
-        }}
-      />
-      <Button
-        variant="plain"
-        aria-label="Send"
-        icon={<PaperPlaneIcon />}
-        className="gp-ai-chatbar__send"
-        onClick={handleSend}
-      />
-      <div className="pf-v6-screen-reader" aria-live="polite">
-        {isThinking ? "AI is thinking…" : ""}
-      </div>
-    </div>
-  );
-}
-
-// Scoped styles for Example 1's chat pill. The thinking glow lives on a
-// ::before pseudo-element so it can fade in/out smoothly while the keyframe
-// animation breathes underneath.
-const chatBarCss = `
-  .gp-ai-chatbar {
-    position: relative;
-    display: flex;
-    align-items: center;
-    border-radius: var(--gp-radius-button, 9999px);
-    background: var(--pf-t--global--background--color--primary--default);
-    border: 1px solid var(--gp-color-border-default, rgba(0, 0, 0, 0.15));
-    padding-inline-start: 1rem;
-    padding-inline-end: 0.5rem;
-    block-size: var(--pf-t--global--spacer--2xl, 3rem);
-    inline-size: 100%;
-  }
-  @media (min-width: 48rem) {
-    .gp-ai-chatbar { max-inline-size: 34rem; }
-  }
-  .gp-ai-chatbar__input {
-    flex: 1;
-    min-inline-size: 0;
-    block-size: 100%;
-    padding: 0;
-    margin: 0;
-    background: transparent;
-    border: 0;
-    outline: none;
-    color: var(--gp-color-text-regular, currentColor);
-    font: inherit;
-    line-height: normal;
-  }
-  .gp-ai-chatbar__input::placeholder {
-    color: var(--gp-color-text-subtle, currentColor);
-  }
-  .gp-ai-chatbar__send {
-    color: var(--gp-color-text-link, currentColor);
-    flex: 0 0 auto;
-  }
-  .gp-ai-chatbar__input:focus,
-  .gp-ai-chatbar__input:focus-visible {
-    outline: none;
-  }
-  .gp-ai-chatbar:focus-within {
-    outline: 2px solid var(--gp-color-focus-ring, currentColor);
-    border-radius: var(--gp-radius-button, 9999px);
-  }
-  .gp-focus-ring-inner .gp-ai-chatbar:focus-within { outline-offset: -4px; }
-  .gp-focus-ring-outer .gp-ai-chatbar:focus-within { outline-offset: 2px; }
-  .gp-ai-chatbar::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 400ms ease;
-  }
-  .gp-ai-chatbar.is-thinking::before {
-    opacity: 1;
-    animation: gp-ai-chatbar-pulse 2.4s ease-in-out infinite;
-  }
-  .gp-ai-chatbar.is-thinking {
-    border-color: color-mix(in srgb, var(--gp-color-brand-default) 50%, transparent);
-    transition: border-color 400ms ease;
-  }
-  @keyframes gp-ai-chatbar-pulse {
-    0%, 100% {
-      box-shadow:
-        0 0 12px 0 color-mix(in srgb, var(--gp-color-brand-default) 40%, transparent),
-        0 0 24px 0 color-mix(in srgb, var(--gp-color-brand-default) 30%, transparent),
-        0 0 40px 0 color-mix(in srgb, var(--gp-color-brand-hover, var(--gp-color-brand-default)) 25%, transparent),
-        0 0 60px 0 color-mix(in srgb, var(--gp-color-brand-default) 15%, transparent);
-    }
-    50% {
-      box-shadow:
-        0 0 20px 0 color-mix(in srgb, var(--gp-color-brand-default) 55%, transparent),
-        0 0 40px 0 color-mix(in srgb, var(--gp-color-brand-default) 40%, transparent),
-        0 0 64px 0 color-mix(in srgb, var(--gp-color-brand-hover, var(--gp-color-brand-default)) 35%, transparent),
-        0 0 96px 0 color-mix(in srgb, var(--gp-color-brand-default) 22%, transparent);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .gp-ai-chatbar.is-thinking::before {
-      animation: none;
-      box-shadow:
-        0 0 24px 0 color-mix(in srgb, var(--gp-color-brand-default) 45%, transparent),
-        0 0 60px 0 color-mix(in srgb, var(--gp-color-brand-default) 20%, transparent);
-    }
-  }
-`;
-
-/**
- * Example 2 — the bar wrapped in the animated AI-indicator border (the same
- * `.gp-ai-borderbar` chrome the AiAssistant uses). On send, the conic gradient
- * sweeps around the box instead of the glow pulse.
- */
-function AiBorderBar() {
-  const [isThinking, setIsThinking] = useState(false);
-  const handleSend = () => {
-    setIsThinking(true);
-    setTimeout(() => setIsThinking(false), 4000);
-  };
-  return (
-    <div className={`gp-ai-borderbar${isThinking ? " is-thinking" : ""}`}>
-      <input
-        type="text"
-        placeholder="Ask the assistant…"
-        aria-label="Ask the assistant"
-        className="gp-ai-borderbar__input"
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            handleSend();
-          }
-        }}
-      />
-      <Button
-        variant="plain"
-        aria-label="Send"
-        icon={<PaperPlaneIcon />}
-        className="gp-ai-borderbar__send"
-        onClick={handleSend}
-      />
-      <div className="pf-v6-screen-reader" aria-live="polite">
-        {isThinking ? "AI is thinking…" : ""}
-      </div>
-    </div>
-  );
-}
-
 // The demo stage for Example 3 — a tall canvas with the bar docked at the
 // bottom; the AiAssistant overlays portal into it and anchor to its corners.
 const stageCss = `
@@ -260,7 +93,6 @@ function Example3Demo(props: Omit<AiAssistantProps, "overlayContainer">) {
 export const Chat: StoryObj = {
   render: () => (
     <>
-      <style>{chatBarCss}</style>
       <style>{stageCss}</style>
       <FoundationPage
         title="Chat"
@@ -288,39 +120,45 @@ export const Chat: StoryObj = {
           title="Example 1 — pulsing glow"
           description="A pill-shaped prompt input with a send button. Send (button or Enter) triggers a brand-coloured thinking pulse and a polite live-region announcement; the pulse honours prefers-reduced-motion. Brand tokens drive the colour, so it reflows per brand and across light / dark / glass."
         >
-          {/* Plain surface (not the doc Card, which clips overflow) with
+          {/* No doc Card here (it clips overflow); the inner wrapper keeps
               generous vertical room so the thinking glow — a soft box-shadow
               that bleeds well past the pill — isn't clipped. */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              padding: "64px 24px",
-              borderRadius: "var(--gp-radius-card, 16px)",
-              background: "var(--gp-color-bg-secondary-default)",
-              border: "1px solid var(--gp-color-border-default)",
-            }}
+          <Example
+            source={chatExampleSrc}
+            region="ChatBar"
+            fileName="Chat.example.tsx"
           >
-            <ChatBar />
-          </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "64px 24px",
+              }}
+            >
+              <ChatBar />
+            </div>
+          </Example>
         </Section>
 
         <Section
           title="Example 2 — animated AI border"
           description="The same bar wrapped in a thick AI-indicator gradient border (coral #f56e6e → purple #876fd4 → deep purple #5e40be). Instead of the glow pulse, sending sweeps the gradient around the box — a conic gradient anchored to an animated @property angle. Honours prefers-reduced-motion."
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              padding: "48px 24px",
-              borderRadius: "var(--gp-radius-card, 16px)",
-              background: "var(--gp-color-bg-secondary-default)",
-              border: "1px solid var(--gp-color-border-default)",
-            }}
+          <Example
+            source={chatExampleSrc}
+            region="AiBorderBar"
+            fileName="Chat.example.tsx"
           >
-            <AiBorderBar />
-          </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "48px 24px",
+              }}
+            >
+              <AiBorderBar />
+            </div>
+          </Example>
         </Section>
 
         <Section
@@ -337,36 +175,6 @@ export const Chat: StoryObj = {
           <div
             style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
           >
-            <Card>
-              <CodeBlock>{`function ChatBar() {
-  const [isThinking, setIsThinking] = useState(false);
-  const handleSend = () => {
-    setIsThinking(true);
-    setTimeout(() => setIsThinking(false), 4000); // mock response
-  };
-  return (
-    <div className={\`gp-ai-chatbar\${isThinking ? " is-thinking" : ""}\`}>
-      <input
-        type="text"
-        placeholder="Send a message…"
-        aria-label="Send a message"
-        className="gp-ai-chatbar__input"
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            handleSend();
-          }
-        }}
-      />
-      <Button variant="plain" aria-label="Send" icon={<PaperPlaneIcon />}
-        className="gp-ai-chatbar__send" onClick={handleSend} />
-      <div className="pf-v6-screen-reader" aria-live="polite">
-        {isThinking ? "AI is thinking…" : ""}
-      </div>
-    </div>
-  );
-}`}</CodeBlock>
-            </Card>
             <Card>
               <CodeBlock>{`/* Example 2's thinking state — a rotating AI-indicator border.
    Animatable angle so the conic gradient can spin. */
@@ -421,6 +229,15 @@ function Demo() {
 <AiAssistant overlayContainer={container} persist persistKey="ai-assistance:layout" />`}</CodeBlock>
             </Card>
           </div>
+        </Section>
+
+        <Section
+          title="Recipe file"
+          description="The complete example file behind Examples 1 and 2 — both bars composed, ready to drop into an app. The same file ships in the MCP docs catalog. (Example 3's end-to-end recipe is the separate Full example story, which renders the assistant docked in the app Shell.)"
+        >
+          <Card>
+            <Example source={chatExampleSrc} fileName="Chat.example.tsx" />
+          </Card>
         </Section>
 
         <ConfigurationSection

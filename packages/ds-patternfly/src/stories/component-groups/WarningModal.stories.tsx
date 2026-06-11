@@ -1,9 +1,12 @@
-import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button, ButtonVariant } from "@golden-passport/ds-patternfly";
-import WarningModal from "@patternfly/react-component-groups/dist/dynamic/WarningModal";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  BasicConfirm,
+  AcknowledgeCheckbox,
+  TypeToConfirm,
+} from "../../examples/component-groups/WarningModal.example.js";
+import warningModalExampleSrc from "../../examples/component-groups/WarningModal.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Error communication/Warning modal",
@@ -13,10 +16,6 @@ export default meta;
 
 export const Overview: StoryObj = {
   render: () => {
-    const [simple, setSimple] = useState(false);
-    const [checkbox, setCheckbox] = useState(false);
-    const [confirmText, setConfirmText] = useState(false);
-
     return (
       <FoundationPage
         title="Warning modal"
@@ -35,34 +34,13 @@ export const Overview: StoryObj = {
           description="Simple yes/no — fires `onConfirm` when the danger button is clicked, `onClose` for cancel / X / Escape."
         >
           <Card>
-            <div style={{ padding: 24, display: "grid", gap: 16 }}>
-              <DemoFrame>
-                <Button variant="danger" onClick={() => setSimple(true)}>
-                  Delete workflow
-                </Button>
-              </DemoFrame>
-              <WarningModal
-                isOpen={simple}
-                onClose={() => setSimple(false)}
-                onConfirm={() => setSimple(false)}
-                title="Delete workflow?"
-                confirmButtonLabel="Delete"
-                confirmButtonVariant={ButtonVariant.danger}
-              >
-                This permanently deletes the workflow and all of its run
-                history. This cannot be undone.
-              </WarningModal>
-              <CodeBlock>{`<WarningModal
-  isOpen={open}
-  onClose={close}
-  onConfirm={confirmDelete}
-  title="Delete workflow?"
-  confirmButtonLabel="Delete"
-  confirmButtonVariant={ButtonVariant.danger}
->
-  This permanently deletes the workflow and all of its run history.
-</WarningModal>`}</CodeBlock>
-            </div>
+            <Example
+              source={warningModalExampleSrc}
+              region="BasicConfirm"
+              fileName="WarningModal.example.tsx"
+            >
+              <BasicConfirm />
+            </Example>
           </Card>
         </Section>
 
@@ -71,26 +49,13 @@ export const Overview: StoryObj = {
           description="`withCheckbox` adds a 'I understand' checkbox that gates the confirm button. Use for irreversible operations."
         >
           <Card>
-            <div style={{ padding: 24 }}>
-              <DemoFrame>
-                <Button variant="danger" onClick={() => setCheckbox(true)}>
-                  Wipe environment
-                </Button>
-              </DemoFrame>
-              <WarningModal
-                isOpen={checkbox}
-                onClose={() => setCheckbox(false)}
-                onConfirm={() => setCheckbox(false)}
-                title="Wipe environment?"
-                withCheckbox
-                checkboxLabel="I understand this destroys all data."
-                confirmButtonLabel="Wipe"
-                confirmButtonVariant={ButtonVariant.danger}
-              >
-                All deployments, data volumes, and secrets in this
-                environment will be deleted.
-              </WarningModal>
-            </div>
+            <Example
+              source={warningModalExampleSrc}
+              region="AcknowledgeCheckbox"
+              fileName="WarningModal.example.tsx"
+            >
+              <AcknowledgeCheckbox />
+            </Example>
           </Card>
         </Section>
 
@@ -99,26 +64,22 @@ export const Overview: StoryObj = {
           description="`confirmationText` requires the user to type the exact phrase before the confirm button enables. Use for catastrophic destructive actions."
         >
           <Card>
-            <div style={{ padding: 24 }}>
-              <DemoFrame>
-                <Button variant="danger" onClick={() => setConfirmText(true)}>
-                  Delete account
-                </Button>
-              </DemoFrame>
-              <WarningModal
-                isOpen={confirmText}
-                onClose={() => setConfirmText(false)}
-                onConfirm={() => setConfirmText(false)}
-                title="Delete account?"
-                confirmationText="DELETE"
-                confirmationInputLabel="Type DELETE to confirm:"
-                confirmButtonLabel="Delete account"
-                confirmButtonVariant={ButtonVariant.danger}
-              >
-                Your account, all workspaces, and every artifact will be
-                permanently destroyed. This cannot be undone.
-              </WarningModal>
-            </div>
+            <Example
+              source={warningModalExampleSrc}
+              region="TypeToConfirm"
+              fileName="WarningModal.example.tsx"
+            >
+              <TypeToConfirm />
+            </Example>
+          </Card>
+        </Section>
+
+        <Section
+          title="Full example"
+          description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+        >
+          <Card>
+            <Example source={warningModalExampleSrc} fileName="WarningModal.example.tsx" />
           </Card>
         </Section>
 

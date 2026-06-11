@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import UnauthorizedAccess from "@patternfly/react-component-groups/dist/dynamic/UnauthorizedAccess";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { Default } from "../../examples/component-groups/UnauthorizedAccess.example.js";
+import unauthorizedAccessExampleSrc from "../../examples/component-groups/UnauthorizedAccess.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Error communication/Unauthorized access",
@@ -39,24 +40,22 @@ export const Overview: StoryObj = {
         description="Pass `serviceName` to bake the product name into the headline ('You do not have access to ServiceName')."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <UnauthorizedAccess
-                serviceName="Workflows"
-                bodyText="Your account doesn't have permission to view this section. Contact your administrator if you think this is wrong."
-                showReturnButton
-                toLandingPageUrl="/"
-                toLandingPageText="Go to landing page"
-              />
-            </DemoFrame>
-            <CodeBlock>{`<UnauthorizedAccess
-  serviceName="Workflows"
-  bodyText="Your account doesn't have permission to view this section."
-  showReturnButton
-  toLandingPageUrl="/"
-  toLandingPageText="Go to landing page"
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={unauthorizedAccessExampleSrc}
+            region="Default"
+            fileName="UnauthorizedAccess.example.tsx"
+          >
+            <Default />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={unauthorizedAccessExampleSrc} fileName="UnauthorizedAccess.example.tsx" />
         </Card>
       </Section>
 

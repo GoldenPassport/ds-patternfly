@@ -1,18 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import StaleDataWarning from "@patternfly/react-component-groups/dist/dynamic/StaleDataWarning";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { Default } from "../../examples/component-groups/StaleDataWarning.example.js";
+import staleDataWarningExampleSrc from "../../examples/component-groups/StaleDataWarning.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Status and state indicators/Stale data warning",
   parameters: { layout: "padded" },
 };
 export default meta;
-
-const now = new Date("2026-05-10T09:00:00Z");
-const staleWarning = new Date("2026-05-09T00:00:00Z"); // 1 day before warning
-const stale         = new Date("2026-05-08T00:00:00Z"); // marked stale 2 days ago
-const culled        = new Date("2026-05-15T00:00:00Z"); // will be deleted in 5 days
 
 export const Overview: StoryObj = {
   render: () => (
@@ -32,35 +28,22 @@ export const Overview: StoryObj = {
         description="Pass the four dates: when the object was last touched (`stale`), the warning threshold, the cull (deletion) date, and `currDate`. The component picks the right state and message."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  color: "var(--gp-color-text-regular)",
-                }}
-              >
-                <span><strong>worker-23</strong></span>
-                <StaleDataWarning
-                  stale={stale}
-                  staleWarning={staleWarning}
-                  culled={culled}
-                  currDate={now}
-                />
-                <span style={{ color: "var(--gp-color-text-subtle)" }}>
-                  · last check-in 2 days ago
-                </span>
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<StaleDataWarning
-  stale={lastCheckIn}
-  staleWarning={warningThreshold}
-  culled={cullDate}
-  currDate={new Date()}
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={staleDataWarningExampleSrc}
+            region="Default"
+            fileName="StaleDataWarning.example.tsx"
+          >
+            <Default />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={staleDataWarningExampleSrc} fileName="StaleDataWarning.example.tsx" />
         </Card>
       </Section>
 

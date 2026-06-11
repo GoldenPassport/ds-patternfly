@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
 import { PropsTable } from "../_kit/DemoKit.js";
+import quickStartsExampleSrc from "../../examples/extensions/QuickStarts.example.tsx?raw";
 
 const meta: Meta = {
   title: "Extensions/Quick starts",
@@ -32,35 +33,11 @@ export const Overview: StoryObj = {
         description="QuickStartContainer wraps your app's routes. The container manages the active tour, completed steps, and the drawer that holds the step UI."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <CodeBlock>{`import { useState } from "react";
-import {
-  QuickStartContainer,
-  type AllQuickStartStates,
-} from "@patternfly/quickstarts";
-import "@patternfly/quickstarts/dist/quickstarts.css";
-
-import { quickStarts } from "./quickstarts-data";
-
-export function App({ children }) {
-  const [activeQuickStartID, setActiveQuickStartID] = useState("");
-  const [allQuickStartStates, setAllQuickStartStates] = useState<AllQuickStartStates>({});
-
-  return (
-    <QuickStartContainer
-      quickStarts={quickStarts}
-      activeQuickStartID={activeQuickStartID}
-      setActiveQuickStartID={setActiveQuickStartID}
-      allQuickStartStates={allQuickStartStates}
-      setAllQuickStartStates={setAllQuickStartStates}
-      isManagedDrawer
-      useQueryParams
-    >
-      {children}
-    </QuickStartContainer>
-  );
-}`}</CodeBlock>
-          </div>
+          <Example
+            source={quickStartsExampleSrc}
+            region="AppLevelWiring"
+            fileName="QuickStarts.example.tsx"
+          />
         </Card>
       </Section>
 
@@ -69,18 +46,11 @@ export function App({ children }) {
         description="QuickStartCatalogPage renders the full catalog grid (search, filter, tile, status). Mount it on a route — typically /learn or /quick-starts."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <CodeBlock>{`import { QuickStartCatalogPage } from "@patternfly/quickstarts";
-
-export default function QuickStartsRoute() {
-  return (
-    <QuickStartCatalogPage
-      title="Quick starts"
-      hint="Learn how to use the workflow engine in 5 minutes."
-    />
-  );
-}`}</CodeBlock>
-          </div>
+          <Example
+            source={quickStartsExampleSrc}
+            region="CatalogPage"
+            fileName="QuickStarts.example.tsx"
+          />
         </Card>
       </Section>
 
@@ -89,41 +59,23 @@ export default function QuickStartsRoute() {
         description="Each quick start is a JSON / YAML object with metadata + an array of tasks. Tasks have markdown instructions and an optional 'check your work' verification."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <CodeBlock>{`// quickstarts-data.ts
-import type { QuickStart } from "@patternfly/quickstarts";
+          <Example
+            source={quickStartsExampleSrc}
+            region="QuickStartData"
+            fileName="QuickStarts.example.tsx"
+          />
+        </Card>
+      </Section>
 
-export const quickStarts: QuickStart[] = [
-  {
-    apiVersion: "console.openshift.io/v1",
-    kind: "QuickStarts",
-    metadata: { name: "create-workflow" },
-    spec: {
-      version: 1.0,
-      displayName: "Create your first workflow",
-      durationMinutes: 5,
-      icon: "data:image/png;base64,...",
-      description: "Build a 4-step workflow and run it.",
-      introduction: "Welcome! This tour walks through the basics.",
-      tasks: [
-        {
-          title: "Open the workflow editor",
-          description: "From the sidebar, click \\"Workflows\\" then \\"New\\".",
-          review: {
-            instructions: "Did the editor open?",
-            failedTaskHelp: "Try refreshing and clicking again.",
-          },
-        },
-        {
-          title: "Add a step",
-          description: "Drag a Trigger block from the palette.",
-        },
-      ],
-      conclusion: "You're done! Run the workflow from the toolbar.",
-    },
-  },
-];`}</CodeBlock>
-          </div>
+      <Section
+        title="Full example"
+        description="The complete example file behind the recipes above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example
+            source={quickStartsExampleSrc}
+            fileName="QuickStarts.example.tsx"
+          />
         </Card>
       </Section>
 

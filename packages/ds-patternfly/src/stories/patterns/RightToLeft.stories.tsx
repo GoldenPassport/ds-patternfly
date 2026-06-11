@@ -1,18 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  Button,
-  Card,
-  CardBody,
-  CardTitle,
-  Flex,
-  FlexItem,
-  Label,
-} from "@golden-passport/ds-patternfly";
-import { ChevronRightIcon, BellIcon } from "@patternfly/react-icons";
-import { FoundationPage, Section, Card as DocCard, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame } from "../_kit/DemoKit.js";
+  FoundationPage,
+  Section,
+  Card as DocCard,
+  CodeBlock,
+  Example,
+} from "../_kit/StoryKit.js";
+import { LtrVsRtl } from "../../examples/patterns/RightToLeft.example.js";
+import rightToLeftExampleSrc from "../../examples/patterns/RightToLeft.example.tsx?raw";
 
 const meta: Meta = {
   title: "Patterns/Right-to-left/Demo",
@@ -52,31 +47,30 @@ export const Demo: StoryObj = {
         description="Render two copies inside dir-scoped containers. Notice icons stay in their semantic positions (back arrow always points to history)."
       >
         <DocCard>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsLg" }}>
-                <FlexItem>
-                  <div style={{ marginBottom: 8, color: "var(--gp-color-text-subtle)", fontSize: 13 }}>
-                    LTR
-                  </div>
-                  <div dir="ltr">
-                    <PreviewBlock />
-                  </div>
-                </FlexItem>
-                <FlexItem>
-                  <div style={{ marginBottom: 8, color: "var(--gp-color-text-subtle)", fontSize: 13 }}>
-                    RTL
-                  </div>
-                  <div dir="rtl">
-                    <PreviewBlock />
-                  </div>
-                </FlexItem>
-              </Flex>
-            </DemoFrame>
-            <CodeBlock>{`<ThemeProvider brand={brand} dir="rtl">
+          <Example
+            source={rightToLeftExampleSrc}
+            region="LtrVsRtl"
+            fileName="RightToLeft.example.tsx"
+          >
+            <LtrVsRtl />
+          </Example>
+          <div style={{ padding: "0 16px 16px" }}>
+            <CodeBlock label="Flip a whole app">{`<ThemeProvider brand={brand} dir="rtl">
   <App />
 </ThemeProvider>`}</CodeBlock>
           </div>
+        </DocCard>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <DocCard>
+          <Example
+            source={rightToLeftExampleSrc}
+            fileName="RightToLeft.example.tsx"
+          />
         </DocCard>
       </Section>
 
@@ -115,42 +109,3 @@ export const Demo: StoryObj = {
     </FoundationPage>
   ),
 };
-
-function PreviewBlock() {
-  return (
-    <Card>
-      <CardBody>
-        <Breadcrumb>
-          <BreadcrumbItem to="#">Workflows</BreadcrumbItem>
-          <BreadcrumbItem to="#" isActive>
-            Quarterly review
-          </BreadcrumbItem>
-        </Breadcrumb>
-        <Flex
-          style={{ marginTop: 12 }}
-          alignItems={{ default: "alignItemsCenter" }}
-          spaceItems={{ default: "spaceItemsSm" }}
-        >
-          <FlexItem>
-            <CardTitle>Quarterly review</CardTitle>
-          </FlexItem>
-          <FlexItem>
-            <Label color="green" isCompact>Active</Label>
-          </FlexItem>
-          <FlexItem align={{ default: "alignRight" }}>
-            <Button variant="primary">
-              Run <ChevronRightIcon />
-            </Button>
-          </FlexItem>
-        </Flex>
-        <p style={{ marginTop: 12, color: "var(--gp-color-text-subtle)" }}>
-          Triggered hourly · 4 steps · last run 12 minutes ago
-        </p>
-        <Flex spaceItems={{ default: "spaceItemsSm" }} style={{ marginTop: 8 }}>
-          <FlexItem><BellIcon /></FlexItem>
-          <FlexItem>3 pending notifications</FlexItem>
-        </Flex>
-      </CardBody>
-    </Card>
-  );
-}

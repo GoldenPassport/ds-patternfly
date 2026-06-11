@@ -1,33 +1,51 @@
 # examples/
 
-Self-contained, end-to-end example apps for the library's exported
-components. Each example is shipped verbatim (source embedded) in the
-`@golden-passport/ds-patternfly-mcp` docs catalog so AI assistants can see
-how a complete page comes together — imports, setup, composition, and
-styling. They are **not** part of the runtime bundle (nothing here is
-reachable from `src/index.ts`).
+Self-contained example files for every story in the design system. Each
+one is:
+
+- **rendered live in its story** — sections import the example's named
+  exports and show the exact `// #region` source slice (Vite `?raw`), so
+  the displayed code is byte-identical to what runs;
+- **downloadable** — every Example block and Configuration section offers
+  the file (and the DS component source) as a download;
+- **served by MCP** — `@golden-passport/ds-patternfly-mcp` embeds every
+  example verbatim (`getGpExample`) and every DS component file
+  (`getGpComponent`), with the `_lib` shim rewritten to the package name.
+
+They are **not** part of the runtime bundle (nothing here is reachable
+from `src/index.ts`).
+
+## Layout
+
+Path mirrors the story: `src/stories/<area>/<Name>.stories.tsx` ↔
+`src/examples/<area>/<Name>.example.tsx` (subfolders mirror too). The MCP
+generator pairs them by this convention — an example that matches no story
+is reported as an orphan at `pnpm mcp:gen` time.
+
+Large patterns (Dashboard, Shell, CompassIntegrations, PrimaryDetailDemo)
+additionally have a dedicated `<Name>Example.stories.tsx` page rendering
+the whole composition full-bleed with its source.
 
 ## Contract
 
-Every `*.example.tsx` file must:
+See [CONVERTING.md](./CONVERTING.md) for the full recipe. The essentials:
 
-1. **Default-export a single zero-props component** — it must render
-   standalone.
-2. **Import the library only through `./_lib.js`** (or `../_lib.js`), never
-   deep paths. The shim re-exports the public API; the MCP generator
-   rewrites the specifier to `@golden-passport/ds-patternfly` when
-   embedding, so consumers see real package imports.
-3. **Open with a comment block showing the app-entry setup** (style imports
-   + `ThemeProvider`). The component itself must NOT render `ThemeProvider`
-   — the Storybook host provides one, and a nested provider would fight the
-   brand/mode toolbar.
-4. **Carry realistic inline demo data** — no fetches, no story-kit imports
-   (`StoryKit`/`DemoKit` are docs chrome, not part of an app).
-5. **Be rendered by a story** (a `FullExample` story in the component's
-   stories file). Storybook builds and smoke tests compile every example,
-   so they cannot rot.
+1. **One `// #region <PascalCaseName>` per story section** with a matching
+   named export; a zero-props **default export** composes them.
+2. **Import the library only via the `_lib.js` shim** (depth-relative).
+   PF extension packages (react-charts, react-data-view, …) and
+   react-icons are imported directly, with the required package named in
+   the header comment. The display/download/MCP pipeline rewrites the shim
+   to `@golden-passport/ds-patternfly`.
+3. **DOM ids derive from `useId()`** — regions render more than once per
+   docs page; hardcoded ids fail axe.
+4. **Self-contained**: story-local helpers/data move in; no
+   StoryKit/DemoKit imports, no ThemeProvider (the host provides one), no
+   fetches; realistic inline data; header comment shows the app-entry
+   setup.
+5. **Rendered by its story** — Storybook builds and the vitest storybook
+   suite compile + axe-check every example, so they cannot rot.
 
-## Naming
-
-`src/examples/<ComponentName>/<ExampleName>.example.tsx`, e.g.
-`src/examples/AiAssistant/AssistantInShell.example.tsx`.
+Doc-only stories (token matrices, utility-class galleries, guidance
+pages in foundations/, accessibility/, utilities/) deliberately have no
+example file.

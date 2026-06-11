@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import ShortcutGrid from "@patternfly/react-component-groups/dist/dynamic/ShortcutGrid";
-import Shortcut from "@patternfly/react-component-groups/dist/dynamic/Shortcut";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  Default,
+  SingleShortcut,
+} from "../../examples/component-groups/ShortcutGrid.example.js";
+import shortcutGridExampleSrc from "../../examples/component-groups/ShortcutGrid.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Helpers/Shortcut grid",
@@ -28,27 +31,13 @@ export const Overview: StoryObj = {
         description="ShortcutGrid takes an array of Shortcut props. Each entry renders the keys + a description in a Grid cell."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <ShortcutGrid
-                shortcuts={[
-                  { keys: ["Cmd", "K"], description: "Open quick search" },
-                  { keys: ["Cmd", "/"], description: "Toggle the help panel" },
-                  { keys: ["G", "I"], description: "Go to inbox" },
-                  { keys: ["G", "S"], description: "Go to settings" },
-                  { keys: ["?"],     description: "Show this shortcut grid" },
-                  { keys: ["Esc"],   description: "Close any open dialog" },
-                ]}
-              />
-            </DemoFrame>
-            <CodeBlock>{`<ShortcutGrid
-  shortcuts={[
-    { keys: ["Cmd", "K"], description: "Open quick search" },
-    { keys: ["G", "I"],   description: "Go to inbox" },
-    { keys: ["?"],        description: "Show this shortcut grid" },
-  ]}
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={shortcutGridExampleSrc}
+            region="Default"
+            fileName="ShortcutGrid.example.tsx"
+          >
+            <Default />
+          </Example>
         </Card>
       </Section>
 
@@ -57,11 +46,22 @@ export const Overview: StoryObj = {
         description="Use Shortcut directly when you just need to render one chord — e.g. inline in a tooltip or alongside a button."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <Shortcut keys={["Cmd", "Shift", "P"]} description="Open command palette" showSymbols />
-            </DemoFrame>
-          </div>
+          <Example
+            source={shortcutGridExampleSrc}
+            region="SingleShortcut"
+            fileName="ShortcutGrid.example.tsx"
+          >
+            <SingleShortcut />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={shortcutGridExampleSrc} fileName="ShortcutGrid.example.tsx" />
         </Card>
       </Section>
 

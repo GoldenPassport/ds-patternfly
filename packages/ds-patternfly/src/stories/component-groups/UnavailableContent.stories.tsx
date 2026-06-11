@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import UnavailableContent from "@patternfly/react-component-groups/dist/dynamic/UnavailableContent";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { Default } from "../../examples/component-groups/UnavailableContent.example.js";
+import unavailableContentExampleSrc from "../../examples/component-groups/UnavailableContent.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Error communication/Unavailable content",
@@ -37,22 +38,22 @@ export const Overview: StoryObj = {
     >
       <Section title="Default">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <UnavailableContent
-                titleText="This service is temporarily unavailable"
-                bodyText="We're investigating an issue. Try again later, or check the status page for updates."
-                statusPageUrl="https://status.example.com"
-                statusPageLinkText="View status page"
-              />
-            </DemoFrame>
-            <CodeBlock>{`<UnavailableContent
-  titleText="This service is temporarily unavailable"
-  bodyText="We're investigating an issue."
-  statusPageUrl="https://status.example.com"
-  statusPageLinkText="View status page"
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={unavailableContentExampleSrc}
+            region="Default"
+            fileName="UnavailableContent.example.tsx"
+          >
+            <Default />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={unavailableContentExampleSrc} fileName="UnavailableContent.example.tsx" />
         </Card>
       </Section>
 

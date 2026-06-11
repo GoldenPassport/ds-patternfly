@@ -1,7 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import SkeletonTable from "@patternfly/react-component-groups/dist/dynamic/SkeletonTable";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  Default,
+  SelectableExpandable,
+} from "../../examples/component-groups/SkeletonTable.example.js";
+import skeletonTableExampleSrc from "../../examples/component-groups/SkeletonTable.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Status and state indicators/Skeleton table",
@@ -24,18 +28,13 @@ export const Overview: StoryObj = {
     >
       <Section title="Default">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <SkeletonTable
-                rowsCount={6}
-                columns={["Name", "Status", "Owner", "Last run"]}
-              />
-            </DemoFrame>
-            <CodeBlock>{`<SkeletonTable
-  rowsCount={loading ? 6 : 0}
-  columns={["Name", "Status", "Owner", "Last run"]}
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={skeletonTableExampleSrc}
+            region="Default"
+            fileName="SkeletonTable.example.tsx"
+          >
+            <Default />
+          </Example>
         </Card>
       </Section>
 
@@ -44,16 +43,22 @@ export const Overview: StoryObj = {
         description="Match the chrome of the real table — checkbox column for select, caret column for expand — so the skeleton occupies the same width."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <SkeletonTable
-                rowsCount={4}
-                isSelectable
-                isExpandable
-                columns={["Name", "Status", "Owner", "Last run"]}
-              />
-            </DemoFrame>
-          </div>
+          <Example
+            source={skeletonTableExampleSrc}
+            region="SelectableExpandable"
+            fileName="SkeletonTable.example.tsx"
+          >
+            <SelectableExpandable />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={skeletonTableExampleSrc} fileName="SkeletonTable.example.tsx" />
         </Card>
       </Section>
 

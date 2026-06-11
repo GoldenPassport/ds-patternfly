@@ -1,31 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  Card,
-  CardBody,
-  CardHeader,
-  CardTitle,
-  Flex,
-  FlexItem,
-  Gallery,
-  GalleryItem,
-  Grid,
-  GridItem,
-  Label,
-  Progress,
-} from "@golden-passport/ds-patternfly";
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-} from "@patternfly/react-icons";
-import {
   FoundationPage,
   Section,
   Card as DocCard,
-  CodeBlock,
+  Example,
 } from "../_kit/StoryKit.js";
-import { DemoFrame } from "../_kit/DemoKit.js";
+import { DashboardContent } from "../../examples/patterns/Dashboard.example.js";
+import dashboardExampleSrc from "../../examples/patterns/Dashboard.example.tsx?raw";
 
 const meta: Meta = {
   title: "Patterns/Dashboard",
@@ -38,196 +19,6 @@ const meta: Meta = {
   },
 };
 export default meta;
-
-// ──────────────────────────────────────────────────────────────────
-// Shared dashboard building blocks
-// ──────────────────────────────────────────────────────────────────
-
-/** KPI tile — big number + sub-label + delta with trend arrow. */
-function KPI({
-  label,
-  value,
-  delta,
-  trend,
-}: {
-  label: string;
-  value: string;
-  delta: string;
-  trend: "up" | "down";
-}) {
-  return (
-    <Card isCompact>
-      <CardBody>
-        <div style={{ color: "var(--gp-color-text-subtle)", fontSize: 13 }}>
-          {label}
-        </div>
-        <div
-          style={{
-            fontSize: 28,
-            fontWeight: 600,
-            color: "var(--gp-color-text-regular)",
-          }}
-        >
-          {value}
-        </div>
-        <div
-          style={{
-            marginTop: 4,
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 4,
-            color:
-              trend === "up"
-                ? "var(--pf-t--global--icon--color--status--success--default, #3e8635)"
-                : "var(--pf-t--global--icon--color--status--danger--default, #c9190b)",
-            fontSize: 13,
-          }}
-        >
-          {trend === "up" ? <ArrowUpIcon /> : <ArrowDownIcon />}
-          {delta}
-        </div>
-      </CardBody>
-    </Card>
-  );
-}
-
-/** Placeholder chart panel — drop in @patternfly/react-charts when real. */
-function ChartPlaceholder({ title }: { title: string }) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-      <CardBody>
-        <div
-          style={{
-            height: 140,
-            background:
-              "linear-gradient(180deg, rgba(0,102,204,0.10), rgba(0,102,204,0.02))",
-            border: "1px dashed var(--gp-color-border-subtle)",
-            borderRadius: 8,
-            display: "grid",
-            placeItems: "center",
-            color: "var(--gp-color-text-subtle)",
-            fontStyle: "italic",
-          }}
-        >
-          chart placeholder — drop in @patternfly/react-charts
-        </div>
-      </CardBody>
-    </Card>
-  );
-}
-
-/** Sidebar status card — icon + label + status chip + a progress bar. */
-function StatusCard() {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>System health</CardTitle>
-      </CardHeader>
-      <CardBody>
-        <Flex
-          direction={{ default: "column" }}
-          spaceItems={{ default: "spaceItemsMd" }}
-        >
-          <FlexItem>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
-              <CheckCircleIcon
-                style={{
-                  color:
-                    "var(--pf-t--global--icon--color--status--success--default, #3e8635)",
-                }}
-              />
-              <strong>API</strong>
-              <Label color="green" isCompact>
-                Healthy
-              </Label>
-            </div>
-          </FlexItem>
-          <FlexItem>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
-              <ExclamationTriangleIcon
-                style={{
-                  color:
-                    "var(--pf-t--global--icon--color--status--warning--default, #f0ab00)",
-                }}
-              />
-              <strong>Queue</strong>
-              <Label color="yellow" isCompact>
-                Degraded
-              </Label>
-            </div>
-          </FlexItem>
-          <FlexItem>
-            <Progress value={62} title="Disk usage" />
-          </FlexItem>
-        </Flex>
-      </CardBody>
-    </Card>
-  );
-}
-
-/** The dashboard body — used by both Basic and AppShell stories. */
-function DashboardContent() {
-  return (
-    <div style={{ display: "grid", gap: 16 }}>
-      <Gallery hasGutter minWidths={{ default: "180px" }}>
-        <GalleryItem>
-          <KPI
-            label="Active workflows"
-            value="142"
-            delta="+12 (8%)"
-            trend="up"
-          />
-        </GalleryItem>
-        <GalleryItem>
-          <KPI
-            label="Failed runs (24h)"
-            value="3"
-            delta="-2 (-40%)"
-            trend="down"
-          />
-        </GalleryItem>
-        <GalleryItem>
-          <KPI label="Avg runtime" value="42s" delta="+3s" trend="down" />
-        </GalleryItem>
-        <GalleryItem>
-          <KPI
-            label="Pending approvals"
-            value="7"
-            delta="+1"
-            trend="up"
-          />
-        </GalleryItem>
-      </Gallery>
-      <Grid hasGutter>
-        <GridItem md={8}>
-          <ChartPlaceholder title="Run volume — last 24h" />
-        </GridItem>
-        <GridItem md={4}>
-          <StatusCard />
-        </GridItem>
-      </Grid>
-    </div>
-  );
-}
-
-// ──────────────────────────────────────────────────────────────────
-// Story: Basic
-// ──────────────────────────────────────────────────────────────────
 
 export const Basic: StoryObj = {
   render: () => (
@@ -249,19 +40,13 @@ export const Basic: StoryObj = {
         description="Gallery for the KPI tiles (responsive column count), Grid for the chart + sidebar split below. Stacks vertically below the md breakpoint."
       >
         <DocCard>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <DashboardContent />
-            </DemoFrame>
-            <CodeBlock>{`<Gallery hasGutter minWidths={{ default: "180px" }}>
-  <GalleryItem><KPI label="Active workflows" value="142" delta="+12 (8%)" trend="up" /></GalleryItem>
-  {/* … */}
-</Gallery>
-<Grid hasGutter>
-  <GridItem md={8}><Card>{/* chart */}</Card></GridItem>
-  <GridItem md={4}><Card>{/* health sidebar */}</Card></GridItem>
-</Grid>`}</CodeBlock>
-          </div>
+          <Example
+            source={dashboardExampleSrc}
+            region="DashboardContent"
+            fileName="Dashboard.example.tsx"
+          >
+            <DashboardContent />
+          </Example>
         </DocCard>
       </Section>
 
@@ -333,7 +118,25 @@ export const Basic: StoryObj = {
           </ul>
         </DocCard>
       </Section>
+
+      <Section
+        title="Full example"
+        description={
+          <>
+            The complete example file behind the demo above — ready to drop
+            into an app, and shipped verbatim in the MCP docs catalog. For a
+            full-bleed live render, see the{" "}
+            <strong>Patterns/Dashboard example</strong> page.
+          </>
+        }
+      >
+        <DocCard>
+          <Example
+            source={dashboardExampleSrc}
+            fileName="Dashboard.example.tsx"
+          />
+        </DocCard>
+      </Section>
     </FoundationPage>
   ),
 };
-
