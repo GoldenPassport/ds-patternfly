@@ -1,0 +1,13 @@
+{
+  "import": "import { ConfirmModal, confirmModalEnLabels } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "labels", "type": "ConfirmModalLabels", "default": "confirmModalEnLabels", "description": "Confirm / cancel button text. Provide via confirmModalEnLabels or your translations." },
+    { "name": "isOpen", "type": "boolean", "required": true, "description": "Whether the modal is open — you own this state." },
+    { "name": "title", "type": "ReactNode", "required": true, "description": "Dialog title. Phrase as a question (e.g. 'Delete workflow?')." },
+    { "name": "children", "type": "ReactNode", "required": true, "description": "Dialog body — the question / consequences." },
+    { "name": "onConfirm", "type": "() => void", "required": true, "description": "Fired when the user confirms." },
+    { "name": "onCancel", "type": "() => void", "required": true, "description": "Fired on cancel / close (X, Cancel, Esc, backdrop)." },
+    { "name": "variant", "type": "\"primary\" | \"danger\"", "default": "\"primary\"", "description": "Use 'danger' for destructive confirmations (red confirm button)." },
+    { "name": "isConfirming", "type": "boolean", "description": "Show a loading state on the confirm button." }
+  ]
+}

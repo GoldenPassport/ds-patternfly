@@ -13,7 +13,7 @@ import dashboardComponentSrc from "../../components/ds/DashboardShell.tsx?raw";
 import propsData from "./dashboardShell.props.json";
 
 const meta: Meta<typeof DashboardShell> = {
-  title: "Patterns/DashboardShell",
+  title: "Building blocks/Layouts/DashboardShell",
   component: DashboardShell,
   parameters: {
     layout: "padded",

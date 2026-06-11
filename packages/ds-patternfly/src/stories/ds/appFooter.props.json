@@ -1,0 +1,10 @@
+{
+  "import": "import { AppFooter } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "logo", "type": "ReactNode", "description": "Brand mark / logo node, shown top-left." },
+    { "name": "tagline", "type": "ReactNode", "description": "Short tagline under the logo." },
+    { "name": "linkGroups", "type": "FooterLinkGroup[]", "description": "Columns of links (sitemap-style). Each group renders as a <nav> labelled by its title." },
+    { "name": "copyright", "type": "ReactNode", "description": "Copyright / legal line in the bottom bar." },
+    { "name": "legalLinks", "type": "{ label: string; href: string }[]", "description": "Inline links in the bottom bar (Privacy, Terms, …)." }
+  ]
+}

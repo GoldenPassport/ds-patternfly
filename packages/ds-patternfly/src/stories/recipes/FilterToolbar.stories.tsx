@@ -13,7 +13,7 @@ import filterToolbarComponentSrc from "../../components/ds/FilterToolbar.tsx?raw
 import propsData from "./filterToolbar.props.json";
 
 const meta: Meta<typeof FilterToolbar> = {
-  title: "Recipes/FilterToolbar",
+  title: "Building blocks/Data/FilterToolbar",
   component: FilterToolbar,
   parameters: { layout: "padded" },
 };

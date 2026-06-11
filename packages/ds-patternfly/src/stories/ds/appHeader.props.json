@@ -1,0 +1,9 @@
+{
+  "import": "import { AppHeader, appHeaderEnLabels } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "labels", "type": "AppHeaderLabels", "description": "i18n contract — provide via appHeaderEnLabels or your translations. Defaults to appHeaderEnLabels." },
+    { "name": "brandLogo", "type": "ReactNode", "description": "Brand mark / logo node, shown in the masthead brand slot." },
+    { "name": "actions", "type": "ReactNode", "description": "Right-aligned content — toolbar, user menu, notifications." },
+    { "name": "onToggleNav", "type": "() => void", "description": "When provided, shows the hamburger sidebar toggle and fires this on click." }
+  ]
+}

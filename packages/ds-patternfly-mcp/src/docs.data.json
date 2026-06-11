@@ -195,6 +195,1067 @@
       "storybookUrl": "/?path=/story/ai-mcp--overview"
     },
     {
+      "id": "building-blocks-data-bulkselecttoolbar",
+      "kind": "ds",
+      "title": "BulkSelectToolbar",
+      "breadcrumb": "Building blocks/Data/BulkSelectToolbar",
+      "summary": "The \"select many, act on many\" toolbar — a split checkbox + dropdown (select all / page / none), a derived \" `} selected\" status, and bulk actions that appear once a selection exists. Fully controlled: you own the selection and pass counts + handlers; the split checkbox reflects page-selected and partial state.",
+      "tags": [
+        "building",
+        "blocks",
+        "data",
+        "bulkselecttoolbar",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "recipes"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-data-bulkselecttoolbar--overview",
+      "layer": "ds",
+      "componentSource": "import { useId, useState, type ReactNode } from \"react\";\nimport {\n  Dropdown,\n  DropdownItem,\n  DropdownList,\n  MenuToggle,\n  MenuToggleCheckbox,\n  type MenuToggleElement,\n  Toolbar,\n  ToolbarContent,\n  ToolbarItem,\n} from \"@patternfly/react-core\";\nimport {\n  type BulkSelectToolbarLabels,\n  bulkSelectToolbarEnLabels,\n  withCount,\n} from \"./labels.js\";\n\nexport type { BulkSelectToolbarLabels } from \"./labels.js\";\nexport { bulkSelectToolbarEnLabels } from \"./labels.js\";\n\n/**\n * BulkSelectToolbar — the \"select many, act on many\" toolbar: a split\n * checkbox + dropdown (select all / page / none) on the left, a derived\n * \"{n} selected\" status, and contextual bulk actions that appear once a\n * selection exists.\n *\n * Fully controlled: you own the selection and pass counts + handlers. The\n * split checkbox reflects page-selected / partially-selected state and\n * toggles the current page when clicked. A composition of branded\n * react-core primitives — no external dependency.\n */\nexport interface BulkSelectToolbarProps {\n  /** Required. Provide via `bulkSelectToolbarEnLabels` or your translations. */\n  labels?: BulkSelectToolbarLabels;\n  /** Total rows selected across all pages. */\n  selectedCount: number;\n  /** Total rows available. */\n  totalCount: number;\n  /** Rows on the current page (enables \"Select page\"). */\n  pageCount?: number;\n  /** Whole current page is selected (checkbox checked). */\n  pageSelected?: boolean;\n  /** Current page partially selected (checkbox indeterminate). */\n  pagePartiallySelected?: boolean;\n  /** Select every row across all pages. */\n  onSelectAll: () => void;\n  /** Clear the entire selection. */\n  onSelectNone: () => void;\n  /** Select every row on the current page. */\n  onSelectPage?: () => void;\n  /** Bulk actions, shown only when `selectedCount > 0`. */\n  actions?: ReactNode;\n}\n\nexport function BulkSelectToolbar({\n  labels = bulkSelectToolbarEnLabels,\n  selectedCount,\n  totalCount,\n  pageCount,\n  pageSelected = false,\n  pagePartiallySelected = false,\n  onSelectAll,\n  onSelectNone,\n  onSelectPage,\n  actions,\n}: BulkSelectToolbarProps) {\n  const id = useId();\n  const [open, setOpen] = useState(false);\n\n  return (\n    <Toolbar id={`${id}-bulk-toolbar`}>\n      <ToolbarContent>\n        <ToolbarItem>\n          <Dropdown\n            isOpen={open}\n            onSelect={() => setOpen(false)}\n            onOpenChange={setOpen}\n            toggle={(toggleRef: React.Ref<MenuToggleElement>) => (\n              <MenuToggle\n                ref={toggleRef}\n                isExpanded={open}\n                aria-label={labels.ariaLabel}\n                onClick={() => setOpen((o) => !o)}\n                splitButtonItems={[\n                  <MenuToggleCheckbox\n                    key=\"bulk-check\"\n                    id={`${id}-bulk-check`}\n                    aria-label={labels.ariaLabel}\n                    isChecked={\n                      pagePartiallySelected ? null : pageSelected\n                    }\n                    onChange={(_e, checked) =>\n                      checked ? onSelectPage?.() : onSelectNone()\n                    }\n                  >\n                    {selectedCount > 0\n                      ? withCount(labels.selectedStatus, selectedCount)\n                      : \"\"}\n                  </MenuToggleCheckbox>,\n                ]}\n              />\n            )}\n          >\n            <DropdownList>\n              <DropdownItem onClick={onSelectNone}>\n                {labels.selectNone}\n              </DropdownItem>\n              {onSelectPage && pageCount !== undefined ? (\n                <DropdownItem onClick={onSelectPage}>\n                  {withCount(labels.selectPage, pageCount)}\n                </DropdownItem>\n              ) : null}\n              <DropdownItem onClick={onSelectAll}>\n                {withCount(labels.selectAll, totalCount)}\n              </DropdownItem>\n            </DropdownList>\n          </Dropdown>\n        </ToolbarItem>\n        {selectedCount > 0 && actions ? (\n          <>\n            <ToolbarItem variant=\"separator\" />\n            <ToolbarItem>{actions}</ToolbarItem>\n          </>\n        ) : null}\n      </ToolbarContent>\n    </Toolbar>\n  );\n}",
+      "import": "import { BulkSelectToolbar, bulkSelectToolbarEnLabels } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "labels",
+          "type": "BulkSelectToolbarLabels",
+          "default": "bulkSelectToolbarEnLabels",
+          "description": "Chrome text — split-button aria, select all/page/none items ({count} token), selected status."
+        },
+        {
+          "name": "selectedCount",
+          "type": "number",
+          "required": true,
+          "description": "Total rows selected across all pages."
+        },
+        {
+          "name": "totalCount",
+          "type": "number",
+          "required": true,
+          "description": "Total rows available (shown in 'Select all')."
+        },
+        {
+          "name": "pageCount",
+          "type": "number",
+          "description": "Rows on the current page (enables 'Select page')."
+        },
+        {
+          "name": "pageSelected",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whole current page selected — checkbox checked."
+        },
+        {
+          "name": "pagePartiallySelected",
+          "type": "boolean",
+          "default": "false",
+          "description": "Current page partially selected — checkbox indeterminate."
+        },
+        {
+          "name": "onSelectAll",
+          "type": "() => void",
+          "required": true,
+          "description": "Select every row across all pages."
+        },
+        {
+          "name": "onSelectNone",
+          "type": "() => void",
+          "required": true,
+          "description": "Clear the entire selection."
+        },
+        {
+          "name": "onSelectPage",
+          "type": "() => void",
+          "description": "Select every row on the current page."
+        },
+        {
+          "name": "actions",
+          "type": "ReactNode",
+          "description": "Bulk actions, shown only when selectedCount > 0."
+        }
+      ],
+      "usage": "BulkSelectToolbar is the controlled 'select many, act on many' toolbar: a split checkbox + dropdown (select all / page / none), a derived '{n} selected' status, and bulk actions shown once a selection exists. You own the selection; pass counts + handlers. The split checkbox reflects page-selected / partially-selected state. Localise via labels (bulkSelectToolbarEnLabels).",
+      "examples": [
+        {
+          "name": "BulkSelectToolbar",
+          "source": "/**\n * BulkSelectToolbar recipe — the lib's exported bulk-select bar: a split\n * checkbox + dropdown (all / page / none), a derived \"{n} selected\" status,\n * and contextual bulk actions. Fully controlled.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  BulkSelectToolbar,\n  bulkSelectToolbarEnLabels,\n  Button,\n  Table,\n  Tbody,\n  Td,\n  Th,\n  Thead,\n  Tr,\n} from \"@golden-passport/ds-patternfly\";\n\ntype Workflow = { id: string; name: string; status: string };\nconst ROWS: Workflow[] = Array.from({ length: 5 }).map((_, i) => ({\n  id: `wf-${i + 1}`,\n  name: `Workflow ${i + 1}`,\n  status: [\"Active\", \"Paused\", \"Failed\"][i % 3] ?? \"Active\",\n}));\n\nexport function FullPattern() {\n  const [selected, setSelected] = useState<Set<string>>(new Set());\n  const pageSelectedCount = ROWS.filter((r) => selected.has(r.id)).length;\n\n  const setMany = (ids: string[], on: boolean) =>\n    setSelected((prev) => {\n      const next = new Set(prev);\n      ids.forEach((id) => (on ? next.add(id) : next.delete(id)));\n      return next;\n    });\n\n  return (\n    <>\n      <BulkSelectToolbar\n        labels={bulkSelectToolbarEnLabels}\n        selectedCount={selected.size}\n        totalCount={ROWS.length}\n        pageCount={ROWS.length}\n        pageSelected={pageSelectedCount === ROWS.length}\n        pagePartiallySelected={pageSelectedCount > 0 && pageSelectedCount < ROWS.length}\n        onSelectAll={() => setMany(ROWS.map((r) => r.id), true)}\n        onSelectPage={() => setMany(ROWS.map((r) => r.id), true)}\n        onSelectNone={() => setSelected(new Set())}\n        actions={\n          <>\n            <Button variant=\"secondary\">Run {selected.size}</Button>\n            <Button variant=\"danger\">Delete {selected.size}</Button>\n          </>\n        }\n      />\n      <Table aria-label=\"Workflows\" variant=\"compact\">\n        <Thead>\n          <Tr>\n            <Th screenReaderText=\"Row select\" />\n            <Th>Name</Th>\n            <Th>Status</Th>\n          </Tr>\n        </Thead>\n        <Tbody>\n          {ROWS.map((r, rowIndex) => (\n            <Tr key={r.id}>\n              <Td\n                select={{\n                  rowIndex,\n                  onSelect: () => setMany([r.id], !selected.has(r.id)),\n                  isSelected: selected.has(r.id),\n                }}\n              />\n              <Td dataLabel=\"Name\">{r.name}</Td>\n              <Td dataLabel=\"Status\">{r.status}</Td>\n            </Tr>\n          ))}\n        </Tbody>\n      </Table>\n    </>\n  );\n}\n\nexport default function BulkSelectToolbarExample() {\n  return <FullPattern />;\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-data-cardgrid",
+      "kind": "ds",
+      "title": "CardGrid",
+      "breadcrumb": "Building blocks/Data/CardGrid",
+      "summary": "A responsive gallery of cards from a data array. Pass items and a renderItem that returns the card for each; CardGrid handles the responsive layout (auto-filling columns at minColumnWidth ). It is the standard alternative to a table for browse-style collections, and is generic — CardGrid&lt;T&gt; infers the item type f",
+      "tags": [
+        "building",
+        "blocks",
+        "data",
+        "cardgrid",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-data-cardgrid--overview",
+      "layer": "ds",
+      "componentSource": "import type { ReactNode } from \"react\";\nimport { Gallery, GalleryItem } from \"../base/index.js\";\n\n/**\n * CardGrid — a responsive gallery of cards from a data array. Pass `items`\n * and a `renderItem` that returns the card body for each; CardGrid handles\n * the responsive `Gallery` layout (auto-fills columns at `minColumnWidth`).\n * The standard alternative to a table for browse-style collections.\n */\nexport interface CardGridProps<T> {\n  /** The data to render, one card each. */\n  items: T[];\n  /** Render the card for one item. */\n  renderItem: (item: T, index: number) => ReactNode;\n  /** Stable key for an item. Defaults to the array index. */\n  getKey?: (item: T, index: number) => string | number;\n  /** Minimum column width before wrapping. Default \"260px\". */\n  minColumnWidth?: string;\n  /** Shown when `items` is empty (e.g. a StatusPanel). */\n  emptyState?: ReactNode;\n}\n\nexport function CardGrid<T>({\n  items,\n  renderItem,\n  getKey,\n  minColumnWidth = \"260px\",\n  emptyState,\n}: CardGridProps<T>) {\n  if (items.length === 0 && emptyState) return <>{emptyState}</>;\n  return (\n    <Gallery hasGutter minWidths={{ default: minColumnWidth }}>\n      {items.map((item, i) => (\n        <GalleryItem key={getKey ? getKey(item, i) : i}>\n          {renderItem(item, i)}\n        </GalleryItem>\n      ))}\n    </Gallery>\n  );\n}",
+      "import": "import { CardGrid } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "items",
+          "type": "T[]",
+          "required": true,
+          "description": "The data to render, one card each."
+        },
+        {
+          "name": "renderItem",
+          "type": "(item: T, index: number) => ReactNode",
+          "required": true,
+          "description": "Render the card for one item — typically a <Card> with CardHeader / CardTitle / CardBody."
+        },
+        {
+          "name": "getKey",
+          "type": "(item: T, index: number) => string | number",
+          "description": "Stable React key for an item. Defaults to the array index."
+        },
+        {
+          "name": "minColumnWidth",
+          "type": "string",
+          "default": "\"260px\"",
+          "description": "Minimum column width before the responsive gallery wraps to the next row."
+        },
+        {
+          "name": "emptyState",
+          "type": "ReactNode",
+          "description": "Rendered instead of the grid when items is empty — e.g. a <StatusPanel variant=\"empty\">."
+        }
+      ],
+      "usage": "CardGrid is a responsive gallery of cards from a data array: pass `items` and a `renderItem` that returns the card body; CardGrid handles the responsive Gallery layout (auto-fills columns at minColumnWidth) and an optional `emptyState`. The standard alternative to a table for browse-style collections.",
+      "examples": [
+        {
+          "name": "CardGrid",
+          "source": "/**\n * CardGrid — a responsive gallery of cards from a data array. Pass `items`\n * and a `renderItem` that returns the card for each; CardGrid handles the\n * responsive layout. The standard alternative to a table for browse-style\n * collections. Show the `emptyState` slot when there's nothing to render.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  Button,\n  Card,\n  CardBody,\n  CardHeader,\n  CardTitle,\n  CardGrid,\n  Label,\n  StatusPanel,\n} from \"@golden-passport/ds-patternfly\";\nimport PlusCircleIcon from \"@patternfly/react-icons/dist/esm/icons/plus-circle-icon\";\n\ntype Template = {\n  id: string;\n  name: string;\n  category: string;\n  description: string;\n};\n\nconst TEMPLATES: Template[] = [\n  { id: \"t-1\", name: \"Onboarding flow\", category: \"Workflow\", description: \"Welcome new users with a guided setup checklist.\" },\n  { id: \"t-2\", name: \"Weekly digest\", category: \"Email\", description: \"Summarize activity and send it out every Monday.\" },\n  { id: \"t-3\", name: \"Incident triage\", category: \"Ops\", description: \"Route alerts to the right on-call responder.\" },\n  { id: \"t-4\", name: \"Lead scoring\", category: \"Sales\", description: \"Rank inbound leads by fit and engagement.\" },\n  { id: \"t-5\", name: \"Content review\", category: \"Workflow\", description: \"Two-step approval before anything publishes.\" },\n  { id: \"t-6\", name: \"Churn watch\", category: \"Analytics\", description: \"Flag accounts trending toward cancellation.\" },\n];\n\nexport function Gallery() {\n  return (\n    <CardGrid\n      items={TEMPLATES}\n      getKey={(t) => t.id}\n      renderItem={(t) => (\n        <Card isFullHeight>\n          <CardHeader>\n            <CardTitle>{t.name}</CardTitle>\n          </CardHeader>\n          <CardBody style={{ display: \"grid\", gap: 12 }}>\n            <Label color=\"blue\">{t.category}</Label>\n            <span>{t.description}</span>\n          </CardBody>\n        </Card>\n      )}\n    />\n  );\n}\n\nexport function Empty() {\n  return (\n    <CardGrid<Template>\n      items={[]}\n      renderItem={() => null}\n      emptyState={\n        <StatusPanel\n          variant=\"empty\"\n          title=\"No templates yet\"\n          primaryAction={\n            <Button variant=\"primary\" icon={<PlusCircleIcon />}>\n              Create template\n            </Button>\n          }\n        >\n          Templates you create will show up here. Start from scratch or\n          duplicate an existing one.\n        </StatusPanel>\n      }\n    />\n  );\n}\n\nexport default function CardGridExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 32 }}>\n      <Gallery />\n      <Empty />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-data-datatable",
+      "kind": "ds",
+      "title": "DataTable",
+      "breadcrumb": "Building blocks/Data/DataTable",
+      "summary": "A declarative table over columns + rows . You define each column's header and a cell renderer; DataTable composes the base Table family and handles the optional toolbar / pagination slots plus built-in loading and empty states. It is generic — DataTable&lt;T&gt; infers the row type from your data.",
+      "tags": [
+        "building",
+        "blocks",
+        "data",
+        "datatable",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-data-datatable--overview",
+      "layer": "ds",
+      "componentSource": "import type { ReactNode } from \"react\";\nimport {\n  Bullseye,\n  Spinner,\n  Table,\n  Tbody,\n  Td,\n  Th,\n  Thead,\n  Tr,\n} from \"../base/index.js\";\n\n/** One column: a header + a cell renderer over a row. */\nexport interface DataTableColumn<T> {\n  /** Stable key. */\n  key: string;\n  /** Column header content. */\n  header: ReactNode;\n  /** Render the cell for a row. */\n  cell: (row: T) => ReactNode;\n  /** Optional `dataLabel` for responsive stacking (defaults to a string header). */\n  dataLabel?: string;\n}\n\n/**\n * DataTable — a declarative table over `columns` + `rows`, with optional\n * toolbar and pagination slots and built-in loading / empty states. Composes\n * the base Table family; you bring the data and the column renderers.\n */\nexport interface DataTableProps<T> {\n  /** Column definitions. */\n  columns: DataTableColumn<T>[];\n  /** Row data. */\n  rows: T[];\n  /** Stable key for a row. */\n  getRowKey: (row: T) => string | number;\n  /** Accessible name for the table. */\n  ariaLabel: string;\n  /** Toolbar slot rendered above the table (filters, bulk select, search). */\n  toolbar?: ReactNode;\n  /** Pagination slot rendered above (right) and/or below the table. */\n  pagination?: ReactNode;\n  /** Footer pagination slot. */\n  footerPagination?: ReactNode;\n  /** Show the loading spinner instead of rows. */\n  isLoading?: boolean;\n  /** Shown when `rows` is empty and not loading (e.g. a StatusPanel). */\n  emptyState?: ReactNode;\n  /** PF table density. */\n  variant?: \"compact\" | \"default\";\n}\n\nexport function DataTable<T>({\n  columns,\n  rows,\n  getRowKey,\n  ariaLabel,\n  toolbar,\n  pagination,\n  footerPagination,\n  isLoading,\n  emptyState,\n  variant = \"default\",\n}: DataTableProps<T>) {\n  const colSpan = columns.length;\n  return (\n    <div style={{ display: \"flex\", flexDirection: \"column\", gap: \"1rem\" }}>\n      {toolbar || pagination ? (\n        <div\n          style={{\n            display: \"flex\",\n            alignItems: \"center\",\n            justifyContent: \"space-between\",\n            gap: \"1rem\",\n            flexWrap: \"wrap\",\n          }}\n        >\n          <div style={{ flex: \"1 1 auto\", minInlineSize: 0 }}>{toolbar}</div>\n          {pagination ? <div>{pagination}</div> : null}\n        </div>\n      ) : null}\n      <Table\n        aria-label={ariaLabel}\n        {...(variant === \"compact\" ? { variant: \"compact\" } : {})}\n      >\n        <Thead>\n          <Tr>\n            {columns.map((col) => (\n              <Th key={col.key}>{col.header}</Th>\n            ))}\n          </Tr>\n        </Thead>\n        <Tbody>\n          {isLoading ? (\n            <Tr>\n              <Td colSpan={colSpan}>\n                <Bullseye style={{ padding: \"2rem\" }}>\n                  <Spinner aria-label=\"Loading\" />\n                </Bullseye>\n              </Td>\n            </Tr>\n          ) : rows.length === 0 && emptyState ? (\n            <Tr>\n              <Td colSpan={colSpan}>{emptyState}</Td>\n            </Tr>\n          ) : (\n            rows.map((row) => (\n              <Tr key={getRowKey(row)}>\n                {columns.map((col) => (\n                  <Td\n                    key={col.key}\n                    {...(col.dataLabel ||\n                    typeof col.header === \"string\"\n                      ? { dataLabel: col.dataLabel ?? String(col.header) }\n                      : {})}\n                  >\n                    {col.cell(row)}\n                  </Td>\n                ))}\n              </Tr>\n            ))\n          )}\n        </Tbody>\n      </Table>\n      {footerPagination ? (\n        <div style={{ display: \"flex\", justifyContent: \"flex-end\" }}>\n          {footerPagination}\n        </div>\n      ) : null}\n    </div>\n  );\n}",
+      "import": "import { DataTable, type DataTableColumn } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "columns",
+          "type": "DataTableColumn<T>[]",
+          "required": true,
+          "description": "Column definitions. Each is { key: string; header: ReactNode; cell: (row: T) => ReactNode; dataLabel?: string } — cell renders one row's value for that column."
+        },
+        {
+          "name": "rows",
+          "type": "T[]",
+          "required": true,
+          "description": "The row data, one table row each."
+        },
+        {
+          "name": "getRowKey",
+          "type": "(row: T) => string | number",
+          "required": true,
+          "description": "Stable React key for a row."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "required": true,
+          "description": "Accessible name for the table."
+        },
+        {
+          "name": "toolbar",
+          "type": "ReactNode",
+          "description": "Toolbar slot above the table (search, filters, bulk select). Rendered on the left of the top row."
+        },
+        {
+          "name": "pagination",
+          "type": "ReactNode",
+          "description": "Pagination slot rendered top-right. Give it a distinct titles.paginationAriaLabel if you also render footerPagination."
+        },
+        {
+          "name": "footerPagination",
+          "type": "ReactNode",
+          "description": "Pagination slot rendered below the table (typically variant=\"bottom\")."
+        },
+        {
+          "name": "isLoading",
+          "type": "boolean",
+          "description": "Show a centered spinner in place of rows."
+        },
+        {
+          "name": "emptyState",
+          "type": "ReactNode",
+          "description": "Rendered when rows is empty and not loading — e.g. a <StatusPanel variant=\"empty\">."
+        },
+        {
+          "name": "variant",
+          "type": "\"compact\" | \"default\"",
+          "default": "\"default\"",
+          "description": "PF table density."
+        }
+      ],
+      "usage": "DataTable is a declarative table over `columns` (DataTableColumn<T>: key/header/cell) + `rows`, with optional toolbar and pagination slots and built-in loading (spinner) / empty (slot) states. Composes the base Table family; you bring the data and the column renderers.",
+      "examples": [
+        {
+          "name": "DataTable",
+          "source": "/**\n * DataTable — a declarative table over `columns` + `rows`, with optional\n * toolbar and pagination slots and built-in loading / empty states. You bring\n * the data and the column renderers; DataTable composes the base Table family.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useId, useState } from \"react\";\nimport {\n  DataTable,\n  Label,\n  Pagination,\n  SearchInput,\n  StatusPanel,\n  type DataTableColumn,\n} from \"@golden-passport/ds-patternfly\";\n\ntype Service = {\n  id: string;\n  name: string;\n  owner: string;\n  status: \"Healthy\" | \"Degraded\" | \"Down\";\n  region: string;\n};\n\nconst SERVICES: Service[] = [\n  { id: \"svc-1\", name: \"Auth API\", owner: \"Platform\", status: \"Healthy\", region: \"us-east-1\" },\n  { id: \"svc-2\", name: \"Billing\", owner: \"Payments\", status: \"Degraded\", region: \"us-east-1\" },\n  { id: \"svc-3\", name: \"Search\", owner: \"Discovery\", status: \"Healthy\", region: \"eu-west-1\" },\n  { id: \"svc-4\", name: \"Notifications\", owner: \"Growth\", status: \"Down\", region: \"us-west-2\" },\n  { id: \"svc-5\", name: \"Media CDN\", owner: \"Platform\", status: \"Healthy\", region: \"eu-west-1\" },\n  { id: \"svc-6\", name: \"Analytics\", owner: \"Data\", status: \"Degraded\", region: \"us-east-1\" },\n];\n\nconst STATUS_COLOR = {\n  Healthy: \"green\",\n  Degraded: \"yellow\",\n  Down: \"red\",\n} as const;\n\nconst columns: DataTableColumn<Service>[] = [\n  { key: \"name\", header: \"Service\", cell: (r) => r.name },\n  { key: \"owner\", header: \"Owner\", cell: (r) => r.owner },\n  {\n    key: \"status\",\n    header: \"Status\",\n    cell: (r) => <Label color={STATUS_COLOR[r.status]}>{r.status}</Label>,\n  },\n  { key: \"region\", header: \"Region\", cell: (r) => r.region },\n];\n\nexport function BasicTable() {\n  return (\n    <DataTable\n      ariaLabel=\"Services\"\n      columns={columns}\n      rows={SERVICES}\n      getRowKey={(r) => r.id}\n    />\n  );\n}\n\nexport function WithToolbarAndPagination() {\n  const id = useId();\n  const [search, setSearch] = useState(\"\");\n  const [page, setPage] = useState(1);\n  const [perPage, setPerPage] = useState(5);\n\n  const filtered = SERVICES.filter((r) =>\n    `${r.name} ${r.owner} ${r.region}`\n      .toLowerCase()\n      .includes(search.toLowerCase()),\n  );\n  const start = (page - 1) * perPage;\n  const pageRows = filtered.slice(start, start + perPage);\n\n  return (\n    <DataTable\n      ariaLabel=\"Services\"\n      columns={columns}\n      rows={pageRows}\n      getRowKey={(r) => r.id}\n      toolbar={\n        <SearchInput\n          aria-label=\"Search services\"\n          placeholder=\"Search services\"\n          value={search}\n          onChange={(_e, v) => {\n            setSearch(v);\n            setPage(1);\n          }}\n          onClear={() => {\n            setSearch(\"\");\n            setPage(1);\n          }}\n        />\n      }\n      pagination={\n        <Pagination\n          titles={{ paginationAriaLabel: `${id}-pagination-top` }}\n          itemCount={filtered.length}\n          page={page}\n          perPage={perPage}\n          onSetPage={(_e, p) => setPage(p)}\n          onPerPageSelect={(_e, pp) => {\n            setPerPage(pp);\n            setPage(1);\n          }}\n          isCompact\n        />\n      }\n      footerPagination={\n        <Pagination\n          titles={{ paginationAriaLabel: `${id}-pagination-bottom` }}\n          itemCount={filtered.length}\n          page={page}\n          perPage={perPage}\n          onSetPage={(_e, p) => setPage(p)}\n          onPerPageSelect={(_e, pp) => {\n            setPerPage(pp);\n            setPage(1);\n          }}\n          variant=\"bottom\"\n        />\n      }\n      emptyState={\n        <StatusPanel variant=\"empty\" title=\"No matching services\" size=\"sm\">\n          No services match “{search}”. Try a different search.\n        </StatusPanel>\n      }\n    />\n  );\n}\n\nexport default function DataTableExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 32 }}>\n      <BasicTable />\n      <WithToolbarAndPagination />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-data-filtertoolbar",
+      "kind": "ds",
+      "title": "FilterToolbar",
+      "breadcrumb": "Building blocks/Data/FilterToolbar",
+      "summary": "The standard filter bar — a search field, faceted multi-select facets, removable filter chips, and one-click clear-all. Fully controlled: you own the search text and selected values; the chips and clear-all control are derived automatically.",
+      "tags": [
+        "building",
+        "blocks",
+        "data",
+        "filtertoolbar",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "recipes"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-data-filtertoolbar--overview",
+      "layer": "ds",
+      "componentSource": "import { useId, useState, type ReactNode } from \"react\";\nimport {\n  Label,\n  MenuToggle,\n  type MenuToggleElement,\n  Select,\n  SelectList,\n  SelectOption,\n  SearchInput,\n  Toolbar,\n  ToolbarContent,\n  ToolbarFilter,\n  ToolbarGroup,\n  ToolbarItem,\n  ToolbarToggleGroup,\n} from \"@patternfly/react-core\";\nimport { FilterIcon } from \"@patternfly/react-icons/dist/esm/icons/filter-icon\";\nimport { type FilterToolbarLabels, filterToolbarEnLabels } from \"./labels.js\";\n\nexport type { FilterToolbarLabels } from \"./labels.js\";\nexport { filterToolbarEnLabels } from \"./labels.js\";\n\n/** One faceted filter: a category with a fixed set of multi-select options. */\nexport interface FilterDef {\n  /** Stable key used in `values` / `onChange`. */\n  key: string;\n  /** Category name shown on the toggle and in chip groups. */\n  label: string;\n  /** Selectable options. */\n  options: { value: string; label: string }[];\n}\n\n/**\n * FilterToolbar — the standard filter bar: a search field, faceted\n * multi-select facets, removable filter chips, and one-click clear-all.\n *\n * Fully controlled: you own `searchValue` + `values` and update them from\n * the callbacks. Chips and the clear-all control are derived from `values`\n * automatically. A composition of branded react-core Toolbar primitives.\n */\nexport interface FilterToolbarProps {\n  /** Required. Provide via `filterToolbarEnLabels` or your own translations. */\n  labels?: FilterToolbarLabels;\n  /** Current search text. Omit to hide the search field. */\n  searchValue?: string;\n  /** Fired as the search text changes. */\n  onSearchChange?: (value: string) => void;\n  /** Faceted filters to render. */\n  filters?: FilterDef[];\n  /** Selected values per filter key. */\n  values?: Record<string, string[]>;\n  /** Fired when a facet's selection changes (toggle a value). */\n  onChange?: (key: string, values: string[]) => void;\n  /** Fired by the search field and PF's clear-all control. */\n  onClearAll?: () => void;\n  /** Right-aligned actions (e.g. a primary \"Create\" button). */\n  actions?: ReactNode;\n}\n\nexport function FilterToolbar({\n  labels = filterToolbarEnLabels,\n  searchValue,\n  onSearchChange,\n  filters = [],\n  values = {},\n  onChange,\n  onClearAll,\n  actions,\n}: FilterToolbarProps) {\n  const id = useId();\n  const [openKey, setOpenKey] = useState<string | null>(null);\n\n  const toggleValue = (def: FilterDef, value: string) => {\n    const current = values[def.key] ?? [];\n    const next = current.includes(value)\n      ? current.filter((v) => v !== value)\n      : [...current, value];\n    onChange?.(def.key, next);\n  };\n\n  return (\n    <Toolbar\n      id={`${id}-filter-toolbar`}\n      {...(onClearAll ? { clearAllFilters: onClearAll } : {})}\n      clearFiltersButtonText={labels.clearAllFilters}\n      collapseListedFiltersBreakpoint=\"md\"\n    >\n      <ToolbarContent>\n        {/* No aria-label on ToolbarToggleGroup — PF renders it as a roleless\n            <div>, where ARIA prohibits aria-label (axe aria-prohibited-attr).\n            The collapse toggle button names itself from the filter icon. */}\n        <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint=\"md\">\n          {onSearchChange ? (\n            <ToolbarItem>\n              <SearchInput\n                value={searchValue ?? \"\"}\n                onChange={(_e, v) => onSearchChange(v)}\n                onClear={() => onSearchChange(\"\")}\n                placeholder={labels.searchPlaceholder}\n                aria-label={labels.searchAriaLabel}\n              />\n            </ToolbarItem>\n          ) : null}\n          {filters.length > 0 ? (\n            <ToolbarGroup variant=\"filter-group\">\n              {filters.map((def) => {\n                const selected = values[def.key] ?? [];\n                return (\n                  <ToolbarFilter\n                    key={def.key}\n                    labels={selected}\n                    deleteLabel={(_c, v) => toggleValue(def, v as string)}\n                    deleteLabelGroup={() => onChange?.(def.key, [])}\n                    categoryName={def.label}\n                  >\n                    <Select\n                      isOpen={openKey === def.key}\n                      onOpenChange={(open) => setOpenKey(open ? def.key : null)}\n                      onSelect={(_e, v) => toggleValue(def, v as string)}\n                      toggle={(toggleRef: React.Ref<MenuToggleElement>) => (\n                        <MenuToggle\n                          ref={toggleRef}\n                          onClick={() =>\n                            setOpenKey((k) => (k === def.key ? null : def.key))\n                          }\n                        >\n                          {def.label}{\" \"}\n                          {selected.length > 0 && (\n                            <Label isCompact>{selected.length}</Label>\n                          )}\n                        </MenuToggle>\n                      )}\n                    >\n                      <SelectList>\n                        {def.options.map((opt) => (\n                          <SelectOption\n                            key={opt.value}\n                            value={opt.value}\n                            hasCheckbox\n                            isSelected={selected.includes(opt.value)}\n                          >\n                            {opt.label}\n                          </SelectOption>\n                        ))}\n                      </SelectList>\n                    </Select>\n                  </ToolbarFilter>\n                );\n              })}\n            </ToolbarGroup>\n          ) : null}\n        </ToolbarToggleGroup>\n        {actions ? (\n          <ToolbarItem align={{ default: \"alignEnd\" }}>{actions}</ToolbarItem>\n        ) : null}\n      </ToolbarContent>\n    </Toolbar>\n  );\n}",
+      "import": "import { FilterToolbar, filterToolbarEnLabels } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "labels",
+          "type": "FilterToolbarLabels",
+          "default": "filterToolbarEnLabels",
+          "description": "Chrome text — search placeholder/aria and clear-all button label."
+        },
+        {
+          "name": "searchValue",
+          "type": "string",
+          "description": "Current search text. Omit (with onSearchChange) to hide the search field."
+        },
+        {
+          "name": "onSearchChange",
+          "type": "(value: string) => void",
+          "description": "Fired as the search text changes."
+        },
+        {
+          "name": "filters",
+          "type": "FilterDef[]",
+          "default": "[]",
+          "description": "Faceted filters — each { key, label, options: { value, label }[] }."
+        },
+        {
+          "name": "values",
+          "type": "Record<string, string[]>",
+          "default": "{}",
+          "description": "Selected values per filter key (controlled)."
+        },
+        {
+          "name": "onChange",
+          "type": "(key: string, values: string[]) => void",
+          "description": "Fired when a facet's selection changes."
+        },
+        {
+          "name": "onClearAll",
+          "type": "() => void",
+          "description": "Fired by the search field and PF's clear-all chip control."
+        },
+        {
+          "name": "actions",
+          "type": "ReactNode",
+          "description": "Right-aligned actions (e.g. a primary Create button)."
+        }
+      ],
+      "usage": "FilterToolbar is the fully-controlled filter bar: a search field, faceted multi-select facets (FilterDef[]), removable filter chips, and one-click clear-all. You own searchValue + values and update them from onSearchChange / onChange / onClearAll; chips and clear-all derive from values automatically. Localise chrome text via labels (filterToolbarEnLabels).",
+      "examples": [
+        {
+          "name": "FilterToolbar",
+          "source": "/**\n * FilterToolbar recipe — the lib's exported filter bar: search + faceted\n * multi-select facets + removable chips + clear-all. Fully controlled.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  Button,\n  FilterToolbar,\n  filterToolbarEnLabels,\n  type FilterDef,\n} from \"@golden-passport/ds-patternfly\";\n\nconst FILTERS: FilterDef[] = [\n  {\n    key: \"status\",\n    label: \"Status\",\n    options: [\n      { value: \"active\", label: \"Active\" },\n      { value: \"paused\", label: \"Paused\" },\n      { value: \"failed\", label: \"Failed\" },\n    ],\n  },\n  {\n    key: \"owner\",\n    label: \"Owner\",\n    options: [\n      { value: \"ada\", label: \"ada\" },\n      { value: \"grace\", label: \"grace\" },\n      { value: \"linus\", label: \"linus\" },\n    ],\n  },\n];\n\nexport function SearchFacetsChips() {\n  const [search, setSearch] = useState(\"\");\n  const [values, setValues] = useState<Record<string, string[]>>({});\n\n  return (\n    <>\n      <FilterToolbar\n        labels={filterToolbarEnLabels}\n        searchValue={search}\n        onSearchChange={setSearch}\n        filters={FILTERS}\n        values={values}\n        onChange={(key, next) => setValues((v) => ({ ...v, [key]: next }))}\n        onClearAll={() => {\n          setSearch(\"\");\n          setValues({});\n        }}\n        actions={<Button variant=\"primary\">Create</Button>}\n      />\n      <div style={{ padding: 12, color: \"var(--gp-color-text-subtle)\", fontSize: 13 }}>\n        search=<strong>{search || \"—\"}</strong>\n        {\" · \"}status=<strong>{(values.status ?? []).join(\",\") || \"any\"}</strong>\n        {\" · \"}owner=<strong>{(values.owner ?? []).join(\",\") || \"any\"}</strong>\n      </div>\n    </>\n  );\n}\n\nexport default function FilterToolbarExample() {\n  return <SearchFacetsChips />;\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-data-listmanager",
+      "kind": "ds",
+      "title": "ListManager",
+      "breadcrumb": "Building blocks/Data/ListManager",
+      "summary": "The page scaffold for a managed collection — it composes a PageHeader , a toolbar row ( FilterToolbar + BulkSelectToolbar on the left, Pagination on the right), the list body, and footer pagination. ListManager owns the consistent vertical rhythm and toolbar arrangement; you bring the pieces and the data.",
+      "tags": [
+        "building",
+        "blocks",
+        "data",
+        "listmanager",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "recipes"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-data-listmanager--overview",
+      "layer": "ds",
+      "componentSource": "import type { ReactNode } from \"react\";\n\n/**\n * ListManager — the page scaffold for a managed collection: an optional\n * header, a toolbar row (filters and/or bulk-select on the left, pagination\n * on the right), the list body (a Table, a Gallery of Cards, …), and an\n * optional footer pagination.\n *\n * A layout-only composition: every region is a `ReactNode` slot, so you\n * bring a `PageHeader`, `FilterToolbar`, `BulkSelectToolbar`, your table or\n * card grid, and `Pagination` — ListManager owns the consistent vertical\n * rhythm and the toolbar arrangement, not the data. No `labels` prop (its\n * slotted children own their text).\n */\nexport interface ListManagerProps {\n  /** Header slot (e.g. a `<PageHeader>`). */\n  header?: ReactNode;\n  /** Left side of the toolbar row — a `<FilterToolbar>` and/or\n   * `<BulkSelectToolbar>`. */\n  toolbar?: ReactNode;\n  /** Right side of the toolbar row — typically a `<Pagination>`. */\n  toolbarEnd?: ReactNode;\n  /** The list body — a `<Table>`, a `<Gallery>` of cards, an empty state. */\n  children: ReactNode;\n  /** Footer pagination slot, rendered below the body. */\n  footer?: ReactNode;\n}\n\nexport function ListManager({\n  header,\n  toolbar,\n  toolbarEnd,\n  children,\n  footer,\n}: ListManagerProps) {\n  return (\n    <div style={{ display: \"flex\", flexDirection: \"column\", gap: \"1rem\" }}>\n      {header}\n      {toolbar || toolbarEnd ? (\n        <div\n          style={{\n            display: \"flex\",\n            alignItems: \"center\",\n            justifyContent: \"space-between\",\n            gap: \"1rem\",\n            flexWrap: \"wrap\",\n          }}\n        >\n          <div style={{ flex: \"1 1 auto\", minInlineSize: 0 }}>{toolbar}</div>\n          {toolbarEnd ? <div>{toolbarEnd}</div> : null}\n        </div>\n      ) : null}\n      <div>{children}</div>\n      {footer ? (\n        <div style={{ display: \"flex\", justifyContent: \"flex-end\" }}>\n          {footer}\n        </div>\n      ) : null}\n    </div>\n  );\n}",
+      "import": "import { ListManager } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "header",
+          "type": "ReactNode",
+          "description": "Header slot (e.g. a <PageHeader>)."
+        },
+        {
+          "name": "toolbar",
+          "type": "ReactNode",
+          "description": "Left side of the toolbar row — a <FilterToolbar> and/or <BulkSelectToolbar>."
+        },
+        {
+          "name": "toolbarEnd",
+          "type": "ReactNode",
+          "description": "Right side of the toolbar row — typically a <Pagination>."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "The list body — a <Table>, a <Gallery> of cards, an empty state."
+        },
+        {
+          "name": "footer",
+          "type": "ReactNode",
+          "description": "Footer pagination slot, rendered below the body."
+        }
+      ],
+      "usage": "ListManager is the layout-only page scaffold for a managed collection: header slot (PageHeader), a toolbar row (FilterToolbar + BulkSelectToolbar left via `toolbar`, Pagination right via `toolbarEnd`), the list body (children — a Table or Gallery), and a footer pagination slot. It owns the vertical rhythm and toolbar arrangement; you bring the pieces and the data.",
+      "examples": [
+        {
+          "name": "ListManager",
+          "source": "/**\n * ListManager recipe — the lib's exported page scaffold for a managed\n * collection: a PageHeader, a toolbar row (FilterToolbar + BulkSelectToolbar\n * left, Pagination right), the list body, and footer pagination. ListManager\n * owns the layout; you bring the pieces and the data.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  BulkSelectToolbar,\n  bulkSelectToolbarEnLabels,\n  Button,\n  FilterToolbar,\n  filterToolbarEnLabels,\n  ListManager,\n  PageHeader,\n  Pagination,\n  Table,\n  Tbody,\n  Td,\n  Th,\n  Thead,\n  Tr,\n  type FilterDef,\n} from \"@golden-passport/ds-patternfly\";\n\ntype Workflow = { id: string; name: string; status: string };\nconst ALL: Workflow[] = Array.from({ length: 23 }).map((_, i) => ({\n  id: `wf-${i + 1}`,\n  name: `Workflow ${i + 1}`,\n  status: [\"Active\", \"Paused\", \"Failed\"][i % 3] ?? \"Active\",\n}));\nconst FILTERS: FilterDef[] = [\n  {\n    key: \"status\",\n    label: \"Status\",\n    options: [\n      { value: \"Active\", label: \"Active\" },\n      { value: \"Paused\", label: \"Paused\" },\n      { value: \"Failed\", label: \"Failed\" },\n    ],\n  },\n];\n\nexport function ManagedTable() {\n  const [search, setSearch] = useState(\"\");\n  const [values, setValues] = useState<Record<string, string[]>>({});\n  const [selected, setSelected] = useState<Set<string>>(new Set());\n  const [page, setPage] = useState(1);\n  const [perPage, setPerPage] = useState(10);\n\n  const statuses = values.status ?? [];\n  const filtered = ALL.filter(\n    (r) =>\n      r.name.toLowerCase().includes(search.toLowerCase()) &&\n      (statuses.length === 0 || statuses.includes(r.status)),\n  );\n  const start = (page - 1) * perPage;\n  const pageRows = filtered.slice(start, start + perPage);\n  const pageSelectedCount = pageRows.filter((r) => selected.has(r.id)).length;\n\n  const setMany = (ids: string[], on: boolean) =>\n    setSelected((prev) => {\n      const next = new Set(prev);\n      ids.forEach((id) => (on ? next.add(id) : next.delete(id)));\n      return next;\n    });\n\n  return (\n    <ListManager\n      header={\n        <PageHeader\n          title=\"Workflows\"\n          subtitle=\"Manage triggers, runs, and history.\"\n          actions={<Button variant=\"primary\">Create</Button>}\n        />\n      }\n      toolbar={\n        <div style={{ display: \"flex\", flexWrap: \"wrap\", gap: \"0.5rem\", alignItems: \"center\" }}>\n          <BulkSelectToolbar\n            labels={bulkSelectToolbarEnLabels}\n            selectedCount={selected.size}\n            totalCount={filtered.length}\n            pageCount={pageRows.length}\n            pageSelected={pageSelectedCount === pageRows.length && pageRows.length > 0}\n            pagePartiallySelected={pageSelectedCount > 0 && pageSelectedCount < pageRows.length}\n            onSelectAll={() => setMany(filtered.map((r) => r.id), true)}\n            onSelectPage={() => setMany(pageRows.map((r) => r.id), true)}\n            onSelectNone={() => setSelected(new Set())}\n            actions={<Button variant=\"danger\">Delete {selected.size}</Button>}\n          />\n          <FilterToolbar\n            labels={filterToolbarEnLabels}\n            searchValue={search}\n            onSearchChange={(v) => {\n              setSearch(v);\n              setPage(1);\n            }}\n            filters={FILTERS}\n            values={values}\n            onChange={(key, next) => {\n              setValues((v) => ({ ...v, [key]: next }));\n              setPage(1);\n            }}\n            onClearAll={() => {\n              setSearch(\"\");\n              setValues({});\n            }}\n          />\n        </div>\n      }\n      toolbarEnd={\n        <Pagination\n          titles={{ paginationAriaLabel: \"Workflows pagination (top)\" }}\n          itemCount={filtered.length}\n          page={page}\n          perPage={perPage}\n          onSetPage={(_e, p) => setPage(p)}\n          onPerPageSelect={(_e, pp) => {\n            setPerPage(pp);\n            setPage(1);\n          }}\n          isCompact\n        />\n      }\n      footer={\n        <Pagination\n          titles={{ paginationAriaLabel: \"Workflows pagination (bottom)\" }}\n          itemCount={filtered.length}\n          page={page}\n          perPage={perPage}\n          onSetPage={(_e, p) => setPage(p)}\n          onPerPageSelect={(_e, pp) => {\n            setPerPage(pp);\n            setPage(1);\n          }}\n          variant=\"bottom\"\n        />\n      }\n    >\n      <Table aria-label=\"Workflows\" variant=\"compact\">\n        <Thead>\n          <Tr>\n            <Th screenReaderText=\"Row select\" />\n            <Th>Name</Th>\n            <Th>Status</Th>\n          </Tr>\n        </Thead>\n        <Tbody>\n          {pageRows.map((r, rowIndex) => (\n            <Tr key={r.id}>\n              <Td\n                select={{\n                  rowIndex,\n                  onSelect: () => setMany([r.id], !selected.has(r.id)),\n                  isSelected: selected.has(r.id),\n                }}\n              />\n              <Td dataLabel=\"Name\">{r.name}</Td>\n              <Td dataLabel=\"Status\">{r.status}</Td>\n            </Tr>\n          ))}\n        </Tbody>\n      </Table>\n    </ListManager>\n  );\n}\n\nexport default function ListManagerExample() {\n  return <ManagedTable />;\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-feedback-confirmmodal",
+      "kind": "ds",
+      "title": "ConfirmModal",
+      "breadcrumb": "Building blocks/Feedback/ConfirmModal",
+      "summary": "A small controlled confirmation dialog: title, body, and a confirm / cancel footer. You own isOpen — wire it to a trigger. Set variant=\"danger\" for destructive actions, which turns the confirm button red.",
+      "tags": [
+        "building",
+        "blocks",
+        "feedback",
+        "confirmmodal",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-feedback-confirmmodal--overview",
+      "layer": "ds",
+      "componentSource": "import type { ReactNode } from \"react\";\nimport {\n  Button,\n  Modal,\n  ModalBody,\n  ModalFooter,\n  ModalHeader,\n} from \"../base/index.js\";\nimport { type ConfirmModalLabels, confirmModalEnLabels } from \"./labels.js\";\n\nexport type { ConfirmModalLabels } from \"./labels.js\";\nexport { confirmModalEnLabels } from \"./labels.js\";\n\n/**\n * ConfirmModal — a small controlled confirmation dialog: title, body, and a\n * confirm / cancel footer. Set `variant=\"danger\"` for destructive actions\n * (red confirm button). Composes the base Modal family; you own `isOpen`.\n */\nexport interface ConfirmModalProps {\n  /** Required. Provide via `confirmModalEnLabels` or your translations. */\n  labels?: ConfirmModalLabels;\n  /** Whether the modal is open. */\n  isOpen: boolean;\n  /** Dialog title. */\n  title: ReactNode;\n  /** Dialog body (the question / consequences). */\n  children: ReactNode;\n  /** Fired when the user confirms. */\n  onConfirm: () => void;\n  /** Fired on cancel / close (X, Cancel, Esc, backdrop). */\n  onCancel: () => void;\n  /** \"primary\" (default) or \"danger\" for destructive confirmations. */\n  variant?: \"primary\" | \"danger\";\n  /** Show a loading state on the confirm button. */\n  isConfirming?: boolean;\n}\n\nexport function ConfirmModal({\n  labels = confirmModalEnLabels,\n  isOpen,\n  title,\n  children,\n  onConfirm,\n  onCancel,\n  variant = \"primary\",\n  isConfirming,\n}: ConfirmModalProps) {\n  return (\n    <Modal variant=\"small\" isOpen={isOpen} onClose={onCancel}>\n      <ModalHeader title={typeof title === \"string\" ? title : undefined}>\n        {typeof title === \"string\" ? undefined : title}\n      </ModalHeader>\n      <ModalBody>{children}</ModalBody>\n      <ModalFooter>\n        <Button\n          variant={variant === \"danger\" ? \"danger\" : \"primary\"}\n          onClick={onConfirm}\n          isLoading={!!isConfirming}\n        >\n          {labels.confirm}\n        </Button>\n        <Button variant=\"link\" onClick={onCancel}>\n          {labels.cancel}\n        </Button>\n      </ModalFooter>\n    </Modal>\n  );\n}",
+      "import": "import { ConfirmModal, confirmModalEnLabels } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "labels",
+          "type": "ConfirmModalLabels",
+          "default": "confirmModalEnLabels",
+          "description": "Confirm / cancel button text. Provide via confirmModalEnLabels or your translations."
+        },
+        {
+          "name": "isOpen",
+          "type": "boolean",
+          "required": true,
+          "description": "Whether the modal is open — you own this state."
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Dialog title. Phrase as a question (e.g. 'Delete workflow?')."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Dialog body — the question / consequences."
+        },
+        {
+          "name": "onConfirm",
+          "type": "() => void",
+          "required": true,
+          "description": "Fired when the user confirms."
+        },
+        {
+          "name": "onCancel",
+          "type": "() => void",
+          "required": true,
+          "description": "Fired on cancel / close (X, Cancel, Esc, backdrop)."
+        },
+        {
+          "name": "variant",
+          "type": "\"primary\" | \"danger\"",
+          "default": "\"primary\"",
+          "description": "Use 'danger' for destructive confirmations (red confirm button)."
+        },
+        {
+          "name": "isConfirming",
+          "type": "boolean",
+          "description": "Show a loading state on the confirm button."
+        }
+      ],
+      "usage": "ConfirmModal is a small controlled confirmation dialog: title, body, and a confirm / cancel footer. Set variant=\"danger\" for destructive actions (red confirm button). Composes the base Modal family; you own isOpen and the confirm/cancel handlers. Localise via labels (confirmModalEnLabels).",
+      "examples": [
+        {
+          "name": "ConfirmModal",
+          "source": "/**\n * ConfirmModal — a small controlled confirmation dialog: title, body, and a\n * confirm / cancel footer. Set `variant=\"danger\"` for destructive actions.\n * You own `isOpen`; here a trigger button toggles it.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport { ConfirmModal, confirmModalEnLabels, Button } from \"@golden-passport/ds-patternfly\";\n\nexport function Confirm() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <>\n      <Button variant=\"primary\" onClick={() => setOpen(true)}>\n        Publish workflow\n      </Button>\n      <ConfirmModal\n        labels={confirmModalEnLabels}\n        isOpen={open}\n        title=\"Publish workflow?\"\n        onConfirm={() => setOpen(false)}\n        onCancel={() => setOpen(false)}\n      >\n        This makes the workflow live and visible to everyone in the project.\n        You can unpublish it again at any time.\n      </ConfirmModal>\n    </>\n  );\n}\n\nexport function DangerConfirm() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <>\n      <Button variant=\"danger\" onClick={() => setOpen(true)}>\n        Delete workflow\n      </Button>\n      <ConfirmModal\n        labels={confirmModalEnLabels}\n        isOpen={open}\n        variant=\"danger\"\n        title=\"Delete workflow?\"\n        onConfirm={() => setOpen(false)}\n        onCancel={() => setOpen(false)}\n      >\n        This permanently deletes the workflow and all of its run history. This\n        action cannot be undone.\n      </ConfirmModal>\n    </>\n  );\n}\n\nexport default function ConfirmModalExample() {\n  return (\n    <div style={{ display: \"flex\", gap: 16, flexWrap: \"wrap\" }}>\n      <Confirm />\n      <DangerConfirm />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-feedback-statuspanel",
+      "kind": "ds",
+      "title": "StatusPanel",
+      "breadcrumb": "Building blocks/Feedback/StatusPanel",
+      "summary": "The one lego block for every full-panel \"state\" screen — empty results, an error, unauthorized access, or maintenance. Pick a variant for a sensible default icon and accent, set the title/body, and add a primary or secondary action.",
+      "tags": [
+        "building",
+        "blocks",
+        "feedback",
+        "statuspanel",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-feedback-statuspanel--overview",
+      "layer": "ds",
+      "componentSource": "import type { ComponentType, ReactNode } from \"react\";\nimport {\n  EmptyState,\n  EmptyStateActions,\n  EmptyStateBody,\n  EmptyStateFooter,\n} from \"../base/index.js\";\nimport CubesIcon from \"@patternfly/react-icons/dist/esm/icons/cubes-icon\";\nimport ExclamationCircleIcon from \"@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon\";\nimport LockIcon from \"@patternfly/react-icons/dist/esm/icons/lock-icon\";\nimport WrenchIcon from \"@patternfly/react-icons/dist/esm/icons/wrench-icon\";\n\nexport type StatusPanelVariant =\n  | \"empty\"\n  | \"error\"\n  | \"unauthorized\"\n  | \"maintenance\";\n\nconst VARIANTS: Record<\n  StatusPanelVariant,\n  { icon: ComponentType; iconColor?: string }\n> = {\n  empty: { icon: CubesIcon },\n  error: {\n    icon: ExclamationCircleIcon,\n    iconColor: \"var(--pf-t--global--icon--color--status--danger--default, #c9190b)\",\n  },\n  unauthorized: { icon: LockIcon },\n  maintenance: {\n    icon: WrenchIcon,\n    iconColor: \"var(--pf-t--global--icon--color--status--warning--default, #f0ab00)\",\n  },\n};\n\n/**\n * StatusPanel — the one lego block for every full-panel \"state\" screen:\n * empty results, an error, unauthorized access, or maintenance. Pick a\n * `variant` (drives a sensible default icon + accent), set the title/body,\n * and add primary/secondary actions. Composes the base EmptyState family.\n */\nexport interface StatusPanelProps {\n  /** Which state this represents — sets the default icon + accent. */\n  variant: StatusPanelVariant;\n  /** Headline. */\n  title: ReactNode;\n  /** Explanatory body text. */\n  children?: ReactNode;\n  /** Override the variant's default icon. */\n  icon?: ComponentType;\n  /** Primary action (e.g. \"Create\", \"Retry\", \"Sign in\"). */\n  primaryAction?: ReactNode;\n  /** Secondary actions (links / buttons). */\n  secondaryActions?: ReactNode;\n  /** EmptyState sizing. */\n  size?: \"sm\" | \"lg\" | \"xl\";\n}\n\nexport function StatusPanel({\n  variant,\n  title,\n  children,\n  icon,\n  primaryAction,\n  secondaryActions,\n  size,\n}: StatusPanelProps) {\n  const v = VARIANTS[variant];\n  const titleText = typeof title === \"string\" ? title : \"\";\n  return (\n    <EmptyState\n      titleText={titleText || title}\n      headingLevel=\"h2\"\n      icon={icon ?? v.icon}\n      {...(size ? { variant: size } : {})}\n      {...(v.iconColor ? { iconProps: { style: { color: v.iconColor } } } : {})}\n    >\n      {children ? <EmptyStateBody>{children}</EmptyStateBody> : null}\n      {primaryAction || secondaryActions ? (\n        <EmptyStateFooter>\n          {primaryAction ? (\n            <EmptyStateActions>{primaryAction}</EmptyStateActions>\n          ) : null}\n          {secondaryActions ? (\n            <EmptyStateActions>{secondaryActions}</EmptyStateActions>\n          ) : null}\n        </EmptyStateFooter>\n      ) : null}\n    </EmptyState>\n  );\n}",
+      "import": "import { StatusPanel } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "variant",
+          "type": "\"empty\" | \"error\" | \"unauthorized\" | \"maintenance\"",
+          "required": true,
+          "description": "Which state this represents — sets the default icon + accent."
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Headline."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "Explanatory body text."
+        },
+        {
+          "name": "icon",
+          "type": "ComponentType",
+          "description": "Override the variant's default icon."
+        },
+        {
+          "name": "primaryAction",
+          "type": "ReactNode",
+          "description": "Primary action (e.g. 'Create', 'Retry', 'Sign in')."
+        },
+        {
+          "name": "secondaryActions",
+          "type": "ReactNode",
+          "description": "Secondary actions (links / buttons)."
+        },
+        {
+          "name": "size",
+          "type": "\"sm\" | \"lg\" | \"xl\"",
+          "description": "EmptyState sizing."
+        }
+      ],
+      "usage": "StatusPanel is the one lego block for every full-panel state screen: pick a variant (empty | error | unauthorized | maintenance) which sets a sensible default icon + accent, set the title/body, and add primary/secondary actions. Composes the base EmptyState family. Drop it into DataTable/CardGrid empty slots.",
+      "examples": [
+        {
+          "name": "StatusPanel",
+          "source": "/**\n * StatusPanel — the one lego block for every full-panel \"state\" screen:\n * empty results, an error, unauthorized access, or maintenance. Pick a\n * `variant` (drives a default icon + accent), set the title/body, and add\n * primary/secondary actions.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { StatusPanel, Button } from \"@golden-passport/ds-patternfly\";\n\nexport function Empty() {\n  return (\n    <StatusPanel\n      variant=\"empty\"\n      title=\"No workflows yet\"\n      primaryAction={<Button variant=\"primary\">Create workflow</Button>}\n    >\n      Workflows you create will show up here. Start with a template or build\n      one from scratch.\n    </StatusPanel>\n  );\n}\n\nexport function Error() {\n  return (\n    <StatusPanel\n      variant=\"error\"\n      title=\"Couldn't load workflows\"\n      primaryAction={<Button variant=\"primary\">Retry</Button>}\n      secondaryActions={<Button variant=\"link\">View status page</Button>}\n    >\n      Something went wrong while fetching your workflows. Check your connection\n      and try again.\n    </StatusPanel>\n  );\n}\n\nexport function Unauthorized() {\n  return (\n    <StatusPanel\n      variant=\"unauthorized\"\n      title=\"Access denied\"\n      primaryAction={<Button variant=\"primary\">Sign in</Button>}\n    >\n      You don't have permission to view this project. Sign in with an account\n      that has access, or ask an admin for an invite.\n    </StatusPanel>\n  );\n}\n\nexport function Maintenance() {\n  return (\n    <StatusPanel\n      variant=\"maintenance\"\n      title=\"Down for maintenance\"\n      secondaryActions={<Button variant=\"link\">Check status</Button>}\n    >\n      We're performing scheduled maintenance and will be back shortly. Thanks\n      for your patience.\n    </StatusPanel>\n  );\n}\n\nexport default function StatusPanelExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Empty />\n      <Error />\n      <Unauthorized />\n      <Maintenance />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-forms-formscaffold",
+      "kind": "ds",
+      "title": "FormScaffold",
+      "breadcrumb": "Building blocks/Forms/FormScaffold",
+      "summary": "The standard form frame: drop your fields in as children , and FormScaffold supplies the branded submit / cancel ActionGroup. It prevents the native submit and wires a disabled-submit guard, so you focus on the fields — typically the Validated* lego blocks.",
+      "tags": [
+        "building",
+        "blocks",
+        "forms",
+        "formscaffold",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-forms-formscaffold--overview",
+      "layer": "ds",
+      "componentSource": "import type { FormEvent, ReactNode } from \"react\";\nimport {\n  ActionGroup,\n  Button,\n  Form,\n} from \"../base/index.js\";\nimport {\n  type FormScaffoldLabels,\n  formScaffoldEnLabels,\n} from \"./labels.js\";\n\nexport type { FormScaffoldLabels } from \"./labels.js\";\nexport { formScaffoldEnLabels } from \"./labels.js\";\n\n/**\n * FormScaffold — the standard form frame: your fields as `children`, then a\n * branded submit / cancel ActionGroup. Wires the submit handler (with native\n * submit prevented) and a disabled-submit guard, so you focus on the fields\n * (e.g. the Validated* lego blocks).\n */\nexport interface FormScaffoldProps {\n  /** Required. Provide via `formScaffoldEnLabels` or your translations. */\n  labels?: FormScaffoldLabels;\n  /** The form fields. */\n  children: ReactNode;\n  /** Fired on submit (native submit already prevented). */\n  onSubmit: () => void;\n  /** Fired when Cancel is pressed. Omit to hide the Cancel button. */\n  onCancel?: () => void;\n  /** Disable the submit button (e.g. while invalid or pending). */\n  isSubmitDisabled?: boolean;\n  /** Show a loading state on the submit button. */\n  isSubmitting?: boolean;\n}\n\nexport function FormScaffold({\n  labels = formScaffoldEnLabels,\n  children,\n  onSubmit,\n  onCancel,\n  isSubmitDisabled,\n  isSubmitting,\n}: FormScaffoldProps) {\n  const handleSubmit = (e: FormEvent) => {\n    e.preventDefault();\n    onSubmit();\n  };\n  return (\n    <Form onSubmit={handleSubmit}>\n      {children}\n      <ActionGroup>\n        <Button\n          type=\"submit\"\n          variant=\"primary\"\n          isDisabled={!!isSubmitDisabled}\n          isLoading={!!isSubmitting}\n        >\n          {labels.submit}\n        </Button>\n        {onCancel ? (\n          <Button variant=\"link\" onClick={onCancel}>\n            {labels.cancel}\n          </Button>\n        ) : null}\n      </ActionGroup>\n    </Form>\n  );\n}",
+      "import": "import { FormScaffold, formScaffoldEnLabels } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "labels",
+          "type": "FormScaffoldLabels",
+          "default": "formScaffoldEnLabels",
+          "description": "Submit / cancel button text. Provide via formScaffoldEnLabels or your translations."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "The form fields (e.g. the Validated* lego blocks)."
+        },
+        {
+          "name": "onSubmit",
+          "type": "() => void",
+          "required": true,
+          "description": "Fired on submit (native submit already prevented)."
+        },
+        {
+          "name": "onCancel",
+          "type": "() => void",
+          "description": "Fired when Cancel is pressed. Omit to hide the Cancel button."
+        },
+        {
+          "name": "isSubmitDisabled",
+          "type": "boolean",
+          "description": "Disable the submit button (e.g. while invalid or pending)."
+        },
+        {
+          "name": "isSubmitting",
+          "type": "boolean",
+          "description": "Show a loading state on the submit button."
+        }
+      ],
+      "usage": "FormScaffold is the standard form frame: your fields as children, then a branded submit / cancel ActionGroup. Wires the submit handler (native submit prevented) and a disabled-submit guard, so you focus on the fields (e.g. the Validated* lego blocks). Localise the buttons via labels (formScaffoldEnLabels).",
+      "examples": [
+        {
+          "name": "FormScaffold",
+          "source": "/**\n * FormScaffold — the standard form frame: your fields as `children`, then a\n * branded submit / cancel ActionGroup. Wires the submit handler (native submit\n * prevented) and a disabled-submit guard, so you focus on the fields.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  FormScaffold,\n  formScaffoldEnLabels,\n  ValidatedTextField,\n  required,\n  email,\n} from \"@golden-passport/ds-patternfly\";\n\nexport function BasicForm() {\n  const [name, setName] = useState(\"\");\n  const [addr, setAddr] = useState(\"\");\n\n  // Disable submit until both fields are filled and the email looks valid.\n  const isSubmitDisabled =\n    name.trim() === \"\" || addr.trim() === \"\" || !/.+@.+\\..+/.test(addr);\n\n  return (\n    <FormScaffold\n      labels={formScaffoldEnLabels}\n      onSubmit={() => {\n        // eslint-disable-next-line no-alert\n        alert(`Saved ${name} <${addr}>`);\n      }}\n      onCancel={() => {\n        setName(\"\");\n        setAddr(\"\");\n      }}\n      isSubmitDisabled={isSubmitDisabled}\n    >\n      <ValidatedTextField\n        label=\"Full name\"\n        value={name}\n        onChange={setName}\n        isRequired\n        helperText=\"As it should appear to your team.\"\n        validators={[required(\"Enter your name\")]}\n      />\n      <ValidatedTextField\n        label=\"Email\"\n        type=\"email\"\n        value={addr}\n        onChange={setAddr}\n        isRequired\n        helperText=\"We'll send notifications here.\"\n        validators={[required(\"Enter your email\"), email()]}\n      />\n    </FormScaffold>\n  );\n}\n\nexport default function FormScaffoldExample() {\n  return <BasicForm />;\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-forms-validatedselect",
+      "kind": "ds",
+      "title": "ValidatedSelect",
+      "breadcrumb": "Building blocks/Forms/ValidatedSelect",
+      "summary": "A labelled, validated single-select built on the base FormSelect. Same controlled + validators API as the text fields: pass options , own the value , and surface errors on blur (or per validateOn ). Include a placeholder row with value \"\" if you want one.",
+      "tags": [
+        "building",
+        "blocks",
+        "forms",
+        "validatedselect",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-forms-validatedselect--overview",
+      "layer": "ds",
+      "componentSource": "import { useId, type ReactNode } from \"react\";\nimport {\n  FormGroup,\n  FormHelperText,\n  FormSelect,\n  FormSelectOption,\n  HelperText,\n  HelperTextItem,\n} from \"../base/index.js\";\nimport {\n  useFieldValidation,\n  type Validator,\n} from \"./validation.js\";\n\nexport interface SelectChoice {\n  value: string;\n  label: string;\n  /** Render as a non-selectable placeholder (e.g. the empty \"Choose…\" row). */\n  isPlaceholder?: boolean;\n  isDisabled?: boolean;\n}\n\n/**\n * ValidatedSelect — a labelled, validated single-select built on the base\n * FormSelect. Same controlled + validators API as the text fields: pass\n * `options`, own `value`, surface errors on blur (or per `validateOn`).\n */\nexport interface ValidatedSelectProps {\n  /** Field label. */\n  label: ReactNode;\n  /** Controlled selected value. */\n  value: string;\n  /** Fired with the next value on change. */\n  onChange: (value: string) => void;\n  /** The choices (include a placeholder row with value \"\" if you want one). */\n  options: SelectChoice[];\n  /** Composable validators; the first failing one's message is shown. */\n  validators?: Validator[];\n  /** Mark the field required. */\n  isRequired?: boolean;\n  /** Helper text shown when there is no error. */\n  helperText?: ReactNode;\n  /** When to first surface errors. Default \"blur\". */\n  validateOn?: \"blur\" | \"change\";\n  /** Disable the field. */\n  isDisabled?: boolean;\n  /** Stable id base (defaults to a generated id). */\n  fieldId?: string;\n}\n\nexport function ValidatedSelect({\n  label,\n  value,\n  onChange,\n  options,\n  validators = [],\n  isRequired,\n  helperText,\n  validateOn = \"blur\",\n  isDisabled,\n  fieldId,\n}: ValidatedSelectProps) {\n  const generatedId = useId();\n  const id = fieldId ?? generatedId;\n  const helpId = `${id}-help`;\n  const { error, validated, onBlur } = useFieldValidation(value, validators, {\n    validateOn,\n  });\n  const hasHelp = Boolean(error || helperText);\n\n  return (\n    <FormGroup label={label} isRequired={!!isRequired} fieldId={id}>\n      <FormSelect\n        id={id}\n        value={value}\n        validated={validated}\n        isRequired={!!isRequired}\n        isDisabled={!!isDisabled}\n        onChange={(_e, v) => onChange(v)}\n        onBlur={onBlur}\n        {...(hasHelp ? { \"aria-describedby\": helpId } : {})}\n      >\n        {options.map((opt) => (\n          <FormSelectOption\n            key={opt.value || \"placeholder\"}\n            value={opt.value}\n            label={opt.label}\n            {...(opt.isPlaceholder ? { isPlaceholder: true } : {})}\n            {...(opt.isDisabled ? { isDisabled: true } : {})}\n          />\n        ))}\n      </FormSelect>\n      {hasHelp ? (\n        <FormHelperText>\n          <HelperText id={helpId}>\n            <HelperTextItem variant={error ? \"error\" : \"default\"}>\n              {error ?? helperText}\n            </HelperTextItem>\n          </HelperText>\n        </FormHelperText>\n      ) : null}\n    </FormGroup>\n  );\n}",
+      "import": "import { ValidatedSelect, required, type SelectChoice } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Field label."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Controlled selected value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": true,
+          "description": "Fired with the next value on change."
+        },
+        {
+          "name": "options",
+          "type": "SelectChoice[]",
+          "required": true,
+          "description": "The choices ({ value, label, isPlaceholder?, isDisabled? }). Include a placeholder row with value \"\" if you want one."
+        },
+        {
+          "name": "validators",
+          "type": "Validator[]",
+          "default": "[]",
+          "description": "Composable validators; the first failing one's message is shown."
+        },
+        {
+          "name": "isRequired",
+          "type": "boolean",
+          "description": "Mark the field required."
+        },
+        {
+          "name": "helperText",
+          "type": "ReactNode",
+          "description": "Helper text shown when there is no error."
+        },
+        {
+          "name": "validateOn",
+          "type": "\"blur\" | \"change\"",
+          "default": "\"blur\"",
+          "description": "When to first surface errors."
+        },
+        {
+          "name": "isDisabled",
+          "type": "boolean",
+          "description": "Disable the field."
+        },
+        {
+          "name": "fieldId",
+          "type": "string",
+          "description": "Stable id base (defaults to a generated id)."
+        }
+      ],
+      "usage": "ValidatedSelect is a labelled, validated single-select built on the base FormSelect. Pass `options` (include a placeholder row with value \"\"), own `value`, and the same composable `validators`; errors surface on blur with derived `validated` state.",
+      "examples": [
+        {
+          "name": "ValidatedSelect",
+          "source": "/**\n * ValidatedSelect — a labelled, validated single-select built on the base\n * FormSelect. Same controlled + validators API as the text fields: pass\n * `options`, own the `value`, surface errors on blur (or per `validateOn`).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  ValidatedSelect,\n  required,\n  type SelectChoice,\n} from \"@golden-passport/ds-patternfly\";\n\nconst ROLE_OPTIONS: SelectChoice[] = [\n  { value: \"\", label: \"Choose a role…\", isPlaceholder: true },\n  { value: \"owner\", label: \"Owner\" },\n  { value: \"editor\", label: \"Editor\" },\n  { value: \"viewer\", label: \"Viewer\" },\n];\n\nexport function Basic() {\n  const [value, setValue] = useState(\"editor\");\n\n  return (\n    <ValidatedSelect\n      label=\"Role\"\n      value={value}\n      onChange={setValue}\n      options={ROLE_OPTIONS}\n      helperText=\"Controls what this member can do.\"\n    />\n  );\n}\n\nexport function WithValidation() {\n  const [value, setValue] = useState(\"\");\n\n  return (\n    <ValidatedSelect\n      label=\"Role\"\n      value={value}\n      onChange={setValue}\n      options={ROLE_OPTIONS}\n      isRequired\n      validators={[required(\"Pick a role to continue\")]}\n      helperText=\"Required.\"\n    />\n  );\n}\n\nexport default function ValidatedSelectExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Basic />\n      <WithValidation />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-forms-validatedtextarea",
+      "kind": "ds",
+      "title": "ValidatedTextArea",
+      "breadcrumb": "Building blocks/Forms/ValidatedTextArea",
+      "summary": "The multi-line sibling of ValidatedTextField . Same controlled + validators API over a base TextArea: own the value , surface errors on blur (or per validateOn ), and the PF validated state + aria-describedby are derived for you.",
+      "tags": [
+        "building",
+        "blocks",
+        "forms",
+        "validatedtextarea",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-forms-validatedtextarea--overview",
+      "layer": "ds",
+      "componentSource": "import { useId, type ReactNode } from \"react\";\nimport {\n  FormGroup,\n  FormHelperText,\n  HelperText,\n  HelperTextItem,\n  TextArea,\n} from \"../base/index.js\";\nimport {\n  useFieldValidation,\n  type Validator,\n} from \"./validation.js\";\n\n/**\n * ValidatedTextArea — the multi-line sibling of ValidatedTextField. Same\n * controlled + validators API over a base TextArea; errors surface on blur\n * (or per `validateOn`) with derived `validated` state and aria-describedby.\n */\nexport interface ValidatedTextAreaProps {\n  /** Field label. */\n  label: ReactNode;\n  /** Controlled value. */\n  value: string;\n  /** Fired with the next value on every keystroke. */\n  onChange: (value: string) => void;\n  /** Composable validators; the first failing one's message is shown. */\n  validators?: Validator[];\n  /** Mark the field required. */\n  isRequired?: boolean;\n  /** Helper text shown when there is no error. */\n  helperText?: ReactNode;\n  /** Visible rows. */\n  rows?: number;\n  /** Placeholder text. */\n  placeholder?: string;\n  /** Auto-grow the textarea with content. */\n  autoResize?: boolean;\n  /** When to first surface errors. Default \"blur\". */\n  validateOn?: \"blur\" | \"change\";\n  /** Disable the field. */\n  isDisabled?: boolean;\n  /** Stable id base (defaults to a generated id). */\n  fieldId?: string;\n}\n\nexport function ValidatedTextArea({\n  label,\n  value,\n  onChange,\n  validators = [],\n  isRequired,\n  helperText,\n  rows,\n  placeholder,\n  autoResize,\n  validateOn = \"blur\",\n  isDisabled,\n  fieldId,\n}: ValidatedTextAreaProps) {\n  const generatedId = useId();\n  const id = fieldId ?? generatedId;\n  const helpId = `${id}-help`;\n  const { error, validated, onBlur } = useFieldValidation(value, validators, {\n    validateOn,\n  });\n  const hasHelp = Boolean(error || helperText);\n\n  return (\n    <FormGroup label={label} isRequired={!!isRequired} fieldId={id}>\n      <TextArea\n        id={id}\n        value={value}\n        validated={validated}\n        isRequired={!!isRequired}\n        isDisabled={!!isDisabled}\n        {...(placeholder !== undefined ? { placeholder } : {})}\n        {...(rows !== undefined ? { rows } : {})}\n        {...(autoResize ? { autoResize: true } : {})}\n        onChange={(_e, v) => onChange(v)}\n        onBlur={onBlur}\n        {...(hasHelp ? { \"aria-describedby\": helpId } : {})}\n      />\n      {hasHelp ? (\n        <FormHelperText>\n          <HelperText id={helpId}>\n            <HelperTextItem variant={error ? \"error\" : \"default\"}>\n              {error ?? helperText}\n            </HelperTextItem>\n          </HelperText>\n        </FormHelperText>\n      ) : null}\n    </FormGroup>\n  );\n}",
+      "import": "import { ValidatedTextArea, required, minLength, maxLength } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Field label."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Controlled value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": true,
+          "description": "Fired with the next value on every keystroke."
+        },
+        {
+          "name": "validators",
+          "type": "Validator[]",
+          "default": "[]",
+          "description": "Composable validators; the first failing one's message is shown."
+        },
+        {
+          "name": "isRequired",
+          "type": "boolean",
+          "description": "Mark the field required."
+        },
+        {
+          "name": "helperText",
+          "type": "ReactNode",
+          "description": "Helper text shown when there is no error."
+        },
+        {
+          "name": "rows",
+          "type": "number",
+          "description": "Visible rows."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Placeholder text."
+        },
+        {
+          "name": "autoResize",
+          "type": "boolean",
+          "description": "Auto-grow the textarea with content."
+        },
+        {
+          "name": "validateOn",
+          "type": "\"blur\" | \"change\"",
+          "default": "\"blur\"",
+          "description": "When to first surface errors."
+        },
+        {
+          "name": "isDisabled",
+          "type": "boolean",
+          "description": "Disable the field."
+        },
+        {
+          "name": "fieldId",
+          "type": "string",
+          "description": "Stable id base (defaults to a generated id)."
+        }
+      ],
+      "usage": "ValidatedTextArea is the multi-line sibling of ValidatedTextField: same controlled value + composable `validators` API over a base TextArea, with errors on blur, derived `validated` state, and aria-describedby. Supports rows / autoResize.",
+      "examples": [
+        {
+          "name": "ValidatedTextArea",
+          "source": "/**\n * ValidatedTextArea — the multi-line sibling of ValidatedTextField. Same\n * controlled + validators API over a base TextArea: own the `value`, surface\n * errors on blur (or per `validateOn`), and derive the PF `validated` state.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  ValidatedTextArea,\n  required,\n  minLength,\n  maxLength,\n} from \"@golden-passport/ds-patternfly\";\n\nexport function Basic() {\n  const [value, setValue] = useState(\"\");\n\n  return (\n    <ValidatedTextArea\n      label=\"Notes\"\n      value={value}\n      onChange={setValue}\n      rows={3}\n      placeholder=\"Anything we should know?\"\n      helperText=\"Optional — internal notes only.\"\n    />\n  );\n}\n\nexport function WithValidation() {\n  const [value, setValue] = useState(\"\");\n\n  return (\n    <ValidatedTextArea\n      label=\"Description\"\n      value={value}\n      onChange={setValue}\n      isRequired\n      rows={4}\n      validators={[\n        required(\"A description is required\"),\n        minLength(10),\n        maxLength(280),\n      ]}\n      helperText=\"Between 10 and 280 characters.\"\n    />\n  );\n}\n\nexport default function ValidatedTextAreaExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Basic />\n      <WithValidation />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-forms-validatedtextfield",
+      "kind": "ds",
+      "title": "ValidatedTextField",
+      "breadcrumb": "Building blocks/Forms/ValidatedTextField",
+      "summary": "A labelled, validated single-line text field. Fully controlled — you own the value and update it from onChange — with composable validators (required, minLength, email, …). Errors surface on blur by default; the PF validated state, the error/helper message, and aria-describedby are all derived for you.",
+      "tags": [
+        "building",
+        "blocks",
+        "forms",
+        "validatedtextfield",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-forms-validatedtextfield--overview",
+      "layer": "ds",
+      "componentSource": "import { useId, type ReactNode } from \"react\";\nimport {\n  FormGroup,\n  FormHelperText,\n  HelperText,\n  HelperTextItem,\n  TextInput,\n} from \"../base/index.js\";\nimport {\n  useFieldValidation,\n  type Validator,\n} from \"./validation.js\";\n\n/**\n * ValidatedTextField — a labelled, validated single-line text field. Composes\n * the base FormGroup + TextInput + HelperText, and wires the DS validation\n * utilities: errors show on blur (or per `validateOn`), the PF `validated`\n * state + an error/helper message + aria-describedby are all derived for you.\n *\n * Fully controlled: own `value`, update it from `onChange`. Pass composable\n * `validators` (required, minLength, email, …) from the lib.\n */\nexport interface ValidatedTextFieldProps {\n  /** Field label. */\n  label: ReactNode;\n  /** Controlled value. */\n  value: string;\n  /** Fired with the next value on every keystroke. */\n  onChange: (value: string) => void;\n  /** Composable validators; the first failing one's message is shown. */\n  validators?: Validator[];\n  /** Mark the field required (visual asterisk + pairs with a `required()` validator). */\n  isRequired?: boolean;\n  /** Helper text shown when there is no error. */\n  helperText?: ReactNode;\n  /** Input type. */\n  type?: \"text\" | \"email\" | \"password\" | \"tel\" | \"url\" | \"number\";\n  /** Placeholder text. */\n  placeholder?: string;\n  /** When to first surface errors. Default \"blur\". */\n  validateOn?: \"blur\" | \"change\";\n  /** Disable the field. */\n  isDisabled?: boolean;\n  /** Stable id base (defaults to a generated id). */\n  fieldId?: string;\n}\n\nexport function ValidatedTextField({\n  label,\n  value,\n  onChange,\n  validators = [],\n  isRequired,\n  helperText,\n  type = \"text\",\n  placeholder,\n  validateOn = \"blur\",\n  isDisabled,\n  fieldId,\n}: ValidatedTextFieldProps) {\n  const generatedId = useId();\n  const id = fieldId ?? generatedId;\n  const helpId = `${id}-help`;\n  const { error, validated, onBlur } = useFieldValidation(value, validators, {\n    validateOn,\n  });\n  // Only reference the help element when it's actually rendered — a dangling\n  // aria-describedby is an a11y violation.\n  const hasHelp = Boolean(error || helperText);\n\n  return (\n    <FormGroup label={label} isRequired={!!isRequired} fieldId={id}>\n      <TextInput\n        id={id}\n        type={type}\n        value={value}\n        validated={validated}\n        isRequired={!!isRequired}\n        isDisabled={!!isDisabled}\n        {...(placeholder !== undefined ? { placeholder } : {})}\n        onChange={(_e, v) => onChange(v)}\n        onBlur={onBlur}\n        {...(hasHelp ? { \"aria-describedby\": helpId } : {})}\n      />\n      {hasHelp ? (\n        <FormHelperText>\n          <HelperText id={helpId}>\n            <HelperTextItem variant={error ? \"error\" : \"default\"}>\n              {error ?? helperText}\n            </HelperTextItem>\n          </HelperText>\n        </FormHelperText>\n      ) : null}\n    </FormGroup>\n  );\n}",
+      "import": "import { ValidatedTextField, required, minLength, email } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Field label."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Controlled value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": true,
+          "description": "Fired with the next value on every keystroke."
+        },
+        {
+          "name": "validators",
+          "type": "Validator[]",
+          "default": "[]",
+          "description": "Composable validators; the first failing one's message is shown."
+        },
+        {
+          "name": "isRequired",
+          "type": "boolean",
+          "description": "Mark the field required (visual asterisk + pairs with a required() validator)."
+        },
+        {
+          "name": "helperText",
+          "type": "ReactNode",
+          "description": "Helper text shown when there is no error."
+        },
+        {
+          "name": "type",
+          "type": "\"text\" | \"email\" | \"password\" | \"tel\" | \"url\" | \"number\"",
+          "default": "\"text\"",
+          "description": "Input type."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Placeholder text."
+        },
+        {
+          "name": "validateOn",
+          "type": "\"blur\" | \"change\"",
+          "default": "\"blur\"",
+          "description": "When to first surface errors."
+        },
+        {
+          "name": "isDisabled",
+          "type": "boolean",
+          "description": "Disable the field."
+        },
+        {
+          "name": "fieldId",
+          "type": "string",
+          "description": "Stable id base (defaults to a generated id)."
+        }
+      ],
+      "usage": "ValidatedTextField is a labelled, validated single-line field composing base FormGroup + TextInput + HelperText. Fully controlled (own value, update from onChange); pass composable `validators` (required, minLength, email, …). Errors surface on blur (or per validateOn) with derived PF `validated` state, an error/helper message, and aria-describedby — all wired for you.",
+      "keyTokens": [
+        "--gp-control-pad-y",
+        "--gp-radius-control",
+        "--gp-color-status-danger"
+      ],
+      "examples": [
+        {
+          "name": "ValidatedTextField",
+          "source": "/**\n * ValidatedTextField — a labelled, validated single-line text field. Fully\n * controlled: own the `value`, update it from `onChange`, and pass composable\n * `validators` (required, minLength, email, …) from the lib. Errors surface on\n * blur by default and the PF `validated` state + message are derived for you.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  ValidatedTextField,\n  required,\n  minLength,\n  email,\n} from \"@golden-passport/ds-patternfly\";\n\nexport function Basic() {\n  const [value, setValue] = useState(\"\");\n\n  return (\n    <ValidatedTextField\n      label=\"Display name\"\n      value={value}\n      onChange={setValue}\n      placeholder=\"e.g. Ada Lovelace\"\n      helperText=\"The name shown on your public profile.\"\n    />\n  );\n}\n\nexport function WithValidation() {\n  const [name, setName] = useState(\"\");\n  const [address, setAddress] = useState(\"\");\n\n  return (\n    <div style={{ display: \"grid\", gap: 16 }}>\n      <ValidatedTextField\n        label=\"Username\"\n        value={name}\n        onChange={setName}\n        isRequired\n        validators={[required(\"Username is required\"), minLength(3)]}\n        helperText=\"At least 3 characters.\"\n      />\n      <ValidatedTextField\n        label=\"Email address\"\n        type=\"email\"\n        value={address}\n        onChange={setAddress}\n        isRequired\n        validators={[required(\"Email is required\"), email()]}\n        placeholder=\"you@example.com\"\n        helperText=\"We'll only use this for account recovery.\"\n      />\n    </div>\n  );\n}\n\nexport default function ValidatedTextFieldExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Basic />\n      <WithValidation />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-layouts-dashboardshell",
+      "kind": "ds",
+      "title": "DashboardShell",
+      "breadcrumb": "Building blocks/Layouts/DashboardShell",
+      "summary": "The page scaffold for an ops dashboard — a titled header band with an actions slot over a padded content region you fill with a KPI strip, charts, and status cards. Layout and rhythm only: the dashboard body is your children , so chart libraries stay in your app and never leak into the design system.",
+      "tags": [
+        "building",
+        "blocks",
+        "layouts",
+        "dashboardshell",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "patterns"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-layouts-dashboardshell--overview",
+      "layer": "ds",
+      "componentSource": "import type { ReactNode } from \"react\";\nimport { Content } from \"@patternfly/react-core\";\n\n/**\n * DashboardShell — the page scaffold for an ops dashboard: a titled header\n * band (title + optional description + right-aligned actions/toolbar) over a\n * padded content region you fill with a KPI strip, charts, and status cards\n * (a `Gallery` + `Grid` of `Card`s).\n *\n * Layout + rhythm only — the dashboard body is your `children`, so chart\n * libraries (`@patternfly/react-charts`, ECharts, …) stay in your app and\n * never leak into the design system. No `labels` prop: title/description are\n * caller-provided content.\n */\nexport interface DashboardShellProps {\n  /** Dashboard title. Rendered as an `<h1>`. */\n  title: ReactNode;\n  /** Supporting line under the title. */\n  description?: ReactNode;\n  /** Right-aligned header slot — a date-range picker, refresh button, etc. */\n  actions?: ReactNode;\n  /** The dashboard body (KPI gallery, chart grid, status cards). */\n  children: ReactNode;\n}\n\nexport function DashboardShell({\n  title,\n  description,\n  actions,\n  children,\n}: DashboardShellProps) {\n  return (\n    <div style={{ display: \"flex\", flexDirection: \"column\", gap: \"var(--gp-pad-section, 1.5rem)\" }}>\n      <div\n        style={{\n          display: \"flex\",\n          alignItems: \"flex-start\",\n          justifyContent: \"space-between\",\n          gap: \"1rem\",\n          flexWrap: \"wrap\",\n        }}\n      >\n        <div>\n          <Content component=\"h1\" style={{ margin: 0 }}>\n            {title}\n          </Content>\n          {description ? (\n            <Content\n              component=\"p\"\n              style={{ margin: \"0.25rem 0 0\", color: \"var(--gp-color-text-subtle)\" }}\n            >\n              {description}\n            </Content>\n          ) : null}\n        </div>\n        {actions ? <div>{actions}</div> : null}\n      </div>\n      <div>{children}</div>\n    </div>\n  );\n}",
+      "import": "import { DashboardShell } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Dashboard title. Rendered as an <h1>."
+        },
+        {
+          "name": "description",
+          "type": "ReactNode",
+          "description": "Supporting line under the title."
+        },
+        {
+          "name": "actions",
+          "type": "ReactNode",
+          "description": "Right-aligned header slot — a date-range picker, refresh button, etc."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "The dashboard body (KPI gallery, chart grid, status cards). Chart libraries stay in your app."
+        }
+      ],
+      "usage": "DashboardShell is the dashboard page scaffold: a titled header band (title + description + right-aligned actions slot) over a content region you fill with a KPI strip, charts, and status cards (children). Layout + rhythm only — chart libraries (@patternfly/react-charts, ECharts) stay in your app and never enter the design system.",
+      "examples": [
+        {
+          "name": "DashboardShell",
+          "source": "/**\n * DashboardShell pattern — the lib's exported dashboard page scaffold: a\n * titled header band (+ actions slot) over a content region you fill with a\n * KPI strip, charts, and status cards. Chart libraries stay in your app.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  Button,\n  Card,\n  CardBody,\n  CardHeader,\n  CardTitle,\n  DashboardShell,\n  Flex,\n  FlexItem,\n  Gallery,\n  GalleryItem,\n  Grid,\n  GridItem,\n  Label,\n  Progress,\n} from \"@golden-passport/ds-patternfly\";\nimport {\n  ArrowDownIcon,\n  ArrowUpIcon,\n  CheckCircleIcon,\n  ExclamationTriangleIcon,\n} from \"@patternfly/react-icons\";\n\n/** KPI tile — big number + sub-label + delta with trend arrow. */\nfunction KPI({\n  label,\n  value,\n  delta,\n  trend,\n}: {\n  label: string;\n  value: string;\n  delta: string;\n  trend: \"up\" | \"down\";\n}) {\n  return (\n    <Card isCompact>\n      <CardBody>\n        <div style={{ color: \"var(--gp-color-text-subtle)\", fontSize: 13 }}>{label}</div>\n        <div style={{ fontSize: 28, fontWeight: 600, color: \"var(--gp-color-text-regular)\" }}>\n          {value}\n        </div>\n        <div\n          style={{\n            marginTop: 4,\n            display: \"inline-flex\",\n            alignItems: \"center\",\n            gap: 4,\n            color:\n              trend === \"up\"\n                ? \"var(--pf-t--global--icon--color--status--success--default, #3e8635)\"\n                : \"var(--pf-t--global--icon--color--status--danger--default, #c9190b)\",\n            fontSize: 13,\n          }}\n        >\n          {trend === \"up\" ? <ArrowUpIcon /> : <ArrowDownIcon />}\n          {delta}\n        </div>\n      </CardBody>\n    </Card>\n  );\n}\n\n/** Placeholder chart panel — drop in @patternfly/react-charts when real. */\nfunction ChartPlaceholder({ title }: { title: string }) {\n  return (\n    <Card>\n      <CardHeader>\n        <CardTitle>{title}</CardTitle>\n      </CardHeader>\n      <CardBody>\n        <div\n          style={{\n            height: 140,\n            background: \"linear-gradient(180deg, rgba(0,102,204,0.10), rgba(0,102,204,0.02))\",\n            border: \"1px dashed var(--gp-color-border-subtle)\",\n            borderRadius: 8,\n            display: \"grid\",\n            placeItems: \"center\",\n            color: \"var(--gp-color-text-subtle)\",\n            fontStyle: \"italic\",\n          }}\n        >\n          chart placeholder — drop in @patternfly/react-charts\n        </div>\n      </CardBody>\n    </Card>\n  );\n}\n\nfunction StatusCard() {\n  return (\n    <Card>\n      <CardHeader>\n        <CardTitle>System health</CardTitle>\n      </CardHeader>\n      <CardBody>\n        <Flex direction={{ default: \"column\" }} spaceItems={{ default: \"spaceItemsMd\" }}>\n          <FlexItem>\n            <div style={{ display: \"flex\", alignItems: \"center\", gap: 8 }}>\n              <CheckCircleIcon style={{ color: \"var(--pf-t--global--icon--color--status--success--default, #3e8635)\" }} />\n              <strong>API</strong>\n              <Label color=\"green\" isCompact>Healthy</Label>\n            </div>\n          </FlexItem>\n          <FlexItem>\n            <div style={{ display: \"flex\", alignItems: \"center\", gap: 8 }}>\n              <ExclamationTriangleIcon style={{ color: \"var(--pf-t--global--icon--color--status--warning--default, #f0ab00)\" }} />\n              <strong>Queue</strong>\n              <Label color=\"yellow\" isCompact>Degraded</Label>\n            </div>\n          </FlexItem>\n          <FlexItem>\n            <Progress value={62} title=\"Disk usage\" />\n          </FlexItem>\n        </Flex>\n      </CardBody>\n    </Card>\n  );\n}\n\nexport function OpsDashboard() {\n  return (\n    <DashboardShell\n      title=\"Operations\"\n      description=\"Live workflow and system metrics.\"\n      actions={<Button variant=\"secondary\">Last 24h</Button>}\n    >\n      <div style={{ display: \"grid\", gap: 16 }}>\n        <Gallery hasGutter minWidths={{ default: \"180px\" }}>\n          <GalleryItem><KPI label=\"Active workflows\" value=\"142\" delta=\"+12 (8%)\" trend=\"up\" /></GalleryItem>\n          <GalleryItem><KPI label=\"Failed runs (24h)\" value=\"3\" delta=\"-2 (-40%)\" trend=\"down\" /></GalleryItem>\n          <GalleryItem><KPI label=\"Avg runtime\" value=\"42s\" delta=\"+3s\" trend=\"down\" /></GalleryItem>\n          <GalleryItem><KPI label=\"Pending approvals\" value=\"7\" delta=\"+1\" trend=\"up\" /></GalleryItem>\n        </Gallery>\n        <Grid hasGutter>\n          <GridItem md={8}><ChartPlaceholder title=\"Run volume — last 24h\" /></GridItem>\n          <GridItem md={4}><StatusCard /></GridItem>\n        </Grid>\n      </div>\n    </DashboardShell>\n  );\n}\n\nexport default function DashboardShellExample() {\n  return <OpsDashboard />;\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-navigation-appfooter",
+      "kind": "ds",
+      "title": "AppFooter",
+      "breadcrumb": "Building blocks/Navigation/AppFooter",
+      "summary": "The branded site footer — an optional logo and tagline, columns of link groups, and a bottom bar with copyright and inline legal links. Layout and brand dials only; every region is a slot you fill. Each link group renders as its own labelled nav landmark.",
+      "tags": [
+        "building",
+        "blocks",
+        "navigation",
+        "appfooter",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-navigation-appfooter--overview",
+      "layer": "ds",
+      "componentSource": "import type { ReactNode } from \"react\";\nimport { Content } from \"../base/index.js\";\n\n/** A titled column of footer links. */\nexport interface FooterLinkGroup {\n  title: string;\n  links: { label: string; href: string; isExternal?: boolean }[];\n}\n\n/**\n * AppFooter — the branded site footer: an optional logo + tagline, optional\n * columns of link groups, and a bottom bar with copyright + inline legal\n * links. Layout + brand dials only; all content is caller-provided.\n */\nexport interface AppFooterProps {\n  /** Brand mark / logo node, shown top-left. */\n  logo?: ReactNode;\n  /** Short tagline under the logo. */\n  tagline?: ReactNode;\n  /** Columns of links (sitemap-style). */\n  linkGroups?: FooterLinkGroup[];\n  /** Copyright / legal line in the bottom bar. */\n  copyright?: ReactNode;\n  /** Inline links in the bottom bar (Privacy, Terms, …). */\n  legalLinks?: { label: string; href: string }[];\n}\n\nexport function AppFooter({\n  logo,\n  tagline,\n  linkGroups = [],\n  copyright,\n  legalLinks = [],\n}: AppFooterProps) {\n  return (\n    <footer\n      style={{\n        background: \"var(--gp-color-bg-secondary-default)\",\n        borderBlockStart: \"1px solid var(--gp-color-border-default)\",\n        color: \"var(--gp-color-text-regular)\",\n        padding: \"var(--gp-pad-section, 2rem) 1.5rem\",\n      }}\n    >\n      {(logo || tagline || linkGroups.length > 0) && (\n        <div\n          style={{\n            display: \"flex\",\n            flexWrap: \"wrap\",\n            gap: \"2rem\",\n            justifyContent: \"space-between\",\n            maxInlineSize: 1200,\n            marginInline: \"auto\",\n          }}\n        >\n          {(logo || tagline) && (\n            <div style={{ maxInlineSize: 280 }}>\n              {logo}\n              {tagline ? (\n                <Content\n                  component=\"p\"\n                  style={{ margin: \"0.5rem 0 0\", color: \"var(--gp-color-text-subtle)\" }}\n                >\n                  {tagline}\n                </Content>\n              ) : null}\n            </div>\n          )}\n          <div style={{ display: \"flex\", flexWrap: \"wrap\", gap: \"2.5rem\" }}>\n            {linkGroups.map((group) => (\n              <nav key={group.title} aria-label={group.title}>\n                <div\n                  style={{\n                    fontWeight: 600,\n                    marginBlockEnd: \"0.5rem\",\n                    color: \"var(--gp-color-text-regular)\",\n                  }}\n                >\n                  {group.title}\n                </div>\n                <ul style={{ listStyle: \"none\", margin: 0, padding: 0, display: \"grid\", gap: \"0.375rem\" }}>\n                  {group.links.map((link) => (\n                    <li key={link.label}>\n                      <a\n                        href={link.href}\n                        {...(link.isExternal ? { target: \"_blank\", rel: \"noreferrer\" } : {})}\n                        style={{ color: \"var(--gp-color-text-link)\", textDecoration: \"none\" }}\n                      >\n                        {link.label}\n                      </a>\n                    </li>\n                  ))}\n                </ul>\n              </nav>\n            ))}\n          </div>\n        </div>\n      )}\n      {(copyright || legalLinks.length > 0) && (\n        <div\n          style={{\n            display: \"flex\",\n            flexWrap: \"wrap\",\n            gap: \"1rem\",\n            justifyContent: \"space-between\",\n            alignItems: \"center\",\n            maxInlineSize: 1200,\n            marginInline: \"auto\",\n            marginBlockStart: linkGroups.length > 0 ? \"1.5rem\" : 0,\n            paddingBlockStart: \"1rem\",\n            borderBlockStart: \"1px solid var(--gp-color-border-subtle)\",\n            color: \"var(--gp-color-text-subtle)\",\n            fontSize: 13,\n          }}\n        >\n          <span>{copyright}</span>\n          {legalLinks.length > 0 ? (\n            <span style={{ display: \"inline-flex\", gap: \"1rem\" }}>\n              {legalLinks.map((link) => (\n                <a\n                  key={link.label}\n                  href={link.href}\n                  style={{ color: \"inherit\" }}\n                >\n                  {link.label}\n                </a>\n              ))}\n            </span>\n          ) : null}\n        </div>\n      )}\n    </footer>\n  );\n}",
+      "import": "import { AppFooter } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "logo",
+          "type": "ReactNode",
+          "description": "Brand mark / logo node, shown top-left."
+        },
+        {
+          "name": "tagline",
+          "type": "ReactNode",
+          "description": "Short tagline under the logo."
+        },
+        {
+          "name": "linkGroups",
+          "type": "FooterLinkGroup[]",
+          "description": "Columns of links (sitemap-style). Each group renders as a <nav> labelled by its title."
+        },
+        {
+          "name": "copyright",
+          "type": "ReactNode",
+          "description": "Copyright / legal line in the bottom bar."
+        },
+        {
+          "name": "legalLinks",
+          "type": "{ label: string; href: string }[]",
+          "description": "Inline links in the bottom bar (Privacy, Terms, …)."
+        }
+      ],
+      "usage": "AppFooter is the branded site footer: an optional logo + tagline, columns of link groups (sitemap), and a bottom bar with copyright + inline legal links. Layout + brand dials only; all content is caller-provided. Each link-group renders a uniquely-labelled nav landmark.",
+      "examples": [
+        {
+          "name": "AppFooter",
+          "source": "/**\n * AppFooter — the branded site footer: an optional logo + tagline, optional\n * columns of link groups, and a bottom bar with copyright + inline legal\n * links. Layout + brand dials only; all content is caller-provided.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { AppFooter, type FooterLinkGroup } from \"@golden-passport/ds-patternfly\";\n\nconst linkGroups: FooterLinkGroup[] = [\n  {\n    title: \"Product\",\n    links: [\n      { label: \"Features\", href: \"#features\" },\n      { label: \"Pricing\", href: \"#pricing\" },\n      { label: \"Changelog\", href: \"#changelog\" },\n    ],\n  },\n  {\n    title: \"Company\",\n    links: [\n      { label: \"About\", href: \"#about\" },\n      { label: \"Careers\", href: \"#careers\" },\n      { label: \"Blog\", href: \"#blog\" },\n    ],\n  },\n  {\n    title: \"Resources\",\n    links: [\n      { label: \"Docs\", href: \"#docs\" },\n      { label: \"Status\", href: \"https://status.example.com\", isExternal: true },\n      { label: \"Support\", href: \"#support\" },\n    ],\n  },\n];\n\nexport function SiteFooter() {\n  return (\n    <AppFooter\n      logo={<strong>Acme</strong>}\n      tagline=\"The platform teams build on.\"\n      linkGroups={linkGroups}\n      copyright=\"© 2026 Acme, Inc. All rights reserved.\"\n      legalLinks={[\n        { label: \"Privacy\", href: \"#privacy\" },\n        { label: \"Terms\", href: \"#terms\" },\n      ]}\n    />\n  );\n}\n\nexport default function AppFooterExample() {\n  return <SiteFooter />;\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-navigation-appheader",
+      "kind": "ds",
+      "title": "AppHeader",
+      "breadcrumb": "Building blocks/Navigation/AppHeader",
+      "summary": "The branded application masthead — an optional sidebar toggle, a brand/logo slot, and a right-aligned actions slot for search, help, notifications and the user menu. Every region is a slot you fill, so it adapts to any app chrome. For the full page frame (masthead + sidebar + content), use Shell.",
+      "tags": [
+        "building",
+        "blocks",
+        "navigation",
+        "appheader",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-navigation-appheader--overview",
+      "layer": "ds",
+      "componentSource": "import type { ReactNode } from \"react\";\nimport {\n  Masthead,\n  MastheadBrand,\n  MastheadContent,\n  MastheadLogo,\n  MastheadMain,\n  MastheadToggle,\n  Button,\n} from \"../base/index.js\";\nimport BarsIcon from \"@patternfly/react-icons/dist/esm/icons/bars-icon\";\nimport { type AppHeaderLabels, appHeaderEnLabels } from \"./labels.js\";\n\nexport type { AppHeaderLabels } from \"./labels.js\";\nexport { appHeaderEnLabels } from \"./labels.js\";\n\n/**\n * AppHeader — the branded application masthead: an optional sidebar-toggle, a\n * brand/logo slot, and a right-aligned actions slot (search, help, user\n * menu). Composes the base Masthead family; brand styling flows from the\n * dials. For the full page frame (masthead + sidebar + content), use `Shell`.\n */\nexport interface AppHeaderProps {\n  /** Required. Provide via `appHeaderEnLabels` or your translations. */\n  labels?: AppHeaderLabels;\n  /** Brand mark / logo node. */\n  brandLogo?: ReactNode;\n  /** Right-aligned content — toolbar, user menu, notifications. */\n  actions?: ReactNode;\n  /** Show the hamburger sidebar toggle and fire this on click. */\n  onToggleNav?: () => void;\n}\n\nexport function AppHeader({\n  labels = appHeaderEnLabels,\n  brandLogo,\n  actions,\n  onToggleNav,\n}: AppHeaderProps) {\n  return (\n    <Masthead>\n      {onToggleNav ? (\n        <MastheadToggle>\n          <Button\n            variant=\"plain\"\n            aria-label={labels.toggleNav}\n            onClick={onToggleNav}\n            icon={<BarsIcon />}\n          />\n        </MastheadToggle>\n      ) : null}\n      <MastheadMain>\n        <MastheadBrand>\n          {brandLogo ? <MastheadLogo>{brandLogo}</MastheadLogo> : null}\n        </MastheadBrand>\n      </MastheadMain>\n      {actions ? <MastheadContent>{actions}</MastheadContent> : null}\n    </Masthead>\n  );\n}",
+      "import": "import { AppHeader, appHeaderEnLabels } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "labels",
+          "type": "AppHeaderLabels",
+          "description": "i18n contract — provide via appHeaderEnLabels or your translations. Defaults to appHeaderEnLabels."
+        },
+        {
+          "name": "brandLogo",
+          "type": "ReactNode",
+          "description": "Brand mark / logo node, shown in the masthead brand slot."
+        },
+        {
+          "name": "actions",
+          "type": "ReactNode",
+          "description": "Right-aligned content — toolbar, user menu, notifications."
+        },
+        {
+          "name": "onToggleNav",
+          "type": "() => void",
+          "description": "When provided, shows the hamburger sidebar toggle and fires this on click."
+        }
+      ],
+      "usage": "AppHeader is the branded application masthead: an optional sidebar-toggle (onToggleNav), a brand/logo slot, and a right-aligned actions slot (search, help, user menu). Composes the base Masthead family; brand styling flows from the dials. For the full page frame (masthead + sidebar + content), use Shell.",
+      "examples": [
+        {
+          "name": "AppHeader",
+          "source": "/**\n * AppHeader — the branded application masthead: an optional sidebar-toggle,\n * a brand/logo slot, and a right-aligned actions slot (search, help, user\n * menu). Composes the base Masthead family; brand styling flows from the\n * dials.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  AppHeader,\n  appHeaderEnLabels,\n  Button,\n  Toolbar,\n  ToolbarContent,\n  ToolbarItem,\n} from \"@golden-passport/ds-patternfly\";\nimport { BellIcon, OutlinedQuestionCircleIcon } from \"@patternfly/react-icons\";\n\n// Right-aligned global actions — a couple of plain icon buttons. Each carries\n// an aria-label since the glyph alone is not an accessible name.\nfunction HeaderActions() {\n  return (\n    <Toolbar isFullHeight isStatic>\n      <ToolbarContent>\n        <ToolbarItem>\n          <Button\n            variant=\"plain\"\n            aria-label=\"Help\"\n            icon={<OutlinedQuestionCircleIcon />}\n          />\n        </ToolbarItem>\n        <ToolbarItem>\n          <Button\n            variant=\"plain\"\n            aria-label=\"Notifications\"\n            icon={<BellIcon />}\n          />\n        </ToolbarItem>\n      </ToolbarContent>\n    </Toolbar>\n  );\n}\n\nexport function Basic() {\n  return (\n    <AppHeader\n      labels={appHeaderEnLabels}\n      brandLogo={<strong>Acme</strong>}\n      actions={<HeaderActions />}\n    />\n  );\n}\n\nexport function WithNavToggle() {\n  const [navOpen, setNavOpen] = useState(true);\n  return (\n    <AppHeader\n      labels={appHeaderEnLabels}\n      brandLogo={<strong>Acme</strong>}\n      actions={<HeaderActions />}\n      onToggleNav={() => setNavOpen((open) => !open)}\n    />\n  );\n}\n\nexport default function AppHeaderExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Basic />\n      <WithNavToggle />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-navigation-pageheader",
+      "kind": "ds",
+      "title": "PageHeader",
+      "breadcrumb": "Building blocks/Navigation/PageHeader",
+      "summary": "The standard top-of-page header — title row with optional icon, status label and right-aligned actions, a subtitle, a breadcrumb above, and a tabs strip below. Every region is a slot you fill, so it adapts to any page without a fixed prop surface.",
+      "tags": [
+        "building",
+        "blocks",
+        "navigation",
+        "pageheader",
+        "packages",
+        "ds-patternfly",
+        "src",
+        "recipes"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-navigation-pageheader--overview",
+      "layer": "ds",
+      "componentSource": "import type { ReactNode } from \"react\";\nimport { Content, Split, SplitItem } from \"@patternfly/react-core\";\n\n/**\n * PageHeader — the standard top-of-page header: a title row (optional icon +\n * status label + right-aligned actions), an optional subtitle, an optional\n * breadcrumb above, and an optional tabs strip below.\n *\n * A composition of branded react-core primitives — every slot is a\n * `ReactNode` you fill, so it stays fully configurable without a fixed prop\n * surface. Layout uses the brand dials; the slotted content brings its own\n * brand styling. No `labels` prop: the header owns no localizable chrome\n * text (title/subtitle/breadcrumb/tabs are all caller-provided).\n */\nexport interface PageHeaderProps {\n  /** The page title. Rendered as an `<h1>`. */\n  title: ReactNode;\n  /** Supporting line under the title. */\n  subtitle?: ReactNode;\n  /** Leading glyph beside the title (e.g. a 36×36 icon). */\n  icon?: ReactNode;\n  /** Status slot rendered inline after the title (e.g. a `<Label>`). */\n  status?: ReactNode;\n  /** Breadcrumb slot rendered above the title (e.g. a `<Breadcrumb>`). */\n  breadcrumb?: ReactNode;\n  /** Right-aligned actions (buttons, a kebab `<Dropdown>`, …). */\n  actions?: ReactNode;\n  /** Tabs strip rendered below the header (e.g. a `<Tabs>`). */\n  tabs?: ReactNode;\n  /** Content rendered below the tabs strip. */\n  children?: ReactNode;\n}\n\nexport function PageHeader({\n  title,\n  subtitle,\n  icon,\n  status,\n  breadcrumb,\n  actions,\n  tabs,\n  children,\n}: PageHeaderProps) {\n  return (\n    <div style={{ display: \"flex\", flexDirection: \"column\" }}>\n      {breadcrumb ? (\n        <div style={{ marginBlockEnd: \"0.75rem\" }}>{breadcrumb}</div>\n      ) : null}\n      <Split hasGutter style={{ alignItems: \"flex-start\" }}>\n        {icon ? (\n          <SplitItem>\n            <span\n              style={{\n                display: \"flex\",\n                alignItems: \"center\",\n                justifyContent: \"center\",\n                blockSize: 36,\n              }}\n            >\n              {icon}\n            </span>\n          </SplitItem>\n        ) : null}\n        <SplitItem isFilled>\n          <div style={{ display: \"flex\", alignItems: \"center\", gap: \"0.75rem\", flexWrap: \"wrap\" }}>\n            <Content component=\"h1\" style={{ margin: 0 }}>\n              {title}\n            </Content>\n            {status}\n          </div>\n          {subtitle ? (\n            <Content\n              component=\"p\"\n              style={{ margin: \"0.25rem 0 0\", color: \"var(--gp-color-text-subtle)\" }}\n            >\n              {subtitle}\n            </Content>\n          ) : null}\n        </SplitItem>\n        {actions ? <SplitItem>{actions}</SplitItem> : null}\n      </Split>\n      {tabs ? <div style={{ marginBlockStart: \"1rem\" }}>{tabs}</div> : null}\n      {children ? (\n        <div style={{ marginBlockStart: \"var(--gp-pad-section, 2rem)\" }}>{children}</div>\n      ) : null}\n    </div>\n  );\n}",
+      "import": "import { PageHeader } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "required": true,
+          "description": "The page title. Rendered as an <h1>."
+        },
+        {
+          "name": "subtitle",
+          "type": "ReactNode",
+          "description": "Supporting line under the title."
+        },
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "description": "Leading glyph beside the title (e.g. a 36×36 icon)."
+        },
+        {
+          "name": "status",
+          "type": "ReactNode",
+          "description": "Status slot rendered inline after the title (e.g. a <Label>)."
+        },
+        {
+          "name": "breadcrumb",
+          "type": "ReactNode",
+          "description": "Breadcrumb slot rendered above the title (e.g. a <Breadcrumb>)."
+        },
+        {
+          "name": "actions",
+          "type": "ReactNode",
+          "description": "Right-aligned actions — buttons, a kebab <Dropdown>."
+        },
+        {
+          "name": "tabs",
+          "type": "ReactNode",
+          "description": "Tabs strip rendered below the header (e.g. a <Tabs>)."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "Content rendered below the tabs strip."
+        }
+      ],
+      "usage": "PageHeader is the standard top-of-page header: a title row (optional icon + status <Label> + right-aligned actions), an optional subtitle, a breadcrumb slot above, and a tabs strip below. Every region is a ReactNode slot — fill what you need. No labels prop (all text is caller-provided content).",
+      "examples": [
+        {
+          "name": "PageHeader",
+          "source": "/**\n * PageHeader recipe — the lib's exported PageHeader: title row + optional\n * icon / status / actions, subtitle, breadcrumb above, tabs below.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useId, useState } from \"react\";\nimport {\n  Breadcrumb,\n  BreadcrumbItem,\n  Button,\n  Dropdown,\n  DropdownItem,\n  DropdownList,\n  Label,\n  MenuToggle,\n  type MenuToggleElement,\n  PageHeader,\n  Tab,\n  Tabs,\n  TabTitleText,\n} from \"@golden-passport/ds-patternfly\";\nimport { CubesIcon, EllipsisVIcon } from \"@patternfly/react-icons\";\n\nexport function Basic() {\n  return (\n    <PageHeader\n      title=\"Workflows\"\n      subtitle=\"Manage triggers, runs, and history.\"\n      actions={<Button variant=\"primary\">Create workflow</Button>}\n    />\n  );\n}\n\nexport function FullChrome() {\n  const [open, setOpen] = useState(false);\n  return (\n    <PageHeader\n      breadcrumb={\n        <Breadcrumb aria-label=\"Workflow breadcrumb\">\n          <BreadcrumbItem to=\"#\">Workflows</BreadcrumbItem>\n          <BreadcrumbItem to=\"#\" isActive>\n            Quarterly review\n          </BreadcrumbItem>\n        </Breadcrumb>\n      }\n      icon={<CubesIcon style={{ width: 36, height: 36 }} />}\n      title=\"Quarterly review\"\n      status={<Label color=\"green\">Active</Label>}\n      subtitle=\"Triggered hourly · 4 steps · last run 12 minutes ago\"\n      actions={\n        <Dropdown\n          isOpen={open}\n          onSelect={() => setOpen(false)}\n          onOpenChange={setOpen}\n          toggle={(toggleRef: React.Ref<MenuToggleElement>) => (\n            <MenuToggle\n              ref={toggleRef}\n              aria-label=\"Workflow actions\"\n              variant=\"plain\"\n              onClick={() => setOpen((o) => !o)}\n            >\n              <EllipsisVIcon />\n            </MenuToggle>\n          )}\n        >\n          <DropdownList>\n            <DropdownItem>Run now</DropdownItem>\n            <DropdownItem>Edit</DropdownItem>\n            <DropdownItem>Disable</DropdownItem>\n          </DropdownList>\n        </Dropdown>\n      }\n    />\n  );\n}\n\nexport function WithTabs() {\n  const id = useId();\n  const [activeTabKey, setActiveTabKey] = useState<string | number>(0);\n  return (\n    <PageHeader\n      icon={<CubesIcon style={{ width: 36, height: 36 }} />}\n      title=\"Pod details\"\n      status={<Label color=\"green\">Running</Label>}\n      tabs={\n        <Tabs\n          activeKey={activeTabKey}\n          onSelect={(_e, k) => setActiveTabKey(k)}\n          id={`${id}-tabs`}\n          component=\"nav\"\n          aria-label=\"Pod navigation tabs\"\n        >\n          <Tab eventKey={0} title={<TabTitleText>Details</TabTitleText>} />\n          <Tab eventKey={1} title={<TabTitleText>YAML</TabTitleText>} />\n          <Tab eventKey={2} title={<TabTitleText>Events</TabTitleText>} />\n        </Tabs>\n      }\n    >\n      <p style={{ margin: 0, color: \"var(--gp-color-text-regular)\" }}>\n        {activeTabKey === 0\n          ? \"Details panel\"\n          : activeTabKey === 1\n            ? \"YAML panel\"\n            : \"Events panel\"}\n      </p>\n    </PageHeader>\n  );\n}\n\nexport default function PageHeaderExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Basic />\n      <FullChrome />\n      <WithTabs />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
       "id": "charts",
       "kind": "component",
       "title": "Charts",
@@ -4295,55 +5356,6 @@
       "storybookUrl": "/?path=/story/patterns-dashboard-example--overview"
     },
     {
-      "id": "patterns-dashboardshell",
-      "kind": "recipe",
-      "title": "DashboardShell",
-      "breadcrumb": "Patterns/DashboardShell",
-      "summary": "The page scaffold for an ops dashboard — a titled header band with an actions slot over a padded content region you fill with a KPI strip, charts, and status cards. Layout and rhythm only: the dashboard body is your children , so chart libraries stay in your app and never leak into the design system.",
-      "tags": [
-        "patterns",
-        "dashboardshell",
-        "packages",
-        "ds-patternfly",
-        "src"
-      ],
-      "storybookUrl": "/?path=/story/patterns-dashboardshell--overview",
-      "layer": "ds",
-      "componentSource": "import type { ReactNode } from \"react\";\nimport { Content } from \"@patternfly/react-core\";\n\n/**\n * DashboardShell — the page scaffold for an ops dashboard: a titled header\n * band (title + optional description + right-aligned actions/toolbar) over a\n * padded content region you fill with a KPI strip, charts, and status cards\n * (a `Gallery` + `Grid` of `Card`s).\n *\n * Layout + rhythm only — the dashboard body is your `children`, so chart\n * libraries (`@patternfly/react-charts`, ECharts, …) stay in your app and\n * never leak into the design system. No `labels` prop: title/description are\n * caller-provided content.\n */\nexport interface DashboardShellProps {\n  /** Dashboard title. Rendered as an `<h1>`. */\n  title: ReactNode;\n  /** Supporting line under the title. */\n  description?: ReactNode;\n  /** Right-aligned header slot — a date-range picker, refresh button, etc. */\n  actions?: ReactNode;\n  /** The dashboard body (KPI gallery, chart grid, status cards). */\n  children: ReactNode;\n}\n\nexport function DashboardShell({\n  title,\n  description,\n  actions,\n  children,\n}: DashboardShellProps) {\n  return (\n    <div style={{ display: \"flex\", flexDirection: \"column\", gap: \"var(--gp-pad-section, 1.5rem)\" }}>\n      <div\n        style={{\n          display: \"flex\",\n          alignItems: \"flex-start\",\n          justifyContent: \"space-between\",\n          gap: \"1rem\",\n          flexWrap: \"wrap\",\n        }}\n      >\n        <div>\n          <Content component=\"h1\" style={{ margin: 0 }}>\n            {title}\n          </Content>\n          {description ? (\n            <Content\n              component=\"p\"\n              style={{ margin: \"0.25rem 0 0\", color: \"var(--gp-color-text-subtle)\" }}\n            >\n              {description}\n            </Content>\n          ) : null}\n        </div>\n        {actions ? <div>{actions}</div> : null}\n      </div>\n      <div>{children}</div>\n    </div>\n  );\n}",
-      "import": "import { DashboardShell } from \"@golden-passport/ds-patternfly\";",
-      "props": [
-        {
-          "name": "title",
-          "type": "ReactNode",
-          "required": true,
-          "description": "Dashboard title. Rendered as an <h1>."
-        },
-        {
-          "name": "description",
-          "type": "ReactNode",
-          "description": "Supporting line under the title."
-        },
-        {
-          "name": "actions",
-          "type": "ReactNode",
-          "description": "Right-aligned header slot — a date-range picker, refresh button, etc."
-        },
-        {
-          "name": "children",
-          "type": "ReactNode",
-          "required": true,
-          "description": "The dashboard body (KPI gallery, chart grid, status cards). Chart libraries stay in your app."
-        }
-      ],
-      "usage": "DashboardShell is the dashboard page scaffold: a titled header band (title + description + right-aligned actions slot) over a content region you fill with a KPI strip, charts, and status cards (children). Layout + rhythm only — chart libraries (@patternfly/react-charts, ECharts) stay in your app and never enter the design system.",
-      "examples": [
-        {
-          "name": "DashboardShell",
-          "source": "/**\n * DashboardShell pattern — the lib's exported dashboard page scaffold: a\n * titled header band (+ actions slot) over a content region you fill with a\n * KPI strip, charts, and status cards. Chart libraries stay in your app.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  Button,\n  Card,\n  CardBody,\n  CardHeader,\n  CardTitle,\n  DashboardShell,\n  Flex,\n  FlexItem,\n  Gallery,\n  GalleryItem,\n  Grid,\n  GridItem,\n  Label,\n  Progress,\n} from \"@golden-passport/ds-patternfly\";\nimport {\n  ArrowDownIcon,\n  ArrowUpIcon,\n  CheckCircleIcon,\n  ExclamationTriangleIcon,\n} from \"@patternfly/react-icons\";\n\n/** KPI tile — big number + sub-label + delta with trend arrow. */\nfunction KPI({\n  label,\n  value,\n  delta,\n  trend,\n}: {\n  label: string;\n  value: string;\n  delta: string;\n  trend: \"up\" | \"down\";\n}) {\n  return (\n    <Card isCompact>\n      <CardBody>\n        <div style={{ color: \"var(--gp-color-text-subtle)\", fontSize: 13 }}>{label}</div>\n        <div style={{ fontSize: 28, fontWeight: 600, color: \"var(--gp-color-text-regular)\" }}>\n          {value}\n        </div>\n        <div\n          style={{\n            marginTop: 4,\n            display: \"inline-flex\",\n            alignItems: \"center\",\n            gap: 4,\n            color:\n              trend === \"up\"\n                ? \"var(--pf-t--global--icon--color--status--success--default, #3e8635)\"\n                : \"var(--pf-t--global--icon--color--status--danger--default, #c9190b)\",\n            fontSize: 13,\n          }}\n        >\n          {trend === \"up\" ? <ArrowUpIcon /> : <ArrowDownIcon />}\n          {delta}\n        </div>\n      </CardBody>\n    </Card>\n  );\n}\n\n/** Placeholder chart panel — drop in @patternfly/react-charts when real. */\nfunction ChartPlaceholder({ title }: { title: string }) {\n  return (\n    <Card>\n      <CardHeader>\n        <CardTitle>{title}</CardTitle>\n      </CardHeader>\n      <CardBody>\n        <div\n          style={{\n            height: 140,\n            background: \"linear-gradient(180deg, rgba(0,102,204,0.10), rgba(0,102,204,0.02))\",\n            border: \"1px dashed var(--gp-color-border-subtle)\",\n            borderRadius: 8,\n            display: \"grid\",\n            placeItems: \"center\",\n            color: \"var(--gp-color-text-subtle)\",\n            fontStyle: \"italic\",\n          }}\n        >\n          chart placeholder — drop in @patternfly/react-charts\n        </div>\n      </CardBody>\n    </Card>\n  );\n}\n\nfunction StatusCard() {\n  return (\n    <Card>\n      <CardHeader>\n        <CardTitle>System health</CardTitle>\n      </CardHeader>\n      <CardBody>\n        <Flex direction={{ default: \"column\" }} spaceItems={{ default: \"spaceItemsMd\" }}>\n          <FlexItem>\n            <div style={{ display: \"flex\", alignItems: \"center\", gap: 8 }}>\n              <CheckCircleIcon style={{ color: \"var(--pf-t--global--icon--color--status--success--default, #3e8635)\" }} />\n              <strong>API</strong>\n              <Label color=\"green\" isCompact>Healthy</Label>\n            </div>\n          </FlexItem>\n          <FlexItem>\n            <div style={{ display: \"flex\", alignItems: \"center\", gap: 8 }}>\n              <ExclamationTriangleIcon style={{ color: \"var(--pf-t--global--icon--color--status--warning--default, #f0ab00)\" }} />\n              <strong>Queue</strong>\n              <Label color=\"yellow\" isCompact>Degraded</Label>\n            </div>\n          </FlexItem>\n          <FlexItem>\n            <Progress value={62} title=\"Disk usage\" />\n          </FlexItem>\n        </Flex>\n      </CardBody>\n    </Card>\n  );\n}\n\nexport function OpsDashboard() {\n  return (\n    <DashboardShell\n      title=\"Operations\"\n      description=\"Live workflow and system metrics.\"\n      actions={<Button variant=\"secondary\">Last 24h</Button>}\n    >\n      <div style={{ display: \"grid\", gap: 16 }}>\n        <Gallery hasGutter minWidths={{ default: \"180px\" }}>\n          <GalleryItem><KPI label=\"Active workflows\" value=\"142\" delta=\"+12 (8%)\" trend=\"up\" /></GalleryItem>\n          <GalleryItem><KPI label=\"Failed runs (24h)\" value=\"3\" delta=\"-2 (-40%)\" trend=\"down\" /></GalleryItem>\n          <GalleryItem><KPI label=\"Avg runtime\" value=\"42s\" delta=\"+3s\" trend=\"down\" /></GalleryItem>\n          <GalleryItem><KPI label=\"Pending approvals\" value=\"7\" delta=\"+1\" trend=\"up\" /></GalleryItem>\n        </Gallery>\n        <Grid hasGutter>\n          <GridItem md={8}><ChartPlaceholder title=\"Run volume — last 24h\" /></GridItem>\n          <GridItem md={4}><StatusCard /></GridItem>\n        </Grid>\n      </div>\n    </DashboardShell>\n  );\n}\n\nexport default function DashboardShellExample() {\n  return <OpsDashboard />;\n}"
-        }
-      ]
-    },
-    {
       "id": "patterns-filters-demo",
       "kind": "recipe",
       "title": "Demo",
@@ -4562,281 +5574,6 @@
         {
           "name": "StatusAndSeverity",
           "source": "/**\n * Status and severity pattern — combining Severity (how bad?), Status\n * (where in the workflow?), and Label (freeform context) in one triage row.\n *\n * Severity and Status come from @patternfly/react-component-groups\n * (installed alongside the lib).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  Label,\n  Table,\n  Tbody,\n  Td,\n  Th,\n  Thead,\n  Tr,\n} from \"@golden-passport/ds-patternfly\";\nimport { Severity } from \"@patternfly/react-component-groups/dist/dynamic/Severity\";\nimport { Status } from \"@patternfly/react-component-groups/dist/dynamic/Status\";\n\ntype Vuln = {\n  id: string;\n  cve: string;\n  severity: \"critical\" | \"important\" | \"moderate\" | \"minor\" | \"none\";\n  status: \"danger\" | \"warning\" | \"success\" | \"info\";\n  statusLabel: string;\n  cluster: string;\n};\n\nconst ROWS: Vuln[] = [\n  { id: \"1\", cve: \"CVE-2026-0019\", severity: \"critical\",  status: \"danger\",  statusLabel: \"Unpatched\",      cluster: \"prod-east-1\" },\n  { id: \"2\", cve: \"CVE-2026-0017\", severity: \"important\", status: \"warning\", statusLabel: \"Patch pending\",  cluster: \"prod-east-1\" },\n  { id: \"3\", cve: \"CVE-2026-0012\", severity: \"moderate\",  status: \"success\", statusLabel: \"Patched\",        cluster: \"stage-eu-2\" },\n  { id: \"4\", cve: \"CVE-2026-0008\", severity: \"minor\",     status: \"info\",    statusLabel: \"Accepted risk\", cluster: \"stage-eu-2\" },\n];\n\nexport function TriageRow() {\n  return (\n    <Table aria-label=\"Vulnerabilities\" variant=\"compact\">\n      <Thead>\n        <Tr>\n          <Th>Severity</Th>\n          <Th>CVE</Th>\n          <Th>Status</Th>\n          <Th>Cluster</Th>\n        </Tr>\n      </Thead>\n      <Tbody>\n        {ROWS.map((r) => (\n          <Tr key={r.id}>\n            <Td dataLabel=\"Severity\">\n              <Severity severity={r.severity} label={r.severity[0]!.toUpperCase() + r.severity.slice(1)} />\n            </Td>\n            <Td dataLabel=\"CVE\"><strong>{r.cve}</strong></Td>\n            <Td dataLabel=\"Status\">\n              <Status status={r.status} label={r.statusLabel} />\n            </Td>\n            <Td dataLabel=\"Cluster\">\n              <Label isCompact>{r.cluster}</Label>\n            </Td>\n          </Tr>\n        ))}\n      </Tbody>\n    </Table>\n  );\n}\n\nexport default function StatusAndSeverityExample() {\n  return <TriageRow />;\n}"
-        }
-      ]
-    },
-    {
-      "id": "recipes-bulkselecttoolbar",
-      "kind": "component",
-      "title": "BulkSelectToolbar",
-      "breadcrumb": "Recipes/BulkSelectToolbar",
-      "summary": "The \"select many, act on many\" toolbar — a split checkbox + dropdown (select all / page / none), a derived \" `} selected\" status, and bulk actions that appear once a selection exists. Fully controlled: you own the selection and pass counts + handlers; the split checkbox reflects page-selected and partial state.",
-      "tags": [
-        "recipes",
-        "bulkselecttoolbar",
-        "packages",
-        "ds-patternfly",
-        "src"
-      ],
-      "storybookUrl": "/?path=/story/recipes-bulkselecttoolbar--overview",
-      "layer": "ds",
-      "import": "import { BulkSelectToolbar, bulkSelectToolbarEnLabels } from \"@golden-passport/ds-patternfly\";",
-      "componentSource": "import { useId, useState, type ReactNode } from \"react\";\nimport {\n  Dropdown,\n  DropdownItem,\n  DropdownList,\n  MenuToggle,\n  MenuToggleCheckbox,\n  type MenuToggleElement,\n  Toolbar,\n  ToolbarContent,\n  ToolbarItem,\n} from \"@patternfly/react-core\";\nimport {\n  type BulkSelectToolbarLabels,\n  bulkSelectToolbarEnLabels,\n  withCount,\n} from \"./labels.js\";\n\nexport type { BulkSelectToolbarLabels } from \"./labels.js\";\nexport { bulkSelectToolbarEnLabels } from \"./labels.js\";\n\n/**\n * BulkSelectToolbar — the \"select many, act on many\" toolbar: a split\n * checkbox + dropdown (select all / page / none) on the left, a derived\n * \"{n} selected\" status, and contextual bulk actions that appear once a\n * selection exists.\n *\n * Fully controlled: you own the selection and pass counts + handlers. The\n * split checkbox reflects page-selected / partially-selected state and\n * toggles the current page when clicked. A composition of branded\n * react-core primitives — no external dependency.\n */\nexport interface BulkSelectToolbarProps {\n  /** Required. Provide via `bulkSelectToolbarEnLabels` or your translations. */\n  labels?: BulkSelectToolbarLabels;\n  /** Total rows selected across all pages. */\n  selectedCount: number;\n  /** Total rows available. */\n  totalCount: number;\n  /** Rows on the current page (enables \"Select page\"). */\n  pageCount?: number;\n  /** Whole current page is selected (checkbox checked). */\n  pageSelected?: boolean;\n  /** Current page partially selected (checkbox indeterminate). */\n  pagePartiallySelected?: boolean;\n  /** Select every row across all pages. */\n  onSelectAll: () => void;\n  /** Clear the entire selection. */\n  onSelectNone: () => void;\n  /** Select every row on the current page. */\n  onSelectPage?: () => void;\n  /** Bulk actions, shown only when `selectedCount > 0`. */\n  actions?: ReactNode;\n}\n\nexport function BulkSelectToolbar({\n  labels = bulkSelectToolbarEnLabels,\n  selectedCount,\n  totalCount,\n  pageCount,\n  pageSelected = false,\n  pagePartiallySelected = false,\n  onSelectAll,\n  onSelectNone,\n  onSelectPage,\n  actions,\n}: BulkSelectToolbarProps) {\n  const id = useId();\n  const [open, setOpen] = useState(false);\n\n  return (\n    <Toolbar id={`${id}-bulk-toolbar`}>\n      <ToolbarContent>\n        <ToolbarItem>\n          <Dropdown\n            isOpen={open}\n            onSelect={() => setOpen(false)}\n            onOpenChange={setOpen}\n            toggle={(toggleRef: React.Ref<MenuToggleElement>) => (\n              <MenuToggle\n                ref={toggleRef}\n                isExpanded={open}\n                aria-label={labels.ariaLabel}\n                onClick={() => setOpen((o) => !o)}\n                splitButtonItems={[\n                  <MenuToggleCheckbox\n                    key=\"bulk-check\"\n                    id={`${id}-bulk-check`}\n                    aria-label={labels.ariaLabel}\n                    isChecked={\n                      pagePartiallySelected ? null : pageSelected\n                    }\n                    onChange={(_e, checked) =>\n                      checked ? onSelectPage?.() : onSelectNone()\n                    }\n                  >\n                    {selectedCount > 0\n                      ? withCount(labels.selectedStatus, selectedCount)\n                      : \"\"}\n                  </MenuToggleCheckbox>,\n                ]}\n              />\n            )}\n          >\n            <DropdownList>\n              <DropdownItem onClick={onSelectNone}>\n                {labels.selectNone}\n              </DropdownItem>\n              {onSelectPage && pageCount !== undefined ? (\n                <DropdownItem onClick={onSelectPage}>\n                  {withCount(labels.selectPage, pageCount)}\n                </DropdownItem>\n              ) : null}\n              <DropdownItem onClick={onSelectAll}>\n                {withCount(labels.selectAll, totalCount)}\n              </DropdownItem>\n            </DropdownList>\n          </Dropdown>\n        </ToolbarItem>\n        {selectedCount > 0 && actions ? (\n          <>\n            <ToolbarItem variant=\"separator\" />\n            <ToolbarItem>{actions}</ToolbarItem>\n          </>\n        ) : null}\n      </ToolbarContent>\n    </Toolbar>\n  );\n}",
-      "props": [
-        {
-          "name": "labels",
-          "type": "BulkSelectToolbarLabels",
-          "default": "bulkSelectToolbarEnLabels",
-          "description": "Chrome text — split-button aria, select all/page/none items ({count} token), selected status."
-        },
-        {
-          "name": "selectedCount",
-          "type": "number",
-          "required": true,
-          "description": "Total rows selected across all pages."
-        },
-        {
-          "name": "totalCount",
-          "type": "number",
-          "required": true,
-          "description": "Total rows available (shown in 'Select all')."
-        },
-        {
-          "name": "pageCount",
-          "type": "number",
-          "description": "Rows on the current page (enables 'Select page')."
-        },
-        {
-          "name": "pageSelected",
-          "type": "boolean",
-          "default": "false",
-          "description": "Whole current page selected — checkbox checked."
-        },
-        {
-          "name": "pagePartiallySelected",
-          "type": "boolean",
-          "default": "false",
-          "description": "Current page partially selected — checkbox indeterminate."
-        },
-        {
-          "name": "onSelectAll",
-          "type": "() => void",
-          "required": true,
-          "description": "Select every row across all pages."
-        },
-        {
-          "name": "onSelectNone",
-          "type": "() => void",
-          "required": true,
-          "description": "Clear the entire selection."
-        },
-        {
-          "name": "onSelectPage",
-          "type": "() => void",
-          "description": "Select every row on the current page."
-        },
-        {
-          "name": "actions",
-          "type": "ReactNode",
-          "description": "Bulk actions, shown only when selectedCount > 0."
-        }
-      ],
-      "usage": "BulkSelectToolbar is the controlled 'select many, act on many' recipe: a split checkbox + dropdown (select all / page / none), a derived '{n} selected' status, and bulk actions shown once a selection exists. You own the selection; pass counts + handlers. The split checkbox reflects page-selected / partially-selected state. Localise via labels (bulkSelectToolbarEnLabels).",
-      "examples": [
-        {
-          "name": "BulkSelectToolbar",
-          "source": "/**\n * BulkSelectToolbar recipe — the lib's exported bulk-select bar: a split\n * checkbox + dropdown (all / page / none), a derived \"{n} selected\" status,\n * and contextual bulk actions. Fully controlled.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  BulkSelectToolbar,\n  bulkSelectToolbarEnLabels,\n  Button,\n  Table,\n  Tbody,\n  Td,\n  Th,\n  Thead,\n  Tr,\n} from \"@golden-passport/ds-patternfly\";\n\ntype Workflow = { id: string; name: string; status: string };\nconst ROWS: Workflow[] = Array.from({ length: 5 }).map((_, i) => ({\n  id: `wf-${i + 1}`,\n  name: `Workflow ${i + 1}`,\n  status: [\"Active\", \"Paused\", \"Failed\"][i % 3] ?? \"Active\",\n}));\n\nexport function FullPattern() {\n  const [selected, setSelected] = useState<Set<string>>(new Set());\n  const pageSelectedCount = ROWS.filter((r) => selected.has(r.id)).length;\n\n  const setMany = (ids: string[], on: boolean) =>\n    setSelected((prev) => {\n      const next = new Set(prev);\n      ids.forEach((id) => (on ? next.add(id) : next.delete(id)));\n      return next;\n    });\n\n  return (\n    <>\n      <BulkSelectToolbar\n        labels={bulkSelectToolbarEnLabels}\n        selectedCount={selected.size}\n        totalCount={ROWS.length}\n        pageCount={ROWS.length}\n        pageSelected={pageSelectedCount === ROWS.length}\n        pagePartiallySelected={pageSelectedCount > 0 && pageSelectedCount < ROWS.length}\n        onSelectAll={() => setMany(ROWS.map((r) => r.id), true)}\n        onSelectPage={() => setMany(ROWS.map((r) => r.id), true)}\n        onSelectNone={() => setSelected(new Set())}\n        actions={\n          <>\n            <Button variant=\"secondary\">Run {selected.size}</Button>\n            <Button variant=\"danger\">Delete {selected.size}</Button>\n          </>\n        }\n      />\n      <Table aria-label=\"Workflows\" variant=\"compact\">\n        <Thead>\n          <Tr>\n            <Th screenReaderText=\"Row select\" />\n            <Th>Name</Th>\n            <Th>Status</Th>\n          </Tr>\n        </Thead>\n        <Tbody>\n          {ROWS.map((r, rowIndex) => (\n            <Tr key={r.id}>\n              <Td\n                select={{\n                  rowIndex,\n                  onSelect: () => setMany([r.id], !selected.has(r.id)),\n                  isSelected: selected.has(r.id),\n                }}\n              />\n              <Td dataLabel=\"Name\">{r.name}</Td>\n              <Td dataLabel=\"Status\">{r.status}</Td>\n            </Tr>\n          ))}\n        </Tbody>\n      </Table>\n    </>\n  );\n}\n\nexport default function BulkSelectToolbarExample() {\n  return <FullPattern />;\n}"
-        }
-      ]
-    },
-    {
-      "id": "recipes-filtertoolbar",
-      "kind": "component",
-      "title": "FilterToolbar",
-      "breadcrumb": "Recipes/FilterToolbar",
-      "summary": "The standard filter bar — a search field, faceted multi-select facets, removable filter chips, and one-click clear-all. Fully controlled: you own the search text and selected values; the chips and clear-all control are derived automatically.",
-      "tags": [
-        "recipes",
-        "filtertoolbar",
-        "packages",
-        "ds-patternfly",
-        "src"
-      ],
-      "storybookUrl": "/?path=/story/recipes-filtertoolbar--overview",
-      "layer": "ds",
-      "import": "import { FilterToolbar, filterToolbarEnLabels } from \"@golden-passport/ds-patternfly\";",
-      "componentSource": "import { useId, useState, type ReactNode } from \"react\";\nimport {\n  Label,\n  MenuToggle,\n  type MenuToggleElement,\n  Select,\n  SelectList,\n  SelectOption,\n  SearchInput,\n  Toolbar,\n  ToolbarContent,\n  ToolbarFilter,\n  ToolbarGroup,\n  ToolbarItem,\n  ToolbarToggleGroup,\n} from \"@patternfly/react-core\";\nimport { FilterIcon } from \"@patternfly/react-icons/dist/esm/icons/filter-icon\";\nimport { type FilterToolbarLabels, filterToolbarEnLabels } from \"./labels.js\";\n\nexport type { FilterToolbarLabels } from \"./labels.js\";\nexport { filterToolbarEnLabels } from \"./labels.js\";\n\n/** One faceted filter: a category with a fixed set of multi-select options. */\nexport interface FilterDef {\n  /** Stable key used in `values` / `onChange`. */\n  key: string;\n  /** Category name shown on the toggle and in chip groups. */\n  label: string;\n  /** Selectable options. */\n  options: { value: string; label: string }[];\n}\n\n/**\n * FilterToolbar — the standard filter bar: a search field, faceted\n * multi-select facets, removable filter chips, and one-click clear-all.\n *\n * Fully controlled: you own `searchValue` + `values` and update them from\n * the callbacks. Chips and the clear-all control are derived from `values`\n * automatically. A composition of branded react-core Toolbar primitives.\n */\nexport interface FilterToolbarProps {\n  /** Required. Provide via `filterToolbarEnLabels` or your own translations. */\n  labels?: FilterToolbarLabels;\n  /** Current search text. Omit to hide the search field. */\n  searchValue?: string;\n  /** Fired as the search text changes. */\n  onSearchChange?: (value: string) => void;\n  /** Faceted filters to render. */\n  filters?: FilterDef[];\n  /** Selected values per filter key. */\n  values?: Record<string, string[]>;\n  /** Fired when a facet's selection changes (toggle a value). */\n  onChange?: (key: string, values: string[]) => void;\n  /** Fired by the search field and PF's clear-all control. */\n  onClearAll?: () => void;\n  /** Right-aligned actions (e.g. a primary \"Create\" button). */\n  actions?: ReactNode;\n}\n\nexport function FilterToolbar({\n  labels = filterToolbarEnLabels,\n  searchValue,\n  onSearchChange,\n  filters = [],\n  values = {},\n  onChange,\n  onClearAll,\n  actions,\n}: FilterToolbarProps) {\n  const id = useId();\n  const [openKey, setOpenKey] = useState<string | null>(null);\n\n  const toggleValue = (def: FilterDef, value: string) => {\n    const current = values[def.key] ?? [];\n    const next = current.includes(value)\n      ? current.filter((v) => v !== value)\n      : [...current, value];\n    onChange?.(def.key, next);\n  };\n\n  return (\n    <Toolbar\n      id={`${id}-filter-toolbar`}\n      {...(onClearAll ? { clearAllFilters: onClearAll } : {})}\n      clearFiltersButtonText={labels.clearAllFilters}\n      collapseListedFiltersBreakpoint=\"md\"\n    >\n      <ToolbarContent>\n        {/* No aria-label on ToolbarToggleGroup — PF renders it as a roleless\n            <div>, where ARIA prohibits aria-label (axe aria-prohibited-attr).\n            The collapse toggle button names itself from the filter icon. */}\n        <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint=\"md\">\n          {onSearchChange ? (\n            <ToolbarItem>\n              <SearchInput\n                value={searchValue ?? \"\"}\n                onChange={(_e, v) => onSearchChange(v)}\n                onClear={() => onSearchChange(\"\")}\n                placeholder={labels.searchPlaceholder}\n                aria-label={labels.searchAriaLabel}\n              />\n            </ToolbarItem>\n          ) : null}\n          {filters.length > 0 ? (\n            <ToolbarGroup variant=\"filter-group\">\n              {filters.map((def) => {\n                const selected = values[def.key] ?? [];\n                return (\n                  <ToolbarFilter\n                    key={def.key}\n                    labels={selected}\n                    deleteLabel={(_c, v) => toggleValue(def, v as string)}\n                    deleteLabelGroup={() => onChange?.(def.key, [])}\n                    categoryName={def.label}\n                  >\n                    <Select\n                      isOpen={openKey === def.key}\n                      onOpenChange={(open) => setOpenKey(open ? def.key : null)}\n                      onSelect={(_e, v) => toggleValue(def, v as string)}\n                      toggle={(toggleRef: React.Ref<MenuToggleElement>) => (\n                        <MenuToggle\n                          ref={toggleRef}\n                          onClick={() =>\n                            setOpenKey((k) => (k === def.key ? null : def.key))\n                          }\n                        >\n                          {def.label}{\" \"}\n                          {selected.length > 0 && (\n                            <Label isCompact>{selected.length}</Label>\n                          )}\n                        </MenuToggle>\n                      )}\n                    >\n                      <SelectList>\n                        {def.options.map((opt) => (\n                          <SelectOption\n                            key={opt.value}\n                            value={opt.value}\n                            hasCheckbox\n                            isSelected={selected.includes(opt.value)}\n                          >\n                            {opt.label}\n                          </SelectOption>\n                        ))}\n                      </SelectList>\n                    </Select>\n                  </ToolbarFilter>\n                );\n              })}\n            </ToolbarGroup>\n          ) : null}\n        </ToolbarToggleGroup>\n        {actions ? (\n          <ToolbarItem align={{ default: \"alignEnd\" }}>{actions}</ToolbarItem>\n        ) : null}\n      </ToolbarContent>\n    </Toolbar>\n  );\n}",
-      "props": [
-        {
-          "name": "labels",
-          "type": "FilterToolbarLabels",
-          "default": "filterToolbarEnLabels",
-          "description": "Chrome text — search placeholder/aria and clear-all button label."
-        },
-        {
-          "name": "searchValue",
-          "type": "string",
-          "description": "Current search text. Omit (with onSearchChange) to hide the search field."
-        },
-        {
-          "name": "onSearchChange",
-          "type": "(value: string) => void",
-          "description": "Fired as the search text changes."
-        },
-        {
-          "name": "filters",
-          "type": "FilterDef[]",
-          "default": "[]",
-          "description": "Faceted filters — each { key, label, options: { value, label }[] }."
-        },
-        {
-          "name": "values",
-          "type": "Record<string, string[]>",
-          "default": "{}",
-          "description": "Selected values per filter key (controlled)."
-        },
-        {
-          "name": "onChange",
-          "type": "(key: string, values: string[]) => void",
-          "description": "Fired when a facet's selection changes."
-        },
-        {
-          "name": "onClearAll",
-          "type": "() => void",
-          "description": "Fired by the search field and PF's clear-all chip control."
-        },
-        {
-          "name": "actions",
-          "type": "ReactNode",
-          "description": "Right-aligned actions (e.g. a primary Create button)."
-        }
-      ],
-      "usage": "FilterToolbar is the fully-controlled filter bar recipe: a search field, faceted multi-select facets (FilterDef[]), removable filter chips, and one-click clear-all. You own searchValue + values and update them from onSearchChange / onChange / onClearAll; chips and clear-all derive from values automatically. Localise chrome text via labels (filterToolbarEnLabels).",
-      "examples": [
-        {
-          "name": "FilterToolbar",
-          "source": "/**\n * FilterToolbar recipe — the lib's exported filter bar: search + faceted\n * multi-select facets + removable chips + clear-all. Fully controlled.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  Button,\n  FilterToolbar,\n  filterToolbarEnLabels,\n  type FilterDef,\n} from \"@golden-passport/ds-patternfly\";\n\nconst FILTERS: FilterDef[] = [\n  {\n    key: \"status\",\n    label: \"Status\",\n    options: [\n      { value: \"active\", label: \"Active\" },\n      { value: \"paused\", label: \"Paused\" },\n      { value: \"failed\", label: \"Failed\" },\n    ],\n  },\n  {\n    key: \"owner\",\n    label: \"Owner\",\n    options: [\n      { value: \"ada\", label: \"ada\" },\n      { value: \"grace\", label: \"grace\" },\n      { value: \"linus\", label: \"linus\" },\n    ],\n  },\n];\n\nexport function SearchFacetsChips() {\n  const [search, setSearch] = useState(\"\");\n  const [values, setValues] = useState<Record<string, string[]>>({});\n\n  return (\n    <>\n      <FilterToolbar\n        labels={filterToolbarEnLabels}\n        searchValue={search}\n        onSearchChange={setSearch}\n        filters={FILTERS}\n        values={values}\n        onChange={(key, next) => setValues((v) => ({ ...v, [key]: next }))}\n        onClearAll={() => {\n          setSearch(\"\");\n          setValues({});\n        }}\n        actions={<Button variant=\"primary\">Create</Button>}\n      />\n      <div style={{ padding: 12, color: \"var(--gp-color-text-subtle)\", fontSize: 13 }}>\n        search=<strong>{search || \"—\"}</strong>\n        {\" · \"}status=<strong>{(values.status ?? []).join(\",\") || \"any\"}</strong>\n        {\" · \"}owner=<strong>{(values.owner ?? []).join(\",\") || \"any\"}</strong>\n      </div>\n    </>\n  );\n}\n\nexport default function FilterToolbarExample() {\n  return <SearchFacetsChips />;\n}"
-        }
-      ]
-    },
-    {
-      "id": "recipes-listmanager",
-      "kind": "component",
-      "title": "ListManager",
-      "breadcrumb": "Recipes/ListManager",
-      "summary": "The page scaffold for a managed collection — it composes a PageHeader , a toolbar row ( FilterToolbar + BulkSelectToolbar on the left, Pagination on the right), the list body, and footer pagination. ListManager owns the consistent vertical rhythm and toolbar arrangement; you bring the pieces and the data.",
-      "tags": [
-        "recipes",
-        "listmanager",
-        "packages",
-        "ds-patternfly",
-        "src"
-      ],
-      "storybookUrl": "/?path=/story/recipes-listmanager--overview",
-      "layer": "ds",
-      "import": "import { ListManager } from \"@golden-passport/ds-patternfly\";",
-      "componentSource": "import type { ReactNode } from \"react\";\n\n/**\n * ListManager — the page scaffold for a managed collection: an optional\n * header, a toolbar row (filters and/or bulk-select on the left, pagination\n * on the right), the list body (a Table, a Gallery of Cards, …), and an\n * optional footer pagination.\n *\n * A layout-only composition: every region is a `ReactNode` slot, so you\n * bring a `PageHeader`, `FilterToolbar`, `BulkSelectToolbar`, your table or\n * card grid, and `Pagination` — ListManager owns the consistent vertical\n * rhythm and the toolbar arrangement, not the data. No `labels` prop (its\n * slotted children own their text).\n */\nexport interface ListManagerProps {\n  /** Header slot (e.g. a `<PageHeader>`). */\n  header?: ReactNode;\n  /** Left side of the toolbar row — a `<FilterToolbar>` and/or\n   * `<BulkSelectToolbar>`. */\n  toolbar?: ReactNode;\n  /** Right side of the toolbar row — typically a `<Pagination>`. */\n  toolbarEnd?: ReactNode;\n  /** The list body — a `<Table>`, a `<Gallery>` of cards, an empty state. */\n  children: ReactNode;\n  /** Footer pagination slot, rendered below the body. */\n  footer?: ReactNode;\n}\n\nexport function ListManager({\n  header,\n  toolbar,\n  toolbarEnd,\n  children,\n  footer,\n}: ListManagerProps) {\n  return (\n    <div style={{ display: \"flex\", flexDirection: \"column\", gap: \"1rem\" }}>\n      {header}\n      {toolbar || toolbarEnd ? (\n        <div\n          style={{\n            display: \"flex\",\n            alignItems: \"center\",\n            justifyContent: \"space-between\",\n            gap: \"1rem\",\n            flexWrap: \"wrap\",\n          }}\n        >\n          <div style={{ flex: \"1 1 auto\", minInlineSize: 0 }}>{toolbar}</div>\n          {toolbarEnd ? <div>{toolbarEnd}</div> : null}\n        </div>\n      ) : null}\n      <div>{children}</div>\n      {footer ? (\n        <div style={{ display: \"flex\", justifyContent: \"flex-end\" }}>\n          {footer}\n        </div>\n      ) : null}\n    </div>\n  );\n}",
-      "props": [
-        {
-          "name": "header",
-          "type": "ReactNode",
-          "description": "Header slot (e.g. a <PageHeader>)."
-        },
-        {
-          "name": "toolbar",
-          "type": "ReactNode",
-          "description": "Left side of the toolbar row — a <FilterToolbar> and/or <BulkSelectToolbar>."
-        },
-        {
-          "name": "toolbarEnd",
-          "type": "ReactNode",
-          "description": "Right side of the toolbar row — typically a <Pagination>."
-        },
-        {
-          "name": "children",
-          "type": "ReactNode",
-          "required": true,
-          "description": "The list body — a <Table>, a <Gallery> of cards, an empty state."
-        },
-        {
-          "name": "footer",
-          "type": "ReactNode",
-          "description": "Footer pagination slot, rendered below the body."
-        }
-      ],
-      "usage": "ListManager is the layout-only page scaffold for a managed collection: header slot (PageHeader), a toolbar row (FilterToolbar + BulkSelectToolbar left via `toolbar`, Pagination right via `toolbarEnd`), the list body (children — a Table or Gallery), and a footer pagination slot. It owns the vertical rhythm and toolbar arrangement; you bring the pieces and the data.",
-      "examples": [
-        {
-          "name": "ListManager",
-          "source": "/**\n * ListManager recipe — the lib's exported page scaffold for a managed\n * collection: a PageHeader, a toolbar row (FilterToolbar + BulkSelectToolbar\n * left, Pagination right), the list body, and footer pagination. ListManager\n * owns the layout; you bring the pieces and the data.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  BulkSelectToolbar,\n  bulkSelectToolbarEnLabels,\n  Button,\n  FilterToolbar,\n  filterToolbarEnLabels,\n  ListManager,\n  PageHeader,\n  Pagination,\n  Table,\n  Tbody,\n  Td,\n  Th,\n  Thead,\n  Tr,\n  type FilterDef,\n} from \"@golden-passport/ds-patternfly\";\n\ntype Workflow = { id: string; name: string; status: string };\nconst ALL: Workflow[] = Array.from({ length: 23 }).map((_, i) => ({\n  id: `wf-${i + 1}`,\n  name: `Workflow ${i + 1}`,\n  status: [\"Active\", \"Paused\", \"Failed\"][i % 3] ?? \"Active\",\n}));\nconst FILTERS: FilterDef[] = [\n  {\n    key: \"status\",\n    label: \"Status\",\n    options: [\n      { value: \"Active\", label: \"Active\" },\n      { value: \"Paused\", label: \"Paused\" },\n      { value: \"Failed\", label: \"Failed\" },\n    ],\n  },\n];\n\nexport function ManagedTable() {\n  const [search, setSearch] = useState(\"\");\n  const [values, setValues] = useState<Record<string, string[]>>({});\n  const [selected, setSelected] = useState<Set<string>>(new Set());\n  const [page, setPage] = useState(1);\n  const [perPage, setPerPage] = useState(10);\n\n  const statuses = values.status ?? [];\n  const filtered = ALL.filter(\n    (r) =>\n      r.name.toLowerCase().includes(search.toLowerCase()) &&\n      (statuses.length === 0 || statuses.includes(r.status)),\n  );\n  const start = (page - 1) * perPage;\n  const pageRows = filtered.slice(start, start + perPage);\n  const pageSelectedCount = pageRows.filter((r) => selected.has(r.id)).length;\n\n  const setMany = (ids: string[], on: boolean) =>\n    setSelected((prev) => {\n      const next = new Set(prev);\n      ids.forEach((id) => (on ? next.add(id) : next.delete(id)));\n      return next;\n    });\n\n  return (\n    <ListManager\n      header={\n        <PageHeader\n          title=\"Workflows\"\n          subtitle=\"Manage triggers, runs, and history.\"\n          actions={<Button variant=\"primary\">Create</Button>}\n        />\n      }\n      toolbar={\n        <div style={{ display: \"flex\", flexWrap: \"wrap\", gap: \"0.5rem\", alignItems: \"center\" }}>\n          <BulkSelectToolbar\n            labels={bulkSelectToolbarEnLabels}\n            selectedCount={selected.size}\n            totalCount={filtered.length}\n            pageCount={pageRows.length}\n            pageSelected={pageSelectedCount === pageRows.length && pageRows.length > 0}\n            pagePartiallySelected={pageSelectedCount > 0 && pageSelectedCount < pageRows.length}\n            onSelectAll={() => setMany(filtered.map((r) => r.id), true)}\n            onSelectPage={() => setMany(pageRows.map((r) => r.id), true)}\n            onSelectNone={() => setSelected(new Set())}\n            actions={<Button variant=\"danger\">Delete {selected.size}</Button>}\n          />\n          <FilterToolbar\n            labels={filterToolbarEnLabels}\n            searchValue={search}\n            onSearchChange={(v) => {\n              setSearch(v);\n              setPage(1);\n            }}\n            filters={FILTERS}\n            values={values}\n            onChange={(key, next) => {\n              setValues((v) => ({ ...v, [key]: next }));\n              setPage(1);\n            }}\n            onClearAll={() => {\n              setSearch(\"\");\n              setValues({});\n            }}\n          />\n        </div>\n      }\n      toolbarEnd={\n        <Pagination\n          titles={{ paginationAriaLabel: \"Workflows pagination (top)\" }}\n          itemCount={filtered.length}\n          page={page}\n          perPage={perPage}\n          onSetPage={(_e, p) => setPage(p)}\n          onPerPageSelect={(_e, pp) => {\n            setPerPage(pp);\n            setPage(1);\n          }}\n          isCompact\n        />\n      }\n      footer={\n        <Pagination\n          titles={{ paginationAriaLabel: \"Workflows pagination (bottom)\" }}\n          itemCount={filtered.length}\n          page={page}\n          perPage={perPage}\n          onSetPage={(_e, p) => setPage(p)}\n          onPerPageSelect={(_e, pp) => {\n            setPerPage(pp);\n            setPage(1);\n          }}\n          variant=\"bottom\"\n        />\n      }\n    >\n      <Table aria-label=\"Workflows\" variant=\"compact\">\n        <Thead>\n          <Tr>\n            <Th screenReaderText=\"Row select\" />\n            <Th>Name</Th>\n            <Th>Status</Th>\n          </Tr>\n        </Thead>\n        <Tbody>\n          {pageRows.map((r, rowIndex) => (\n            <Tr key={r.id}>\n              <Td\n                select={{\n                  rowIndex,\n                  onSelect: () => setMany([r.id], !selected.has(r.id)),\n                  isSelected: selected.has(r.id),\n                }}\n              />\n              <Td dataLabel=\"Name\">{r.name}</Td>\n              <Td dataLabel=\"Status\">{r.status}</Td>\n            </Tr>\n          ))}\n        </Tbody>\n      </Table>\n    </ListManager>\n  );\n}\n\nexport default function ListManagerExample() {\n  return <ManagedTable />;\n}"
-        }
-      ]
-    },
-    {
-      "id": "recipes-pageheader",
-      "kind": "component",
-      "title": "PageHeader",
-      "breadcrumb": "Recipes/PageHeader",
-      "summary": "The standard top-of-page header — title row with optional icon, status label and right-aligned actions, a subtitle, a breadcrumb above, and a tabs strip below. Every region is a slot you fill, so it adapts to any page without a fixed prop surface.",
-      "tags": [
-        "recipes",
-        "pageheader",
-        "packages",
-        "ds-patternfly",
-        "src"
-      ],
-      "storybookUrl": "/?path=/story/recipes-pageheader--overview",
-      "layer": "ds",
-      "import": "import { PageHeader } from \"@golden-passport/ds-patternfly\";",
-      "componentSource": "import type { ReactNode } from \"react\";\nimport { Content, Split, SplitItem } from \"@patternfly/react-core\";\n\n/**\n * PageHeader — the standard top-of-page header: a title row (optional icon +\n * status label + right-aligned actions), an optional subtitle, an optional\n * breadcrumb above, and an optional tabs strip below.\n *\n * A composition of branded react-core primitives — every slot is a\n * `ReactNode` you fill, so it stays fully configurable without a fixed prop\n * surface. Layout uses the brand dials; the slotted content brings its own\n * brand styling. No `labels` prop: the header owns no localizable chrome\n * text (title/subtitle/breadcrumb/tabs are all caller-provided).\n */\nexport interface PageHeaderProps {\n  /** The page title. Rendered as an `<h1>`. */\n  title: ReactNode;\n  /** Supporting line under the title. */\n  subtitle?: ReactNode;\n  /** Leading glyph beside the title (e.g. a 36×36 icon). */\n  icon?: ReactNode;\n  /** Status slot rendered inline after the title (e.g. a `<Label>`). */\n  status?: ReactNode;\n  /** Breadcrumb slot rendered above the title (e.g. a `<Breadcrumb>`). */\n  breadcrumb?: ReactNode;\n  /** Right-aligned actions (buttons, a kebab `<Dropdown>`, …). */\n  actions?: ReactNode;\n  /** Tabs strip rendered below the header (e.g. a `<Tabs>`). */\n  tabs?: ReactNode;\n  /** Content rendered below the tabs strip. */\n  children?: ReactNode;\n}\n\nexport function PageHeader({\n  title,\n  subtitle,\n  icon,\n  status,\n  breadcrumb,\n  actions,\n  tabs,\n  children,\n}: PageHeaderProps) {\n  return (\n    <div style={{ display: \"flex\", flexDirection: \"column\" }}>\n      {breadcrumb ? (\n        <div style={{ marginBlockEnd: \"0.75rem\" }}>{breadcrumb}</div>\n      ) : null}\n      <Split hasGutter style={{ alignItems: \"flex-start\" }}>\n        {icon ? (\n          <SplitItem>\n            <span\n              style={{\n                display: \"flex\",\n                alignItems: \"center\",\n                justifyContent: \"center\",\n                blockSize: 36,\n              }}\n            >\n              {icon}\n            </span>\n          </SplitItem>\n        ) : null}\n        <SplitItem isFilled>\n          <div style={{ display: \"flex\", alignItems: \"center\", gap: \"0.75rem\", flexWrap: \"wrap\" }}>\n            <Content component=\"h1\" style={{ margin: 0 }}>\n              {title}\n            </Content>\n            {status}\n          </div>\n          {subtitle ? (\n            <Content\n              component=\"p\"\n              style={{ margin: \"0.25rem 0 0\", color: \"var(--gp-color-text-subtle)\" }}\n            >\n              {subtitle}\n            </Content>\n          ) : null}\n        </SplitItem>\n        {actions ? <SplitItem>{actions}</SplitItem> : null}\n      </Split>\n      {tabs ? <div style={{ marginBlockStart: \"1rem\" }}>{tabs}</div> : null}\n      {children ? (\n        <div style={{ marginBlockStart: \"var(--gp-pad-section, 2rem)\" }}>{children}</div>\n      ) : null}\n    </div>\n  );\n}",
-      "props": [
-        {
-          "name": "title",
-          "type": "ReactNode",
-          "required": true,
-          "description": "The page title. Rendered as an <h1>."
-        },
-        {
-          "name": "subtitle",
-          "type": "ReactNode",
-          "description": "Supporting line under the title."
-        },
-        {
-          "name": "icon",
-          "type": "ReactNode",
-          "description": "Leading glyph beside the title (e.g. a 36×36 icon)."
-        },
-        {
-          "name": "status",
-          "type": "ReactNode",
-          "description": "Status slot rendered inline after the title (e.g. a <Label>)."
-        },
-        {
-          "name": "breadcrumb",
-          "type": "ReactNode",
-          "description": "Breadcrumb slot rendered above the title (e.g. a <Breadcrumb>)."
-        },
-        {
-          "name": "actions",
-          "type": "ReactNode",
-          "description": "Right-aligned actions — buttons, a kebab <Dropdown>."
-        },
-        {
-          "name": "tabs",
-          "type": "ReactNode",
-          "description": "Tabs strip rendered below the header (e.g. a <Tabs>)."
-        },
-        {
-          "name": "children",
-          "type": "ReactNode",
-          "description": "Content rendered below the tabs strip."
-        }
-      ],
-      "usage": "PageHeader is the standard top-of-page header recipe: a title row (optional icon + status <Label> + right-aligned actions), an optional subtitle, a breadcrumb slot above, and a tabs strip below. Every region is a ReactNode slot — fill what you need. Built from branded react-core primitives; no labels prop (all text is caller-provided content).",
-      "examples": [
-        {
-          "name": "PageHeader",
-          "source": "/**\n * PageHeader recipe — the lib's exported PageHeader: title row + optional\n * icon / status / actions, subtitle, breadcrumb above, tabs below.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useId, useState } from \"react\";\nimport {\n  Breadcrumb,\n  BreadcrumbItem,\n  Button,\n  Dropdown,\n  DropdownItem,\n  DropdownList,\n  Label,\n  MenuToggle,\n  type MenuToggleElement,\n  PageHeader,\n  Tab,\n  Tabs,\n  TabTitleText,\n} from \"@golden-passport/ds-patternfly\";\nimport { CubesIcon, EllipsisVIcon } from \"@patternfly/react-icons\";\n\nexport function Basic() {\n  return (\n    <PageHeader\n      title=\"Workflows\"\n      subtitle=\"Manage triggers, runs, and history.\"\n      actions={<Button variant=\"primary\">Create workflow</Button>}\n    />\n  );\n}\n\nexport function FullChrome() {\n  const [open, setOpen] = useState(false);\n  return (\n    <PageHeader\n      breadcrumb={\n        <Breadcrumb aria-label=\"Workflow breadcrumb\">\n          <BreadcrumbItem to=\"#\">Workflows</BreadcrumbItem>\n          <BreadcrumbItem to=\"#\" isActive>\n            Quarterly review\n          </BreadcrumbItem>\n        </Breadcrumb>\n      }\n      icon={<CubesIcon style={{ width: 36, height: 36 }} />}\n      title=\"Quarterly review\"\n      status={<Label color=\"green\">Active</Label>}\n      subtitle=\"Triggered hourly · 4 steps · last run 12 minutes ago\"\n      actions={\n        <Dropdown\n          isOpen={open}\n          onSelect={() => setOpen(false)}\n          onOpenChange={setOpen}\n          toggle={(toggleRef: React.Ref<MenuToggleElement>) => (\n            <MenuToggle\n              ref={toggleRef}\n              aria-label=\"Workflow actions\"\n              variant=\"plain\"\n              onClick={() => setOpen((o) => !o)}\n            >\n              <EllipsisVIcon />\n            </MenuToggle>\n          )}\n        >\n          <DropdownList>\n            <DropdownItem>Run now</DropdownItem>\n            <DropdownItem>Edit</DropdownItem>\n            <DropdownItem>Disable</DropdownItem>\n          </DropdownList>\n        </Dropdown>\n      }\n    />\n  );\n}\n\nexport function WithTabs() {\n  const id = useId();\n  const [activeTabKey, setActiveTabKey] = useState<string | number>(0);\n  return (\n    <PageHeader\n      icon={<CubesIcon style={{ width: 36, height: 36 }} />}\n      title=\"Pod details\"\n      status={<Label color=\"green\">Running</Label>}\n      tabs={\n        <Tabs\n          activeKey={activeTabKey}\n          onSelect={(_e, k) => setActiveTabKey(k)}\n          id={`${id}-tabs`}\n          component=\"nav\"\n          aria-label=\"Pod navigation tabs\"\n        >\n          <Tab eventKey={0} title={<TabTitleText>Details</TabTitleText>} />\n          <Tab eventKey={1} title={<TabTitleText>YAML</TabTitleText>} />\n          <Tab eventKey={2} title={<TabTitleText>Events</TabTitleText>} />\n        </Tabs>\n      }\n    >\n      <p style={{ margin: 0, color: \"var(--gp-color-text-regular)\" }}>\n        {activeTabKey === 0\n          ? \"Details panel\"\n          : activeTabKey === 1\n            ? \"YAML panel\"\n            : \"Events panel\"}\n      </p>\n    </PageHeader>\n  );\n}\n\nexport default function PageHeaderExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Basic />\n      <FullChrome />\n      <WithTabs />\n    </div>\n  );\n}"
         }
       ]
     },

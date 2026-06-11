@@ -63,6 +63,7 @@ export function ValidatedTextArea({
   const { error, validated, onBlur } = useFieldValidation(value, validators, {
     validateOn,
   });
+  const hasHelp = Boolean(error || helperText);
 
   return (
     <FormGroup label={label} isRequired={!!isRequired} fieldId={id}>
@@ -77,9 +78,9 @@ export function ValidatedTextArea({
         {...(autoResize ? { autoResize: true } : {})}
         onChange={(_e, v) => onChange(v)}
         onBlur={onBlur}
-        aria-describedby={helpId}
+        {...(hasHelp ? { "aria-describedby": helpId } : {})}
       />
-      {error || helperText ? (
+      {hasHelp ? (
         <FormHelperText>
           <HelperText id={helpId}>
             <HelperTextItem variant={error ? "error" : "default"}>

@@ -11,6 +11,7 @@ export type DocKind =
   | "foundation"
   | "component"
   | "recipe"
+  | "ds"
   | "guideline";
 
 /** One prop of an exported component (mirrors the lib's PropsTable rows). */
@@ -109,6 +110,9 @@ export function search(query: string, limit = 8): DocItem[] {
         // Bonus for tag match — tags are curated.
         if (item.tags?.includes(t)) score += 2;
       }
+      // The DS "lego block" layer is the focus — float it above the base
+      // PF wrappers when an item otherwise matched.
+      if (score > 0 && item.layer === "ds") score += 2;
       return { item, score };
     })
     .filter((r) => r.score > 0)

@@ -13,7 +13,7 @@ import bulkComponentSrc from "../../components/ds/BulkSelectToolbar.tsx?raw";
 import propsData from "./bulkSelectToolbar.props.json";
 
 const meta: Meta<typeof BulkSelectToolbar> = {
-  title: "Recipes/BulkSelectToolbar",
+  title: "Building blocks/Data/BulkSelectToolbar",
   component: BulkSelectToolbar,
   parameters: { layout: "padded" },
 };

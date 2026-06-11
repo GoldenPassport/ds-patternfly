@@ -16,20 +16,16 @@ export type StatusPanelVariant =
   | "unauthorized"
   | "maintenance";
 
+// PF6 EmptyState colours the icon via its `status` prop ("danger" |
+// "warning" | "success" | "info"); plain states leave it default.
 const VARIANTS: Record<
   StatusPanelVariant,
-  { icon: ComponentType; iconColor?: string }
+  { icon: ComponentType; status?: "danger" | "warning" }
 > = {
   empty: { icon: CubesIcon },
-  error: {
-    icon: ExclamationCircleIcon,
-    iconColor: "var(--pf-t--global--icon--color--status--danger--default, #c9190b)",
-  },
+  error: { icon: ExclamationCircleIcon, status: "danger" },
   unauthorized: { icon: LockIcon },
-  maintenance: {
-    icon: WrenchIcon,
-    iconColor: "var(--pf-t--global--icon--color--status--warning--default, #f0ab00)",
-  },
+  maintenance: { icon: WrenchIcon, status: "warning" },
 };
 
 /**
@@ -72,7 +68,7 @@ export function StatusPanel({
       headingLevel="h2"
       icon={icon ?? v.icon}
       {...(size ? { variant: size } : {})}
-      {...(v.iconColor ? { iconProps: { style: { color: v.iconColor } } } : {})}
+      {...(v.status ? { status: v.status } : {})}
     >
       {children ? <EmptyStateBody>{children}</EmptyStateBody> : null}
       {primaryAction || secondaryActions ? (

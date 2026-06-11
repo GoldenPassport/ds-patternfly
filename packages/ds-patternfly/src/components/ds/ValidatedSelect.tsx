@@ -66,6 +66,7 @@ export function ValidatedSelect({
   const { error, validated, onBlur } = useFieldValidation(value, validators, {
     validateOn,
   });
+  const hasHelp = Boolean(error || helperText);
 
   return (
     <FormGroup label={label} isRequired={!!isRequired} fieldId={id}>
@@ -77,7 +78,7 @@ export function ValidatedSelect({
         isDisabled={!!isDisabled}
         onChange={(_e, v) => onChange(v)}
         onBlur={onBlur}
-        aria-describedby={helpId}
+        {...(hasHelp ? { "aria-describedby": helpId } : {})}
       >
         {options.map((opt) => (
           <FormSelectOption
@@ -89,7 +90,7 @@ export function ValidatedSelect({
           />
         ))}
       </FormSelect>
-      {error || helperText ? (
+      {hasHelp ? (
         <FormHelperText>
           <HelperText id={helpId}>
             <HelperTextItem variant={error ? "error" : "default"}>

@@ -13,7 +13,7 @@ import listManagerComponentSrc from "../../components/ds/ListManager.tsx?raw";
 import propsData from "./listManager.props.json";
 
 const meta: Meta<typeof ListManager> = {
-  title: "Recipes/ListManager",
+  title: "Building blocks/Data/ListManager",
   component: ListManager,
   parameters: { layout: "padded" },
 };

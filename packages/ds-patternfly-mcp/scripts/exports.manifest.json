@@ -1,5 +1,5 @@
 {
-  "$comment": "Curation manifest for the lib's EXPORTED components. Keyed by catalog id (the kebab-cased story title). Each entry enriches the generated catalog item with an import statement + props (read from the colocated *.props.json the story also renders), usage guidance, key brand tokens, and end-to-end examples whose full source is embedded verbatim (with the examples/_lib shim rewritten to the package name). Paths are relative to packages/ds-patternfly.",
+  "$comment": "Curation manifest for the lib's EXPORTED DS lego-block components. Keyed by catalog id (the kebab-cased story title). Each entry enriches the generated catalog item with an import statement + props (read from the colocated *.props.json the story also renders), usage guidance, key brand tokens, and end-to-end examples whose full source is embedded verbatim (with the examples/_lib shim rewritten to the package name). Paths are relative to packages/ds-patternfly. Examples are also auto-discovered by story↔example path mirroring, so most entries only need propsFile + usage.",
   "ai-chat": {
     "propsFile": "src/stories/ai/aiAssistant.props.json",
     "usage": "AiAssistant is the lib's exported AI chat experience: a brandable prompt bar that renders inline wherever you place it, plus the surfaces it grows into — a transient recent-chat popover and a repositionable, resizable, searchable full-conversation panel (a modal below the sm breakpoint). Overlays portal into the `overlayContainer` element (position: relative) and anchor to its corners. Wire your backend via `onSend`; seed restored history via `initialMessages`; localise every string via `labels`. Styles ship in the lib stylesheet (`@golden-passport/ds-patternfly/styles`) — no extra CSS import.",
@@ -17,23 +17,69 @@
       }
     ]
   },
-  "recipes-pageheader": {
+
+  "building-blocks-navigation-pageheader": {
     "propsFile": "src/stories/recipes/pageHeader.props.json",
-    "usage": "PageHeader is the standard top-of-page header recipe: a title row (optional icon + status <Label> + right-aligned actions), an optional subtitle, a breadcrumb slot above, and a tabs strip below. Every region is a ReactNode slot — fill what you need. Built from branded react-core primitives; no labels prop (all text is caller-provided content)."
+    "usage": "PageHeader is the standard top-of-page header: a title row (optional icon + status <Label> + right-aligned actions), an optional subtitle, a breadcrumb slot above, and a tabs strip below. Every region is a ReactNode slot — fill what you need. No labels prop (all text is caller-provided content)."
   },
-  "recipes-filtertoolbar": {
+  "building-blocks-navigation-appheader": {
+    "propsFile": "src/stories/ds/appHeader.props.json",
+    "usage": "AppHeader is the branded application masthead: an optional sidebar-toggle (onToggleNav), a brand/logo slot, and a right-aligned actions slot (search, help, user menu). Composes the base Masthead family; brand styling flows from the dials. For the full page frame (masthead + sidebar + content), use Shell."
+  },
+  "building-blocks-navigation-appfooter": {
+    "propsFile": "src/stories/ds/appFooter.props.json",
+    "usage": "AppFooter is the branded site footer: an optional logo + tagline, columns of link groups (sitemap), and a bottom bar with copyright + inline legal links. Layout + brand dials only; all content is caller-provided. Each link-group renders a uniquely-labelled nav landmark."
+  },
+
+  "building-blocks-forms-validatedtextfield": {
+    "propsFile": "src/stories/ds/validatedTextField.props.json",
+    "usage": "ValidatedTextField is a labelled, validated single-line field composing base FormGroup + TextInput + HelperText. Fully controlled (own value, update from onChange); pass composable `validators` (required, minLength, email, …). Errors surface on blur (or per validateOn) with derived PF `validated` state, an error/helper message, and aria-describedby — all wired for you.",
+    "keyTokens": ["--gp-control-pad-y", "--gp-radius-control", "--gp-color-status-danger"]
+  },
+  "building-blocks-forms-validatedtextarea": {
+    "propsFile": "src/stories/ds/validatedTextArea.props.json",
+    "usage": "ValidatedTextArea is the multi-line sibling of ValidatedTextField: same controlled value + composable `validators` API over a base TextArea, with errors on blur, derived `validated` state, and aria-describedby. Supports rows / autoResize."
+  },
+  "building-blocks-forms-validatedselect": {
+    "propsFile": "src/stories/ds/validatedSelect.props.json",
+    "usage": "ValidatedSelect is a labelled, validated single-select built on the base FormSelect. Pass `options` (include a placeholder row with value \"\"), own `value`, and the same composable `validators`; errors surface on blur with derived `validated` state."
+  },
+  "building-blocks-forms-formscaffold": {
+    "propsFile": "src/stories/ds/formScaffold.props.json",
+    "usage": "FormScaffold is the standard form frame: your fields as children, then a branded submit / cancel ActionGroup. Wires the submit handler (native submit prevented) and a disabled-submit guard, so you focus on the fields (e.g. the Validated* lego blocks). Localise the buttons via labels (formScaffoldEnLabels)."
+  },
+
+  "building-blocks-data-datatable": {
+    "propsFile": "src/stories/ds/dataTable.props.json",
+    "usage": "DataTable is a declarative table over `columns` (DataTableColumn<T>: key/header/cell) + `rows`, with optional toolbar and pagination slots and built-in loading (spinner) / empty (slot) states. Composes the base Table family; you bring the data and the column renderers."
+  },
+  "building-blocks-data-cardgrid": {
+    "propsFile": "src/stories/ds/cardGrid.props.json",
+    "usage": "CardGrid is a responsive gallery of cards from a data array: pass `items` and a `renderItem` that returns the card body; CardGrid handles the responsive Gallery layout (auto-fills columns at minColumnWidth) and an optional `emptyState`. The standard alternative to a table for browse-style collections."
+  },
+  "building-blocks-data-filtertoolbar": {
     "propsFile": "src/stories/recipes/filterToolbar.props.json",
-    "usage": "FilterToolbar is the fully-controlled filter bar recipe: a search field, faceted multi-select facets (FilterDef[]), removable filter chips, and one-click clear-all. You own searchValue + values and update them from onSearchChange / onChange / onClearAll; chips and clear-all derive from values automatically. Localise chrome text via labels (filterToolbarEnLabels)."
+    "usage": "FilterToolbar is the fully-controlled filter bar: a search field, faceted multi-select facets (FilterDef[]), removable filter chips, and one-click clear-all. You own searchValue + values and update them from onSearchChange / onChange / onClearAll; chips and clear-all derive from values automatically. Localise chrome text via labels (filterToolbarEnLabels)."
   },
-  "recipes-bulkselecttoolbar": {
+  "building-blocks-data-bulkselecttoolbar": {
     "propsFile": "src/stories/recipes/bulkSelectToolbar.props.json",
-    "usage": "BulkSelectToolbar is the controlled 'select many, act on many' recipe: a split checkbox + dropdown (select all / page / none), a derived '{n} selected' status, and bulk actions shown once a selection exists. You own the selection; pass counts + handlers. The split checkbox reflects page-selected / partially-selected state. Localise via labels (bulkSelectToolbarEnLabels)."
+    "usage": "BulkSelectToolbar is the controlled 'select many, act on many' toolbar: a split checkbox + dropdown (select all / page / none), a derived '{n} selected' status, and bulk actions shown once a selection exists. You own the selection; pass counts + handlers. The split checkbox reflects page-selected / partially-selected state. Localise via labels (bulkSelectToolbarEnLabels)."
   },
-  "recipes-listmanager": {
+  "building-blocks-data-listmanager": {
     "propsFile": "src/stories/recipes/listManager.props.json",
     "usage": "ListManager is the layout-only page scaffold for a managed collection: header slot (PageHeader), a toolbar row (FilterToolbar + BulkSelectToolbar left via `toolbar`, Pagination right via `toolbarEnd`), the list body (children — a Table or Gallery), and a footer pagination slot. It owns the vertical rhythm and toolbar arrangement; you bring the pieces and the data."
   },
-  "patterns-dashboardshell": {
+
+  "building-blocks-feedback-confirmmodal": {
+    "propsFile": "src/stories/ds/confirmModal.props.json",
+    "usage": "ConfirmModal is a small controlled confirmation dialog: title, body, and a confirm / cancel footer. Set variant=\"danger\" for destructive actions (red confirm button). Composes the base Modal family; you own isOpen and the confirm/cancel handlers. Localise via labels (confirmModalEnLabels)."
+  },
+  "building-blocks-feedback-statuspanel": {
+    "propsFile": "src/stories/ds/statusPanel.props.json",
+    "usage": "StatusPanel is the one lego block for every full-panel state screen: pick a variant (empty | error | unauthorized | maintenance) which sets a sensible default icon + accent, set the title/body, and add primary/secondary actions. Composes the base EmptyState family. Drop it into DataTable/CardGrid empty slots."
+  },
+
+  "building-blocks-layouts-dashboardshell": {
     "propsFile": "src/stories/patterns/dashboardShell.props.json",
     "usage": "DashboardShell is the dashboard page scaffold: a titled header band (title + description + right-aligned actions slot) over a content region you fill with a KPI strip, charts, and status cards (children). Layout + rhythm only — chart libraries (@patternfly/react-charts, ECharts) stay in your app and never enter the design system."
   }

@@ -137,6 +137,8 @@ const preview: Preview = {
       storySort: {
         order: [
           "Foundations",
+          "Building blocks",
+          ["Layouts", "Navigation", "Forms", "Data", "Feedback"],
           "AI",
           "Utility classes",
           "Layouts",

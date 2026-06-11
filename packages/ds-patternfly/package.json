@@ -34,7 +34,8 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "tsup && node scripts/build-css.mjs",
+    "build": "tsup && node scripts/build-css.mjs && node scripts/gen-ds-table.mjs",
+    "gen:readme": "node scripts/gen-ds-table.mjs",
     "dev": "tsup --watch",
     "storybook": "storybook dev -p 6006 --no-open",
     "storybook:start": "pnpm storybook:stop && pnpm storybook",

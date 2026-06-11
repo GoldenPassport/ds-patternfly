@@ -1,0 +1,10 @@
+{
+  "import": "import { CardGrid } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "items", "type": "T[]", "required": true, "description": "The data to render, one card each." },
+    { "name": "renderItem", "type": "(item: T, index: number) => ReactNode", "required": true, "description": "Render the card for one item — typically a <Card> with CardHeader / CardTitle / CardBody." },
+    { "name": "getKey", "type": "(item: T, index: number) => string | number", "description": "Stable React key for an item. Defaults to the array index." },
+    { "name": "minColumnWidth", "type": "string", "default": "\"260px\"", "description": "Minimum column width before the responsive gallery wraps to the next row." },
+    { "name": "emptyState", "type": "ReactNode", "description": "Rendered instead of the grid when items is empty — e.g. a <StatusPanel variant=\"empty\">." }
+  ]
+}

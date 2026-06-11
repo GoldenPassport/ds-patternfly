@@ -1,0 +1,12 @@
+{
+  "import": "import { StatusPanel } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "variant", "type": "\"empty\" | \"error\" | \"unauthorized\" | \"maintenance\"", "required": true, "description": "Which state this represents — sets the default icon + accent." },
+    { "name": "title", "type": "ReactNode", "required": true, "description": "Headline." },
+    { "name": "children", "type": "ReactNode", "description": "Explanatory body text." },
+    { "name": "icon", "type": "ComponentType", "description": "Override the variant's default icon." },
+    { "name": "primaryAction", "type": "ReactNode", "description": "Primary action (e.g. 'Create', 'Retry', 'Sign in')." },
+    { "name": "secondaryActions", "type": "ReactNode", "description": "Secondary actions (links / buttons)." },
+    { "name": "size", "type": "\"sm\" | \"lg\" | \"xl\"", "description": "EmptyState sizing." }
+  ]
+}

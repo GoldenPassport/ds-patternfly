@@ -74,6 +74,39 @@ export default function App() {
 }
 ```
 
+## Components
+
+Two layers: **base** components are thin PatternFly 6 wrappers under the
+brand dials (the building material); **DS "lego block"** components are the
+focus — exported, OOTB-configurable pieces for whole jobs that compose base
+components, apply the design tokens + brand styling, and add the TS logic.
+
+<!-- ds-components:start -->
+
+| Component | Category | What it does | Import |
+| --- | --- | --- | --- |
+| `DashboardShell` | Layouts | the page scaffold for an ops dashboard: a titled header band (title + optional description + right-aligned actions/toolbar) over a padded content region you fill with a KPI strip, charts, and status cards (a `Gallery` + `Grid` of `Card`s). | `import { DashboardShell } from "@golden-passport/ds-patternfly"` |
+| `PrimaryDetailLayout` | Layouts | Two-pane Primary–Detail layout (modeled on patternfly.org/patterns/primary-detail). | `import { PrimaryDetailLayout } from "@golden-passport/ds-patternfly"` |
+| `Shell` | Layouts | Top-level application shell: SkipToContent + Masthead + (optional) Sidebar + main. | `import { Shell } from "@golden-passport/ds-patternfly"` |
+| `AppFooter` | Navigation | the branded site footer: an optional logo + tagline, optional columns of link groups, and a bottom bar with copyright + inline legal links. | `import { AppFooter } from "@golden-passport/ds-patternfly"` |
+| `AppHeader` | Navigation | the branded application masthead: an optional sidebar-toggle, a brand/logo slot, and a right-aligned actions slot (search, help, user menu). | `import { AppHeader } from "@golden-passport/ds-patternfly"` |
+| `Hyperlink` | Navigation | Inline-friendly hyperlink wrapping a real `<a>`. | `import { Hyperlink } from "@golden-passport/ds-patternfly"` |
+| `PageHeader` | Navigation | the standard top-of-page header: a title row (optional icon + status label + right-aligned actions), an optional subtitle, an optional breadcrumb above, and an optional tabs strip below. | `import { PageHeader } from "@golden-passport/ds-patternfly"` |
+| `FormScaffold` | Forms | the standard form frame: your fields as `children`, then a branded submit / cancel ActionGroup. | `import { FormScaffold } from "@golden-passport/ds-patternfly"` |
+| `ValidatedSelect` | Forms | a labelled, validated single-select built on the base FormSelect. | `import { ValidatedSelect } from "@golden-passport/ds-patternfly"` |
+| `ValidatedTextArea` | Forms | the multi-line sibling of ValidatedTextField. | `import { ValidatedTextArea } from "@golden-passport/ds-patternfly"` |
+| `ValidatedTextField` | Forms | a labelled, validated single-line text field. | `import { ValidatedTextField } from "@golden-passport/ds-patternfly"` |
+| `BulkSelectToolbar` | Data | the "select many, act on many" toolbar: a split checkbox + dropdown (select all / page / none) on the left, a derived "{n} selected" status, and contextual bulk actions that appear once a selection exists. | `import { BulkSelectToolbar } from "@golden-passport/ds-patternfly"` |
+| `CardGrid` | Data | a responsive gallery of cards from a data array. | `import { CardGrid } from "@golden-passport/ds-patternfly"` |
+| `DataTable` | Data | a declarative table over `columns` + `rows`, with optional toolbar and pagination slots and built-in loading / empty states. | `import { DataTable } from "@golden-passport/ds-patternfly"` |
+| `FilterToolbar` | Data | the standard filter bar: a search field, faceted multi-select facets, removable filter chips, and one-click clear-all. | `import { FilterToolbar } from "@golden-passport/ds-patternfly"` |
+| `ListManager` | Data | the page scaffold for a managed collection: an optional header, a toolbar row (filters and/or bulk-select on the left, pagination on the right), the list body (a Table, a Gallery of Cards, …), and an optional footer pagination. | `import { ListManager } from "@golden-passport/ds-patternfly"` |
+| `ConfirmModal` | Feedback | a small controlled confirmation dialog: title, body, and a confirm / cancel footer. | `import { ConfirmModal } from "@golden-passport/ds-patternfly"` |
+| `StatusPanel` | Feedback | the one lego block for every full-panel "state" screen: empty results, an error, unauthorized access, or maintenance. | `import { StatusPanel } from "@golden-passport/ds-patternfly"` |
+| `AiAssistant` | AI | a brandable AI prompt bar plus the surfaces it grows into: a transient "recent chat" popover, and a repositionable, resizable, searchable full-conversation panel (a modal on narrow viewports). | `import { AiAssistant } from "@golden-passport/ds-patternfly"` |
+
+<!-- ds-components:end -->
+
 ## Design principles
 
 - **Brandable**: every brand is a `BrandTokens` object that overrides PatternFly 6 CSS variables. Switch by changing the `brand` prop.

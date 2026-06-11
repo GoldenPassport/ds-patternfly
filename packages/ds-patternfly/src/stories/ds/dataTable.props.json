@@ -1,0 +1,15 @@
+{
+  "import": "import { DataTable, type DataTableColumn } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "columns", "type": "DataTableColumn<T>[]", "required": true, "description": "Column definitions. Each is { key: string; header: ReactNode; cell: (row: T) => ReactNode; dataLabel?: string } — cell renders one row's value for that column." },
+    { "name": "rows", "type": "T[]", "required": true, "description": "The row data, one table row each." },
+    { "name": "getRowKey", "type": "(row: T) => string | number", "required": true, "description": "Stable React key for a row." },
+    { "name": "ariaLabel", "type": "string", "required": true, "description": "Accessible name for the table." },
+    { "name": "toolbar", "type": "ReactNode", "description": "Toolbar slot above the table (search, filters, bulk select). Rendered on the left of the top row." },
+    { "name": "pagination", "type": "ReactNode", "description": "Pagination slot rendered top-right. Give it a distinct titles.paginationAriaLabel if you also render footerPagination." },
+    { "name": "footerPagination", "type": "ReactNode", "description": "Pagination slot rendered below the table (typically variant=\"bottom\")." },
+    { "name": "isLoading", "type": "boolean", "description": "Show a centered spinner in place of rows." },
+    { "name": "emptyState", "type": "ReactNode", "description": "Rendered when rows is empty and not loading — e.g. a <StatusPanel variant=\"empty\">." },
+    { "name": "variant", "type": "\"compact\" | \"default\"", "default": "\"default\"", "description": "PF table density." }
+  ]
+}

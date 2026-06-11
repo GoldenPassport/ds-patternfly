@@ -1,0 +1,11 @@
+{
+  "import": "import { FormScaffold, formScaffoldEnLabels } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "labels", "type": "FormScaffoldLabels", "default": "formScaffoldEnLabels", "description": "Submit / cancel button text. Provide via formScaffoldEnLabels or your translations." },
+    { "name": "children", "type": "ReactNode", "required": true, "description": "The form fields (e.g. the Validated* lego blocks)." },
+    { "name": "onSubmit", "type": "() => void", "required": true, "description": "Fired on submit (native submit already prevented)." },
+    { "name": "onCancel", "type": "() => void", "description": "Fired when Cancel is pressed. Omit to hide the Cancel button." },
+    { "name": "isSubmitDisabled", "type": "boolean", "description": "Disable the submit button (e.g. while invalid or pending)." },
+    { "name": "isSubmitting", "type": "boolean", "description": "Show a loading state on the submit button." }
+  ]
+}

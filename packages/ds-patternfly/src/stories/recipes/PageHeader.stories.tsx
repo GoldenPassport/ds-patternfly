@@ -17,7 +17,7 @@ import pageHeaderComponentSrc from "../../components/ds/PageHeader.tsx?raw";
 import propsData from "./pageHeader.props.json";
 
 const meta: Meta<typeof PageHeader> = {
-  title: "Recipes/PageHeader",
+  title: "Building blocks/Navigation/PageHeader",
   component: PageHeader,
   parameters: {
     layout: "padded",

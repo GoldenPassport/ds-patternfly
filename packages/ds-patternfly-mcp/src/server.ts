@@ -36,13 +36,25 @@ import { ThemeProvider, goldenPassport } from "@golden-passport/ds-patternfly";
 </ThemeProvider>
 \`\`\`
 
-## Exported components
-Beyond theming, the lib exports ready-made components — \`Shell\`,
-\`PrimaryDetailLayout\`, \`Hyperlink\`, \`AiAssistant\` — each with a
-\`labels\` i18n contract (\`xxxEnLabels\` defaults) and slot props. Their
-catalog entries carry \`import\`, \`props\`, and \`usage\`; large ones also
-list end-to-end \`examples\` — fetch full example source with
-\`getGpExample\`.
+## Two component layers (DS is the focus)
+The lib ships components in two layers:
+
+- **DS "lego blocks"** (\`layer: "ds"\`) — the focus. Exported,
+  OOTB-configurable components for whole jobs: app chrome (\`AppHeader\`,
+  \`AppFooter\`, \`Shell\`), forms (\`ValidatedTextField\`, \`FormScaffold\`
+  + composable \`validators\`), data (\`DataTable\`, \`CardGrid\`,
+  \`ListManager\`), navigation (\`PageHeader\`), feedback (\`ConfirmModal\`,
+  \`StatusPanel\`), layouts (\`DashboardShell\`, \`PrimaryDetailLayout\`), and
+  \`AiAssistant\`. Each composes base wrappers, applies the brand dials, and
+  adds DS logic. **Reach for these first.** Their catalog entries carry
+  \`import\`, \`props\`, \`usage\`, embedded \`examples\` (via \`getGpExample\`),
+  and source (via \`getGpComponent\`).
+- **Base wrappers** (\`layer: "base"\`) — thin PF6 wrappers (Button, Card,
+  Table…), the building material the DS blocks compose. Use directly when no
+  DS block fits; \`getGpComponent\` returns their source for reference.
+
+\`searchGpDocs\` floats DS blocks above base wrappers. The full DS catalog is
+also tabulated in the package README.
 
 ## Things that flow from dials — don't override
 - Field / button height → \`--gp-control-pad-y\` (resolves to 2.25rem = 36px via padding + line-height)
@@ -286,11 +298,15 @@ export function createServer(): McpServer {
           ],
         };
       }
+      const layerNote =
+        item.layer === "base"
+          ? "base layer — a thin PF6 wrapper (reference building material; the ds/ lego blocks compose these)"
+          : "ds layer — an exported DS lego block (compose-and-go)";
       return {
         content: [
           {
             type: "text",
-            text: `// ${name}.tsx — @golden-passport/ds-patternfly component source\n${item.componentSource}`,
+            text: `// ${name}.tsx — @golden-passport/ds-patternfly (${layerNote})\n${item.componentSource}`,
           },
         ],
       };

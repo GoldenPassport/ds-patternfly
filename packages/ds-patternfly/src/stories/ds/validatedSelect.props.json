@@ -1,0 +1,15 @@
+{
+  "import": "import { ValidatedSelect, required, type SelectChoice } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "label", "type": "ReactNode", "required": true, "description": "Field label." },
+    { "name": "value", "type": "string", "required": true, "description": "Controlled selected value." },
+    { "name": "onChange", "type": "(value: string) => void", "required": true, "description": "Fired with the next value on change." },
+    { "name": "options", "type": "SelectChoice[]", "required": true, "description": "The choices ({ value, label, isPlaceholder?, isDisabled? }). Include a placeholder row with value \"\" if you want one." },
+    { "name": "validators", "type": "Validator[]", "default": "[]", "description": "Composable validators; the first failing one's message is shown." },
+    { "name": "isRequired", "type": "boolean", "description": "Mark the field required." },
+    { "name": "helperText", "type": "ReactNode", "description": "Helper text shown when there is no error." },
+    { "name": "validateOn", "type": "\"blur\" | \"change\"", "default": "\"blur\"", "description": "When to first surface errors." },
+    { "name": "isDisabled", "type": "boolean", "description": "Disable the field." },
+    { "name": "fieldId", "type": "string", "description": "Stable id base (defaults to a generated id)." }
+  ]
+}

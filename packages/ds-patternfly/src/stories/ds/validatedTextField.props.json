@@ -1,0 +1,16 @@
+{
+  "import": "import { ValidatedTextField, required, minLength, email } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "label", "type": "ReactNode", "required": true, "description": "Field label." },
+    { "name": "value", "type": "string", "required": true, "description": "Controlled value." },
+    { "name": "onChange", "type": "(value: string) => void", "required": true, "description": "Fired with the next value on every keystroke." },
+    { "name": "validators", "type": "Validator[]", "default": "[]", "description": "Composable validators; the first failing one's message is shown." },
+    { "name": "isRequired", "type": "boolean", "description": "Mark the field required (visual asterisk + pairs with a required() validator)." },
+    { "name": "helperText", "type": "ReactNode", "description": "Helper text shown when there is no error." },
+    { "name": "type", "type": "\"text\" | \"email\" | \"password\" | \"tel\" | \"url\" | \"number\"", "default": "\"text\"", "description": "Input type." },
+    { "name": "placeholder", "type": "string", "description": "Placeholder text." },
+    { "name": "validateOn", "type": "\"blur\" | \"change\"", "default": "\"blur\"", "description": "When to first surface errors." },
+    { "name": "isDisabled", "type": "boolean", "description": "Disable the field." },
+    { "name": "fieldId", "type": "string", "description": "Stable id base (defaults to a generated id)." }
+  ]
+}

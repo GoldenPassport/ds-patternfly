@@ -233,6 +233,7 @@ function classify(title) {
   if (head === "foundations") return "foundation";
   if (head === "utility classes") return "guideline";
   if (head === "layouts") return "foundation";
+  if (head === "building blocks") return "ds";
   if (head === "components") return "component";
   if (head === "component groups") return "component";
   if (head === "charts") return "component";

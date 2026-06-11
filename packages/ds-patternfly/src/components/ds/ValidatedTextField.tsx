@@ -64,6 +64,9 @@ export function ValidatedTextField({
   const { error, validated, onBlur } = useFieldValidation(value, validators, {
     validateOn,
   });
+  // Only reference the help element when it's actually rendered — a dangling
+  // aria-describedby is an a11y violation.
+  const hasHelp = Boolean(error || helperText);
 
   return (
     <FormGroup label={label} isRequired={!!isRequired} fieldId={id}>
@@ -77,9 +80,9 @@ export function ValidatedTextField({
         {...(placeholder !== undefined ? { placeholder } : {})}
         onChange={(_e, v) => onChange(v)}
         onBlur={onBlur}
-        aria-describedby={helpId}
+        {...(hasHelp ? { "aria-describedby": helpId } : {})}
       />
-      {error || helperText ? (
+      {hasHelp ? (
         <FormHelperText>
           <HelperText id={helpId}>
             <HelperTextItem variant={error ? "error" : "default"}>
