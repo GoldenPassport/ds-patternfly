@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ExternalLinkButton } from "@patternfly/react-component-groups/dist/dynamic/ExternalLinkButton";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { Variants } from "../../examples/component-groups/ExternalLinkButton.example.js";
+import externalLinkButtonExampleSrc from "../../examples/component-groups/ExternalLinkButton.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Controls/External link button",
@@ -24,24 +25,25 @@ export const Overview: StoryObj = {
     >
       <Section title="Variants">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-                <ExternalLinkButton href="https://patternfly.org" variant="primary">
-                  Primary
-                </ExternalLinkButton>
-                <ExternalLinkButton href="https://patternfly.org" variant="secondary">
-                  Secondary
-                </ExternalLinkButton>
-                <ExternalLinkButton href="https://patternfly.org" variant="link" isInline>
-                  Inline link
-                </ExternalLinkButton>
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<ExternalLinkButton href="https://patternfly.org" variant="link" isInline>
-  Read the docs
-</ExternalLinkButton>`}</CodeBlock>
-          </div>
+          <Example
+            source={externalLinkButtonExampleSrc}
+            region="Variants"
+            fileName="ExternalLinkButton.example.tsx"
+          >
+            <Variants />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example
+            source={externalLinkButtonExampleSrc}
+            fileName="ExternalLinkButton.example.tsx"
+          />
         </Card>
       </Section>
 

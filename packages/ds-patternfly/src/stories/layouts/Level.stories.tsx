@@ -1,7 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Level, LevelItem } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { Box, DemoFrame, PropsTable } from "./_layoutKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import {
+  TwoEnds,
+  ThreeOrMoreItems,
+} from "../../examples/layouts/Level.example.js";
+import levelExampleSrc from "../../examples/layouts/Level.example.tsx?raw";
+import levelComponentSrc from "../../components/Level.tsx?raw";
 
 const meta: Meta = {
   title: "Layouts/Level",
@@ -27,22 +37,13 @@ export const Overview: StoryObj = {
         description="The most common pattern: title on the left, actions on the right."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Level>
-                <LevelItem>
-                  <strong style={{ fontSize: 18 }}>Tasks</strong>
-                </LevelItem>
-                <LevelItem>
-                  <Box label="Create task" />
-                </LevelItem>
-              </Level>
-            </DemoFrame>
-            <CodeBlock>{`<Level>
-  <LevelItem><Title>Tasks</Title></LevelItem>
-  <LevelItem><Button>Create task</Button></LevelItem>
-</Level>`}</CodeBlock>
-          </div>
+          <Example
+            source={levelExampleSrc}
+            region="TwoEnds"
+            fileName="Level.example.tsx"
+          >
+            <TwoEnds />
+          </Example>
         </Card>
       </Section>
 
@@ -51,41 +52,49 @@ export const Overview: StoryObj = {
         description="Items distribute evenly across the row."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Level>
-                <LevelItem><Box label="left" /></LevelItem>
-                <LevelItem><Box label="middle" /></LevelItem>
-                <LevelItem><Box label="right" /></LevelItem>
-              </Level>
-            </DemoFrame>
-          </div>
+          <Example
+            source={levelExampleSrc}
+            region="ThreeOrMoreItems"
+            fileName="Level.example.tsx"
+          >
+            <ThreeOrMoreItems />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "children",
-                  type: "ReactNode (LevelItem children)",
-                  description: "Wrap each top-level item in <LevelItem> for correct spacing.",
-                },
-                {
-                  name: "className",
-                  type: "string",
-                  description: "Additional classes — rarely needed.",
-                },
-              ]}
-            />
-            <p style={{ marginTop: 16, marginBottom: 0, color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
-              Level intentionally has a tiny prop surface — alignment is fixed, the only knob you turn is the children.
-            </p>
-          </div>
+          <Example source={levelExampleSrc} fileName="Level.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Level, LevelItem } from "@golden-passport/ds-patternfly";'}
+        componentSource={levelComponentSrc}
+        componentFileName="Level.tsx"
+        description={
+          <>
+            How to import the component and every prop it accepts. Level
+            intentionally has a tiny prop surface — alignment is fixed, the
+            only knob you turn is the children.
+          </>
+        }
+        rows={[
+          {
+            name: "children",
+            type: "ReactNode (LevelItem children)",
+            description: "Wrap each top-level item in <LevelItem> for correct spacing.",
+          },
+          {
+            name: "className",
+            type: "string",
+            description: "Additional classes — rarely needed.",
+          },
+        ]}
+      />
 
       <Section
         title="Level vs Flex vs Split"

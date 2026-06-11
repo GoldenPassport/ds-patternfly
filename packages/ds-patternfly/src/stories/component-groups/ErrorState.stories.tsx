@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button } from "@golden-passport/ds-patternfly";
-import ErrorState from "@patternfly/react-component-groups/dist/dynamic/ErrorState";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  Default,
+  StatusVariants,
+} from "../../examples/component-groups/ErrorState.example.js";
+import errorStateExampleSrc from "../../examples/component-groups/ErrorState.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Error communication/Error state",
@@ -41,30 +44,13 @@ export const Overview: StoryObj = {
         description="Status defaults to `danger`. Pass `customFooter` for retry / contact-support actions."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <ErrorState
-                titleText="Something went wrong"
-                bodyText="We couldn't load your workflows. Try again, or contact support if the issue persists."
-                customFooter={
-                  <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
-                    <Button variant="primary">Retry</Button>
-                    <Button variant="link">Contact support</Button>
-                  </div>
-                }
-              />
-            </DemoFrame>
-            <CodeBlock>{`<ErrorState
-  titleText="Something went wrong"
-  bodyText="We couldn't load your workflows. Try again, or contact support."
-  customFooter={
-    <Flex>
-      <Button variant="primary">Retry</Button>
-      <Button variant="link">Contact support</Button>
-    </Flex>
-  }
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={errorStateExampleSrc}
+            region="Default"
+            fileName="ErrorState.example.tsx"
+          >
+            <Default />
+          </Example>
         </Card>
       </Section>
 
@@ -73,15 +59,22 @@ export const Overview: StoryObj = {
         description="Use `warning` when the error is recoverable (rate-limited, network blip), `info` for informational failures."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <ErrorState
-                status="warning"
-                titleText="Rate limited"
-                bodyText="You've hit the API rate limit. Try again in a minute."
-              />
-            </DemoFrame>
-          </div>
+          <Example
+            source={errorStateExampleSrc}
+            region="StatusVariants"
+            fileName="ErrorState.example.tsx"
+          >
+            <StatusVariants />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={errorStateExampleSrc} fileName="ErrorState.example.tsx" />
         </Card>
       </Section>
 

@@ -1,33 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Label } from "@golden-passport/ds-patternfly";
-import { Charts } from "@patternfly/react-charts/echarts";
-import * as echarts from "echarts/core";
-import { SankeyChart } from "echarts/charts";
-import { TitleComponent, TooltipComponent } from "echarts/components";
-import { SVGRenderer } from "echarts/renderers";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { Basic } from "../../examples/charts/SankeyChart.example.js";
+import sankeyChartExampleSrc from "../../examples/charts/SankeyChart.example.tsx?raw";
 import { chartA11yParams } from "./_chartKit.js";
-import { useTheme } from "../../theme/ThemeProvider.js";
-
-// Register only the ECharts pieces the Sankey needs (tree-shakeable).
-echarts.use([SankeyChart, SVGRenderer, TitleComponent, TooltipComponent]);
-
-// A realistic SaaS funnel: free trial → activated → paid plans / churn.
-const sankeyNodes = [
-  { name: "Free trial" },
-  { name: "Activated" },
-  { name: "Pro" },
-  { name: "Enterprise" },
-  { name: "Churned" },
-];
-const sankeyLinks = [
-  { source: "Free trial", target: "Activated", value: 480 },
-  { source: "Free trial", target: "Churned", value: 220 },
-  { source: "Activated", target: "Pro", value: 320 },
-  { source: "Activated", target: "Enterprise", value: 90 },
-  { source: "Activated", target: "Churned", value: 70 },
-];
 
 const meta: Meta = {
   title: "Charts/Sankey chart",
@@ -36,10 +13,7 @@ const meta: Meta = {
 export default meta;
 
 export const Overview: StoryObj = {
-  render: () => {
-    const { mode } = useTheme();
-    const labelColor = mode === "dark" ? "#f5f5f5" : "#151515";
-    return (
+  render: () => (
     <FoundationPage
       title="Sankey chart"
       intro={
@@ -57,72 +31,23 @@ export const Overview: StoryObj = {
     >
       <Section title="Basic (ECharts wrapper)">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={420}>
-              <Charts
-                id="sankey-basic"
-                nodeSelector="html"
-                height={360}
-                width={760}
-                option={{
-                  aria: {
-                    enabled: true,
-                    label: {
-                      description:
-                        "User funnel: free trial through activation to paid plans and churn.",
-                    },
-                  },
-                  series: [
-                    {
-                      type: "sankey",
-                      data: sankeyNodes,
-                      links: sankeyLinks,
-                      label: { color: labelColor },
-                      lineStyle: { color: "gradient", opacity: 0.4 },
-                    },
-                  ],
-                  tooltip: {
-                    sourceLabel: "From",
-                    destinationLabel: "To",
-                    valueFormatter: (value: unknown) => `${value as number} users`,
-                  },
-                }}
-              />
-            </DemoFrame>
-            <CodeBlock>{`import { Charts } from "@patternfly/react-charts/echarts";
-import * as echarts from "echarts/core";
-import { SankeyChart } from "echarts/charts";
-import { TitleComponent, TooltipComponent } from "echarts/components";
-import { SVGRenderer } from "echarts/renderers";
+          <Example
+            source={sankeyChartExampleSrc}
+            region="Basic"
+            fileName="SankeyChart.example.tsx"
+            height={420}
+          >
+            <Basic />
+          </Example>
+        </Card>
+      </Section>
 
-echarts.use([SankeyChart, SVGRenderer, TitleComponent, TooltipComponent]);
-
-const data = [
-  { name: "Free trial" }, { name: "Activated" }, { name: "Pro" },
-  { name: "Enterprise" }, { name: "Churned" },
-];
-const links = [
-  { source: "Free trial", target: "Activated",  value: 480 },
-  { source: "Free trial", target: "Churned",    value: 220 },
-  { source: "Activated",  target: "Pro",         value: 320 },
-  { source: "Activated",  target: "Enterprise",  value: 90  },
-  { source: "Activated",  target: "Churned",     value: 70  },
-];
-
-<Charts
-  id="sankey-basic"
-  height={360}
-  width={760}
-  option={{
-    series: [{ type: "sankey", data, links }],
-    tooltip: {
-      sourceLabel: "From",
-      destinationLabel: "To",
-      valueFormatter: (value) => \`\${value} users\`,
-    },
-  }}
-/>`}</CodeBlock>
-          </div>
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={sankeyChartExampleSrc} fileName="SankeyChart.example.tsx" />
         </Card>
       </Section>
 
@@ -221,6 +146,5 @@ function SankeyChart({ width = 600, height = 320 }) {
         </Card>
       </Section>
     </FoundationPage>
-    );
-  },
+  ),
 };

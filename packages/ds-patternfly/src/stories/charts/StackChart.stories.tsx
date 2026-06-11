@@ -1,13 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Chart,
-  ChartArea,
-  ChartAxis,
-  ChartBar,
-  ChartStack,
-} from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { StackedBar, StackedArea } from "../../examples/charts/StackChart.example.js";
+import stackChartExampleSrc from "../../examples/charts/StackChart.example.tsx?raw";
 import { chartA11yParams } from "./_chartKit.js";
 
 const meta: Meta = {
@@ -15,11 +10,6 @@ const meta: Meta = {
   parameters: { layout: "padded", a11y: chartA11yParams },
 };
 export default meta;
-
-const x = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-const a = x.map((d, i) => ({ x: d, y: 3 + (i % 3) }));
-const b = x.map((d, i) => ({ x: d, y: 2 + (i % 2) }));
-const c = x.map((d, i) => ({ x: d, y: 4 + ((i + 1) % 3) }));
 
 export const Overview: StoryObj = {
   render: () => (
@@ -37,60 +27,36 @@ export const Overview: StoryObj = {
     >
       <Section title="Stacked bar">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={280}>
-              <Chart
-                ariaTitle="Runs by service"
-                ariaDesc="Stacked counts for API, Worker, Queue by day."
-                themeColor="multi"
-                height={260}
-                domainPadding={{ x: [40, 40] }}
-                padding={{ left: 60, right: 20, top: 20, bottom: 60 }}
-                legendData={[{ name: "API" }, { name: "Worker" }, { name: "Queue" }]}
-                legendPosition="bottom"
-              >
-                <ChartAxis />
-                <ChartAxis dependentAxis showGrid />
-                <ChartStack>
-                  <ChartBar data={a} />
-                  <ChartBar data={b} />
-                  <ChartBar data={c} />
-                </ChartStack>
-              </Chart>
-            </DemoFrame>
-            <CodeBlock>{`<Chart themeColor="multi" ariaTitle="Runs by service" domainPadding={{ x: [40, 40] }}>
-  <ChartAxis />
-  <ChartAxis dependentAxis showGrid />
-  <ChartStack>
-    <ChartBar data={api} />
-    <ChartBar data={worker} />
-    <ChartBar data={queue} />
-  </ChartStack>
-</Chart>`}</CodeBlock>
-          </div>
+          <Example
+            source={stackChartExampleSrc}
+            region="StackedBar"
+            fileName="StackChart.example.tsx"
+            height={280}
+          >
+            <StackedBar />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Stacked area">
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame height={280}>
-              <Chart
-                ariaTitle="Cumulative throughput"
-                themeColor="multi"
-                height={260}
-                padding={{ left: 60, right: 20, top: 20, bottom: 50 }}
-              >
-                <ChartAxis />
-                <ChartAxis dependentAxis showGrid />
-                <ChartStack>
-                  <ChartArea data={a} interpolation="monotoneX" />
-                  <ChartArea data={b} interpolation="monotoneX" />
-                  <ChartArea data={c} interpolation="monotoneX" />
-                </ChartStack>
-              </Chart>
-            </DemoFrame>
-          </div>
+          <Example
+            source={stackChartExampleSrc}
+            region="StackedArea"
+            fileName="StackChart.example.tsx"
+            height={280}
+          >
+            <StackedArea />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={stackChartExampleSrc} fileName="StackChart.example.tsx" />
         </Card>
       </Section>
 

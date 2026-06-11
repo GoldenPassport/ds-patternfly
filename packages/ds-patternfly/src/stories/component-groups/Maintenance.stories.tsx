@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import Maintenance from "@patternfly/react-component-groups/dist/dynamic/Maintenance";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { Default } from "../../examples/component-groups/Maintenance.example.js";
+import maintenanceExampleSrc from "../../examples/component-groups/Maintenance.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Error communication/Maintenance",
@@ -40,28 +41,22 @@ export const Overview: StoryObj = {
         description="Pass start / end / time zone for the standard maintenance window display."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Maintenance
-                titleText="Scheduled maintenance"
-                bodyText="We're upgrading the workflow engine. Service will be unavailable during the window below."
-                startTime="2026-05-10 22:00"
-                endTime="2026-05-11 02:00"
-                timeZone="UTC"
-                redirectLinkUrl="https://status.example.com"
-                redirectLinkText="View status page"
-              />
-            </DemoFrame>
-            <CodeBlock>{`<Maintenance
-  titleText="Scheduled maintenance"
-  bodyText="We're upgrading the workflow engine."
-  startTime="2026-05-10 22:00"
-  endTime="2026-05-11 02:00"
-  timeZone="UTC"
-  redirectLinkUrl="https://status.example.com"
-  redirectLinkText="View status page"
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={maintenanceExampleSrc}
+            region="Default"
+            fileName="Maintenance.example.tsx"
+          >
+            <Default />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={maintenanceExampleSrc} fileName="Maintenance.example.tsx" />
         </Card>
       </Section>
 

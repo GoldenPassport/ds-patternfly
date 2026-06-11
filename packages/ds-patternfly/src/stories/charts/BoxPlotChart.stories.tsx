@@ -1,10 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
 import { PropsTable } from "../_kit/DemoKit.js";
+import { chartA11yParams } from "./_chartKit.js";
+import { Recipe } from "../../examples/charts/BoxPlotChart.example.js";
+import boxPlotChartExampleSrc from "../../examples/charts/BoxPlotChart.example.tsx?raw";
 
 const meta: Meta = {
   title: "Charts/Box plot chart",
-  parameters: { layout: "padded" },
+  parameters: { layout: "padded", a11y: chartA11yParams },
 };
 export default meta;
 
@@ -25,37 +28,23 @@ export const Overview: StoryObj = {
     >
       <Section title="Recipe">
         <Card>
-          <div style={{ padding: 24 }}>
-            <CodeBlock>{`import { Chart, ChartAxis } from "@patternfly/react-charts/victory";
-import { VictoryBoxPlot } from "victory-box-plot";
+          <Example
+            source={boxPlotChartExampleSrc}
+            region="Recipe"
+            fileName="BoxPlotChart.example.tsx"
+            height={260}
+          >
+            <Recipe />
+          </Example>
+        </Card>
+      </Section>
 
-const data = [
-  { x: "p50", min: 1,  q1: 2, median: 3, q3: 4, max: 5 },
-  { x: "p95", min: 2,  q1: 3, median: 5, q3: 7, max: 9 },
-  { x: "p99", min: 3,  q1: 5, median: 8, q3: 12, max: 18 },
-];
-
-<Chart
-  ariaTitle="API latency"
-  ariaDesc="p50/p95/p99 latency distributions across last hour."
-  domainPadding={{ x: [40, 40] }}
-  padding={{ left: 60, right: 20, top: 20, bottom: 50 }}
->
-  <ChartAxis />
-  <ChartAxis dependentAxis showGrid />
-  <VictoryBoxPlot
-    boxWidth={20}
-    data={data}
-    style={{
-      min: { stroke: "var(--pf-t--global--icon--color--regular)" },
-      max: { stroke: "var(--pf-t--global--icon--color--regular)" },
-      q1:  { fill:   "var(--pf-t--chart--color--blue--400)" },
-      q3:  { fill:   "var(--pf-t--chart--color--blue--400)" },
-      median: { stroke: "var(--pf-t--global--text--color--regular)" },
-    }}
-  />
-</Chart>`}</CodeBlock>
-          </div>
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={boxPlotChartExampleSrc} fileName="BoxPlotChart.example.tsx" />
         </Card>
       </Section>
 

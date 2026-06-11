@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ChartBullet } from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 import { chartA11yParams } from "./_chartKit.js";
+import { Basic } from "../../examples/charts/BulletChart.example.js";
+import bulletChartExampleSrc from "../../examples/charts/BulletChart.example.tsx?raw";
 
 const meta: Meta = {
   title: "Charts/Bullet chart",
@@ -25,43 +26,23 @@ export const Overview: StoryObj = {
     >
       <Section title="Basic">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={200}>
-              <ChartBullet
-                ariaTitle="SLA: API latency"
-                ariaDesc="P99 latency vs 250ms SLA target."
-                title="API latency"
-                subTitle="p99 (ms)"
-                primarySegmentedMeasureData={[{ name: "Actual", y: 180 }]}
-                comparativeWarningMeasureData={[{ name: "Warning", y: 200 }]}
-                comparativeErrorMeasureData={[{ name: "SLA", y: 250 }]}
-                qualitativeRangeData={[
-                  { name: "Range", y: 150 },
-                  { name: "Range", y: 220 },
-                  { name: "Range", y: 300 },
-                ]}
-                maxDomain={{ y: 300 }}
-                height={200}
-                width={500}
-                padding={{ left: 100, right: 50, top: 60, bottom: 60 }}
-              />
-            </DemoFrame>
-            <CodeBlock>{`<ChartBullet
-  ariaTitle="SLA: API latency"
-  ariaDesc="P99 latency vs 250ms SLA target."
-  title="API latency"
-  subTitle="p99 (ms)"
-  primarySegmentedMeasureData={[{ name: "Actual", y: 180 }]}
-  comparativeWarningMeasureData={[{ name: "Warning", y: 200 }]}
-  comparativeErrorMeasureData={[{ name: "SLA", y: 250 }]}
-  qualitativeRangeData={[
-    { name: "OK",   y: 150 },
-    { name: "Warn", y: 220 },
-    { name: "Bad",  y: 300 },
-  ]}
-  maxDomain={{ y: 300 }}
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={bulletChartExampleSrc}
+            region="Basic"
+            fileName="BulletChart.example.tsx"
+            height={200}
+          >
+            <Basic />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={bulletChartExampleSrc} fileName="BulletChart.example.tsx" />
         </Card>
       </Section>
 

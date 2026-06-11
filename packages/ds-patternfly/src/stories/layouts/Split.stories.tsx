@@ -1,7 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Split, SplitItem } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { Box, DemoFrame, PropsTable } from "./_layoutKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import {
+  OneFilledItem,
+  FilledMiddle,
+} from "../../examples/layouts/Split.example.js";
+import splitExampleSrc from "../../examples/layouts/Split.example.tsx?raw";
+import splitComponentSrc from "../../components/Split.tsx?raw";
 
 const meta: Meta = {
   title: "Layouts/Split",
@@ -27,20 +37,13 @@ export const Overview: StoryObj = {
         description="Mark exactly one SplitItem with isFilled."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Split hasGutter>
-                <SplitItem><Box label="sidebar" style={{ minWidth: 120 }} /></SplitItem>
-                <SplitItem isFilled>
-                  <Box label="main content — fills remaining width" />
-                </SplitItem>
-              </Split>
-            </DemoFrame>
-            <CodeBlock>{`<Split hasGutter>
-  <SplitItem>{sidebar}</SplitItem>
-  <SplitItem isFilled>{content}</SplitItem>
-</Split>`}</CodeBlock>
-          </div>
+          <Example
+            source={splitExampleSrc}
+            region="OneFilledItem"
+            fileName="Split.example.tsx"
+          >
+            <OneFilledItem />
+          </Example>
         </Card>
       </Section>
 
@@ -49,34 +52,42 @@ export const Overview: StoryObj = {
         description="Filled item can be in any position."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Split hasGutter>
-                <SplitItem><Box label="leading icon" style={{ minWidth: 80 }} /></SplitItem>
-                <SplitItem isFilled><Box label="flexible label" /></SplitItem>
-                <SplitItem><Box label="action" style={{ minWidth: 80 }} /></SplitItem>
-              </Split>
-            </DemoFrame>
-          </div>
+          <Example
+            source={splitExampleSrc}
+            region="FilledMiddle"
+            fileName="Split.example.tsx"
+          >
+            <FilledMiddle />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                { name: "hasGutter", type: "boolean", description: "Adds the standard spacer between items." },
-                { name: "isWrappable", type: "boolean", description: "Allow items to wrap to a new line on narrow viewports." },
-                { name: "component", type: "ElementType", description: <>Override the rendered tag (defaults to <code>div</code>).</> },
-              ]}
-            />
-            <p style={{ marginTop: 16, marginBottom: 0, color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
-              SplitItem accepts <code>isFilled</code> to mark the item that fills remaining space. Mark exactly one.
-            </p>
-          </div>
+          <Example source={splitExampleSrc} fileName="Split.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Split, SplitItem } from "@golden-passport/ds-patternfly";'}
+        componentSource={splitComponentSrc}
+        componentFileName="Split.tsx"
+        description={
+          <>
+            How to import the component and every prop it accepts. SplitItem
+            accepts <code>isFilled</code> to mark the item that fills
+            remaining space. Mark exactly one.
+          </>
+        }
+        rows={[
+          { name: "hasGutter", type: "boolean", description: "Adds the standard spacer between items." },
+          { name: "isWrappable", type: "boolean", description: "Allow items to wrap to a new line on narrow viewports." },
+          { name: "component", type: "ElementType", description: <>Override the rendered tag (defaults to <code>div</code>).</> },
+        ]}
+      />
 
       <Section
         title="Split vs Flex with grow"

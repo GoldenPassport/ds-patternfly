@@ -1,21 +1,9 @@
 import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import ListManager, {
-  type ListManagerItem,
-} from "@patternfly/react-component-groups/dist/dynamic/ListManager";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
-
-// Mirrors PF6's canonical ColumnExample for ListManager
-// (https://www.patternfly.org/component-groups/helpers/list-manager).
-// `isShown` in the upstream sample maps to `isSelected` on our installed
-// ListManagerItem — same semantic.
-const DEFAULT_COLUMNS: ListManagerItem[] = [
-  { key: "id",          title: "ID",           isShownByDefault: true,  isSelected: true,  isUntoggleable: true },
-  { key: "publishDate", title: "Publish date", isShownByDefault: true,  isSelected: true },
-  { key: "impact",      title: "Impact",       isShownByDefault: true,  isSelected: true },
-  { key: "score",       title: "Score",        isShownByDefault: false, isSelected: false },
-];
+import { FoundationPage, Section, Card, CodeBlock, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { ColumnExample } from "../../examples/component-groups/ListManager.example.js";
+import listManagerExampleSrc from "../../examples/component-groups/ListManager.example.tsx?raw";
 
 /**
  * ListManager's underlying @patternfly/react-drag-drop DragDropContainer
@@ -57,36 +45,15 @@ function useEnsureRootMount(): boolean {
   return ready;
 }
 
-function ColumnExample() {
+function GatedColumnExample() {
   const ready = useEnsureRootMount();
-  const [columns, setColumns] = useState(DEFAULT_COLUMNS);
 
   // Hold the ListManager out of the tree until #root exists, otherwise
   // DragDropContainer's createPortal crashes on first render.
   if (!ready) {
     return <div style={{ minHeight: 320 }} aria-hidden />;
   }
-
-  return (
-    <ListManager
-      columns={columns}
-      enableDragDrop
-      onOrderChange={setColumns}
-      onSelect={(col) =>
-        setColumns((prev) =>
-          prev.map((c) =>
-            c.key === col.key ? { ...c, isSelected: !!col.isSelected } : c,
-          ),
-        )
-      }
-      onSelectAll={(newColumns) => setColumns(newColumns)}
-      onSave={(newColumns) => {
-        setColumns(newColumns);
-        alert("Changes saved!");
-      }}
-      onCancel={() => alert("Changes cancelled!")}
-    />
-  );
+  return <ColumnExample />;
 }
 
 const meta: Meta = {
@@ -123,63 +90,47 @@ export const Overview: StoryObj = {
         description="Live port of PF6's canonical ColumnExample (https://www.patternfly.org/component-groups/helpers/list-manager). Reorder via drag-and-drop or per-row move buttons, toggle checkboxes to show / hide, lock the ID column via `isUntoggleable`. Save / Cancel alert from the demo handlers."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            {/* PF6's `pf-m-plain` button paints a circular hover/focus
-                background. On the draggable-handle button the circle
-                competes visually with the 6-dot drag icon — flatten it
-                so only the cursor + icon colour change on hover. */}
-            <style
-              dangerouslySetInnerHTML={{
-                __html: [
-                  ".pf-v6-c-data-list__item-draggable-button {",
-                  "  background: transparent !important;",
-                  "  box-shadow: none !important;",
-                  "}",
-                  ".pf-v6-c-data-list__item-draggable-button:hover,",
-                  ".pf-v6-c-data-list__item-draggable-button:focus,",
-                  ".pf-v6-c-data-list__item-draggable-button:focus-visible,",
-                  ".pf-v6-c-data-list__item-draggable-button:active {",
-                  "  background: transparent !important;",
-                  "  box-shadow: none !important;",
-                  "}",
-                  /* PF6 also paints the hover via the ::before pseudo. */
-                  ".pf-v6-c-data-list__item-draggable-button::before {",
-                  "  background: transparent !important;",
-                  "}",
-                ].join("\n"),
-              }}
-            />
-            <DemoFrame>
-              <ColumnExample />
-            </DemoFrame>
-            <CodeBlock>{`import ListManager, { type ListManagerItem } from "@patternfly/react-component-groups/dist/dynamic/ListManager";
+          {/* PF6's `pf-m-plain` button paints a circular hover/focus
+              background. On the draggable-handle button the circle
+              competes visually with the 6-dot drag icon — flatten it
+              so only the cursor + icon colour change on hover. */}
+          <style
+            dangerouslySetInnerHTML={{
+              __html: [
+                ".pf-v6-c-data-list__item-draggable-button {",
+                "  background: transparent !important;",
+                "  box-shadow: none !important;",
+                "}",
+                ".pf-v6-c-data-list__item-draggable-button:hover,",
+                ".pf-v6-c-data-list__item-draggable-button:focus,",
+                ".pf-v6-c-data-list__item-draggable-button:focus-visible,",
+                ".pf-v6-c-data-list__item-draggable-button:active {",
+                "  background: transparent !important;",
+                "  box-shadow: none !important;",
+                "}",
+                /* PF6 also paints the hover via the ::before pseudo. */
+                ".pf-v6-c-data-list__item-draggable-button::before {",
+                "  background: transparent !important;",
+                "}",
+              ].join("\n"),
+            }}
+          />
+          <Example
+            source={listManagerExampleSrc}
+            region="ColumnExample"
+            fileName="ListManager.example.tsx"
+          >
+            <GatedColumnExample />
+          </Example>
+        </Card>
+      </Section>
 
-const DEFAULT_COLUMNS: ListManagerItem[] = [
-  { key: "id",          title: "ID",           isShownByDefault: true,  isSelected: true,  isUntoggleable: true },
-  { key: "publishDate", title: "Publish date", isShownByDefault: true,  isSelected: true },
-  { key: "impact",      title: "Impact",       isShownByDefault: true,  isSelected: true },
-  { key: "score",       title: "Score",        isShownByDefault: false, isSelected: false },
-];
-
-function ColumnExample() {
-  const [columns, setColumns] = useState(DEFAULT_COLUMNS);
-  return (
-    <ListManager
-      columns={columns}
-      enableDragDrop
-      onOrderChange={setColumns}
-      onSelect={(col) =>
-        setColumns(prev =>
-          prev.map(c => c.key === col.key ? { ...c, isSelected: !!col.isSelected } : c),
-        )
-      }
-      onSelectAll={setColumns}
-      onSave={(c) => { setColumns(c); alert("Changes saved!"); }}
-      onCancel={() => alert("Changes cancelled!")}
-    />
-  );
-}`}</CodeBlock>
-          </div>
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={listManagerExampleSrc} fileName="ListManager.example.tsx" />
         </Card>
       </Section>
 

@@ -1,26 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Chart,
-  ChartArea,
-  ChartAxis,
-  ChartGroup,
-  ChartLegend,
-} from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 import { chartA11yParams } from "./_chartKit.js";
+import {
+  LegendAtTheBottom,
+  StandaloneChartLegend,
+} from "../../examples/charts/Legends.example.js";
+import legendsExampleSrc from "../../examples/charts/Legends.example.tsx?raw";
 
 const meta: Meta = {
   title: "Charts/Legends",
   parameters: { layout: "padded", a11y: chartA11yParams },
 };
 export default meta;
-
-const a = [{ x: 1, y: 2 }, { x: 2, y: 4 }, { x: 3, y: 3 }, { x: 4, y: 5 }];
-const b = a.map((p) => ({ ...p, y: p.y + 1 }));
-const c = a.map((p) => ({ ...p, y: p.y + 2 }));
-
-const legendData = [{ name: "API" }, { name: "Worker" }, { name: "Queue" }];
 
 export const Overview: StoryObj = {
   render: () => (
@@ -37,50 +29,36 @@ export const Overview: StoryObj = {
     >
       <Section title="Legend at the bottom">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={300}>
-              <Chart
-                ariaTitle="Throughput by service"
-                ariaDesc="API, Worker, and Queue throughput."
-                themeColor="multi"
-                height={280}
-                padding={{ left: 60, right: 20, top: 20, bottom: 80 }}
-                legendData={legendData}
-                legendPosition="bottom"
-              >
-                <ChartAxis />
-                <ChartAxis dependentAxis showGrid />
-                <ChartGroup>
-                  <ChartArea data={a} />
-                  <ChartArea data={b} />
-                  <ChartArea data={c} />
-                </ChartGroup>
-              </Chart>
-            </DemoFrame>
-            <CodeBlock>{`<Chart
-  ariaTitle="…"
-  themeColor="multi"
-  legendData={[{ name: "API" }, { name: "Worker" }, { name: "Queue" }]}
-  legendPosition="bottom"
->
-  <ChartGroup>{/* series */}</ChartGroup>
-</Chart>`}</CodeBlock>
-          </div>
+          <Example
+            source={legendsExampleSrc}
+            region="LegendAtTheBottom"
+            fileName="Legends.example.tsx"
+            height={300}
+          >
+            <LegendAtTheBottom />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Standalone ChartLegend">
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame height={80}>
-              <ChartLegend
-                data={legendData}
-                orientation="horizontal"
-                height={60}
-                width={300}
-              />
-            </DemoFrame>
-          </div>
+          <Example
+            source={legendsExampleSrc}
+            region="StandaloneChartLegend"
+            fileName="Legends.example.tsx"
+            height={80}
+          >
+            <StandaloneChartLegend />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={legendsExampleSrc} fileName="Legends.example.tsx" />
         </Card>
       </Section>
 

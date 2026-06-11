@@ -1,12 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Chart,
-  ChartAxis,
-  ChartScatter,
-  ChartVoronoiContainer,
-} from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { BasicWithSizeDimension } from "../../examples/charts/ScatterChart.example.js";
+import scatterChartExampleSrc from "../../examples/charts/ScatterChart.example.tsx?raw";
 import { chartA11yParams } from "./_chartKit.js";
 
 const meta: Meta = {
@@ -14,12 +10,6 @@ const meta: Meta = {
   parameters: { layout: "padded", a11y: chartA11yParams },
 };
 export default meta;
-
-const data = Array.from({ length: 24 }).map((_, i) => ({
-  x: 1 + (i % 8) + Math.random() * 0.6,
-  y: 1 + Math.floor(i / 8) * 2 + Math.random() * 2,
-  size: 3 + (i % 4),
-}));
 
 export const Overview: StoryObj = {
   render: () => (
@@ -36,33 +26,23 @@ export const Overview: StoryObj = {
     >
       <Section title="Basic with size dimension">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={280}>
-              <Chart
-                ariaTitle="Latency vs payload size"
-                ariaDesc="Each point is a request; size encodes retry count."
-                height={260}
-                padding={{ left: 60, right: 20, top: 20, bottom: 60 }}
-                containerComponent={
-                  <ChartVoronoiContainer
-                    labels={({ datum }: { datum: { x: number; y: number; size: number } }) =>
-                      `payload ${datum.x.toFixed(1)} KB, latency ${datum.y.toFixed(1)} ms, retries ${datum.size - 3}`
-                    }
-                    constrainToVisibleArea
-                  />
-                }
-              >
-                <ChartAxis label="Payload (KB)" />
-                <ChartAxis dependentAxis label="Latency (ms)" showGrid />
-                <ChartScatter data={data} />
-              </Chart>
-            </DemoFrame>
-            <CodeBlock>{`<Chart ariaTitle="Latency vs payload" containerComponent={<ChartVoronoiContainer labels={fmt} />}>
-  <ChartAxis label="Payload (KB)" />
-  <ChartAxis dependentAxis label="Latency (ms)" showGrid />
-  <ChartScatter data={points /* { x, y, size? }[] */} />
-</Chart>`}</CodeBlock>
-          </div>
+          <Example
+            source={scatterChartExampleSrc}
+            region="BasicWithSizeDimension"
+            fileName="ScatterChart.example.tsx"
+            height={280}
+          >
+            <BasicWithSizeDimension />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={scatterChartExampleSrc} fileName="ScatterChart.example.tsx" />
         </Card>
       </Section>
 

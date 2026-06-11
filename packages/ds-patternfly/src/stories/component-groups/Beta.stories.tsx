@@ -1,7 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Label, LabelGroup } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  Conventions,
+  StackedExample,
+} from "../../examples/component-groups/Beta.example.js";
+import betaExampleSrc from "../../examples/component-groups/Beta.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Status and state indicators/Beta",
@@ -28,34 +32,13 @@ export const Overview: StoryObj = {
         description="Use a Label sized to fit alongside the title it qualifies. Colour by GA-distance: orange for Tech preview, gold for Beta, blue for general 'New'."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <div style={{ display: "grid", gap: 12 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <strong style={{ color: "var(--gp-color-text-regular)" }}>
-                    Workflow templates
-                  </strong>
-                  <Label color="yellow" isCompact>Beta</Label>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <strong style={{ color: "var(--gp-color-text-regular)" }}>
-                    AI suggestions
-                  </strong>
-                  <Label color="orange" isCompact>Tech preview</Label>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <strong style={{ color: "var(--gp-color-text-regular)" }}>
-                    Run history
-                  </strong>
-                  <Label color="blue" isCompact>New</Label>
-                </div>
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-  <strong>Workflow templates</strong>
-  <Label color="yellow" isCompact>Beta</Label>
-</div>`}</CodeBlock>
-          </div>
+          <Example
+            source={betaExampleSrc}
+            region="Conventions"
+            fileName="Beta.example.tsx"
+          >
+            <Conventions />
+          </Example>
         </Card>
       </Section>
 
@@ -64,19 +47,22 @@ export const Overview: StoryObj = {
         description="A LabelGroup keeps multiple qualifiers tidy when a feature is, say, Beta + Premium."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <strong style={{ color: "var(--gp-color-text-regular)" }}>
-                  Cross-region replication
-                </strong>
-                <LabelGroup numLabels={3} isCompact>
-                  <Label color="yellow" isCompact>Beta</Label>
-                  <Label color="purple" isCompact>Premium</Label>
-                </LabelGroup>
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={betaExampleSrc}
+            region="StackedExample"
+            fileName="Beta.example.tsx"
+          >
+            <StackedExample />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={betaExampleSrc} fileName="Beta.example.tsx" />
         </Card>
       </Section>
 

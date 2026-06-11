@@ -1,7 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Flex, FlexItem } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { Box, DemoFrame, PropsTable } from "./_layoutKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import {
+  BasicRow,
+  PushingItemsApart,
+  ColumnDirection,
+  FillingRemainingSpace,
+} from "../../examples/layouts/Flex.example.js";
+import flexExampleSrc from "../../examples/layouts/Flex.example.tsx?raw";
+import flexComponentSrc from "../../components/Flex.tsx?raw";
 
 const meta: Meta = {
   title: "Layouts/Flex",
@@ -28,20 +40,13 @@ export const Overview: StoryObj = {
         description="Default direction is row, with no gap. Add spaceItems to introduce spacing."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Flex spaceItems={{ default: "spaceItemsMd" }}>
-                <FlexItem><Box label="A" /></FlexItem>
-                <FlexItem><Box label="B" /></FlexItem>
-                <FlexItem><Box label="C" /></FlexItem>
-              </Flex>
-            </DemoFrame>
-            <CodeBlock>{`<Flex spaceItems={{ default: "spaceItemsMd" }}>
-  <FlexItem>A</FlexItem>
-  <FlexItem>B</FlexItem>
-  <FlexItem>C</FlexItem>
-</Flex>`}</CodeBlock>
-          </div>
+          <Example
+            source={flexExampleSrc}
+            region="BasicRow"
+            fileName="Flex.example.tsx"
+          >
+            <BasicRow />
+          </Example>
         </Card>
       </Section>
 
@@ -50,26 +55,13 @@ export const Overview: StoryObj = {
         description="alignSelf or justifyContent at the container level."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Flex
-                justifyContent={{ default: "justifyContentSpaceBetween" }}
-                alignItems={{ default: "alignItemsCenter" }}
-              >
-                <FlexItem><Box label="left" /></FlexItem>
-                <FlexItem><Box label="center" /></FlexItem>
-                <FlexItem><Box label="right" /></FlexItem>
-              </Flex>
-            </DemoFrame>
-            <CodeBlock>{`<Flex
-  justifyContent={{ default: "justifyContentSpaceBetween" }}
-  alignItems={{ default: "alignItemsCenter" }}
->
-  <FlexItem>left</FlexItem>
-  <FlexItem>center</FlexItem>
-  <FlexItem>right</FlexItem>
-</Flex>`}</CodeBlock>
-          </div>
+          <Example
+            source={flexExampleSrc}
+            region="PushingItemsApart"
+            fileName="Flex.example.tsx"
+          >
+            <PushingItemsApart />
+          </Example>
         </Card>
       </Section>
 
@@ -78,23 +70,13 @@ export const Overview: StoryObj = {
         description="Switch the main axis to vertical."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Flex
-                direction={{ default: "column" }}
-                spaceItems={{ default: "spaceItemsSm" }}
-              >
-                <FlexItem><Box label="top" /></FlexItem>
-                <FlexItem><Box label="middle" /></FlexItem>
-                <FlexItem><Box label="bottom" /></FlexItem>
-              </Flex>
-            </DemoFrame>
-            <CodeBlock>{`<Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsSm" }}>
-  <FlexItem>top</FlexItem>
-  <FlexItem>middle</FlexItem>
-  <FlexItem>bottom</FlexItem>
-</Flex>`}</CodeBlock>
-          </div>
+          <Example
+            source={flexExampleSrc}
+            region="ColumnDirection"
+            fileName="Flex.example.tsx"
+          >
+            <ColumnDirection />
+          </Example>
         </Card>
       </Section>
 
@@ -103,65 +85,67 @@ export const Overview: StoryObj = {
         description="A FlexItem with grow={{ default: 'grow' }} expands."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Flex spaceItems={{ default: "spaceItemsMd" }}>
-                <FlexItem><Box label="fixed" /></FlexItem>
-                <FlexItem grow={{ default: "grow" }}>
-                  <Box label="grows to fill" />
-                </FlexItem>
-                <FlexItem><Box label="fixed" /></FlexItem>
-              </Flex>
-            </DemoFrame>
-          </div>
+          <Example
+            source={flexExampleSrc}
+            region="FillingRemainingSpace"
+            fileName="Flex.example.tsx"
+          >
+            <FillingRemainingSpace />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Key props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "spaceItems",
-                  type: "{ default?, sm?, md?, lg?, xl?, '2xl'? }",
-                  description: "Per-breakpoint gap between items. Values like spaceItemsSm, spaceItemsMd.",
-                },
-                {
-                  name: "spacer",
-                  type: "Same shape",
-                  description: "Per-item spacer (margin) — set on a FlexItem to override the container.",
-                },
-                {
-                  name: "direction",
-                  type: "{ default?: 'row' | 'column' | 'rowReverse' | 'columnReverse', ... }",
-                  description: "Main axis direction, per breakpoint.",
-                },
-                {
-                  name: "alignItems",
-                  type: "{ default?: 'alignItemsCenter' | 'alignItemsFlexStart' | ... }",
-                  description: "Cross-axis alignment.",
-                },
-                {
-                  name: "justifyContent",
-                  type: "{ default?: 'justifyContentSpaceBetween' | ... }",
-                  description: "Main-axis distribution.",
-                },
-                {
-                  name: "flexWrap",
-                  type: "{ default?: 'wrap' | 'nowrap' | 'wrapReverse', ... }",
-                  description: "Allow items to wrap to a new row.",
-                },
-                {
-                  name: "gap / rowGap / columnGap",
-                  type: "Same shape",
-                  description: "Modern gap-based spacing — overrides spacer/spaceItems on the relevant axis.",
-                },
-              ]}
-            />
-          </div>
+          <Example source={flexExampleSrc} fileName="Flex.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Flex, FlexItem } from "@golden-passport/ds-patternfly";'}
+        componentSource={flexComponentSrc}
+        componentFileName="Flex.tsx"
+        rows={[
+          {
+            name: "spaceItems",
+            type: "{ default?, sm?, md?, lg?, xl?, '2xl'? }",
+            description: "Per-breakpoint gap between items. Values like spaceItemsSm, spaceItemsMd.",
+          },
+          {
+            name: "spacer",
+            type: "Same shape",
+            description: "Per-item spacer (margin) — set on a FlexItem to override the container.",
+          },
+          {
+            name: "direction",
+            type: "{ default?: 'row' | 'column' | 'rowReverse' | 'columnReverse', ... }",
+            description: "Main axis direction, per breakpoint.",
+          },
+          {
+            name: "alignItems",
+            type: "{ default?: 'alignItemsCenter' | 'alignItemsFlexStart' | ... }",
+            description: "Cross-axis alignment.",
+          },
+          {
+            name: "justifyContent",
+            type: "{ default?: 'justifyContentSpaceBetween' | ... }",
+            description: "Main-axis distribution.",
+          },
+          {
+            name: "flexWrap",
+            type: "{ default?: 'wrap' | 'nowrap' | 'wrapReverse', ... }",
+            description: "Allow items to wrap to a new row.",
+          },
+          {
+            name: "gap / rowGap / columnGap",
+            type: "Same shape",
+            description: "Modern gap-based spacing — overrides spacer/spaceItems on the relevant axis.",
+          },
+        ]}
+      />
 
       <Section
         title="When to prefer specialized layouts"

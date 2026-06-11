@@ -1,13 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Chart,
-  ChartAxis,
-  ChartGroup,
-  ChartLine,
-  ChartThreshold,
-} from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { MetricWithThresholds } from "../../examples/charts/ThresholdChart.example.js";
+import thresholdChartExampleSrc from "../../examples/charts/ThresholdChart.example.tsx?raw";
 import { chartA11yParams } from "./_chartKit.js";
 
 const meta: Meta = {
@@ -15,13 +10,6 @@ const meta: Meta = {
   parameters: { layout: "padded", a11y: chartA11yParams },
 };
 export default meta;
-
-const series = [
-  { x: "Mon", y: 80 },  { x: "Tue", y: 120 }, { x: "Wed", y: 210 },
-  { x: "Thu", y: 180 }, { x: "Fri", y: 280 }, { x: "Sat", y: 240 }, { x: "Sun", y: 170 },
-];
-const warningLine = series.map((p) => ({ x: p.x, y: 200 }));
-const dangerLine = series.map((p) => ({ x: p.x, y: 260 }));
 
 export const Overview: StoryObj = {
   render: () => (
@@ -39,52 +27,23 @@ export const Overview: StoryObj = {
     >
       <Section title="Metric + warning + danger">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={280}>
-              <Chart
-                ariaTitle="P99 latency vs thresholds"
-                ariaDesc="P99 latency over the week with warning threshold at 200ms and danger threshold at 260ms."
-                themeColor="multi"
-                height={260}
-                padding={{ left: 60, right: 20, top: 20, bottom: 60 }}
-                legendData={[{ name: "p99 (ms)" }, { name: "Warning" }, { name: "Danger" }]}
-                legendPosition="bottom"
-              >
-                <ChartAxis />
-                <ChartAxis dependentAxis showGrid />
-                <ChartGroup>
-                  <ChartLine data={series} name="p99 (ms)" interpolation="monotoneX" />
-                  <ChartThreshold
-                    data={warningLine}
-                    name="Warning"
-                    style={{ data: { stroke: "var(--pf-t--chart--color--gold--400, #f0ab00)" } }}
-                  />
-                  <ChartThreshold
-                    data={dangerLine}
-                    name="Danger"
-                    style={{ data: { stroke: "var(--pf-t--chart--color--red--400, #c9190b)" } }}
-                  />
-                </ChartGroup>
-              </Chart>
-            </DemoFrame>
-            <CodeBlock>{`<Chart ariaTitle="…" legendData={[{ name: "p99 (ms)" }, { name: "Warning" }, { name: "Danger" }]}>
-  <ChartAxis />
-  <ChartAxis dependentAxis showGrid />
-  <ChartGroup>
-    <ChartLine data={metric} name="p99 (ms)" />
-    <ChartThreshold
-      data={warningLine}
-      name="Warning"
-      style={{ data: { stroke: "var(--pf-t--chart--color--gold--400)" } }}
-    />
-    <ChartThreshold
-      data={dangerLine}
-      name="Danger"
-      style={{ data: { stroke: "var(--pf-t--chart--color--red--400)" } }}
-    />
-  </ChartGroup>
-</Chart>`}</CodeBlock>
-          </div>
+          <Example
+            source={thresholdChartExampleSrc}
+            region="MetricWithThresholds"
+            fileName="ThresholdChart.example.tsx"
+            height={280}
+          >
+            <MetricWithThresholds />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={thresholdChartExampleSrc} fileName="ThresholdChart.example.tsx" />
         </Card>
       </Section>
 

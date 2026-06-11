@@ -1,17 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Chart, ChartAxis, ChartBar, ChartGroup } from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 import { chartA11yParams } from "./_chartKit.js";
+import {
+  GroupedBars,
+  Horizontal,
+} from "../../examples/charts/BarChart.example.js";
+import barChartExampleSrc from "../../examples/charts/BarChart.example.tsx?raw";
 
 const meta: Meta = {
   title: "Charts/Bar chart",
   parameters: { layout: "padded", a11y: chartA11yParams },
 };
 export default meta;
-
-const data1 = [{ x: "Active", y: 142 }, { x: "Paused", y: 18 }, { x: "Failed", y: 3 }];
-const data2 = [{ x: "Active", y: 120 }, { x: "Paused", y: 22 }, { x: "Failed", y: 5 }];
 
 export const Overview: StoryObj = {
   render: () => (
@@ -27,55 +28,36 @@ export const Overview: StoryObj = {
     >
       <Section title="Grouped bars">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={260}>
-              <Chart
-                ariaTitle="Workflow counts"
-                ariaDesc="Active, paused, failed across this week and last."
-                themeColor="multi"
-                height={240}
-                domainPadding={{ x: [40, 40] }}
-                padding={{ left: 60, right: 20, top: 20, bottom: 50 }}
-              >
-                <ChartAxis />
-                <ChartAxis dependentAxis showGrid />
-                <ChartGroup offset={11}>
-                  <ChartBar data={data1} />
-                  <ChartBar data={data2} />
-                </ChartGroup>
-              </Chart>
-            </DemoFrame>
-            <CodeBlock>{`<Chart ariaTitle="Workflow counts" themeColor="multi" domainPadding={{ x: [40, 40] }}>
-  <ChartAxis />
-  <ChartAxis dependentAxis showGrid />
-  <ChartGroup offset={11}>
-    <ChartBar data={thisWeek} />
-    <ChartBar data={lastWeek} />
-  </ChartGroup>
-</Chart>`}</CodeBlock>
-          </div>
+          <Example
+            source={barChartExampleSrc}
+            region="GroupedBars"
+            fileName="BarChart.example.tsx"
+            height={260}
+          >
+            <GroupedBars />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Horizontal">
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame height={260}>
-              <Chart
-                ariaTitle="Status (horizontal)"
-                horizontal
-                height={240}
-                domainPadding={{ y: [40, 40] }}
-                padding={{ left: 100, right: 20, top: 20, bottom: 50 }}
-              >
-                <ChartAxis />
-                <ChartAxis dependentAxis showGrid />
-                <ChartGroup>
-                  <ChartBar data={data1} />
-                </ChartGroup>
-              </Chart>
-            </DemoFrame>
-          </div>
+          <Example
+            source={barChartExampleSrc}
+            region="Horizontal"
+            fileName="BarChart.example.tsx"
+            height={260}
+          >
+            <Horizontal />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={barChartExampleSrc} fileName="BarChart.example.tsx" />
         </Card>
       </Section>
 

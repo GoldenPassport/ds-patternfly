@@ -1,12 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Chart,
-  ChartArea,
-  ChartAxis,
-  ChartGroup,
-} from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { ContainerDrivenWidth } from "../../examples/charts/ResizeObserver.example.js";
+import resizeObserverExampleSrc from "../../examples/charts/ResizeObserver.example.tsx?raw";
 import { chartA11yParams } from "./_chartKit.js";
 
 const meta: Meta = {
@@ -14,10 +10,6 @@ const meta: Meta = {
   parameters: { layout: "padded", a11y: chartA11yParams },
 };
 export default meta;
-
-const data = [
-  { x: 1, y: 1 }, { x: 2, y: 3 }, { x: 3, y: 2 }, { x: 4, y: 5 }, { x: 5, y: 4 },
-];
 
 export const Overview: StoryObj = {
   render: () => (
@@ -39,34 +31,23 @@ export const Overview: StoryObj = {
         description="Resize the Storybook canvas — the chart fills the width of its bounded parent."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={260}>
-              <div style={{ width: "100%", height: 240 }}>
-                <Chart
-                  ariaTitle="Resizable area"
-                  ariaDesc="A chart that fills the width of its container."
-                  height={240}
-                  padding={{ left: 60, right: 20, top: 20, bottom: 50 }}
-                  // Omit `width` — Victory's default container reads from layout.
-                >
-                  <ChartAxis />
-                  <ChartAxis dependentAxis showGrid />
-                  <ChartGroup>
-                    <ChartArea data={data} interpolation="monotoneX" />
-                  </ChartGroup>
-                </Chart>
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<div style={{ width: "100%", height: 240 }}>
-  <Chart
-    ariaTitle="Resizable area"
-    height={240}
-    /* don't set width — let the container drive it */
-  >
-    {/* … */}
-  </Chart>
-</div>`}</CodeBlock>
-          </div>
+          <Example
+            source={resizeObserverExampleSrc}
+            region="ContainerDrivenWidth"
+            fileName="ResizeObserver.example.tsx"
+            height={260}
+          >
+            <ContainerDrivenWidth />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={resizeObserverExampleSrc} fileName="ResizeObserver.example.tsx" />
         </Card>
       </Section>
 

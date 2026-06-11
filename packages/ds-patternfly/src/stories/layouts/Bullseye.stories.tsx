@@ -1,7 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Bullseye } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { Box, DemoFrame, PropsTable } from "./_layoutKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import { LiveDemo } from "../../examples/layouts/Bullseye.example.js";
+import bullseyeExampleSrc from "../../examples/layouts/Bullseye.example.tsx?raw";
+import bullseyeComponentSrc from "../../components/Bullseye.tsx?raw";
 
 const meta: Meta = {
   title: "Layouts/Bullseye",
@@ -25,53 +32,48 @@ export const Overview: StoryObj = {
     >
       <Section title="Live demo">
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame height={240}>
-              <Bullseye>
-                <Box label="centered" style={{ minWidth: 160 }} />
-              </Bullseye>
-            </DemoFrame>
-          </div>
+          <Example
+            source={bullseyeExampleSrc}
+            region="LiveDemo"
+            fileName="Bullseye.example.tsx"
+            height={240}
+          >
+            <LiveDemo />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Code">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <CodeBlock>{`import { Bullseye } from "@golden-passport/ds-patternfly";
-
-<Bullseye>
-  <EmptyState>...</EmptyState>
-</Bullseye>`}</CodeBlock>
-          </div>
+          <Example source={bullseyeExampleSrc} fileName="Bullseye.example.tsx" />
         </Card>
       </Section>
 
-      <Section title="Props">
-        <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "children",
-                  type: "ReactNode",
-                  description: "The single element to center. Bullseye is intentionally one-child shaped.",
-                },
-                {
-                  name: "component",
-                  type: "ElementType",
-                  description: <>Override the rendered tag (defaults to <code>div</code>).</>,
-                },
-                {
-                  name: "className",
-                  type: "string",
-                  description: "Additional classes — rarely needed.",
-                },
-              ]}
-            />
-          </div>
-        </Card>
-      </Section>
+      <ConfigurationSection
+        importStatement={'import { Bullseye } from "@golden-passport/ds-patternfly";'}
+        componentSource={bullseyeComponentSrc}
+        componentFileName="Bullseye.tsx"
+        rows={[
+          {
+            name: "children",
+            type: "ReactNode",
+            description: "The single element to center. Bullseye is intentionally one-child shaped.",
+          },
+          {
+            name: "component",
+            type: "ElementType",
+            description: <>Override the rendered tag (defaults to <code>div</code>).</>,
+          },
+          {
+            name: "className",
+            type: "string",
+            description: "Additional classes — rarely needed.",
+          },
+        ]}
+      />
 
       <Section
         title="When to use it"

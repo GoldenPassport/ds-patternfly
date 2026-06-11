@@ -1,7 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Grid, GridItem } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { Box, DemoFrame, PropsTable } from "./_layoutKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import {
+  EqualColumns,
+  MixedSpans,
+  ResponsiveSpans,
+} from "../../examples/layouts/Grid.example.js";
+import gridExampleSrc from "../../examples/layouts/Grid.example.tsx?raw";
+import gridComponentSrc from "../../components/Grid.tsx?raw";
 
 const meta: Meta = {
   title: "Layouts/Grid",
@@ -27,20 +38,13 @@ export const Overview: StoryObj = {
         description="Set a default span on the Grid and every item gets it."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Grid hasGutter span={4}>
-                <GridItem><Box label="span 4" /></GridItem>
-                <GridItem><Box label="span 4" /></GridItem>
-                <GridItem><Box label="span 4" /></GridItem>
-              </Grid>
-            </DemoFrame>
-            <CodeBlock>{`<Grid hasGutter span={4}>
-  <GridItem>...</GridItem>
-  <GridItem>...</GridItem>
-  <GridItem>...</GridItem>
-</Grid>`}</CodeBlock>
-          </div>
+          <Example
+            source={gridExampleSrc}
+            region="EqualColumns"
+            fileName="Grid.example.tsx"
+          >
+            <EqualColumns />
+          </Example>
         </Card>
       </Section>
 
@@ -49,18 +53,13 @@ export const Overview: StoryObj = {
         description="Set span at the item level for asymmetric layouts."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Grid hasGutter>
-                <GridItem span={8}><Box label="span 8 — wide chart" /></GridItem>
-                <GridItem span={4}><Box label="span 4 — stat" /></GridItem>
-                <GridItem span={3}><Box label="3" /></GridItem>
-                <GridItem span={3}><Box label="3" /></GridItem>
-                <GridItem span={3}><Box label="3" /></GridItem>
-                <GridItem span={3}><Box label="3" /></GridItem>
-              </Grid>
-            </DemoFrame>
-          </div>
+          <Example
+            source={gridExampleSrc}
+            region="MixedSpans"
+            fileName="Grid.example.tsx"
+          >
+            <MixedSpans />
+          </Example>
         </Card>
       </Section>
 
@@ -69,48 +68,52 @@ export const Overview: StoryObj = {
         description="Single column on mobile, two at md, three at lg."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Grid hasGutter>
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <GridItem key={i} span={12} md={6} lg={4}>
-                    <Box label={`item ${i + 1}`} />
-                  </GridItem>
-                ))}
-              </Grid>
-            </DemoFrame>
-            <CodeBlock>{`<Grid hasGutter>
-  {items.map(i => (
-    <GridItem key={i.id} span={12} md={6} lg={4}>
-      ...
-    </GridItem>
-  ))}
-</Grid>`}</CodeBlock>
-            <p style={{ margin: 0, color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
-              Resize the canvas to see the column count step from 1 → 2 → 3.
-            </p>
-          </div>
+          <Example
+            source={gridExampleSrc}
+            region="ResponsiveSpans"
+            fileName="Grid.example.tsx"
+          >
+            <ResponsiveSpans />
+          </Example>
+          <p
+            style={{
+              margin: "0 16px 16px",
+              color: "var(--gp-color-text-subtle)",
+              fontSize: 14,
+            }}
+          >
+            Resize the canvas to see the column count step from 1 → 2 → 3.
+          </p>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                { name: "hasGutter", type: "boolean", description: "Adds the standard gutter between cells." },
-                { name: "span", type: "1–12", description: "Default column span for every GridItem child." },
-                { name: "sm / md / lg / xl / xl2", type: "1–12", description: "Per-breakpoint default span." },
-                { name: "order", type: "{ default?, md?, ... }", description: "Override visual order of items per breakpoint." },
-                { name: "component", type: "ElementType", description: <>Override the rendered tag (defaults to <code>div</code>).</> },
-              ]}
-            />
-            <p style={{ marginTop: 16, marginBottom: 0, color: "var(--gp-color-text-subtle)", fontSize: 14 }}>
-              GridItem accepts the same span props for per-item control.
-            </p>
-          </div>
+          <Example source={gridExampleSrc} fileName="Grid.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Grid, GridItem } from "@golden-passport/ds-patternfly";'}
+        componentSource={gridComponentSrc}
+        componentFileName="Grid.tsx"
+        description={
+          <>
+            How to import the component and every prop it accepts. GridItem
+            accepts the same span props for per-item control.
+          </>
+        }
+        rows={[
+          { name: "hasGutter", type: "boolean", description: "Adds the standard gutter between cells." },
+          { name: "span", type: "1–12", description: "Default column span for every GridItem child." },
+          { name: "sm / md / lg / xl / xl2", type: "1–12", description: "Per-breakpoint default span." },
+          { name: "order", type: "{ default?, md?, ... }", description: "Override visual order of items per breakpoint." },
+          { name: "component", type: "ElementType", description: <>Override the rendered tag (defaults to <code>div</code>).</> },
+        ]}
+      />
     </FoundationPage>
   ),
 };

@@ -1,23 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Chart,
-  ChartAxis,
-  ChartGroup,
-  ChartLine,
-  ChartVoronoiContainer,
-} from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 import { chartA11yParams } from "./_chartKit.js";
+import { TwoSeriesWithTooltip } from "../../examples/charts/LineChart.example.js";
+import lineChartExampleSrc from "../../examples/charts/LineChart.example.tsx?raw";
 
 const meta: Meta = {
   title: "Charts/Line chart",
   parameters: { layout: "padded", a11y: chartA11yParams },
 };
 export default meta;
-
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const series = (n: number) => days.map((x, i) => ({ x, y: n + (i % 4) * 1.5 + (i % 2 === 0 ? 1 : 0) }));
 
 export const Overview: StoryObj = {
   render: () => (
@@ -35,48 +27,23 @@ export const Overview: StoryObj = {
     >
       <Section title="Two series with tooltip">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={280}>
-              <Chart
-                ariaTitle="Latency by env"
-                ariaDesc="Prod vs staging latency over the past week."
-                themeColor="multi"
-                height={260}
-                padding={{ left: 60, right: 20, top: 20, bottom: 60 }}
-                legendData={[{ name: "Prod" }, { name: "Staging" }]}
-                legendPosition="bottom"
-                containerComponent={
-                  <ChartVoronoiContainer
-                    labels={({ datum }: { datum: { x: string; y: number; childName?: string } }) =>
-                      `${datum.childName ?? "series"} ${datum.x}: ${datum.y.toFixed(1)}`
-                    }
-                    constrainToVisibleArea
-                  />
-                }
-              >
-                <ChartAxis />
-                <ChartAxis dependentAxis showGrid />
-                <ChartGroup>
-                  <ChartLine data={series(2)} name="Prod" interpolation="monotoneX" />
-                  <ChartLine data={series(4)} name="Staging" interpolation="monotoneX" />
-                </ChartGroup>
-              </Chart>
-            </DemoFrame>
-            <CodeBlock>{`<Chart
-  ariaTitle="Latency by env"
-  themeColor="multi"
-  legendData={[{ name: "Prod" }, { name: "Staging" }]}
-  legendPosition="bottom"
-  containerComponent={<ChartVoronoiContainer labels={({ datum }) => \`\${datum.childName}: \${datum.y}\`} />}
->
-  <ChartAxis />
-  <ChartAxis dependentAxis showGrid />
-  <ChartGroup>
-    <ChartLine data={prod} name="Prod" interpolation="monotoneX" />
-    <ChartLine data={staging} name="Staging" interpolation="monotoneX" />
-  </ChartGroup>
-</Chart>`}</CodeBlock>
-          </div>
+          <Example
+            source={lineChartExampleSrc}
+            region="TwoSeriesWithTooltip"
+            fileName="LineChart.example.tsx"
+            height={280}
+          >
+            <TwoSeriesWithTooltip />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={lineChartExampleSrc} fileName="LineChart.example.tsx" />
         </Card>
       </Section>
 

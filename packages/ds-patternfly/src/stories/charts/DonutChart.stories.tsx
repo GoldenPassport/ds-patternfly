@@ -1,20 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ChartDonut } from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 import { chartA11yParams } from "./_chartKit.js";
+import { CentredTotal } from "../../examples/charts/DonutChart.example.js";
+import donutChartExampleSrc from "../../examples/charts/DonutChart.example.tsx?raw";
 
 const meta: Meta = {
   title: "Charts/Donut chart",
   parameters: { layout: "padded", a11y: chartA11yParams },
 };
 export default meta;
-
-const data = [
-  { x: "Active", y: 142 },
-  { x: "Paused", y: 18 },
-  { x: "Failed", y: 3 },
-];
 
 export const Overview: StoryObj = {
   render: () => (
@@ -32,32 +27,23 @@ export const Overview: StoryObj = {
     >
       <Section title="Centred total">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={280}>
-              <ChartDonut
-                ariaTitle="Workflows by status"
-                ariaDesc="142 active, 18 paused, 3 failed of 163 total."
-                data={data}
-                labels={({ datum }: { datum: { x: string; y: number } }) =>
-                  `${datum.x}: ${datum.y}`
-                }
-                title="163"
-                subTitle="Workflows"
-                themeColor="multi"
-                height={260}
-                width={260}
-              />
-            </DemoFrame>
-            <CodeBlock>{`<ChartDonut
-  ariaTitle="Workflows by status"
-  ariaDesc="142 active, 18 paused, 3 failed of 163 total."
-  data={data}
-  labels={({ datum }) => \`\${datum.x}: \${datum.y}\`}
-  title="163"
-  subTitle="Workflows"
-  themeColor="multi"
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={donutChartExampleSrc}
+            region="CentredTotal"
+            fileName="DonutChart.example.tsx"
+            height={280}
+          >
+            <CentredTotal />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={donutChartExampleSrc} fileName="DonutChart.example.tsx" />
         </Card>
       </Section>
 

@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ChartContainer, ChartPie } from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { Basic } from "../../examples/charts/PieChart.example.js";
+import pieChartExampleSrc from "../../examples/charts/PieChart.example.tsx?raw";
 import { chartA11yParams } from "./_chartKit.js";
 
 const meta: Meta = {
@@ -9,12 +10,6 @@ const meta: Meta = {
   parameters: { layout: "padded", a11y: chartA11yParams },
 };
 export default meta;
-
-const data = [
-  { x: "Pro",        y: 60 },
-  { x: "Enterprise", y: 25 },
-  { x: "Free",       y: 15 },
-];
 
 export const Overview: StoryObj = {
   render: () => (
@@ -30,38 +25,23 @@ export const Overview: StoryObj = {
     >
       <Section title="Basic">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={300}>
-              {/* responsive={false} renders the chart at its fixed
-                  width×height instead of scaling to fill the container —
-                  otherwise the SVG stretches to the frame width and its
-                  height balloons, overflowing onto the code block below. */}
-              <ChartPie
-                ariaTitle="Plan distribution"
-                ariaDesc="60% Pro, 25% Enterprise, 15% Free."
-                data={data}
-                labels={({ datum }: { datum: { x: string; y: number } }) =>
-                  `${datum.x}: ${datum.y}%`
-                }
-                themeColor="multi"
-                height={260}
-                width={440}
-                legendData={data.map((d) => ({ name: `${d.x} (${d.y}%)` }))}
-                legendPosition="right"
-                padding={{ top: 10, bottom: 10, left: 10, right: 160 }}
-                containerComponent={<ChartContainer responsive={false} />}
-              />
-            </DemoFrame>
-            <CodeBlock>{`<ChartPie
-  ariaTitle="Plan distribution"
-  ariaDesc="60% Pro, 25% Enterprise, 15% Free."
-  data={data}
-  labels={({ datum }) => \`\${datum.x}: \${datum.y}%\`}
-  themeColor="multi"
-  legendData={data.map(d => ({ name: \`\${d.x} (\${d.y}%)\` }))}
-  legendPosition="right"
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={pieChartExampleSrc}
+            region="Basic"
+            fileName="PieChart.example.tsx"
+            height={300}
+          >
+            <Basic />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={pieChartExampleSrc} fileName="PieChart.example.tsx" />
         </Card>
       </Section>
 

@@ -1,14 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Chart,
-  ChartAxis,
-  ChartGroup,
-  ChartLine,
-  ChartThemeColor,
-  getCustomTheme,
-} from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { DefaultVsCustom } from "../../examples/charts/Themes.example.js";
+import themesExampleSrc from "../../examples/charts/Themes.example.tsx?raw";
 import { chartA11yParams } from "./_chartKit.js";
 
 const meta: Meta = {
@@ -16,15 +10,6 @@ const meta: Meta = {
   parameters: { layout: "padded", a11y: chartA11yParams },
 };
 export default meta;
-
-const data1 = [{ x: 1, y: 1 }, { x: 2, y: 3 }, { x: 3, y: 5 }, { x: 4, y: 4 }, { x: 5, y: 6 }];
-const data2 = [{ x: 1, y: 2 }, { x: 2, y: 4 }, { x: 3, y: 3 }, { x: 4, y: 5 }, { x: 5, y: 7 }];
-
-// Build a custom theme once at module scope.
-const customTheme = getCustomTheme(ChartThemeColor.blue, {
-  area: { style: { data: { strokeWidth: 3 } } },
-  line: { style: { data: { strokeWidth: 3 } } },
-});
 
 export const Overview: StoryObj = {
   render: () => (
@@ -43,59 +28,23 @@ export const Overview: StoryObj = {
     >
       <Section title="Default vs custom">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16, gridTemplateColumns: "1fr 1fr" }}>
-            <div>
-              <div style={{ marginBottom: 4, color: "var(--gp-color-text-subtle)", fontSize: 13 }}>
-                Default theme, themeColor=&quot;blue&quot;
-              </div>
-              <DemoFrame height={220}>
-                <Chart
-                  ariaTitle="Default theme"
-                  themeColor="blue"
-                  height={200}
-                  padding={{ left: 60, right: 20, top: 20, bottom: 50 }}
-                >
-                  <ChartAxis />
-                  <ChartAxis dependentAxis showGrid />
-                  <ChartGroup>
-                    <ChartLine data={data1} />
-                    <ChartLine data={data2} />
-                  </ChartGroup>
-                </Chart>
-              </DemoFrame>
-            </div>
-            <div>
-              <div style={{ marginBottom: 4, color: "var(--gp-color-text-subtle)", fontSize: 13 }}>
-                getCustomTheme — bolder strokes
-              </div>
-              <DemoFrame height={220}>
-                <Chart
-                  ariaTitle="Custom theme"
-                  theme={customTheme}
-                  height={200}
-                  padding={{ left: 60, right: 20, top: 20, bottom: 50 }}
-                >
-                  <ChartAxis />
-                  <ChartAxis dependentAxis showGrid />
-                  <ChartGroup>
-                    <ChartLine data={data1} />
-                    <ChartLine data={data2} />
-                  </ChartGroup>
-                </Chart>
-              </DemoFrame>
-            </div>
-          </div>
-          <div style={{ padding: 24 }}>
-            <CodeBlock>{`import { getCustomTheme, ChartThemeColor } from "@patternfly/react-charts/victory";
+          <Example
+            source={themesExampleSrc}
+            region="DefaultVsCustom"
+            fileName="Themes.example.tsx"
+            height={250}
+          >
+            <DefaultVsCustom />
+          </Example>
+        </Card>
+      </Section>
 
-// Build once at module scope.
-const bold = getCustomTheme(ChartThemeColor.blue, {
-  area: { style: { data: { strokeWidth: 3 } } },
-  line: { style: { data: { strokeWidth: 3 } } },
-});
-
-<Chart theme={bold} ariaTitle="...">{/* … */}</Chart>`}</CodeBlock>
-          </div>
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={themesExampleSrc} fileName="Themes.example.tsx" />
         </Card>
       </Section>
 

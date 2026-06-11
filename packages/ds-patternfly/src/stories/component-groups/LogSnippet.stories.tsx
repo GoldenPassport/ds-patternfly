@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { AlertVariant } from "@golden-passport/ds-patternfly";
-import { LogSnippet } from "@patternfly/react-component-groups/dist/dynamic/LogSnippet";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  DefaultDanger,
+  OtherVariants,
+} from "../../examples/component-groups/LogSnippet.example.js";
+import logSnippetExampleSrc from "../../examples/component-groups/LogSnippet.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Helpers/Log snippet",
@@ -23,11 +26,6 @@ const meta: Meta = {
 };
 export default meta;
 
-const sampleLog = `2026-05-10T09:21:14.231Z ERROR  worker-3   Failed to dispatch job 4892
-  at WorkflowDispatcher.dispatch (workflow-dispatcher.ts:142)
-  at async WorkflowRunner.run (workflow-runner.ts:88)
-caused by: ConnectionResetError: connection closed by upstream`;
-
 export const Overview: StoryObj = {
   render: () => (
     <FoundationPage
@@ -43,20 +41,13 @@ export const Overview: StoryObj = {
     >
       <Section title="Default (danger)">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <LogSnippet
-                message="The job failed during dispatch."
-                logSnippet={sampleLog}
-                variant={AlertVariant.danger}
-              />
-            </DemoFrame>
-            <CodeBlock>{`<LogSnippet
-  message="The job failed during dispatch."
-  logSnippet={errorOutput}
-  variant={AlertVariant.danger}
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={logSnippetExampleSrc}
+            region="DefaultDanger"
+            fileName="LogSnippet.example.tsx"
+          >
+            <DefaultDanger />
+          </Example>
         </Card>
       </Section>
 
@@ -65,15 +56,22 @@ export const Overview: StoryObj = {
         description="warning / info / success colour the side rail to match the severity of the surrounding context."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <LogSnippet
-                message="Run completed with warnings."
-                logSnippet="WARN  step 2 took 14.2s (threshold: 10s)"
-                variant={AlertVariant.warning}
-              />
-            </DemoFrame>
-          </div>
+          <Example
+            source={logSnippetExampleSrc}
+            region="OtherVariants"
+            fileName="LogSnippet.example.tsx"
+          >
+            <OtherVariants />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={logSnippetExampleSrc} fileName="LogSnippet.example.tsx" />
         </Card>
       </Section>
 

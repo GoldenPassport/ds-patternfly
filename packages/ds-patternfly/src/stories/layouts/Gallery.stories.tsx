@@ -1,7 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Gallery, GalleryItem } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { Box, DemoFrame, PropsTable } from "./_layoutKit.js";
+import {
+  FoundationPage,
+  Section,
+  Card,
+  ConfigurationSection,
+  Example,
+} from "../_kit/StoryKit.js";
+import {
+  DefaultBehavior,
+  PerBreakpointMinWidths,
+} from "../../examples/layouts/Gallery.example.js";
+import galleryExampleSrc from "../../examples/layouts/Gallery.example.tsx?raw";
+import galleryComponentSrc from "../../components/Gallery.tsx?raw";
 
 const meta: Meta = {
   title: "Layouts/Gallery",
@@ -27,20 +37,13 @@ export const Overview: StoryObj = {
         description="hasGutter adds the standard spacer between tiles."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Gallery hasGutter minWidths={{ default: "180px" }}>
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <GalleryItem key={i}>
-                    <Box label={`tile ${i + 1}`} style={{ padding: 24 }} />
-                  </GalleryItem>
-                ))}
-              </Gallery>
-            </DemoFrame>
-            <CodeBlock>{`<Gallery hasGutter minWidths={{ default: "180px" }}>
-  {items.map(i => <GalleryItem key={i.id}>...</GalleryItem>)}
-</Gallery>`}</CodeBlock>
-          </div>
+          <Example
+            source={galleryExampleSrc}
+            region="DefaultBehavior"
+            fileName="Gallery.example.tsx"
+          >
+            <DefaultBehavior />
+          </Example>
         </Card>
       </Section>
 
@@ -49,67 +52,52 @@ export const Overview: StoryObj = {
         description="Tighter tiles on small viewports, more generous as space allows."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <Gallery
-                hasGutter
-                minWidths={{
-                  default: "140px",
-                  md: "200px",
-                  lg: "260px",
-                }}
-              >
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <GalleryItem key={i}>
-                    <Box label={`tile ${i + 1}`} style={{ padding: 24 }} />
-                  </GalleryItem>
-                ))}
-              </Gallery>
-            </DemoFrame>
-            <CodeBlock>{`<Gallery
-  hasGutter
-  minWidths={{
-    default: "140px",
-    md: "200px",
-    lg: "260px",
-  }}
->
-  ...
-</Gallery>`}</CodeBlock>
-          </div>
+          <Example
+            source={galleryExampleSrc}
+            region="PerBreakpointMinWidths"
+            fileName="Gallery.example.tsx"
+          >
+            <PerBreakpointMinWidths />
+          </Example>
         </Card>
       </Section>
 
-      <Section title="Props">
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
         <Card>
-          <div style={{ padding: 24 }}>
-            <PropsTable
-              rows={[
-                {
-                  name: "hasGutter",
-                  type: "boolean",
-                  description: "Adds the standard spacer between tiles. Default false.",
-                },
-                {
-                  name: "minWidths",
-                  type: "{ default?: string, sm?: string, md?: string, lg?: string, xl?: string, '2xl'?: string }",
-                  description: "Minimum tile width per breakpoint. The browser fits as many columns as space allows.",
-                },
-                {
-                  name: "maxWidths",
-                  type: "Same shape",
-                  description: "Cap on tile width — rarely needed; use to prevent over-stretching on wide viewports.",
-                },
-                {
-                  name: "component",
-                  type: "ElementType",
-                  description: <>Override the rendered tag (defaults to <code>div</code>).</>,
-                },
-              ]}
-            />
-          </div>
+          <Example source={galleryExampleSrc} fileName="Gallery.example.tsx" />
         </Card>
       </Section>
+
+      <ConfigurationSection
+        importStatement={'import { Gallery, GalleryItem } from "@golden-passport/ds-patternfly";'}
+        componentSource={galleryComponentSrc}
+        componentFileName="Gallery.tsx"
+        rows={[
+          {
+            name: "hasGutter",
+            type: "boolean",
+            description: "Adds the standard spacer between tiles. Default false.",
+          },
+          {
+            name: "minWidths",
+            type: "{ default?: string, sm?: string, md?: string, lg?: string, xl?: string, '2xl'?: string }",
+            description: "Minimum tile width per breakpoint. The browser fits as many columns as space allows.",
+          },
+          {
+            name: "maxWidths",
+            type: "Same shape",
+            description: "Cap on tile width — rarely needed; use to prevent over-stretching on wide viewports.",
+          },
+          {
+            name: "component",
+            type: "ElementType",
+            description: <>Override the rendered tag (defaults to <code>div</code>).</>,
+          },
+        ]}
+      />
 
       <Section
         title="Gallery vs Grid"

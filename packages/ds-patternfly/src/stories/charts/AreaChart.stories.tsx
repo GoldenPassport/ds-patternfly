@@ -1,26 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Chart,
-  ChartArea,
-  ChartAxis,
-  ChartGroup,
-  ChartVoronoiContainer,
-} from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 import { chartA11yParams } from "./_chartKit.js";
+import {
+  SingleSeries,
+  MultipleSeries,
+} from "../../examples/charts/AreaChart.example.js";
+import areaChartExampleSrc from "../../examples/charts/AreaChart.example.tsx?raw";
 
 const meta: Meta = {
   title: "Charts/Area chart",
   parameters: { layout: "padded", a11y: chartA11yParams },
 };
 export default meta;
-
-const single = [
-  { x: "Mon", y: 1 }, { x: "Tue", y: 3 }, { x: "Wed", y: 2 },
-  { x: "Thu", y: 4 }, { x: "Fri", y: 7 }, { x: "Sat", y: 5 }, { x: "Sun", y: 6 },
-];
-const series2 = single.map((p) => ({ ...p, y: p.y + 2 }));
 
 export const Overview: StoryObj = {
   render: () => (
@@ -37,60 +29,36 @@ export const Overview: StoryObj = {
     >
       <Section title="Single series">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={260}>
-              <Chart
-                ariaTitle="Run volume"
-                ariaDesc="Runs per day, Monday through Sunday."
-                height={240}
-                padding={{ left: 60, right: 20, top: 20, bottom: 50 }}
-                containerComponent={
-                  <ChartVoronoiContainer
-                    labels={({ datum }: { datum: { x: string; y: number } }) =>
-                      `${datum.x}: ${datum.y}`
-                    }
-                    constrainToVisibleArea
-                  />
-                }
-              >
-                <ChartAxis />
-                <ChartAxis dependentAxis showGrid />
-                <ChartGroup>
-                  <ChartArea data={single} interpolation="monotoneX" />
-                </ChartGroup>
-              </Chart>
-            </DemoFrame>
-            <CodeBlock>{`<Chart ariaTitle="Run volume" ariaDesc="Runs per day, Mon through Sun." height={240}>
-  <ChartAxis />
-  <ChartAxis dependentAxis showGrid />
-  <ChartGroup>
-    <ChartArea data={data} interpolation="monotoneX" />
-  </ChartGroup>
-</Chart>`}</CodeBlock>
-          </div>
+          <Example
+            source={areaChartExampleSrc}
+            region="SingleSeries"
+            fileName="AreaChart.example.tsx"
+            height={260}
+          >
+            <SingleSeries />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Multiple series">
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame height={260}>
-              <Chart
-                ariaTitle="Run volume by env"
-                ariaDesc="Run counts for production and staging."
-                themeColor="multi"
-                height={240}
-                padding={{ left: 60, right: 20, top: 20, bottom: 50 }}
-              >
-                <ChartAxis />
-                <ChartAxis dependentAxis showGrid />
-                <ChartGroup>
-                  <ChartArea data={single} interpolation="monotoneX" />
-                  <ChartArea data={series2} interpolation="monotoneX" />
-                </ChartGroup>
-              </Chart>
-            </DemoFrame>
-          </div>
+          <Example
+            source={areaChartExampleSrc}
+            region="MultipleSeries"
+            fileName="AreaChart.example.tsx"
+            height={260}
+          >
+            <MultipleSeries />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={areaChartExampleSrc} fileName="AreaChart.example.tsx" />
         </Card>
       </Section>
 

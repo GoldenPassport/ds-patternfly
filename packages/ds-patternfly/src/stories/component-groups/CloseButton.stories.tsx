@@ -1,7 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { CloseButton } from "@patternfly/react-component-groups/dist/dynamic/CloseButton";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import {
+  Basic,
+  InsideACustomPanel,
+} from "../../examples/component-groups/CloseButton.example.js";
+import closeButtonExampleSrc from "../../examples/component-groups/CloseButton.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Controls/Close button",
@@ -24,12 +28,13 @@ export const Overview: StoryObj = {
     >
       <Section title="Basic">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <CloseButton onClick={() => alert("dismissed")} />
-            </DemoFrame>
-            <CodeBlock>{`<CloseButton onClick={handleClose} />`}</CodeBlock>
-          </div>
+          <Example
+            source={closeButtonExampleSrc}
+            region="Basic"
+            fileName="CloseButton.example.tsx"
+          >
+            <Basic />
+          </Example>
         </Card>
       </Section>
 
@@ -38,29 +43,22 @@ export const Overview: StoryObj = {
         description="Drop CloseButton into the top-right of any dismissable surface — drawers, banners, ad-hoc cards."
       >
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame>
-              <div
-                style={{
-                  position: "relative",
-                  padding: "16px 48px 16px 16px",
-                  background: "var(--gp-color-bg-secondary-default)",
-                  border: "1px solid var(--gp-color-border-subtle)",
-                  borderRadius: 8,
-                  color: "var(--gp-color-text-regular)",
-                }}
-              >
-                <strong>Heads up</strong>
-                <p style={{ margin: "4px 0 0", color: "var(--gp-color-text-subtle)" }}>
-                  A custom inline notice — the close button sits absolutely
-                  positioned in the top-right corner.
-                </p>
-                <span style={{ position: "absolute", top: 8, right: 8 }}>
-                  <CloseButton onClick={() => alert("dismissed")} />
-                </span>
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={closeButtonExampleSrc}
+            region="InsideACustomPanel"
+            fileName="CloseButton.example.tsx"
+          >
+            <InsideACustomPanel />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={closeButtonExampleSrc} fileName="CloseButton.example.tsx" />
         </Card>
       </Section>
 

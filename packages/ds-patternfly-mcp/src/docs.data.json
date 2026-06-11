@@ -220,7 +220,13 @@
         "src",
         "areachart"
       ],
-      "storybookUrl": "/?path=/story/charts-area-chart--overview"
+      "storybookUrl": "/?path=/story/charts-area-chart--overview",
+      "examples": [
+        {
+          "name": "AreaChart",
+          "source": "/**\n * Area chart — filled line emphasising cumulative volume over time.\n * Requires @patternfly/react-charts (Victory-based).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  Chart,\n  ChartArea,\n  ChartAxis,\n  ChartGroup,\n  ChartVoronoiContainer,\n} from \"@patternfly/react-charts/victory\";\n\nconst single = [\n  { x: \"Mon\", y: 1 }, { x: \"Tue\", y: 3 }, { x: \"Wed\", y: 2 },\n  { x: \"Thu\", y: 4 }, { x: \"Fri\", y: 7 }, { x: \"Sat\", y: 5 }, { x: \"Sun\", y: 6 },\n];\nconst series2 = single.map((p) => ({ ...p, y: p.y + 2 }));\n\nexport function SingleSeries() {\n  return (\n    <Chart\n      ariaTitle=\"Run volume\"\n      ariaDesc=\"Runs per day, Monday through Sunday.\"\n      height={240}\n      padding={{ left: 60, right: 20, top: 20, bottom: 50 }}\n      containerComponent={\n        <ChartVoronoiContainer\n          labels={({ datum }: { datum: { x: string; y: number } }) =>\n            `${datum.x}: ${datum.y}`\n          }\n          constrainToVisibleArea\n        />\n      }\n    >\n      <ChartAxis />\n      <ChartAxis dependentAxis showGrid />\n      <ChartGroup>\n        <ChartArea data={single} interpolation=\"monotoneX\" />\n      </ChartGroup>\n    </Chart>\n  );\n}\n\nexport function MultipleSeries() {\n  return (\n    <Chart\n      ariaTitle=\"Run volume by env\"\n      ariaDesc=\"Run counts for production and staging.\"\n      themeColor=\"multi\"\n      height={240}\n      padding={{ left: 60, right: 20, top: 20, bottom: 50 }}\n    >\n      <ChartAxis />\n      <ChartAxis dependentAxis showGrid />\n      <ChartGroup>\n        <ChartArea data={single} interpolation=\"monotoneX\" />\n        <ChartArea data={series2} interpolation=\"monotoneX\" />\n      </ChartGroup>\n    </Chart>\n  );\n}\n\nexport default function AreaChartExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <SingleSeries />\n      <MultipleSeries />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-bar-chart",
@@ -237,7 +243,13 @@
         "src",
         "barchart"
       ],
-      "storybookUrl": "/?path=/story/charts-bar-chart--overview"
+      "storybookUrl": "/?path=/story/charts-bar-chart--overview",
+      "examples": [
+        {
+          "name": "BarChart",
+          "source": "/**\n * Bar chart — discrete categorical comparison, vertical or horizontal.\n * Requires @patternfly/react-charts (Victory-based).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { Chart, ChartAxis, ChartBar, ChartGroup } from \"@patternfly/react-charts/victory\";\n\nconst data1 = [{ x: \"Active\", y: 142 }, { x: \"Paused\", y: 18 }, { x: \"Failed\", y: 3 }];\nconst data2 = [{ x: \"Active\", y: 120 }, { x: \"Paused\", y: 22 }, { x: \"Failed\", y: 5 }];\n\nexport function GroupedBars() {\n  return (\n    <Chart\n      ariaTitle=\"Workflow counts\"\n      ariaDesc=\"Active, paused, failed across this week and last.\"\n      themeColor=\"multi\"\n      height={240}\n      domainPadding={{ x: [40, 40] }}\n      padding={{ left: 60, right: 20, top: 20, bottom: 50 }}\n    >\n      <ChartAxis />\n      <ChartAxis dependentAxis showGrid />\n      <ChartGroup offset={11}>\n        <ChartBar data={data1} />\n        <ChartBar data={data2} />\n      </ChartGroup>\n    </Chart>\n  );\n}\n\nexport function Horizontal() {\n  return (\n    <Chart\n      ariaTitle=\"Status (horizontal)\"\n      horizontal\n      height={240}\n      domainPadding={{ y: [40, 40] }}\n      padding={{ left: 100, right: 20, top: 20, bottom: 50 }}\n    >\n      <ChartAxis />\n      <ChartAxis dependentAxis showGrid />\n      <ChartGroup>\n        <ChartBar data={data1} />\n      </ChartGroup>\n    </Chart>\n  );\n}\n\nexport default function BarChartExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <GroupedBars />\n      <Horizontal />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-box-plot-chart",
@@ -255,7 +267,13 @@
         "src",
         "boxplotchart"
       ],
-      "storybookUrl": "/?path=/story/charts-box-plot-chart--overview"
+      "storybookUrl": "/?path=/story/charts-box-plot-chart--overview",
+      "examples": [
+        {
+          "name": "BoxPlotChart",
+          "source": "/**\n * Box plot chart — five-number distribution summaries per category.\n * Requires @patternfly/react-charts and victory (PF6 ships no dedicated\n * ChartBoxPlot wrapper, so Victory's VictoryBoxPlot is composed directly\n * inside a PF6-themed Chart).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { Chart, ChartAxis } from \"@patternfly/react-charts/victory\";\nimport { VictoryBoxPlot } from \"victory\";\n\nconst data = [\n  { x: \"p50\", min: 1, q1: 2, median: 3, q3: 4, max: 5 },\n  { x: \"p95\", min: 2, q1: 3, median: 5, q3: 7, max: 9 },\n  { x: \"p99\", min: 3, q1: 5, median: 8, q3: 12, max: 18 },\n];\n\nexport function Recipe() {\n  return (\n    <Chart\n      ariaTitle=\"API latency\"\n      ariaDesc=\"p50/p95/p99 latency distributions across last hour.\"\n      height={240}\n      domainPadding={{ x: [40, 40] }}\n      padding={{ left: 60, right: 20, top: 20, bottom: 50 }}\n    >\n      <ChartAxis />\n      <ChartAxis dependentAxis showGrid />\n      <VictoryBoxPlot\n        boxWidth={20}\n        data={data}\n        style={{\n          min: { stroke: \"var(--pf-t--global--icon--color--regular)\" },\n          max: { stroke: \"var(--pf-t--global--icon--color--regular)\" },\n          q1: { fill: \"var(--pf-t--chart--color--blue--400)\" },\n          q3: { fill: \"var(--pf-t--chart--color--blue--400)\" },\n          median: { stroke: \"var(--pf-t--global--text--color--regular)\" },\n        }}\n      />\n    </Chart>\n  );\n}\n\nexport default function BoxPlotChartExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Recipe />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-bullet-chart",
@@ -272,7 +290,13 @@
         "src",
         "bulletchart"
       ],
-      "storybookUrl": "/?path=/story/charts-bullet-chart--overview"
+      "storybookUrl": "/?path=/story/charts-bullet-chart--overview",
+      "examples": [
+        {
+          "name": "BulletChart",
+          "source": "/**\n * Bullet chart — single-metric performance vs target with qualitative bands.\n * Requires @patternfly/react-charts (Victory-based).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { ChartBullet } from \"@patternfly/react-charts/victory\";\n\nexport function Basic() {\n  return (\n    <ChartBullet\n      ariaTitle=\"SLA: API latency\"\n      ariaDesc=\"P99 latency vs 250ms SLA target.\"\n      title=\"API latency\"\n      subTitle=\"p99 (ms)\"\n      primarySegmentedMeasureData={[{ name: \"Actual\", y: 180 }]}\n      comparativeWarningMeasureData={[{ name: \"Warning\", y: 200 }]}\n      comparativeErrorMeasureData={[{ name: \"SLA\", y: 250 }]}\n      qualitativeRangeData={[\n        { name: \"Range\", y: 150 },\n        { name: \"Range\", y: 220 },\n        { name: \"Range\", y: 300 },\n      ]}\n      maxDomain={{ y: 300 }}\n      height={200}\n      width={500}\n      padding={{ left: 100, right: 50, top: 60, bottom: 60 }}\n    />\n  );\n}\n\nexport default function BulletChartExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Basic />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-colors-for-charts",
@@ -305,7 +329,13 @@
         "src",
         "donutchart"
       ],
-      "storybookUrl": "/?path=/story/charts-donut-chart--overview"
+      "storybookUrl": "/?path=/story/charts-donut-chart--overview",
+      "examples": [
+        {
+          "name": "DonutChart",
+          "source": "/**\n * Donut chart — parts-of-a-whole with a centred topline number.\n * Requires @patternfly/react-charts (Victory-based).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { ChartDonut } from \"@patternfly/react-charts/victory\";\n\nconst data = [\n  { x: \"Active\", y: 142 },\n  { x: \"Paused\", y: 18 },\n  { x: \"Failed\", y: 3 },\n];\n\nexport function CentredTotal() {\n  return (\n    <ChartDonut\n      ariaTitle=\"Workflows by status\"\n      ariaDesc=\"142 active, 18 paused, 3 failed of 163 total.\"\n      data={data}\n      labels={({ datum }: { datum: { x: string; y: number } }) =>\n        `${datum.x}: ${datum.y}`\n      }\n      title=\"163\"\n      subTitle=\"Workflows\"\n      themeColor=\"multi\"\n      height={260}\n      width={260}\n    />\n  );\n}\n\nexport default function DonutChartExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <CentredTotal />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-donut-utilization-chart",
@@ -323,7 +353,13 @@
         "src",
         "donututilizationchart"
       ],
-      "storybookUrl": "/?path=/story/charts-donut-utilization-chart--overview"
+      "storybookUrl": "/?path=/story/charts-donut-utilization-chart--overview",
+      "examples": [
+        {
+          "name": "DonutUtilizationChart",
+          "source": "/**\n * Donut utilization chart — single-metric percentage arc with thresholds.\n * Requires @patternfly/react-charts (Victory-based).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { ChartDonutUtilization } from \"@patternfly/react-charts/victory\";\n\nexport function ThreeUtilizations() {\n  return (\n    <div style={{ display: \"grid\", gap: 16, gridTemplateColumns: \"repeat(3, 1fr)\" }}>\n      <ChartDonutUtilization\n        ariaTitle=\"CPU utilization\"\n        ariaDesc=\"35% of CPU capacity used.\"\n        data={{ x: \"CPU\", y: 35 }}\n        title=\"35%\"\n        subTitle=\"CPU\"\n        thresholds={[{ value: 60 }, { value: 90 }]}\n        height={240}\n        width={240}\n      />\n      <ChartDonutUtilization\n        ariaTitle=\"Memory utilization\"\n        ariaDesc=\"72% of memory used — past the warning threshold.\"\n        data={{ x: \"Memory\", y: 72 }}\n        title=\"72%\"\n        subTitle=\"Memory\"\n        thresholds={[{ value: 60 }, { value: 90 }]}\n        height={240}\n        width={240}\n      />\n      <ChartDonutUtilization\n        ariaTitle=\"Disk utilization\"\n        ariaDesc=\"92% of disk used — past the danger threshold.\"\n        data={{ x: \"Disk\", y: 92 }}\n        title=\"92%\"\n        subTitle=\"Disk\"\n        thresholds={[{ value: 60 }, { value: 90 }]}\n        height={240}\n        width={240}\n      />\n    </div>\n  );\n}\n\nexport default function DonutUtilizationChartExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <ThreeUtilizations />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-legends",
@@ -338,7 +374,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/charts-legends--overview"
+      "storybookUrl": "/?path=/story/charts-legends--overview",
+      "examples": [
+        {
+          "name": "Legends",
+          "source": "/**\n * Legends — colour-to-series keys, auto-placed or standalone.\n * Requires @patternfly/react-charts (Victory-based).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  Chart,\n  ChartArea,\n  ChartAxis,\n  ChartGroup,\n  ChartLegend,\n} from \"@patternfly/react-charts/victory\";\n\nconst a = [{ x: 1, y: 2 }, { x: 2, y: 4 }, { x: 3, y: 3 }, { x: 4, y: 5 }];\nconst b = a.map((p) => ({ ...p, y: p.y + 1 }));\nconst c = a.map((p) => ({ ...p, y: p.y + 2 }));\n\nconst legendData = [{ name: \"API\" }, { name: \"Worker\" }, { name: \"Queue\" }];\n\nexport function LegendAtTheBottom() {\n  return (\n    <Chart\n      ariaTitle=\"Throughput by service\"\n      ariaDesc=\"API, Worker, and Queue throughput.\"\n      themeColor=\"multi\"\n      height={280}\n      padding={{ left: 60, right: 20, top: 20, bottom: 80 }}\n      legendData={legendData}\n      legendPosition=\"bottom\"\n    >\n      <ChartAxis />\n      <ChartAxis dependentAxis showGrid />\n      <ChartGroup>\n        <ChartArea data={a} />\n        <ChartArea data={b} />\n        <ChartArea data={c} />\n      </ChartGroup>\n    </Chart>\n  );\n}\n\nexport function StandaloneChartLegend() {\n  return (\n    <ChartLegend\n      data={legendData}\n      orientation=\"horizontal\"\n      height={60}\n      width={300}\n    />\n  );\n}\n\nexport default function LegendsExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <LegendAtTheBottom />\n      <StandaloneChartLegend />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-line-chart",
@@ -355,7 +397,13 @@
         "src",
         "linechart"
       ],
-      "storybookUrl": "/?path=/story/charts-line-chart--overview"
+      "storybookUrl": "/?path=/story/charts-line-chart--overview",
+      "examples": [
+        {
+          "name": "LineChart",
+          "source": "/**\n * Line chart — the classic trend visualization, values over time.\n * Requires @patternfly/react-charts (Victory-based).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  Chart,\n  ChartAxis,\n  ChartGroup,\n  ChartLine,\n  ChartVoronoiContainer,\n} from \"@patternfly/react-charts/victory\";\n\nconst days = [\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\", \"Sun\"];\nconst series = (n: number) =>\n  days.map((x, i) => ({ x, y: n + (i % 4) * 1.5 + (i % 2 === 0 ? 1 : 0) }));\n\nexport function TwoSeriesWithTooltip() {\n  return (\n    <Chart\n      ariaTitle=\"Latency by env\"\n      ariaDesc=\"Prod vs staging latency over the past week.\"\n      themeColor=\"multi\"\n      height={260}\n      padding={{ left: 60, right: 20, top: 20, bottom: 60 }}\n      legendData={[{ name: \"Prod\" }, { name: \"Staging\" }]}\n      legendPosition=\"bottom\"\n      containerComponent={\n        <ChartVoronoiContainer\n          labels={({ datum }: { datum: { x: string; y: number; childName?: string } }) =>\n            `${datum.childName ?? \"series\"} ${datum.x}: ${datum.y.toFixed(1)}`\n          }\n          constrainToVisibleArea\n        />\n      }\n    >\n      <ChartAxis />\n      <ChartAxis dependentAxis showGrid />\n      <ChartGroup>\n        <ChartLine data={series(2)} name=\"Prod\" interpolation=\"monotoneX\" />\n        <ChartLine data={series(4)} name=\"Staging\" interpolation=\"monotoneX\" />\n      </ChartGroup>\n    </Chart>\n  );\n}\n\nexport default function LineChartExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <TwoSeriesWithTooltip />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-patterns",
@@ -370,7 +418,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/charts-patterns--overview"
+      "storybookUrl": "/?path=/story/charts-patterns--overview",
+      "examples": [
+        {
+          "name": "Patterns",
+          "source": "/**\n * Chart patterns — SVG fill patterns as a second signal alongside colour.\n *\n * Requires @patternfly/react-charts (Victory wrapper).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useId } from \"react\";\nimport {\n  Chart,\n  ChartAxis,\n  ChartBar,\n  ChartGroup,\n} from \"@patternfly/react-charts/victory\";\n\nconst data1 = [\n  { x: \"Q1\", y: 40 }, { x: \"Q2\", y: 70 }, { x: \"Q3\", y: 55 }, { x: \"Q4\", y: 80 },\n];\nconst data2 = data1.map((p) => ({ ...p, y: p.y + 12 }));\n\nexport function PatternFills() {\n  const id = useId();\n  const diagId = `${id}-diag`;\n  const dotsId = `${id}-dots`;\n  return (\n    <>\n      <svg width={0} height={0} style={{ position: \"absolute\" }}>\n        <defs>\n          <pattern id={diagId} patternUnits=\"userSpaceOnUse\" width=\"6\" height=\"6\" patternTransform=\"rotate(45)\">\n            <rect width=\"6\" height=\"6\" fill=\"var(--pf-t--chart--color--blue--400, #06c)\" />\n            <line x1=\"0\" y1=\"0\" x2=\"0\" y2=\"6\" stroke=\"white\" strokeWidth=\"2\" />\n          </pattern>\n          <pattern id={dotsId} patternUnits=\"userSpaceOnUse\" width=\"6\" height=\"6\">\n            <rect width=\"6\" height=\"6\" fill=\"var(--pf-t--chart--color--purple--400, #5752d1)\" />\n            <circle cx=\"3\" cy=\"3\" r=\"1.2\" fill=\"white\" />\n          </pattern>\n        </defs>\n      </svg>\n      <Chart\n        ariaTitle=\"Quarterly revenue (patterned)\"\n        ariaDesc=\"Two products by quarter, distinguished by diagonal vs dotted fill.\"\n        height={260}\n        domainPadding={{ x: [40, 40] }}\n        padding={{ left: 60, right: 20, top: 20, bottom: 60 }}\n        legendData={[{ name: \"Pro\" }, { name: \"Enterprise\" }]}\n        legendPosition=\"bottom\"\n      >\n        <ChartAxis />\n        <ChartAxis dependentAxis showGrid />\n        <ChartGroup offset={14}>\n          <ChartBar data={data1} style={{ data: { fill: `url(#${diagId})` } }} />\n          <ChartBar data={data2} style={{ data: { fill: `url(#${dotsId})` } }} />\n        </ChartGroup>\n      </Chart>\n    </>\n  );\n}\n\nexport default function PatternsExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <PatternFills />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-pie-chart",
@@ -387,7 +441,13 @@
         "src",
         "piechart"
       ],
-      "storybookUrl": "/?path=/story/charts-pie-chart--overview"
+      "storybookUrl": "/?path=/story/charts-pie-chart--overview",
+      "examples": [
+        {
+          "name": "PieChart",
+          "source": "/**\n * Pie chart — composition of a whole; slices that sum to 100%.\n *\n * Requires @patternfly/react-charts (Victory wrapper).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { ChartContainer, ChartPie } from \"@patternfly/react-charts/victory\";\n\nconst data = [\n  { x: \"Pro\",        y: 60 },\n  { x: \"Enterprise\", y: 25 },\n  { x: \"Free\",       y: 15 },\n];\n\nexport function Basic() {\n  return (\n    /* responsive={false} renders the chart at its fixed width×height\n       instead of scaling to fill the container — otherwise the SVG\n       stretches to the container width and its height balloons. */\n    <ChartPie\n      ariaTitle=\"Plan distribution\"\n      ariaDesc=\"60% Pro, 25% Enterprise, 15% Free.\"\n      data={data}\n      labels={({ datum }: { datum: { x: string; y: number } }) =>\n        `${datum.x}: ${datum.y}%`\n      }\n      themeColor=\"multi\"\n      height={260}\n      width={440}\n      legendData={data.map((d) => ({ name: `${d.x} (${d.y}%)` }))}\n      legendPosition=\"right\"\n      padding={{ top: 10, bottom: 10, left: 10, right: 160 }}\n      containerComponent={<ChartContainer responsive={false} />}\n    />\n  );\n}\n\nexport default function PieChartExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Basic />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-resize-observer",
@@ -404,7 +464,13 @@
         "src",
         "resizeobserver"
       ],
-      "storybookUrl": "/?path=/story/charts-resize-observer--overview"
+      "storybookUrl": "/?path=/story/charts-resize-observer--overview",
+      "examples": [
+        {
+          "name": "ResizeObserver",
+          "source": "/**\n * Resize observer — a fluid chart that fills its container's width.\n *\n * Requires @patternfly/react-charts (Victory wrapper).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  Chart,\n  ChartArea,\n  ChartAxis,\n  ChartGroup,\n} from \"@patternfly/react-charts/victory\";\n\nconst data = [\n  { x: 1, y: 1 }, { x: 2, y: 3 }, { x: 3, y: 2 }, { x: 4, y: 5 }, { x: 5, y: 4 },\n];\n\nexport function ContainerDrivenWidth() {\n  return (\n    <div style={{ width: \"100%\", height: 240 }}>\n      <Chart\n        ariaTitle=\"Resizable area\"\n        ariaDesc=\"A chart that fills the width of its container.\"\n        height={240}\n        padding={{ left: 60, right: 20, top: 20, bottom: 50 }}\n        // Omit `width` — Victory's default container reads from layout.\n      >\n        <ChartAxis />\n        <ChartAxis dependentAxis showGrid />\n        <ChartGroup>\n          <ChartArea data={data} interpolation=\"monotoneX\" />\n        </ChartGroup>\n      </Chart>\n    </div>\n  );\n}\n\nexport default function ResizeObserverExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <ContainerDrivenWidth />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-sankey-chart",
@@ -421,7 +487,13 @@
         "src",
         "sankeychart"
       ],
-      "storybookUrl": "/?path=/story/charts-sankey-chart--overview"
+      "storybookUrl": "/?path=/story/charts-sankey-chart--overview",
+      "examples": [
+        {
+          "name": "SankeyChart",
+          "source": "/**\n * Sankey chart — flow visualization; values moving from one bucket to another.\n *\n * Requires @patternfly/react-charts (ECharts wrapper, beta) and echarts.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useId } from \"react\";\nimport { Charts } from \"@patternfly/react-charts/echarts\";\nimport * as echarts from \"echarts/core\";\nimport { SankeyChart } from \"echarts/charts\";\nimport { TitleComponent, TooltipComponent } from \"echarts/components\";\nimport { SVGRenderer } from \"echarts/renderers\";\nimport { useTheme } from \"@golden-passport/ds-patternfly\";\n\n// Register only the ECharts pieces the Sankey needs (tree-shakeable).\necharts.use([SankeyChart, SVGRenderer, TitleComponent, TooltipComponent]);\n\n// A realistic SaaS funnel: free trial → activated → paid plans / churn.\nconst sankeyNodes = [\n  { name: \"Free trial\" },\n  { name: \"Activated\" },\n  { name: \"Pro\" },\n  { name: \"Enterprise\" },\n  { name: \"Churned\" },\n];\nconst sankeyLinks = [\n  { source: \"Free trial\", target: \"Activated\", value: 480 },\n  { source: \"Free trial\", target: \"Churned\", value: 220 },\n  { source: \"Activated\", target: \"Pro\", value: 320 },\n  { source: \"Activated\", target: \"Enterprise\", value: 90 },\n  { source: \"Activated\", target: \"Churned\", value: 70 },\n];\n\nexport function Basic() {\n  const id = useId();\n  const { mode } = useTheme();\n  const labelColor = mode === \"dark\" ? \"#f5f5f5\" : \"#151515\";\n  return (\n    <Charts\n      id={`${id}-sankey-basic`}\n      nodeSelector=\"html\"\n      height={360}\n      width={760}\n      option={{\n        aria: {\n          enabled: true,\n          label: {\n            description:\n              \"User funnel: free trial through activation to paid plans and churn.\",\n          },\n        },\n        series: [\n          {\n            type: \"sankey\",\n            data: sankeyNodes,\n            links: sankeyLinks,\n            label: { color: labelColor },\n            lineStyle: { color: \"gradient\", opacity: 0.4 },\n          },\n        ],\n        tooltip: {\n          sourceLabel: \"From\",\n          destinationLabel: \"To\",\n          valueFormatter: (value: unknown) => `${value as number} users`,\n        },\n      }}\n    />\n  );\n}\n\nexport default function SankeyChartExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Basic />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-scatter-chart",
@@ -438,7 +510,13 @@
         "src",
         "scatterchart"
       ],
-      "storybookUrl": "/?path=/story/charts-scatter-chart--overview"
+      "storybookUrl": "/?path=/story/charts-scatter-chart--overview",
+      "examples": [
+        {
+          "name": "ScatterChart",
+          "source": "/**\n * Scatter chart — points on an X/Y plane for distributions and outliers.\n *\n * Requires @patternfly/react-charts (Victory wrapper).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  Chart,\n  ChartAxis,\n  ChartScatter,\n  ChartVoronoiContainer,\n} from \"@patternfly/react-charts/victory\";\n\nconst data = Array.from({ length: 24 }).map((_, i) => ({\n  x: 1 + (i % 8) + Math.random() * 0.6,\n  y: 1 + Math.floor(i / 8) * 2 + Math.random() * 2,\n  size: 3 + (i % 4),\n}));\n\nexport function BasicWithSizeDimension() {\n  return (\n    <Chart\n      ariaTitle=\"Latency vs payload size\"\n      ariaDesc=\"Each point is a request; size encodes retry count.\"\n      height={260}\n      padding={{ left: 60, right: 20, top: 20, bottom: 60 }}\n      containerComponent={\n        <ChartVoronoiContainer\n          labels={({ datum }: { datum: { x: number; y: number; size: number } }) =>\n            `payload ${datum.x.toFixed(1)} KB, latency ${datum.y.toFixed(1)} ms, retries ${datum.size - 3}`\n          }\n          constrainToVisibleArea\n        />\n      }\n    >\n      <ChartAxis label=\"Payload (KB)\" />\n      <ChartAxis dependentAxis label=\"Latency (ms)\" showGrid />\n      <ChartScatter data={data} />\n    </Chart>\n  );\n}\n\nexport default function ScatterChartExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <BasicWithSizeDimension />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-skeletons",
@@ -453,7 +531,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/charts-skeletons--overview"
+      "storybookUrl": "/?path=/story/charts-skeletons--overview",
+      "examples": [
+        {
+          "name": "Skeletons",
+          "source": "/**\n * Chart skeletons — loading placeholders that match a chart's footprint.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { Skeleton } from \"@golden-passport/ds-patternfly\";\n\nexport function LineAreaSilhouette() {\n  return (\n    <div style={{ position: \"relative\", height: 240, padding: 12 }}>\n      <Skeleton height=\"100%\" width=\"100%\" screenreaderText=\"Loading chart\" />\n    </div>\n  );\n}\n\nexport function BarSilhouette() {\n  return (\n    <div\n      style={{\n        display: \"flex\",\n        alignItems: \"flex-end\",\n        gap: 16,\n        padding: 12,\n        height: 240,\n      }}\n      role=\"img\"\n      aria-busy=\"true\"\n      aria-label=\"Loading chart\"\n    >\n      {[0.4, 0.7, 0.55, 0.8, 0.3, 0.6].map((h, i) => (\n        <Skeleton key={i} width=\"40px\" height={`${h * 100}%`} screenreaderText=\"\" />\n      ))}\n    </div>\n  );\n}\n\nexport function DonutSilhouette() {\n  return (\n    <div\n      style={{ display: \"grid\", placeItems: \"center\", height: 240 }}\n      role=\"img\"\n      aria-busy=\"true\"\n      aria-label=\"Loading donut chart\"\n    >\n      <Skeleton shape=\"circle\" width=\"180px\" height=\"180px\" />\n    </div>\n  );\n}\n\nexport default function SkeletonsExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <LineAreaSilhouette />\n      <BarSilhouette />\n      <DonutSilhouette />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-sparkline-chart",
@@ -470,7 +554,13 @@
         "src",
         "sparklinechart"
       ],
-      "storybookUrl": "/?path=/story/charts-sparkline-chart--overview"
+      "storybookUrl": "/?path=/story/charts-sparkline-chart--overview",
+      "examples": [
+        {
+          "name": "SparklineChart",
+          "source": "/**\n * Sparkline chart — a miniature, axis-less area chart inside a KPI tile.\n *\n * Requires @patternfly/react-charts (Victory wrapper).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  Chart,\n  ChartArea,\n  ChartGroup,\n  ChartVoronoiContainer,\n} from \"@patternfly/react-charts/victory\";\n\nconst data = Array.from({ length: 24 }).map((_, i) => ({\n  x: i,\n  y: 30 + Math.sin(i / 3) * 12 + (i % 5) * 2,\n}));\n\nconst Sparkline = ({ data: d, label, value, change }: { data: { x: number; y: number }[]; label: string; value: string; change: string }) => (\n  <div\n    style={{\n      display: \"grid\",\n      gridTemplateColumns: \"1fr 120px\",\n      alignItems: \"center\",\n      gap: 16,\n      padding: 12,\n      border: \"1px solid var(--gp-color-border-subtle)\",\n      borderRadius: 8,\n    }}\n  >\n    <div>\n      <div style={{ color: \"var(--gp-color-text-subtle)\", fontSize: 13 }}>{label}</div>\n      <div style={{ fontSize: 22, fontWeight: 600, color: \"var(--gp-color-text-regular)\" }}>{value}</div>\n      <div style={{ fontSize: 12, color: \"var(--gp-color-text-subtle)\" }}>{change}</div>\n    </div>\n    <Chart\n      ariaTitle={label}\n      ariaDesc={`${label} sparkline.`}\n      height={50}\n      width={120}\n      padding={2}\n      domainPadding={{ y: [2, 2] }}\n      containerComponent={\n        <ChartVoronoiContainer\n          labels={({ datum }: { datum: { x: number; y: number } }) => `${datum.y.toFixed(0)}`}\n          constrainToVisibleArea\n        />\n      }\n    >\n      <ChartGroup>\n        <ChartArea data={d} interpolation=\"monotoneX\" />\n      </ChartGroup>\n    </Chart>\n  </div>\n);\n\nexport function KpiTileWithSparkline() {\n  return (\n    <div style={{ display: \"grid\", gap: 12, maxWidth: 480 }}>\n      <Sparkline\n        data={data}\n        label=\"API requests\"\n        value=\"2.4k\"\n        change=\"+12% vs last hour\"\n      />\n      <Sparkline\n        data={data.map((p) => ({ ...p, y: 30 - p.y / 2 }))}\n        label=\"Error rate\"\n        value=\"0.4%\"\n        change=\"-0.2% vs last hour\"\n      />\n    </div>\n  );\n}\n\nexport default function SparklineChartExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <KpiTileWithSparkline />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-stack-chart",
@@ -487,7 +577,13 @@
         "src",
         "stackchart"
       ],
-      "storybookUrl": "/?path=/story/charts-stack-chart--overview"
+      "storybookUrl": "/?path=/story/charts-stack-chart--overview",
+      "examples": [
+        {
+          "name": "StackChart",
+          "source": "/**\n * Stack chart — cumulative composition over a categorical or time axis.\n *\n * Requires @patternfly/react-charts (Victory wrapper).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  Chart,\n  ChartArea,\n  ChartAxis,\n  ChartBar,\n  ChartStack,\n} from \"@patternfly/react-charts/victory\";\n\nconst x = [\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\"];\nconst a = x.map((d, i) => ({ x: d, y: 3 + (i % 3) }));\nconst b = x.map((d, i) => ({ x: d, y: 2 + (i % 2) }));\nconst c = x.map((d, i) => ({ x: d, y: 4 + ((i + 1) % 3) }));\n\nexport function StackedBar() {\n  return (\n    <Chart\n      ariaTitle=\"Runs by service\"\n      ariaDesc=\"Stacked counts for API, Worker, Queue by day.\"\n      themeColor=\"multi\"\n      height={260}\n      domainPadding={{ x: [40, 40] }}\n      padding={{ left: 60, right: 20, top: 20, bottom: 60 }}\n      legendData={[{ name: \"API\" }, { name: \"Worker\" }, { name: \"Queue\" }]}\n      legendPosition=\"bottom\"\n    >\n      <ChartAxis />\n      <ChartAxis dependentAxis showGrid />\n      <ChartStack>\n        <ChartBar data={a} />\n        <ChartBar data={b} />\n        <ChartBar data={c} />\n      </ChartStack>\n    </Chart>\n  );\n}\n\nexport function StackedArea() {\n  return (\n    <Chart\n      ariaTitle=\"Cumulative throughput\"\n      themeColor=\"multi\"\n      height={260}\n      padding={{ left: 60, right: 20, top: 20, bottom: 50 }}\n    >\n      <ChartAxis />\n      <ChartAxis dependentAxis showGrid />\n      <ChartStack>\n        <ChartArea data={a} interpolation=\"monotoneX\" />\n        <ChartArea data={b} interpolation=\"monotoneX\" />\n        <ChartArea data={c} interpolation=\"monotoneX\" />\n      </ChartStack>\n    </Chart>\n  );\n}\n\nexport default function StackChartExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <StackedBar />\n      <StackedArea />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-themes",
@@ -502,7 +598,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/charts-themes--overview"
+      "storybookUrl": "/?path=/story/charts-themes--overview",
+      "examples": [
+        {
+          "name": "Themes",
+          "source": "/**\n * Chart themes — PF6 default palettes vs getCustomTheme overrides.\n *\n * Requires @patternfly/react-charts (Victory wrapper).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  Chart,\n  ChartAxis,\n  ChartGroup,\n  ChartLine,\n  ChartThemeColor,\n  getCustomTheme,\n} from \"@patternfly/react-charts/victory\";\n\nconst data1 = [{ x: 1, y: 1 }, { x: 2, y: 3 }, { x: 3, y: 5 }, { x: 4, y: 4 }, { x: 5, y: 6 }];\nconst data2 = [{ x: 1, y: 2 }, { x: 2, y: 4 }, { x: 3, y: 3 }, { x: 4, y: 5 }, { x: 5, y: 7 }];\n\n// Build a custom theme once at module scope — passing a fresh object each\n// render trashes Victory's diffing.\nconst customTheme = getCustomTheme(ChartThemeColor.blue, {\n  area: { style: { data: { strokeWidth: 3 } } },\n  line: { style: { data: { strokeWidth: 3 } } },\n});\n\nexport function DefaultVsCustom() {\n  return (\n    <div style={{ display: \"grid\", gap: 16, gridTemplateColumns: \"1fr 1fr\" }}>\n      <div>\n        <div style={{ marginBottom: 4, color: \"var(--gp-color-text-subtle)\", fontSize: 13 }}>\n          Default theme, themeColor=&quot;blue&quot;\n        </div>\n        <Chart\n          ariaTitle=\"Default theme\"\n          themeColor=\"blue\"\n          height={200}\n          padding={{ left: 60, right: 20, top: 20, bottom: 50 }}\n        >\n          <ChartAxis />\n          <ChartAxis dependentAxis showGrid />\n          <ChartGroup>\n            <ChartLine data={data1} />\n            <ChartLine data={data2} />\n          </ChartGroup>\n        </Chart>\n      </div>\n      <div>\n        <div style={{ marginBottom: 4, color: \"var(--gp-color-text-subtle)\", fontSize: 13 }}>\n          getCustomTheme — bolder strokes\n        </div>\n        <Chart\n          ariaTitle=\"Custom theme\"\n          theme={customTheme}\n          height={200}\n          padding={{ left: 60, right: 20, top: 20, bottom: 50 }}\n        >\n          <ChartAxis />\n          <ChartAxis dependentAxis showGrid />\n          <ChartGroup>\n            <ChartLine data={data1} />\n            <ChartLine data={data2} />\n          </ChartGroup>\n        </Chart>\n      </div>\n    </div>\n  );\n}\n\nexport default function ThemesExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <DefaultVsCustom />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-threshold-chart",
@@ -519,7 +621,13 @@
         "src",
         "thresholdchart"
       ],
-      "storybookUrl": "/?path=/story/charts-threshold-chart--overview"
+      "storybookUrl": "/?path=/story/charts-threshold-chart--overview",
+      "examples": [
+        {
+          "name": "ThresholdChart",
+          "source": "/**\n * Threshold chart — a line chart with warning / danger threshold overlays.\n *\n * Requires @patternfly/react-charts (Victory wrapper).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  Chart,\n  ChartAxis,\n  ChartGroup,\n  ChartLine,\n  ChartThreshold,\n} from \"@patternfly/react-charts/victory\";\n\nconst series = [\n  { x: \"Mon\", y: 80 },  { x: \"Tue\", y: 120 }, { x: \"Wed\", y: 210 },\n  { x: \"Thu\", y: 180 }, { x: \"Fri\", y: 280 }, { x: \"Sat\", y: 240 }, { x: \"Sun\", y: 170 },\n];\nconst warningLine = series.map((p) => ({ x: p.x, y: 200 }));\nconst dangerLine = series.map((p) => ({ x: p.x, y: 260 }));\n\nexport function MetricWithThresholds() {\n  return (\n    <Chart\n      ariaTitle=\"P99 latency vs thresholds\"\n      ariaDesc=\"P99 latency over the week with warning threshold at 200ms and danger threshold at 260ms.\"\n      themeColor=\"multi\"\n      height={260}\n      padding={{ left: 60, right: 20, top: 20, bottom: 60 }}\n      legendData={[{ name: \"p99 (ms)\" }, { name: \"Warning\" }, { name: \"Danger\" }]}\n      legendPosition=\"bottom\"\n    >\n      <ChartAxis />\n      <ChartAxis dependentAxis showGrid />\n      <ChartGroup>\n        <ChartLine data={series} name=\"p99 (ms)\" interpolation=\"monotoneX\" />\n        <ChartThreshold\n          data={warningLine}\n          name=\"Warning\"\n          style={{ data: { stroke: \"var(--pf-t--chart--color--gold--400, #f0ab00)\" } }}\n        />\n        <ChartThreshold\n          data={dangerLine}\n          name=\"Danger\"\n          style={{ data: { stroke: \"var(--pf-t--chart--color--red--400, #c9190b)\" } }}\n        />\n      </ChartGroup>\n    </Chart>\n  );\n}\n\nexport default function ThresholdChartExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <MetricWithThresholds />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "charts-tooltips",
@@ -534,7 +642,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/charts-tooltips--overview"
+      "storybookUrl": "/?path=/story/charts-tooltips--overview",
+      "examples": [
+        {
+          "name": "Tooltips",
+          "source": "/**\n * Chart tooltips — voronoi hover-anywhere and cursor + legend tooltips.\n *\n * Requires @patternfly/react-charts (Victory wrapper).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport {\n  Chart,\n  ChartArea,\n  ChartAxis,\n  ChartGroup,\n  ChartLegendTooltip,\n  createContainer,\n  ChartVoronoiContainer,\n} from \"@patternfly/react-charts/victory\";\n\nconst x = [\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\"];\nconst a = x.map((d, i) => ({ x: d, y: 2 + i }));\nconst b = x.map((d, i) => ({ x: d, y: 5 - (i % 3) }));\n\n// Cursor + voronoi combination for hover-anywhere + crosshair.\nconst CursorVoronoiContainer = createContainer(\"voronoi\", \"cursor\");\n\nexport function VoronoiTooltip() {\n  return (\n    <Chart\n      ariaTitle=\"Throughput with tooltips\"\n      ariaDesc=\"Hover anywhere — the nearest point's series + value appears.\"\n      themeColor=\"multi\"\n      height={260}\n      padding={{ left: 60, right: 20, top: 20, bottom: 60 }}\n      legendData={[{ name: \"API\" }, { name: \"Worker\" }]}\n      legendPosition=\"bottom\"\n      containerComponent={\n        <ChartVoronoiContainer\n          labels={({ datum }: { datum: { x: string; y: number; childName?: string } }) =>\n            `${datum.childName ?? \"\"} ${datum.x}: ${datum.y}`\n          }\n          constrainToVisibleArea\n        />\n      }\n    >\n      <ChartAxis />\n      <ChartAxis dependentAxis showGrid />\n      <ChartGroup>\n        <ChartArea data={a} name=\"API\" interpolation=\"monotoneX\" />\n        <ChartArea data={b} name=\"Worker\" interpolation=\"monotoneX\" />\n      </ChartGroup>\n    </Chart>\n  );\n}\n\nexport function CursorLegendTooltip() {\n  return (\n    <Chart\n      ariaTitle=\"Throughput with cursor tooltip\"\n      ariaDesc=\"Crosshair tracks the x-position; tooltip shows all series at that x.\"\n      themeColor=\"multi\"\n      height={260}\n      padding={{ left: 60, right: 20, top: 20, bottom: 60 }}\n      legendData={[{ name: \"API\" }, { name: \"Worker\" }]}\n      legendPosition=\"bottom\"\n      containerComponent={\n        <CursorVoronoiContainer\n          cursorDimension=\"x\"\n          labels={({ datum }: { datum: { x: string; y: number } }) =>\n            `${datum.y}`\n          }\n          labelComponent={\n            <ChartLegendTooltip\n              legendData={[{ name: \"API\" }, { name: \"Worker\" }]}\n              title={(datum: { x?: string | number }) => String(datum.x ?? \"\")}\n            />\n          }\n          mouseFollowTooltips\n          voronoiDimension=\"x\"\n        />\n      }\n    >\n      <ChartAxis />\n      <ChartAxis dependentAxis showGrid />\n      <ChartGroup>\n        <ChartArea data={a} name=\"API\" interpolation=\"monotoneX\" />\n        <ChartArea data={b} name=\"Worker\" interpolation=\"monotoneX\" />\n      </ChartGroup>\n    </Chart>\n  );\n}\n\nexport default function TooltipsExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <VoronoiTooltip />\n      <CursorLegendTooltip />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "component-groups",
@@ -623,7 +737,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/component-groups-controls-bulk-select--overview"
+      "storybookUrl": "/?path=/story/component-groups-controls-bulk-select--overview",
+      "examples": [
+        {
+          "name": "BulkSelect",
+          "source": "/**\n * BulkSelect (@patternfly/react-component-groups) — a toolbar dropdown for\n * selecting all items, none, or just the current page above a paginated\n * selectable list / table.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport BulkSelect, { BulkSelectValue } from \"@patternfly/react-component-groups/dist/dynamic/BulkSelect\";\n\nconst TOTAL = 523;\nconst PAGE = 20;\n\nexport function PaginatedList() {\n  const [selected, setSelected] = useState(0);\n  const pageSelected = selected >= PAGE;\n  const pagePartial = selected > 0 && selected < PAGE;\n\n  const onSelect = (v: BulkSelectValue) => {\n    switch (v) {\n      case \"all\":      return setSelected(TOTAL);\n      case \"none\":     return setSelected(0);\n      case \"page\":     return setSelected(PAGE);\n      case \"nonePage\": return setSelected(0);\n    }\n  };\n\n  return (\n    <BulkSelect\n      isDataPaginated\n      canSelectAll\n      pageCount={PAGE}\n      selectedCount={selected}\n      totalCount={TOTAL}\n      pageSelected={pageSelected}\n      pagePartiallySelected={pagePartial}\n      onSelect={onSelect}\n    />\n  );\n}\n\nexport default function BulkSelectExample() {\n  return <PaginatedList />;\n}"
+        }
+      ]
     },
     {
       "id": "component-groups-controls-close-button",
@@ -641,7 +761,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/component-groups-controls-close-button--overview"
+      "storybookUrl": "/?path=/story/component-groups-controls-close-button--overview",
+      "examples": [
+        {
+          "name": "CloseButton",
+          "source": "/**\n * CloseButton (@patternfly/react-component-groups) — a standardized X button\n * with consistent icon, hit-target, and aria-label for dismissable surfaces\n * (drawers, panels, toasts, custom widgets).\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { CloseButton } from \"@patternfly/react-component-groups/dist/dynamic/CloseButton\";\n\nexport function Basic() {\n  return <CloseButton onClick={() => alert(\"dismissed\")} />;\n}\n\nexport function InsideACustomPanel() {\n  return (\n    <div\n      style={{\n        position: \"relative\",\n        padding: \"16px 48px 16px 16px\",\n        background: \"var(--gp-color-bg-secondary-default)\",\n        border: \"1px solid var(--gp-color-border-subtle)\",\n        borderRadius: 8,\n        color: \"var(--gp-color-text-regular)\",\n      }}\n    >\n      <strong>Heads up</strong>\n      <p style={{ margin: \"4px 0 0\", color: \"var(--gp-color-text-subtle)\" }}>\n        A custom inline notice — the close button sits absolutely\n        positioned in the top-right corner.\n      </p>\n      <span style={{ position: \"absolute\", top: 8, right: 8 }}>\n        <CloseButton onClick={() => alert(\"dismissed\")} />\n      </span>\n    </div>\n  );\n}\n\nexport default function CloseButtonExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Basic />\n      <InsideACustomPanel />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "component-groups-controls-external-link-button",
@@ -659,7 +785,13 @@
         "packages",
         "ds-patternfly"
       ],
-      "storybookUrl": "/?path=/story/component-groups-controls-external-link-button--overview"
+      "storybookUrl": "/?path=/story/component-groups-controls-external-link-button--overview",
+      "examples": [
+        {
+          "name": "ExternalLinkButton",
+          "source": "/**\n * ExternalLinkButton (@patternfly/react-component-groups) — a Button preset\n * for outbound links: sets component=\"a\", target=\"_blank\",\n * rel=\"noopener noreferrer\", and renders a trailing external-link glyph.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { ExternalLinkButton } from \"@patternfly/react-component-groups/dist/dynamic/ExternalLinkButton\";\n\nexport function Variants() {\n  return (\n    <div style={{ display: \"flex\", flexWrap: \"wrap\", gap: 12 }}>\n      <ExternalLinkButton href=\"https://patternfly.org\" variant=\"primary\">\n        Primary\n      </ExternalLinkButton>\n      <ExternalLinkButton href=\"https://patternfly.org\" variant=\"secondary\">\n        Secondary\n      </ExternalLinkButton>\n      <ExternalLinkButton href=\"https://patternfly.org\" variant=\"link\" isInline>\n        Inline link\n      </ExternalLinkButton>\n    </div>\n  );\n}\n\nexport default function ExternalLinkButtonExample() {\n  return <Variants />;\n}"
+        }
+      ]
     },
     {
       "id": "component-groups-controls-responsive-actions",
@@ -695,7 +827,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/component-groups-error-communication-error-boundary--overview"
+      "storybookUrl": "/?path=/story/component-groups-error-communication-error-boundary--overview",
+      "examples": [
+        {
+          "name": "ErrorBoundary",
+          "source": "/**\n * ErrorBoundary (@patternfly/react-component-groups) — a React error\n * boundary with a built-in error page UI. Wrap routes, top-level layouts,\n * or risky widgets so a child crash renders a friendly error page instead\n * of unmounting the whole app.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport { ErrorBoundary } from \"@patternfly/react-component-groups/dist/dynamic/ErrorBoundary\";\nimport { Button } from \"@golden-passport/ds-patternfly\";\n\nfunction Bomb({ shouldThrow }: { shouldThrow: boolean }) {\n  if (shouldThrow) {\n    throw new Error(\"Demo crash — synthesized for the ErrorBoundary preview.\");\n  }\n  return (\n    <p style={{ margin: 0, color: \"var(--gp-color-text-subtle)\" }}>\n      All good. Press the button to trigger an error inside the boundary.\n    </p>\n  );\n}\n\nexport function CatchingAThrownError() {\n  const [boom, setBoom] = useState(false);\n  return (\n    <div style={{ display: \"grid\", gap: 12 }}>\n      <Button variant=\"danger\" onClick={() => setBoom((b) => !b)}>\n        {boom ? \"Reset\" : \"Throw an error\"}\n      </Button>\n      <ErrorBoundary headerTitle=\"Workflows\">\n        <Bomb shouldThrow={boom} />\n      </ErrorBoundary>\n    </div>\n  );\n}\n\nexport default function ErrorBoundaryExample() {\n  return <CatchingAThrownError />;\n}"
+        }
+      ]
     },
     {
       "id": "component-groups-error-communication-error-state",
@@ -713,7 +851,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/component-groups-error-communication-error-state--overview"
+      "storybookUrl": "/?path=/story/component-groups-error-communication-error-state--overview",
+      "examples": [
+        {
+          "name": "ErrorState",
+          "source": "/**\n * ErrorState (@patternfly/react-component-groups) — a pre-built EmptyState\n * variant for \"something failed\" screens: load failures, save failures,\n * partial-render failures.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport ErrorState from \"@patternfly/react-component-groups/dist/dynamic/ErrorState\";\nimport { Button } from \"@golden-passport/ds-patternfly\";\n\nexport function Default() {\n  return (\n    <ErrorState\n      titleText=\"Something went wrong\"\n      bodyText=\"We couldn't load your workflows. Try again, or contact support if the issue persists.\"\n      customFooter={\n        <div style={{ display: \"flex\", gap: 8, justifyContent: \"center\" }}>\n          <Button variant=\"primary\">Retry</Button>\n          <Button variant=\"link\">Contact support</Button>\n        </div>\n      }\n    />\n  );\n}\n\nexport function StatusVariants() {\n  return (\n    <ErrorState\n      status=\"warning\"\n      titleText=\"Rate limited\"\n      bodyText=\"You've hit the API rate limit. Try again in a minute.\"\n    />\n  );\n}\n\nexport default function ErrorStateExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Default />\n      <StatusVariants />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "component-groups-error-communication-maintenance",
@@ -731,7 +875,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/component-groups-error-communication-maintenance--overview"
+      "storybookUrl": "/?path=/story/component-groups-error-communication-maintenance--overview",
+      "examples": [
+        {
+          "name": "Maintenance",
+          "source": "/**\n * Maintenance (@patternfly/react-component-groups) — a scheduled-downtime\n * page: title, body, start / end times, time zone, and an optional\n * information link, so the user understands the outage is planned.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport Maintenance from \"@patternfly/react-component-groups/dist/dynamic/Maintenance\";\n\nexport function Default() {\n  return (\n    <Maintenance\n      titleText=\"Scheduled maintenance\"\n      bodyText=\"We're upgrading the workflow engine. Service will be unavailable during the window below.\"\n      startTime=\"2026-05-10 22:00\"\n      endTime=\"2026-05-11 02:00\"\n      timeZone=\"UTC\"\n      redirectLinkUrl=\"https://status.example.com\"\n      redirectLinkText=\"View status page\"\n    />\n  );\n}\n\nexport default function MaintenanceExample() {\n  return <Default />;\n}"
+        }
+      ]
     },
     {
       "id": "component-groups-error-communication-missing-page",
@@ -749,7 +899,13 @@
         "packages",
         "ds-patternfly"
       ],
-      "storybookUrl": "/?path=/story/component-groups-error-communication-missing-page--overview"
+      "storybookUrl": "/?path=/story/component-groups-error-communication-missing-page--overview",
+      "examples": [
+        {
+          "name": "MissingPage",
+          "source": "/**\n * MissingPage (@patternfly/react-component-groups) — a standard 404 page:\n * title, body, and a link back home. Wire it up as the catch-all route in\n * your router.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { MissingPage } from \"@patternfly/react-component-groups/dist/dynamic/MissingPage\";\n\nexport function Default() {\n  return (\n    <MissingPage\n      titleText=\"Page not found\"\n      bodyText=\"The page you're looking for doesn't exist or has moved.\"\n      toHomePageUrl=\"/\"\n      toHomePageText=\"Go home\"\n    />\n  );\n}\n\nexport default function MissingPageExample() {\n  return <Default />;\n}"
+        }
+      ]
     },
     {
       "id": "component-groups-error-communication-unauthorized-access",
@@ -821,7 +977,13 @@
         "packages",
         "ds-patternfly"
       ],
-      "storybookUrl": "/?path=/story/component-groups-helpers-column-management-modal--overview"
+      "storybookUrl": "/?path=/story/component-groups-helpers-column-management-modal--overview",
+      "examples": [
+        {
+          "name": "ColumnManagementModal",
+          "source": "/**\n * ColumnManagementModal (@patternfly/react-component-groups) — a pre-built\n * modal for showing / hiding table columns, with untoggleable \"always-on\"\n * columns and optional drag-and-drop reorder.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport ColumnManagementModal, {\n  type ColumnManagementModalColumn,\n} from \"@patternfly/react-component-groups/dist/dynamic/ColumnManagementModal\";\nimport { Button } from \"@golden-passport/ds-patternfly\";\n\nconst initial: ColumnManagementModalColumn[] = [\n  { key: \"name\",    title: \"Name\",    isShown: true,  isShownByDefault: true,  isUntoggleable: true },\n  { key: \"status\",  title: \"Status\",  isShown: true,  isShownByDefault: true },\n  { key: \"owner\",   title: \"Owner\",   isShown: true,  isShownByDefault: true },\n  { key: \"created\", title: \"Created\", isShown: false, isShownByDefault: false },\n  { key: \"updated\", title: \"Updated\", isShown: false, isShownByDefault: false },\n  { key: \"tags\",    title: \"Tags\",    isShown: false, isShownByDefault: false },\n];\n\nexport function ToggleColumns() {\n  const [open, setOpen] = useState(false);\n  const [cols, setCols] = useState(initial);\n\n  return (\n    <>\n      <div style={{ display: \"grid\", gap: 8 }}>\n        <Button onClick={() => setOpen(true)}>Manage columns</Button>\n        <p style={{ margin: 0, color: \"var(--gp-color-text-subtle)\", fontSize: 13 }}>\n          Currently visible:{\" \"}\n          {cols.filter((c) => c.isShown).map((c) => c.title).join(\", \")}\n        </p>\n      </div>\n      <ColumnManagementModal\n        isOpen={open}\n        onClose={() => setOpen(false)}\n        appliedColumns={cols}\n        applyColumns={(next) => {\n          setCols(next);\n          setOpen(false);\n        }}\n        title=\"Manage columns\"\n        description=\"Pick which columns appear in the workflows table.\"\n      />\n    </>\n  );\n}\n\nexport default function ColumnManagementModalExample() {\n  return <ToggleColumns />;\n}"
+        }
+      ]
     },
     {
       "id": "component-groups-helpers-field-builder",
@@ -839,7 +1001,37 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/component-groups-helpers-field-builder--overview"
+      "storybookUrl": "/?path=/story/component-groups-helpers-field-builder--overview",
+      "examples": [
+        {
+          "name": "FieldBuilder",
+          "source": "/**\n * FieldBuilder (@patternfly/react-component-groups) — a two-column repeater\n * for dynamic form rows: env vars, tags, key/value pairs, conditions.\n * Manages the add / remove / focus-management chrome; you supply the inputs\n * via a render prop.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useId, useState } from \"react\";\nimport { FieldBuilder } from \"@patternfly/react-component-groups/dist/dynamic/FieldBuilder\";\nimport { TextInput } from \"@golden-passport/ds-patternfly\";\n\n// FieldBuilder renders as a PF6 Table. The Table's TDs default to\n// `padding-inline: 0`, so the Name / Value columns butt against each other\n// and the row edges. Scope a bit of inline padding + a touch more row gap\n// to give the inputs room to breathe. PF6 Table cells read their padding\n// from CSS custom properties; `pf-m-compact` (used by FieldBuilder's inner\n// Table) zeros the inline ones — override the tokens at the wrapper so the\n// override survives PF6's own selectors regardless of breakpoint/grid mode.\nconst fieldBuilderSpacingCss = [\n  \".gp-field-builder-demo .pf-v6-c-table {\",\n  \"  --pf-v6-c-table--cell--PaddingInlineStart: 0;\",\n  \"  --pf-v6-c-table--cell--PaddingInlineEnd: 12px;\",\n  \"  --pf-v6-c-table--cell--PaddingBlockStart: 0.75rem;\",\n  \"  --pf-v6-c-table--cell--PaddingBlockEnd: 0.75rem;\",\n  \"}\",\n  \".gp-field-builder-demo .pf-v6-c-table__td:last-child,\",\n  \".gp-field-builder-demo .pf-v6-c-table__th:last-child {\",\n  \"  --pf-v6-c-table--cell--PaddingInlineEnd: 0;\",\n  \"}\",\n].join(\"\\n\");\n\ntype EnvVar = { key: string; value: string };\n\nexport function KeyValueEditor() {\n  const id = useId();\n  const [vars, setVars] = useState<EnvVar[]>([\n    { key: \"API_URL\", value: \"https://api.example.com\" },\n    { key: \"LOG_LEVEL\", value: \"info\" },\n  ]);\n\n  const update = (i: number, patch: Partial<EnvVar>) =>\n    setVars((prev) => prev.map((v, idx) => (idx === i ? { ...v, ...patch } : v)));\n\n  return (\n    <div className=\"gp-field-builder-demo\">\n      <style dangerouslySetInnerHTML={{ __html: fieldBuilderSpacingCss }} />\n      <FieldBuilder\n        label=\"Environment variables\"\n        firstColumnLabel=\"Name\"\n        secondColumnLabel=\"Value\"\n        rowCount={vars.length}\n        rowGroupLabelPrefix=\"Variable\"\n        fieldBuilderIdPrefix={id}\n        onAddRow={() => setVars((p) => [...p, { key: \"\", value: \"\" }])}\n        onRemoveRow={(_e, i) => setVars((p) => p.filter((_, idx) => idx !== i))}\n        addButtonContent=\"Add variable\"\n      >\n        {(helpers, i) => [\n          <TextInput\n            key={`k-${i}`}\n            ref={helpers.focusRef as React.Ref<HTMLInputElement>}\n            aria-label={helpers.firstColumnAriaLabel}\n            value={vars[i]?.key ?? \"\"}\n            onChange={(_e, v) => update(i, { key: v })}\n          />,\n          <TextInput\n            key={`v-${i}`}\n            aria-label={helpers.secondColumnAriaLabel ?? \"\"}\n            value={vars[i]?.value ?? \"\"}\n            onChange={(_e, v) => update(i, { value: v })}\n          />,\n        ]}\n      </FieldBuilder>\n    </div>\n  );\n}\n\nexport function SingleColumn() {\n  const id = useId();\n  const [tags, setTags] = useState<string[]>([\"urgent\", \"billing\"]);\n  return (\n    <div className=\"gp-field-builder-demo\">\n      <style dangerouslySetInnerHTML={{ __html: fieldBuilderSpacingCss }} />\n      <FieldBuilder\n        label=\"Tags\"\n        firstColumnLabel=\"Tag\"\n        rowCount={tags.length}\n        rowGroupLabelPrefix=\"Tag\"\n        fieldBuilderIdPrefix={id}\n        onAddRow={() => setTags((p) => [...p, \"\"])}\n        onRemoveRow={(_e, i) => setTags((p) => p.filter((_, idx) => idx !== i))}\n        addButtonContent=\"Add tag\"\n      >\n        {(helpers, i) => (\n          <TextInput\n            ref={helpers.focusRef as React.Ref<HTMLInputElement>}\n            aria-label={helpers.firstColumnAriaLabel}\n            value={tags[i] ?? \"\"}\n            onChange={(_e, v) =>\n              setTags((p) => p.map((t, idx) => (idx === i ? v : t)))\n            }\n          />\n        )}\n      </FieldBuilder>\n    </div>\n  );\n}\n\nexport default function FieldBuilderExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <KeyValueEditor />\n      <SingleColumn />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "id": "component-groups-helpers-list-manager",
+      "kind": "component",
+      "title": "List manager",
+      "breadcrumb": "Component groups/Helpers/List manager",
+      "summary": "A reusable selectable + reorderable list — the visible body of a column-management or preferences modal. Use the standalone ListManager when you want to embed the same UI inline (e.g. inside a Drawer) rather than launching the full ColumnManagementModal .",
+      "tags": [
+        "component",
+        "groups",
+        "helpers",
+        "list",
+        "manager",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/component-groups-helpers-list-manager--overview",
+      "examples": [
+        {
+          "name": "ListManager",
+          "source": "/**\n * ListManager (@patternfly/react-component-groups) — a reusable selectable +\n * reorderable list, the visible body of a column-management or preferences\n * modal. Embed it inline (e.g. inside a Drawer) when you don't want the full\n * ColumnManagementModal.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n *\n * Note: ListManager's drag-and-drop overlay portals into\n * `document.getElementById(\"root\")` — make sure your app mounts in a\n * `<div id=\"root\">` (the typical Vite / CRA default).\n */\nimport { useState } from \"react\";\nimport ListManager, {\n  type ListManagerItem,\n} from \"@patternfly/react-component-groups/dist/dynamic/ListManager\";\n\n// Mirrors PF6's canonical ColumnExample for ListManager\n// (https://www.patternfly.org/component-groups/helpers/list-manager).\n// `isShown` in the upstream sample maps to `isSelected` on the installed\n// ListManagerItem — same semantic.\nconst DEFAULT_COLUMNS: ListManagerItem[] = [\n  { key: \"id\",          title: \"ID\",           isShownByDefault: true,  isSelected: true,  isUntoggleable: true },\n  { key: \"publishDate\", title: \"Publish date\", isShownByDefault: true,  isSelected: true },\n  { key: \"impact\",      title: \"Impact\",       isShownByDefault: true,  isSelected: true },\n  { key: \"score\",       title: \"Score\",        isShownByDefault: false, isSelected: false },\n];\n\nexport function ColumnExample() {\n  const [columns, setColumns] = useState(DEFAULT_COLUMNS);\n\n  return (\n    <ListManager\n      columns={columns}\n      enableDragDrop\n      onOrderChange={setColumns}\n      onSelect={(col) =>\n        setColumns((prev) =>\n          prev.map((c) =>\n            c.key === col.key ? { ...c, isSelected: !!col.isSelected } : c,\n          ),\n        )\n      }\n      onSelectAll={(newColumns) => setColumns(newColumns)}\n      onSave={(newColumns) => {\n        setColumns(newColumns);\n        alert(\"Changes saved!\");\n      }}\n      onCancel={() => alert(\"Changes cancelled!\")}\n    />\n  );\n}\n\nexport default function ListManagerExample() {\n  return <ColumnExample />;\n}"
+        }
+      ]
     },
     {
       "id": "component-groups-helpers-log-snippet",
@@ -857,7 +1049,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/component-groups-helpers-log-snippet--overview"
+      "storybookUrl": "/?path=/story/component-groups-helpers-log-snippet--overview",
+      "examples": [
+        {
+          "name": "LogSnippet",
+          "source": "/**\n * LogSnippet (@patternfly/react-component-groups) — a small, alert-coloured\n * block for inline error logs and stack traces, for detail panels, error\n * states, or notification drawers.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { LogSnippet } from \"@patternfly/react-component-groups/dist/dynamic/LogSnippet\";\nimport { AlertVariant } from \"@golden-passport/ds-patternfly\";\n\nconst sampleLog = `2026-05-10T09:21:14.231Z ERROR  worker-3   Failed to dispatch job 4892\n  at WorkflowDispatcher.dispatch (workflow-dispatcher.ts:142)\n  at async WorkflowRunner.run (workflow-runner.ts:88)\ncaused by: ConnectionResetError: connection closed by upstream`;\n\nexport function DefaultDanger() {\n  return (\n    <LogSnippet\n      message=\"The job failed during dispatch.\"\n      logSnippet={sampleLog}\n      variant={AlertVariant.danger}\n    />\n  );\n}\n\nexport function OtherVariants() {\n  return (\n    <LogSnippet\n      message=\"Run completed with warnings.\"\n      logSnippet=\"WARN  step 2 took 14.2s (threshold: 10s)\"\n      variant={AlertVariant.warning}\n    />\n  );\n}\n\nexport default function LogSnippetExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <DefaultDanger />\n      <OtherVariants />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "component-groups-helpers-shortcut-grid",
@@ -893,7 +1091,13 @@
         "beta",
         "packages"
       ],
-      "storybookUrl": "/?path=/story/component-groups-status-and-state-indicators-beta--overview"
+      "storybookUrl": "/?path=/story/component-groups-status-and-state-indicators-beta--overview",
+      "examples": [
+        {
+          "name": "Beta",
+          "source": "/**\n * Beta — \"Beta\" / \"Tech preview\" / \"New\" qualifier tags for features that\n * aren't generally available. Not a separate component (in\n * @patternfly/react-component-groups or elsewhere) — the convention is a\n * Label with a consistent colour and copy.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { Label, LabelGroup } from \"@golden-passport/ds-patternfly\";\n\nexport function Conventions() {\n  return (\n    <div style={{ display: \"grid\", gap: 12 }}>\n      <div style={{ display: \"flex\", alignItems: \"center\", gap: 8 }}>\n        <strong style={{ color: \"var(--gp-color-text-regular)\" }}>\n          Workflow templates\n        </strong>\n        <Label color=\"yellow\" isCompact>Beta</Label>\n      </div>\n      <div style={{ display: \"flex\", alignItems: \"center\", gap: 8 }}>\n        <strong style={{ color: \"var(--gp-color-text-regular)\" }}>\n          AI suggestions\n        </strong>\n        <Label color=\"orange\" isCompact>Tech preview</Label>\n      </div>\n      <div style={{ display: \"flex\", alignItems: \"center\", gap: 8 }}>\n        <strong style={{ color: \"var(--gp-color-text-regular)\" }}>\n          Run history\n        </strong>\n        <Label color=\"blue\" isCompact>New</Label>\n      </div>\n    </div>\n  );\n}\n\nexport function StackedExample() {\n  return (\n    <div style={{ display: \"flex\", alignItems: \"center\", gap: 8 }}>\n      <strong style={{ color: \"var(--gp-color-text-regular)\" }}>\n        Cross-region replication\n      </strong>\n      <LabelGroup numLabels={3} isCompact>\n        <Label color=\"yellow\" isCompact>Beta</Label>\n        <Label color=\"purple\" isCompact>Premium</Label>\n      </LabelGroup>\n    </div>\n  );\n}\n\nexport default function BetaExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Conventions />\n      <StackedExample />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "component-groups-status-and-state-indicators-severity",
@@ -3516,21 +3720,6 @@
       "storybookUrl": "/?path=/story/foundations-usage-and-behavior--overview"
     },
     {
-      "id": "id",
-      "kind": "component",
-      "title": "ID",
-      "breadcrumb": "ID",
-      "summary": "A reusable selectable + reorderable list — the visible body of a column-management or preferences modal. Use the standalone ListManager when you want to embed the same UI inline (e.g. inside a Drawer) rather than launching the full ColumnManagementModal .",
-      "tags": [
-        "packages",
-        "ds-patternfly",
-        "src",
-        "component-groups",
-        "listmanager"
-      ],
-      "storybookUrl": "/?path=/story/id--overview"
-    },
-    {
       "id": "layouts",
       "kind": "foundation",
       "title": "Layouts",
@@ -3558,7 +3747,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/layouts-bullseye--overview"
+      "storybookUrl": "/?path=/story/layouts-bullseye--overview",
+      "examples": [
+        {
+          "name": "Bullseye",
+          "source": "/**\n * Bullseye — centers a single child both vertically and horizontally within\n * its parent. The classic use is empty states, loading spinners, and error\n * screens.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport type { CSSProperties } from \"react\";\nimport { Bullseye } from \"@golden-passport/ds-patternfly\";\n\n// Shaded placeholder block so the centered content is visible in the demo.\n// In a real app this is your empty state / spinner / error message.\nfunction Box({ label, style }: { label: string; style?: CSSProperties }) {\n  return (\n    <div\n      style={{\n        background: \"var(--gp-color-brand-default)\",\n        color: \"var(--gp-color-brand-on)\",\n        padding: \"12px 16px\",\n        borderRadius: \"var(--gp-radius-sm)\",\n        fontSize: 14,\n        textAlign: \"center\",\n        ...style,\n      }}\n    >\n      {label}\n    </div>\n  );\n}\n\nexport function LiveDemo() {\n  return (\n    <Bullseye>\n      <Box label=\"centered\" style={{ minWidth: 160 }} />\n    </Bullseye>\n  );\n}\n\nexport default function BullseyeExample() {\n  return (\n    <div style={{ height: 240 }}>\n      <LiveDemo />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "layouts-flex",
@@ -3573,7 +3768,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/layouts-flex--overview"
+      "storybookUrl": "/?path=/story/layouts-flex--overview",
+      "examples": [
+        {
+          "name": "Flex",
+          "source": "/**\n * Flex — general-purpose flex container with a token-aware API: spacing,\n * direction, alignment, and justification are all set per breakpoint.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { Flex, FlexItem } from \"@golden-passport/ds-patternfly\";\n\n// Shaded placeholder block so the layout regions are visible in the demo.\n// In a real app these are your buttons / labels / panels.\nfunction Box({ label }: { label: string }) {\n  return (\n    <div\n      style={{\n        background: \"var(--gp-color-brand-default)\",\n        color: \"var(--gp-color-brand-on)\",\n        padding: \"12px 16px\",\n        borderRadius: \"var(--gp-radius-sm)\",\n        fontSize: 14,\n        textAlign: \"center\",\n      }}\n    >\n      {label}\n    </div>\n  );\n}\n\nexport function BasicRow() {\n  return (\n    <Flex spaceItems={{ default: \"spaceItemsMd\" }}>\n      <FlexItem><Box label=\"A\" /></FlexItem>\n      <FlexItem><Box label=\"B\" /></FlexItem>\n      <FlexItem><Box label=\"C\" /></FlexItem>\n    </Flex>\n  );\n}\n\nexport function PushingItemsApart() {\n  return (\n    <Flex\n      justifyContent={{ default: \"justifyContentSpaceBetween\" }}\n      alignItems={{ default: \"alignItemsCenter\" }}\n    >\n      <FlexItem><Box label=\"left\" /></FlexItem>\n      <FlexItem><Box label=\"center\" /></FlexItem>\n      <FlexItem><Box label=\"right\" /></FlexItem>\n    </Flex>\n  );\n}\n\nexport function ColumnDirection() {\n  return (\n    <Flex\n      direction={{ default: \"column\" }}\n      spaceItems={{ default: \"spaceItemsSm\" }}\n    >\n      <FlexItem><Box label=\"top\" /></FlexItem>\n      <FlexItem><Box label=\"middle\" /></FlexItem>\n      <FlexItem><Box label=\"bottom\" /></FlexItem>\n    </Flex>\n  );\n}\n\nexport function FillingRemainingSpace() {\n  return (\n    <Flex spaceItems={{ default: \"spaceItemsMd\" }}>\n      <FlexItem><Box label=\"fixed\" /></FlexItem>\n      <FlexItem grow={{ default: \"grow\" }}>\n        <Box label=\"grows to fill\" />\n      </FlexItem>\n      <FlexItem><Box label=\"fixed\" /></FlexItem>\n    </Flex>\n  );\n}\n\nexport default function FlexExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <BasicRow />\n      <PushingItemsApart />\n      <ColumnDirection />\n      <FillingRemainingSpace />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "layouts-gallery",
@@ -3588,7 +3789,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/layouts-gallery--overview"
+      "storybookUrl": "/?path=/story/layouts-gallery--overview",
+      "examples": [
+        {
+          "name": "Gallery",
+          "source": "/**\n * Gallery — responsive grid of equal-width tiles. You specify the minimum\n * tile width; the browser computes the column count at every viewport size.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { Gallery, GalleryItem } from \"@golden-passport/ds-patternfly\";\n\n// Shaded placeholder tile so the gallery cells are visible in the demo.\n// In a real app these are your cards / dashboard widgets.\nfunction Box({ label }: { label: string }) {\n  return (\n    <div\n      style={{\n        background: \"var(--gp-color-brand-default)\",\n        color: \"var(--gp-color-brand-on)\",\n        padding: 24,\n        borderRadius: \"var(--gp-radius-sm)\",\n        fontSize: 14,\n        textAlign: \"center\",\n      }}\n    >\n      {label}\n    </div>\n  );\n}\n\nexport function DefaultBehavior() {\n  return (\n    <Gallery hasGutter minWidths={{ default: \"180px\" }}>\n      {Array.from({ length: 8 }).map((_, i) => (\n        <GalleryItem key={i}>\n          <Box label={`tile ${i + 1}`} />\n        </GalleryItem>\n      ))}\n    </Gallery>\n  );\n}\n\nexport function PerBreakpointMinWidths() {\n  return (\n    <Gallery\n      hasGutter\n      minWidths={{\n        default: \"140px\",\n        md: \"200px\",\n        lg: \"260px\",\n      }}\n    >\n      {Array.from({ length: 6 }).map((_, i) => (\n        <GalleryItem key={i}>\n          <Box label={`tile ${i + 1}`} />\n        </GalleryItem>\n      ))}\n    </Gallery>\n  );\n}\n\nexport default function GalleryExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <DefaultBehavior />\n      <PerBreakpointMinWidths />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "layouts-grid",
@@ -3603,7 +3810,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/layouts-grid--overview"
+      "storybookUrl": "/?path=/story/layouts-grid--overview",
+      "examples": [
+        {
+          "name": "Grid",
+          "source": "/**\n * Grid — 12-column grid with per-breakpoint span controls. Use it when items\n * have distinct widths and you want the layout expressed in column units.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { Grid, GridItem } from \"@golden-passport/ds-patternfly\";\n\n// Shaded placeholder block so the grid cells are visible in the demo.\n// In a real app these are your charts / stats / form fields.\nfunction Box({ label }: { label: string }) {\n  return (\n    <div\n      style={{\n        background: \"var(--gp-color-brand-default)\",\n        color: \"var(--gp-color-brand-on)\",\n        padding: \"12px 16px\",\n        borderRadius: \"var(--gp-radius-sm)\",\n        fontSize: 14,\n        textAlign: \"center\",\n      }}\n    >\n      {label}\n    </div>\n  );\n}\n\nexport function EqualColumns() {\n  return (\n    <Grid hasGutter span={4}>\n      <GridItem><Box label=\"span 4\" /></GridItem>\n      <GridItem><Box label=\"span 4\" /></GridItem>\n      <GridItem><Box label=\"span 4\" /></GridItem>\n    </Grid>\n  );\n}\n\nexport function MixedSpans() {\n  return (\n    <Grid hasGutter>\n      <GridItem span={8}><Box label=\"span 8 — wide chart\" /></GridItem>\n      <GridItem span={4}><Box label=\"span 4 — stat\" /></GridItem>\n      <GridItem span={3}><Box label=\"3\" /></GridItem>\n      <GridItem span={3}><Box label=\"3\" /></GridItem>\n      <GridItem span={3}><Box label=\"3\" /></GridItem>\n      <GridItem span={3}><Box label=\"3\" /></GridItem>\n    </Grid>\n  );\n}\n\nexport function ResponsiveSpans() {\n  return (\n    <Grid hasGutter>\n      {Array.from({ length: 6 }).map((_, i) => (\n        <GridItem key={i} span={12} md={6} lg={4}>\n          <Box label={`item ${i + 1}`} />\n        </GridItem>\n      ))}\n    </Grid>\n  );\n}\n\nexport default function GridExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <EqualColumns />\n      <MixedSpans />\n      <ResponsiveSpans />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "layouts-level",
@@ -3618,7 +3831,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/layouts-level--overview"
+      "storybookUrl": "/?path=/story/layouts-level--overview",
+      "examples": [
+        {
+          "name": "Level",
+          "source": "/**\n * Level — single horizontal row that distributes its children with\n * justify-content: space-between. The classic use is a header bar with a\n * title on the left and actions on the right.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { Level, LevelItem } from \"@golden-passport/ds-patternfly\";\n\n// Shaded placeholder block so the row items are visible in the demo.\n// In a real app these are your titles / buttons / metadata.\nfunction Box({ label }: { label: string }) {\n  return (\n    <div\n      style={{\n        background: \"var(--gp-color-brand-default)\",\n        color: \"var(--gp-color-brand-on)\",\n        padding: \"12px 16px\",\n        borderRadius: \"var(--gp-radius-sm)\",\n        fontSize: 14,\n        textAlign: \"center\",\n      }}\n    >\n      {label}\n    </div>\n  );\n}\n\nexport function TwoEnds() {\n  return (\n    <Level>\n      <LevelItem>\n        <strong style={{ fontSize: 18 }}>Tasks</strong>\n      </LevelItem>\n      <LevelItem>\n        <Box label=\"Create task\" />\n      </LevelItem>\n    </Level>\n  );\n}\n\nexport function ThreeOrMoreItems() {\n  return (\n    <Level>\n      <LevelItem><Box label=\"left\" /></LevelItem>\n      <LevelItem><Box label=\"middle\" /></LevelItem>\n      <LevelItem><Box label=\"right\" /></LevelItem>\n    </Level>\n  );\n}\n\nexport default function LevelExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <TwoEnds />\n      <ThreeOrMoreItems />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "layouts-split",
@@ -3633,7 +3852,13 @@
         "ds-patternfly",
         "src"
       ],
-      "storybookUrl": "/?path=/story/layouts-split--overview"
+      "storybookUrl": "/?path=/story/layouts-split--overview",
+      "examples": [
+        {
+          "name": "Split",
+          "source": "/**\n * Split — horizontal row where one item fills remaining space and the others\n * stay intrinsic. The classic use is a sidebar + content row, or a row with\n * a flexible label that pushes trailing icons to the end.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport type { CSSProperties } from \"react\";\nimport { Split, SplitItem } from \"@golden-passport/ds-patternfly\";\n\n// Shaded placeholder block so the row segments are visible in the demo.\n// In a real app these are your sidebar / content / action contents.\nfunction Box({ label, style }: { label: string; style?: CSSProperties }) {\n  return (\n    <div\n      style={{\n        background: \"var(--gp-color-brand-default)\",\n        color: \"var(--gp-color-brand-on)\",\n        padding: \"12px 16px\",\n        borderRadius: \"var(--gp-radius-sm)\",\n        fontSize: 14,\n        textAlign: \"center\",\n        ...style,\n      }}\n    >\n      {label}\n    </div>\n  );\n}\n\nexport function OneFilledItem() {\n  return (\n    <Split hasGutter>\n      <SplitItem><Box label=\"sidebar\" style={{ minWidth: 120 }} /></SplitItem>\n      <SplitItem isFilled>\n        <Box label=\"main content — fills remaining width\" />\n      </SplitItem>\n    </Split>\n  );\n}\n\nexport function FilledMiddle() {\n  return (\n    <Split hasGutter>\n      <SplitItem><Box label=\"leading icon\" style={{ minWidth: 80 }} /></SplitItem>\n      <SplitItem isFilled><Box label=\"flexible label\" /></SplitItem>\n      <SplitItem><Box label=\"action\" style={{ minWidth: 80 }} /></SplitItem>\n    </Split>\n  );\n}\n\nexport default function SplitExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <OneFilledItem />\n      <FilledMiddle />\n    </div>\n  );\n}"
+        }
+      ]
     },
     {
       "id": "layouts-stack",

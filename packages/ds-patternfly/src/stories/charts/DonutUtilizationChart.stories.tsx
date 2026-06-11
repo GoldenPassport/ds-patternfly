@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ChartDonutUtilization } from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 import { chartA11yParams } from "./_chartKit.js";
+import { ThreeUtilizations } from "../../examples/charts/DonutUtilizationChart.example.js";
+import donutUtilizationChartExampleSrc from "../../examples/charts/DonutUtilizationChart.example.tsx?raw";
 
 const meta: Meta = {
   title: "Charts/Donut utilization chart",
@@ -25,54 +26,26 @@ export const Overview: StoryObj = {
     >
       <Section title="Three utilizations">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16, gridTemplateColumns: "repeat(3, 1fr)" }}>
-            <DemoFrame height={260}>
-              <ChartDonutUtilization
-                ariaTitle="CPU utilization"
-                ariaDesc="35% of CPU capacity used."
-                data={{ x: "CPU", y: 35 }}
-                title="35%"
-                subTitle="CPU"
-                thresholds={[{ value: 60 }, { value: 90 }]}
-                height={240}
-                width={240}
-              />
-            </DemoFrame>
-            <DemoFrame height={260}>
-              <ChartDonutUtilization
-                ariaTitle="Memory utilization"
-                ariaDesc="72% of memory used — past the warning threshold."
-                data={{ x: "Memory", y: 72 }}
-                title="72%"
-                subTitle="Memory"
-                thresholds={[{ value: 60 }, { value: 90 }]}
-                height={240}
-                width={240}
-              />
-            </DemoFrame>
-            <DemoFrame height={260}>
-              <ChartDonutUtilization
-                ariaTitle="Disk utilization"
-                ariaDesc="92% of disk used — past the danger threshold."
-                data={{ x: "Disk", y: 92 }}
-                title="92%"
-                subTitle="Disk"
-                thresholds={[{ value: 60 }, { value: 90 }]}
-                height={240}
-                width={240}
-              />
-            </DemoFrame>
-          </div>
-          <div style={{ padding: 24 }}>
-            <CodeBlock>{`<ChartDonutUtilization
-  ariaTitle="Disk utilization"
-  ariaDesc="92% of disk used."
-  data={{ x: "Disk", y: 92 }}
-  title="92%"
-  subTitle="Disk"
-  thresholds={[{ value: 60 }, { value: 90 }]}
-/>`}</CodeBlock>
-          </div>
+          <Example
+            source={donutUtilizationChartExampleSrc}
+            region="ThreeUtilizations"
+            fileName="DonutUtilizationChart.example.tsx"
+            height={260}
+          >
+            <ThreeUtilizations />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example
+            source={donutUtilizationChartExampleSrc}
+            fileName="DonutUtilizationChart.example.tsx"
+          />
         </Card>
       </Section>
 

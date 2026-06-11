@@ -1,7 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Skeleton } from "@golden-passport/ds-patternfly";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import {
+  LineAreaSilhouette,
+  BarSilhouette,
+  DonutSilhouette,
+} from "../../examples/charts/Skeletons.example.js";
+import skeletonsExampleSrc from "../../examples/charts/Skeletons.example.tsx?raw";
 
 const meta: Meta = {
   title: "Charts/Skeletons",
@@ -25,58 +29,49 @@ export const Overview: StoryObj = {
     >
       <Section title="Line / area silhouette">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={260}>
-              <div style={{ position: "relative", height: 240, padding: 12 }}>
-                <Skeleton height="100%" width="100%" screenreaderText="Loading chart" />
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={skeletonsExampleSrc}
+            region="LineAreaSilhouette"
+            fileName="Skeletons.example.tsx"
+            height={260}
+          >
+            <LineAreaSilhouette />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Bar silhouette">
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame height={260}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "flex-end",
-                  gap: 16,
-                  padding: 12,
-                  height: 240,
-                }}
-                role="img"
-                aria-busy="true"
-                aria-label="Loading chart"
-              >
-                {[0.4, 0.7, 0.55, 0.8, 0.3, 0.6].map((h, i) => (
-                  <Skeleton key={i} width="40px" height={`${h * 100}%`} screenreaderText="" />
-                ))}
-              </div>
-            </DemoFrame>
-          </div>
+          <Example
+            source={skeletonsExampleSrc}
+            region="BarSilhouette"
+            fileName="Skeletons.example.tsx"
+            height={260}
+          >
+            <BarSilhouette />
+          </Example>
         </Card>
       </Section>
 
       <Section title="Donut silhouette">
         <Card>
-          <div style={{ padding: 24 }}>
-            <DemoFrame height={260}>
-              <div
-                style={{ display: "grid", placeItems: "center", height: 240 }}
-                role="img"
-                aria-busy="true"
-                aria-label="Loading donut chart"
-              >
-                <Skeleton shape="circle" width="180px" height="180px" />
-              </div>
-            </DemoFrame>
-            <CodeBlock>{`<div aria-busy="true" aria-label="Loading donut chart">
-  <Skeleton shape="circle" width="180px" height="180px" />
-</div>`}</CodeBlock>
-          </div>
+          <Example
+            source={skeletonsExampleSrc}
+            region="DonutSilhouette"
+            fileName="Skeletons.example.tsx"
+            height={260}
+          >
+            <DonutSilhouette />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={skeletonsExampleSrc} fileName="Skeletons.example.tsx" />
         </Card>
       </Section>
 

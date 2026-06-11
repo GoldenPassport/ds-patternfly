@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { MissingPage } from "@patternfly/react-component-groups/dist/dynamic/MissingPage";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame, PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
+import { Default } from "../../examples/component-groups/MissingPage.example.js";
+import missingPageExampleSrc from "../../examples/component-groups/MissingPage.example.tsx?raw";
 
 const meta: Meta = {
   title: "Component groups/Error communication/Missing page",
@@ -22,22 +23,22 @@ export const Overview: StoryObj = {
     >
       <Section title="Default">
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame>
-              <MissingPage
-                titleText="Page not found"
-                bodyText="The page you're looking for doesn't exist or has moved."
-                toHomePageUrl="/"
-                toHomePageText="Go home"
-              />
-            </DemoFrame>
-            <CodeBlock>{`<Route path="*" element={
-  <MissingPage
-    toHomePageUrl="/"
-    toHomePageText="Go home"
-  />
-} />`}</CodeBlock>
-          </div>
+          <Example
+            source={missingPageExampleSrc}
+            region="Default"
+            fileName="MissingPage.example.tsx"
+          >
+            <Default />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={missingPageExampleSrc} fileName="MissingPage.example.tsx" />
         </Card>
       </Section>
 

@@ -1,12 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Chart,
-  ChartAxis,
-  ChartBar,
-  ChartGroup,
-} from "@patternfly/react-charts/victory";
-import { FoundationPage, Section, Card, CodeBlock } from "../_kit/StoryKit.js";
-import { DemoFrame } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, Example } from "../_kit/StoryKit.js";
+import { PatternFills } from "../../examples/charts/Patterns.example.js";
+import patternsExampleSrc from "../../examples/charts/Patterns.example.tsx?raw";
 import { chartA11yParams } from "./_chartKit.js";
 
 const meta: Meta = {
@@ -14,11 +9,6 @@ const meta: Meta = {
   parameters: { layout: "padded", a11y: chartA11yParams },
 };
 export default meta;
-
-const data1 = [
-  { x: "Q1", y: 40 }, { x: "Q2", y: 70 }, { x: "Q3", y: 55 }, { x: "Q4", y: 80 },
-];
-const data2 = data1.map((p) => ({ ...p, y: p.y + 12 }));
 
 export const Overview: StoryObj = {
   render: () => (
@@ -39,53 +29,23 @@ export const Overview: StoryObj = {
         description="Define <pattern> elements once in an SVG <defs>, then reference them as fills on chart series via style.data.fill."
       >
         <Card>
-          <div style={{ padding: 24, display: "grid", gap: 16 }}>
-            <DemoFrame height={280}>
-              <svg width={0} height={0} style={{ position: "absolute" }}>
-                <defs>
-                  <pattern id="diag" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
-                    <rect width="6" height="6" fill="var(--pf-t--chart--color--blue--400, #06c)" />
-                    <line x1="0" y1="0" x2="0" y2="6" stroke="white" strokeWidth="2" />
-                  </pattern>
-                  <pattern id="dots" patternUnits="userSpaceOnUse" width="6" height="6">
-                    <rect width="6" height="6" fill="var(--pf-t--chart--color--purple--400, #5752d1)" />
-                    <circle cx="3" cy="3" r="1.2" fill="white" />
-                  </pattern>
-                </defs>
-              </svg>
-              <Chart
-                ariaTitle="Quarterly revenue (patterned)"
-                ariaDesc="Two products by quarter, distinguished by diagonal vs dotted fill."
-                height={260}
-                domainPadding={{ x: [40, 40] }}
-                padding={{ left: 60, right: 20, top: 20, bottom: 60 }}
-                legendData={[{ name: "Pro" }, { name: "Enterprise" }]}
-                legendPosition="bottom"
-              >
-                <ChartAxis />
-                <ChartAxis dependentAxis showGrid />
-                <ChartGroup offset={14}>
-                  <ChartBar data={data1} style={{ data: { fill: "url(#diag)" } }} />
-                  <ChartBar data={data2} style={{ data: { fill: "url(#dots)" } }} />
-                </ChartGroup>
-              </Chart>
-            </DemoFrame>
-            <CodeBlock>{`<svg width={0} height={0} style={{ position: "absolute" }}>
-  <defs>
-    <pattern id="diag" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
-      <rect width="6" height="6" fill="var(--pf-t--chart--color--blue--400)" />
-      <line x1="0" y1="0" x2="0" y2="6" stroke="white" strokeWidth="2" />
-    </pattern>
-  </defs>
-</svg>
+          <Example
+            source={patternsExampleSrc}
+            region="PatternFills"
+            fileName="Patterns.example.tsx"
+            height={280}
+          >
+            <PatternFills />
+          </Example>
+        </Card>
+      </Section>
 
-<Chart ariaTitle="…">
-  <ChartGroup>
-    <ChartBar data={pro}        style={{ data: { fill: "url(#diag)" } }} />
-    <ChartBar data={enterprise} style={{ data: { fill: "url(#dots)" } }} />
-  </ChartGroup>
-</Chart>`}</CodeBlock>
-          </div>
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={patternsExampleSrc} fileName="Patterns.example.tsx" />
         </Card>
       </Section>
 
