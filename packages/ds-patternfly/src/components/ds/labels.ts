@@ -109,6 +109,33 @@ export const formScaffoldEnLabels: FormScaffoldLabels = {
   cancel: "Cancel",
 };
 
+export interface ListTransferLabels {
+  /** Title over the Available (left) pane. */
+  availableTitle: string;
+  /** Title over the Chosen (right) pane. */
+  chosenTitle: string;
+  /** Accessible name for the "move selected right" control. */
+  addSelected: string;
+  /** Accessible name for the "move all right" control. */
+  addAll: string;
+  /** Accessible name for the "move all left" control. */
+  removeAll: string;
+  /** Accessible name for the "move selected left" control. */
+  removeSelected: string;
+  /** Per-pane status — `{selected}` and `{total}` tokens are replaced. */
+  selectedStatus: string;
+}
+
+export const listTransferEnLabels: ListTransferLabels = {
+  availableTitle: "Available",
+  chosenTitle: "Chosen",
+  addSelected: "Add selected",
+  addAll: "Add all",
+  removeAll: "Remove all",
+  removeSelected: "Remove selected",
+  selectedStatus: "{selected} of {total} selected",
+};
+
 export interface CompassShellLabels {
   /** "Skip to main content" link text. */
   skipToContent: string;

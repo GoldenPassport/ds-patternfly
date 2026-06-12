@@ -75,6 +75,7 @@ wrappers when nothing fits.
 | `TabbedView` | Navigation | a declarative tabbed container over a `tabs` array: each entry is { key, title, content }. | `import { TabbedView } from "@golden-passport/ds-patternfly"` |
 | `TreeNavigation` | Navigation | a controlled hierarchical navigation tree from a nested `data` array. | `import { TreeNavigation } from "@golden-passport/ds-patternfly"` |
 | `FormScaffold` | Forms | the standard form frame: your fields as `children`, then a branded submit / cancel ActionGroup. | `import { FormScaffold } from "@golden-passport/ds-patternfly"` |
+| `ListTransfer` | Forms | the "dual list selector": two side-by-side lists with controls for moving items between an Available pane and a Chosen pane (select-some / move-all, both directions). | `import { ListTransfer } from "@golden-passport/ds-patternfly"` |
 | `ValidatedSelect` | Forms | a labelled, validated single-select built on the base FormSelect. | `import { ValidatedSelect } from "@golden-passport/ds-patternfly"` |
 | `ValidatedTextArea` | Forms | the multi-line sibling of ValidatedTextField. | `import { ValidatedTextArea } from "@golden-passport/ds-patternfly"` |
 | `ValidatedTextField` | Forms | a labelled, validated single-line text field. | `import { ValidatedTextField } from "@golden-passport/ds-patternfly"` |

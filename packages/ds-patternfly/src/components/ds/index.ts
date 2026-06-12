@@ -66,6 +66,8 @@ export { TabbedView } from "./TabbedView.js";
 export type { TabbedViewProps, TabDef } from "./TabbedView.js";
 export { TreeNavigation } from "./TreeNavigation.js";
 export type { TreeNavigationProps, TreeNode } from "./TreeNavigation.js";
+export { ListTransfer, listTransferEnLabels } from "./ListTransfer.js";
+export type { ListTransferProps, TransferItem, ListTransferLabels } from "./ListTransfer.js";
 
 // Feedback & overlays
 export { ConfirmModal, confirmModalEnLabels } from "./ConfirmModal.js";

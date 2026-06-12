@@ -1,0 +1,9 @@
+{
+  "import": "import { ListTransfer, listTransferEnLabels } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "labels", "type": "ListTransferLabels", "default": "listTransferEnLabels", "description": "Pane titles, the four control aria-labels, and the {selected}/{total} status template." },
+    { "name": "available", "type": "TransferItem[]", "required": true, "description": "Items in the Available (left) pane — each { id, text }." },
+    { "name": "chosen", "type": "TransferItem[]", "required": true, "description": "Items in the Chosen (right) pane — each { id, text }." },
+    { "name": "onChange", "type": "(next: { available: TransferItem[]; chosen: TransferItem[] }) => void", "required": true, "description": "Fired with the new partition whenever items move. You own the two arrays." }
+  ]
+}

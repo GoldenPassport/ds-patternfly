@@ -817,6 +817,59 @@
       ]
     },
     {
+      "id": "building-blocks-forms-listtransfer",
+      "kind": "ds",
+      "title": "ListTransfer",
+      "breadcrumb": "Building blocks/Forms/ListTransfer",
+      "summary": "The dual list selector — two side-by-side lists with controls for moving items between an Available pane and a Chosen pane (select-some / move-all, both directions). Controlled by the two partitions: ListTransfer owns the transient per-item selection and the move logic, and fires onChange with the new partition. Use fo",
+      "tags": [
+        "building",
+        "blocks",
+        "forms",
+        "listtransfer",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-forms-listtransfer--overview",
+      "layer": "ds",
+      "componentSource": "import { useState, type ReactNode } from \"react\";\nimport {\n  DualListSelector,\n  DualListSelectorControl,\n  DualListSelectorControlsWrapper,\n  DualListSelectorList,\n  DualListSelectorListItem,\n  DualListSelectorPane,\n} from \"../base/index.js\";\nimport AngleDoubleLeftIcon from \"@patternfly/react-icons/dist/esm/icons/angle-double-left-icon\";\nimport AngleDoubleRightIcon from \"@patternfly/react-icons/dist/esm/icons/angle-double-right-icon\";\nimport AngleLeftIcon from \"@patternfly/react-icons/dist/esm/icons/angle-left-icon\";\nimport AngleRightIcon from \"@patternfly/react-icons/dist/esm/icons/angle-right-icon\";\nimport { type ListTransferLabels, listTransferEnLabels } from \"./labels.js\";\n\nexport type { ListTransferLabels } from \"./labels.js\";\nexport { listTransferEnLabels } from \"./labels.js\";\n\n/** One transferable item. */\nexport interface TransferItem {\n  /** Stable id. */\n  id: string;\n  /** Display content. */\n  text: ReactNode;\n}\n\n/**\n * ListTransfer — the \"dual list selector\": two side-by-side lists with\n * controls for moving items between an Available pane and a Chosen pane\n * (select-some / move-all, both directions). Controlled by the `available`\n * and `chosen` partitions — ListTransfer owns the transient per-item\n * selection and the move logic, and fires `onChange` with the new partition.\n * Use for permissions, column pickers, allow-lists.\n */\nexport interface ListTransferProps {\n  /** Required. Provide via `listTransferEnLabels` or your translations. */\n  labels?: ListTransferLabels;\n  /** Items in the Available (left) pane. */\n  available: TransferItem[];\n  /** Items in the Chosen (right) pane. */\n  chosen: TransferItem[];\n  /** Fired with the new partition whenever items move. */\n  onChange: (next: { available: TransferItem[]; chosen: TransferItem[] }) => void;\n}\n\nfunction status(template: string, selected: number, total: number): string {\n  return template\n    .replace(/\\{selected\\}/g, String(selected))\n    .replace(/\\{total\\}/g, String(total));\n}\n\nexport function ListTransfer({\n  labels = listTransferEnLabels,\n  available,\n  chosen,\n  onChange,\n}: ListTransferProps) {\n  const [availSel, setAvailSel] = useState<Set<string>>(new Set());\n  const [chosenSel, setChosenSel] = useState<Set<string>>(new Set());\n\n  const toggle = (set: Set<string>, id: string): Set<string> => {\n    const next = new Set(set);\n    if (next.has(id)) next.delete(id);\n    else next.add(id);\n    return next;\n  };\n\n  const moveSelected = (fromAvailable: boolean) => {\n    const sel = fromAvailable ? availSel : chosenSel;\n    const src = fromAvailable ? available : chosen;\n    const dst = fromAvailable ? chosen : available;\n    const moved = src.filter((it) => sel.has(it.id));\n    const remaining = src.filter((it) => !sel.has(it.id));\n    const nextSrc = remaining;\n    const nextDst = [...dst, ...moved];\n    onChange(\n      fromAvailable\n        ? { available: nextSrc, chosen: nextDst }\n        : { available: nextDst, chosen: nextSrc },\n    );\n    if (fromAvailable) setAvailSel(new Set());\n    else setChosenSel(new Set());\n  };\n\n  const moveAll = (fromAvailable: boolean) => {\n    onChange(\n      fromAvailable\n        ? { available: [], chosen: [...chosen, ...available] }\n        : { available: [...available, ...chosen], chosen: [] },\n    );\n    setAvailSel(new Set());\n    setChosenSel(new Set());\n  };\n\n  const pane = (items: TransferItem[], isChosen: boolean) => {\n    const sel = isChosen ? chosenSel : availSel;\n    const setSel = isChosen ? setChosenSel : setAvailSel;\n    return (\n      <DualListSelectorPane\n        title={isChosen ? labels.chosenTitle : labels.availableTitle}\n        status={status(labels.selectedStatus, sel.size, items.length)}\n        {...(isChosen ? { isChosen: true } : {})}\n      >\n        <DualListSelectorList>\n          {items.map((it) => (\n            <DualListSelectorListItem\n              key={it.id}\n              isSelected={sel.has(it.id)}\n              onOptionSelect={() => setSel(toggle(sel, it.id))}\n            >\n              {it.text}\n            </DualListSelectorListItem>\n          ))}\n        </DualListSelectorList>\n      </DualListSelectorPane>\n    );\n  };\n\n  return (\n    <DualListSelector>\n      {pane(available, false)}\n      <DualListSelectorControlsWrapper>\n        <DualListSelectorControl\n          isDisabled={availSel.size === 0}\n          onClick={() => moveSelected(true)}\n          aria-label={labels.addSelected}\n          icon={<AngleRightIcon />}\n        />\n        <DualListSelectorControl\n          isDisabled={available.length === 0}\n          onClick={() => moveAll(true)}\n          aria-label={labels.addAll}\n          icon={<AngleDoubleRightIcon />}\n        />\n        <DualListSelectorControl\n          isDisabled={chosen.length === 0}\n          onClick={() => moveAll(false)}\n          aria-label={labels.removeAll}\n          icon={<AngleDoubleLeftIcon />}\n        />\n        <DualListSelectorControl\n          isDisabled={chosenSel.size === 0}\n          onClick={() => moveSelected(false)}\n          aria-label={labels.removeSelected}\n          icon={<AngleLeftIcon />}\n        />\n      </DualListSelectorControlsWrapper>\n      {pane(chosen, true)}\n    </DualListSelector>\n  );\n}",
+      "import": "import { ListTransfer, listTransferEnLabels } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "labels",
+          "type": "ListTransferLabels",
+          "default": "listTransferEnLabels",
+          "description": "Pane titles, the four control aria-labels, and the {selected}/{total} status template."
+        },
+        {
+          "name": "available",
+          "type": "TransferItem[]",
+          "required": true,
+          "description": "Items in the Available (left) pane — each { id, text }."
+        },
+        {
+          "name": "chosen",
+          "type": "TransferItem[]",
+          "required": true,
+          "description": "Items in the Chosen (right) pane — each { id, text }."
+        },
+        {
+          "name": "onChange",
+          "type": "(next: { available: TransferItem[]; chosen: TransferItem[] }) => void",
+          "required": true,
+          "description": "Fired with the new partition whenever items move. You own the two arrays."
+        }
+      ],
+      "usage": "ListTransfer is the dual list selector: two side-by-side lists with controls for moving items between an Available pane and a Chosen pane (select-some / move-all, both directions). Controlled by the `available` + `chosen` partitions (arrays of { id, text }); ListTransfer owns the transient per-item selection + move logic and fires onChange with the new partition. Use for permissions, column pickers, allow-lists. Localise via labels (listTransferEnLabels). The friendlier wrapper over the base DualListSelector composition.",
+      "examples": [
+        {
+          "name": "ListTransfer",
+          "source": "/**\n * ListTransfer — the dual list selector: move items between an Available and\n * a Chosen pane. Controlled by the two partitions; the component owns the\n * per-item selection + move logic.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  ListTransfer,\n  listTransferEnLabels,\n  type ListTransferLabels,\n  type TransferItem,\n} from \"@golden-passport/ds-patternfly\";\n\nconst LABELS: ListTransferLabels = {\n  ...listTransferEnLabels,\n  availableTitle: \"Available permissions\",\n  chosenTitle: \"Granted permissions\",\n};\n\nexport function Permissions() {\n  const [available, setAvailable] = useState<TransferItem[]>([\n    { id: \"read\", text: \"Read tasks\" },\n    { id: \"write\", text: \"Write tasks\" },\n    { id: \"delete\", text: \"Delete tasks\" },\n    { id: \"members\", text: \"Manage members\" },\n    { id: \"billing\", text: \"Manage billing\" },\n  ]);\n  const [chosen, setChosen] = useState<TransferItem[]>([\n    { id: \"read-wf\", text: \"Read workflows\" },\n  ]);\n\n  return (\n    <ListTransfer\n      labels={LABELS}\n      available={available}\n      chosen={chosen}\n      onChange={(next) => {\n        setAvailable(next.available);\n        setChosen(next.chosen);\n      }}\n    />\n  );\n}\n\nexport default function ListTransferExample() {\n  return <Permissions />;\n}"
+        }
+      ]
+    },
+    {
       "id": "building-blocks-forms-validatedselect",
       "kind": "ds",
       "title": "ValidatedSelect",

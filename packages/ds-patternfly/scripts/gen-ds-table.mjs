@@ -38,6 +38,7 @@ const CATEGORY = {
   ValidatedTextArea: "Forms",
   ValidatedSelect: "Forms",
   FormScaffold: "Forms",
+  ListTransfer: "Forms",
   FilterToolbar: "Data",
   BulkSelectToolbar: "Data",
   ListManager: "Data",
