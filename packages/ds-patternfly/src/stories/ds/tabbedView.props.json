@@ -1,0 +1,12 @@
+{
+  "import": "import { TabbedView } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "tabs", "type": "TabDef[]", "required": true, "description": "The tabs — each { key, title, content, isDisabled?, icon? }." },
+    { "name": "activeKey", "type": "string", "description": "Controlled active key. Omit to let TabbedView manage it." },
+    { "name": "defaultActiveKey", "type": "string", "description": "Initial active key when uncontrolled. Defaults to the first tab." },
+    { "name": "onSelect", "type": "(key: string) => void", "description": "Fired with the next key when a tab is selected." },
+    { "name": "isBox", "type": "boolean", "description": "Box (card-like) tab styling." },
+    { "name": "isVertical", "type": "boolean", "description": "Vertical tab orientation." },
+    { "name": "ariaLabel", "type": "string", "description": "Accessible name for the tablist." }
+  ]
+}

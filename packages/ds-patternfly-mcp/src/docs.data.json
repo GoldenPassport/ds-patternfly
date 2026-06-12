@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "1",
-  "generatedAt": "2026-06-11",
+  "generatedAt": "2026-06-12",
   "library": {
     "name": "@golden-passport/ds-patternfly",
     "version": "0.4.0",
@@ -548,6 +548,67 @@
         {
           "name": "ListManager",
           "source": "/**\n * ListManager recipe — the lib's exported page scaffold for a managed\n * collection: a PageHeader, a toolbar row (FilterToolbar + BulkSelectToolbar\n * left, Pagination right), the list body, and footer pagination. ListManager\n * owns the layout; you bring the pieces and the data.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  BulkSelectToolbar,\n  bulkSelectToolbarEnLabels,\n  Button,\n  FilterToolbar,\n  filterToolbarEnLabels,\n  ListManager,\n  PageHeader,\n  Pagination,\n  Table,\n  Tbody,\n  Td,\n  Th,\n  Thead,\n  Tr,\n  type FilterDef,\n} from \"@golden-passport/ds-patternfly\";\n\ntype Workflow = { id: string; name: string; status: string };\nconst ALL: Workflow[] = Array.from({ length: 23 }).map((_, i) => ({\n  id: `wf-${i + 1}`,\n  name: `Workflow ${i + 1}`,\n  status: [\"Active\", \"Paused\", \"Failed\"][i % 3] ?? \"Active\",\n}));\nconst FILTERS: FilterDef[] = [\n  {\n    key: \"status\",\n    label: \"Status\",\n    options: [\n      { value: \"Active\", label: \"Active\" },\n      { value: \"Paused\", label: \"Paused\" },\n      { value: \"Failed\", label: \"Failed\" },\n    ],\n  },\n];\n\nexport function ManagedTable() {\n  const [search, setSearch] = useState(\"\");\n  const [values, setValues] = useState<Record<string, string[]>>({});\n  const [selected, setSelected] = useState<Set<string>>(new Set());\n  const [page, setPage] = useState(1);\n  const [perPage, setPerPage] = useState(10);\n\n  const statuses = values.status ?? [];\n  const filtered = ALL.filter(\n    (r) =>\n      r.name.toLowerCase().includes(search.toLowerCase()) &&\n      (statuses.length === 0 || statuses.includes(r.status)),\n  );\n  const start = (page - 1) * perPage;\n  const pageRows = filtered.slice(start, start + perPage);\n  const pageSelectedCount = pageRows.filter((r) => selected.has(r.id)).length;\n\n  const setMany = (ids: string[], on: boolean) =>\n    setSelected((prev) => {\n      const next = new Set(prev);\n      ids.forEach((id) => (on ? next.add(id) : next.delete(id)));\n      return next;\n    });\n\n  return (\n    <ListManager\n      header={\n        <PageHeader\n          title=\"Workflows\"\n          subtitle=\"Manage triggers, runs, and history.\"\n          actions={<Button variant=\"primary\">Create</Button>}\n        />\n      }\n      toolbar={\n        <div style={{ display: \"flex\", flexWrap: \"wrap\", gap: \"0.5rem\", alignItems: \"center\" }}>\n          <BulkSelectToolbar\n            labels={bulkSelectToolbarEnLabels}\n            selectedCount={selected.size}\n            totalCount={filtered.length}\n            pageCount={pageRows.length}\n            pageSelected={pageSelectedCount === pageRows.length && pageRows.length > 0}\n            pagePartiallySelected={pageSelectedCount > 0 && pageSelectedCount < pageRows.length}\n            onSelectAll={() => setMany(filtered.map((r) => r.id), true)}\n            onSelectPage={() => setMany(pageRows.map((r) => r.id), true)}\n            onSelectNone={() => setSelected(new Set())}\n            actions={<Button variant=\"danger\">Delete {selected.size}</Button>}\n          />\n          <FilterToolbar\n            labels={filterToolbarEnLabels}\n            searchValue={search}\n            onSearchChange={(v) => {\n              setSearch(v);\n              setPage(1);\n            }}\n            filters={FILTERS}\n            values={values}\n            onChange={(key, next) => {\n              setValues((v) => ({ ...v, [key]: next }));\n              setPage(1);\n            }}\n            onClearAll={() => {\n              setSearch(\"\");\n              setValues({});\n            }}\n          />\n        </div>\n      }\n      toolbarEnd={\n        <Pagination\n          titles={{ paginationAriaLabel: \"Workflows pagination (top)\" }}\n          itemCount={filtered.length}\n          page={page}\n          perPage={perPage}\n          onSetPage={(_e, p) => setPage(p)}\n          onPerPageSelect={(_e, pp) => {\n            setPerPage(pp);\n            setPage(1);\n          }}\n          isCompact\n        />\n      }\n      footer={\n        <Pagination\n          titles={{ paginationAriaLabel: \"Workflows pagination (bottom)\" }}\n          itemCount={filtered.length}\n          page={page}\n          perPage={perPage}\n          onSetPage={(_e, p) => setPage(p)}\n          onPerPageSelect={(_e, pp) => {\n            setPerPage(pp);\n            setPage(1);\n          }}\n          variant=\"bottom\"\n        />\n      }\n    >\n      <Table aria-label=\"Workflows\" variant=\"compact\">\n        <Thead>\n          <Tr>\n            <Th screenReaderText=\"Row select\" />\n            <Th>Name</Th>\n            <Th>Status</Th>\n          </Tr>\n        </Thead>\n        <Tbody>\n          {pageRows.map((r, rowIndex) => (\n            <Tr key={r.id}>\n              <Td\n                select={{\n                  rowIndex,\n                  onSelect: () => setMany([r.id], !selected.has(r.id)),\n                  isSelected: selected.has(r.id),\n                }}\n              />\n              <Td dataLabel=\"Name\">{r.name}</Td>\n              <Td dataLabel=\"Status\">{r.status}</Td>\n            </Tr>\n          ))}\n        </Tbody>\n      </Table>\n    </ListManager>\n  );\n}\n\nexport default function ListManagerExample() {\n  return <ManagedTable />;\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-data-listview",
+      "kind": "ds",
+      "title": "ListView",
+      "breadcrumb": "Building blocks/Data/ListView",
+      "summary": "A selectable list of rows from an items array — each with a title, optional description, extra content, and per-row actions. Wraps the base DataList with single-select wiring and an empty-state slot. The richer sibling of the base SimpleList (multi-cell rows + actions).",
+      "tags": [
+        "building",
+        "blocks",
+        "data",
+        "listview",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-data-listview--overview",
+      "layer": "ds",
+      "componentSource": "import { useId, type ReactNode } from \"react\";\nimport {\n  DataList,\n  DataListAction,\n  DataListCell,\n  DataListItem,\n  DataListItemCells,\n  DataListItemRow,\n} from \"../base/index.js\";\n\n/** One list row. */\nexport interface ListViewItem {\n  /** Stable id — the value passed to onSelect. */\n  id: string;\n  /** Primary line. */\n  title: ReactNode;\n  /** Secondary line under the title. */\n  description?: ReactNode;\n  /** Extra cell content shown to the right of the title block. */\n  content?: ReactNode;\n  /** Per-row actions (buttons, a kebab menu). */\n  actions?: ReactNode;\n}\n\n/**\n * ListView — a selectable list of rows from an `items` array, each with a\n * title, optional description, extra content, and per-row actions. Wraps the\n * base DataList with single-select wiring and an empty-state slot. The\n * richer sibling of the base SimpleList (multi-cell rows + actions).\n */\nexport interface ListViewProps {\n  /** Row data. */\n  items: ListViewItem[];\n  /** Accessible name for the list. */\n  ariaLabel: string;\n  /** Selected row id (controlled). Enables selectable rows when `onSelect` is set. */\n  selectedId?: string;\n  /** Fired with the row id when a row is selected. */\n  onSelect?: (id: string) => void;\n  /** Shown when `items` is empty (e.g. a StatusPanel). */\n  emptyState?: ReactNode;\n  /** Compact row density. */\n  isCompact?: boolean;\n}\n\nexport function ListView({\n  items,\n  ariaLabel,\n  selectedId,\n  onSelect,\n  emptyState,\n  isCompact,\n}: ListViewProps) {\n  const uid = useId();\n  if (items.length === 0 && emptyState) return <>{emptyState}</>;\n\n  return (\n    <DataList\n      aria-label={ariaLabel}\n      {...(isCompact ? { isCompact: true } : {})}\n      {...(onSelect\n        ? {\n            selectedDataListItemId: selectedId ? `${uid}-${selectedId}` : \"\",\n            onSelectDataListItem: (_e, id) => {\n              const raw = id.replace(`${uid}-`, \"\");\n              onSelect(raw);\n            },\n          }\n        : {})}\n    >\n      {items.map((item) => {\n        const rowId = `${uid}-${item.id}`;\n        return (\n          <DataListItem key={item.id} id={rowId} aria-labelledby={`${rowId}-title`}>\n            <DataListItemRow>\n              <DataListItemCells\n                dataListCells={[\n                  <DataListCell key=\"primary\">\n                    <span id={`${rowId}-title`} style={{ fontWeight: 600 }}>\n                      {item.title}\n                    </span>\n                    {item.description ? (\n                      <div style={{ color: \"var(--gp-color-text-subtle)\", fontSize: 14 }}>\n                        {item.description}\n                      </div>\n                    ) : null}\n                  </DataListCell>,\n                  ...(item.content\n                    ? [<DataListCell key=\"content\">{item.content}</DataListCell>]\n                    : []),\n                ]}\n              />\n              {item.actions ? (\n                <DataListAction\n                  id={`${rowId}-actions`}\n                  aria-labelledby={`${rowId}-title ${rowId}-actions`}\n                  aria-label=\"Actions\"\n                >\n                  {item.actions}\n                </DataListAction>\n              ) : null}\n            </DataListItemRow>\n          </DataListItem>\n        );\n      })}\n    </DataList>\n  );\n}",
+      "import": "import { ListView } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "items",
+          "type": "ListViewItem[]",
+          "required": true,
+          "description": "Row data — each { id, title, description?, content?, actions? }."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "required": true,
+          "description": "Accessible name for the list."
+        },
+        {
+          "name": "selectedId",
+          "type": "string",
+          "description": "Selected row id (controlled). Enables selectable rows when onSelect is set."
+        },
+        {
+          "name": "onSelect",
+          "type": "(id: string) => void",
+          "description": "Fired with the row id when a row is selected."
+        },
+        {
+          "name": "emptyState",
+          "type": "ReactNode",
+          "description": "Shown when items is empty (e.g. a StatusPanel)."
+        },
+        {
+          "name": "isCompact",
+          "type": "boolean",
+          "description": "Compact row density."
+        }
+      ],
+      "usage": "ListView is a selectable list of rows from an `items` array (id/title/description?/content?/actions?), wrapping the base DataList with single-select wiring (selectedId + onSelect) and an emptyState slot. The richer sibling of the base SimpleList (multi-cell rows + per-row actions). For tabular data with columns use DataTable; for browse-style cards use CardGrid.",
+      "examples": [
+        {
+          "name": "ListView",
+          "source": "/**\n * ListView — a selectable list of rows (title / description / content /\n * actions) from an `items` array, the richer sibling of SimpleList.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport {\n  Button,\n  Label,\n  ListView,\n  StatusPanel,\n  type ListViewItem,\n} from \"@golden-passport/ds-patternfly\";\n\nconst ITEMS: ListViewItem[] = [\n  {\n    id: \"wf-1\",\n    title: \"Quarterly review\",\n    description: \"Hourly · 4 steps\",\n    content: <Label color=\"green\" isCompact>Active</Label>,\n    actions: <Button variant=\"secondary\">Run</Button>,\n  },\n  {\n    id: \"wf-2\",\n    title: \"Nightly build\",\n    description: \"On push · 6 steps\",\n    content: <Label color=\"green\" isCompact>Active</Label>,\n    actions: <Button variant=\"secondary\">Run</Button>,\n  },\n  {\n    id: \"wf-3\",\n    title: \"Backup pipeline\",\n    description: \"Daily · 3 steps\",\n    content: <Label color=\"grey\" isCompact>Paused</Label>,\n    actions: <Button variant=\"secondary\">Run</Button>,\n  },\n];\n\nexport function Selectable() {\n  const [selected, setSelected] = useState(\"wf-1\");\n  return (\n    <ListView\n      items={ITEMS}\n      ariaLabel=\"Workflows\"\n      selectedId={selected}\n      onSelect={setSelected}\n    />\n  );\n}\n\nexport function Empty() {\n  return (\n    <ListView\n      items={[]}\n      ariaLabel=\"Empty workflows\"\n      emptyState={\n        <StatusPanel\n          variant=\"empty\"\n          title=\"No workflows yet\"\n          size=\"sm\"\n          primaryAction={<Button variant=\"primary\">Create workflow</Button>}\n        >\n          Workflows you create will show up here.\n        </StatusPanel>\n      }\n    />\n  );\n}\n\nexport default function ListViewExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Selectable />\n      <Empty />\n    </div>\n  );\n}"
         }
       ]
     },
@@ -1338,6 +1399,137 @@
         {
           "name": "PageHeader",
           "source": "/**\n * PageHeader recipe — the lib's exported PageHeader: title row + optional\n * icon / status / actions, subtitle, breadcrumb above, tabs below.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useId, useState } from \"react\";\nimport {\n  Breadcrumb,\n  BreadcrumbItem,\n  Button,\n  Dropdown,\n  DropdownItem,\n  DropdownList,\n  Label,\n  MenuToggle,\n  type MenuToggleElement,\n  PageHeader,\n  Tab,\n  Tabs,\n  TabTitleText,\n} from \"@golden-passport/ds-patternfly\";\nimport { CubesIcon, EllipsisVIcon } from \"@patternfly/react-icons\";\n\nexport function Basic() {\n  return (\n    <PageHeader\n      title=\"Workflows\"\n      subtitle=\"Manage triggers, runs, and history.\"\n      actions={<Button variant=\"primary\">Create workflow</Button>}\n    />\n  );\n}\n\nexport function FullChrome() {\n  const [open, setOpen] = useState(false);\n  return (\n    <PageHeader\n      breadcrumb={\n        <Breadcrumb aria-label=\"Workflow breadcrumb\">\n          <BreadcrumbItem to=\"#\">Workflows</BreadcrumbItem>\n          <BreadcrumbItem to=\"#\" isActive>\n            Quarterly review\n          </BreadcrumbItem>\n        </Breadcrumb>\n      }\n      icon={<CubesIcon style={{ width: 36, height: 36 }} />}\n      title=\"Quarterly review\"\n      status={<Label color=\"green\">Active</Label>}\n      subtitle=\"Triggered hourly · 4 steps · last run 12 minutes ago\"\n      actions={\n        <Dropdown\n          isOpen={open}\n          onSelect={() => setOpen(false)}\n          onOpenChange={setOpen}\n          toggle={(toggleRef: React.Ref<MenuToggleElement>) => (\n            <MenuToggle\n              ref={toggleRef}\n              aria-label=\"Workflow actions\"\n              variant=\"plain\"\n              onClick={() => setOpen((o) => !o)}\n            >\n              <EllipsisVIcon />\n            </MenuToggle>\n          )}\n        >\n          <DropdownList>\n            <DropdownItem>Run now</DropdownItem>\n            <DropdownItem>Edit</DropdownItem>\n            <DropdownItem>Disable</DropdownItem>\n          </DropdownList>\n        </Dropdown>\n      }\n    />\n  );\n}\n\nexport function WithTabs() {\n  const id = useId();\n  const [activeTabKey, setActiveTabKey] = useState<string | number>(0);\n  return (\n    <PageHeader\n      icon={<CubesIcon style={{ width: 36, height: 36 }} />}\n      title=\"Pod details\"\n      status={<Label color=\"green\">Running</Label>}\n      tabs={\n        <Tabs\n          activeKey={activeTabKey}\n          onSelect={(_e, k) => setActiveTabKey(k)}\n          id={`${id}-tabs`}\n          component=\"nav\"\n          aria-label=\"Pod navigation tabs\"\n        >\n          <Tab eventKey={0} title={<TabTitleText>Details</TabTitleText>} />\n          <Tab eventKey={1} title={<TabTitleText>YAML</TabTitleText>} />\n          <Tab eventKey={2} title={<TabTitleText>Events</TabTitleText>} />\n        </Tabs>\n      }\n    >\n      <p style={{ margin: 0, color: \"var(--gp-color-text-regular)\" }}>\n        {activeTabKey === 0\n          ? \"Details panel\"\n          : activeTabKey === 1\n            ? \"YAML panel\"\n            : \"Events panel\"}\n      </p>\n    </PageHeader>\n  );\n}\n\nexport default function PageHeaderExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Basic />\n      <FullChrome />\n      <WithTabs />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-navigation-tabbedview",
+      "kind": "ds",
+      "title": "TabbedView",
+      "breadcrumb": "Building blocks/Navigation/TabbedView",
+      "summary": "A declarative tabbed container over a tabs array — each entry is `} . Renders the tab strip plus the active panel and manages the active tab itself (uncontrolled via defaultActiveKey ) or hands control to you ( activeKey + onSelect ).",
+      "tags": [
+        "building",
+        "blocks",
+        "navigation",
+        "tabbedview",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-navigation-tabbedview--overview",
+      "layer": "ds",
+      "componentSource": "import { useId, useState, type ReactNode } from \"react\";\nimport {\n  Tab,\n  TabContent,\n  TabContentBody,\n  TabTitleText,\n  Tabs,\n} from \"../base/index.js\";\n\n/** One tab: a key, its title, and the panel content. */\nexport interface TabDef {\n  /** Stable key — also the value passed to onSelect. */\n  key: string;\n  /** Tab label. */\n  title: ReactNode;\n  /** Panel content shown when this tab is active. */\n  content: ReactNode;\n  /** Disable this tab. */\n  isDisabled?: boolean;\n  /** Optional leading icon in the tab title. */\n  icon?: ReactNode;\n}\n\n/**\n * TabbedView — a declarative tabbed container over a `tabs` array: each entry\n * is { key, title, content }. Renders the base Tabs strip + the active\n * panel, and manages the active tab itself (uncontrolled via\n * `defaultActiveKey`) or hands control to you (`activeKey` + `onSelect`).\n */\nexport interface TabbedViewProps {\n  /** The tabs to render. */\n  tabs: TabDef[];\n  /** Controlled active key. Omit to let TabbedView manage it. */\n  activeKey?: string;\n  /** Initial active key when uncontrolled. Defaults to the first tab. */\n  defaultActiveKey?: string;\n  /** Fired with the next key when a tab is selected. */\n  onSelect?: (key: string) => void;\n  /** Box (card-like) tab styling. */\n  isBox?: boolean;\n  /** Vertical tab orientation. */\n  isVertical?: boolean;\n  /** Accessible name for the tablist. */\n  ariaLabel?: string;\n}\n\nexport function TabbedView({\n  tabs,\n  activeKey,\n  defaultActiveKey,\n  onSelect,\n  isBox,\n  isVertical,\n  ariaLabel,\n}: TabbedViewProps) {\n  const uid = useId();\n  const [internalKey, setInternalKey] = useState(\n    defaultActiveKey ?? tabs[0]?.key ?? \"\",\n  );\n  const active = activeKey ?? internalKey;\n\n  const select = (key: string) => {\n    if (activeKey === undefined) setInternalKey(key);\n    onSelect?.(key);\n  };\n\n  return (\n    <>\n      <Tabs\n        activeKey={active}\n        onSelect={(_e, key) => select(String(key))}\n        {...(isBox ? { isBox: true } : {})}\n        {...(isVertical ? { isVertical: true } : {})}\n        {...(ariaLabel\n          ? // Render as <nav> so aria-label is valid (PF Tabs' default <div>\n            // is roleless and rejects aria-label — axe aria-prohibited-attr).\n            { component: \"nav\", \"aria-label\": ariaLabel }\n          : {})}\n      >\n        {tabs.map((tab) => (\n          <Tab\n            key={tab.key}\n            eventKey={tab.key}\n            title={\n              <TabTitleText>\n                {tab.icon ? (\n                  <span style={{ marginInlineEnd: 6 }}>{tab.icon}</span>\n                ) : null}\n                {tab.title}\n              </TabTitleText>\n            }\n            isDisabled={!!tab.isDisabled}\n            tabContentId={`${uid}-${tab.key}`}\n          />\n        ))}\n      </Tabs>\n      {tabs.map((tab) => (\n        <TabContent\n          key={tab.key}\n          eventKey={tab.key}\n          id={`${uid}-${tab.key}`}\n          activeKey={active}\n          hidden={tab.key !== active}\n        >\n          <TabContentBody>{tab.content}</TabContentBody>\n        </TabContent>\n      ))}\n    </>\n  );\n}",
+      "import": "import { TabbedView } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "tabs",
+          "type": "TabDef[]",
+          "required": true,
+          "description": "The tabs — each { key, title, content, isDisabled?, icon? }."
+        },
+        {
+          "name": "activeKey",
+          "type": "string",
+          "description": "Controlled active key. Omit to let TabbedView manage it."
+        },
+        {
+          "name": "defaultActiveKey",
+          "type": "string",
+          "description": "Initial active key when uncontrolled. Defaults to the first tab."
+        },
+        {
+          "name": "onSelect",
+          "type": "(key: string) => void",
+          "description": "Fired with the next key when a tab is selected."
+        },
+        {
+          "name": "isBox",
+          "type": "boolean",
+          "description": "Box (card-like) tab styling."
+        },
+        {
+          "name": "isVertical",
+          "type": "boolean",
+          "description": "Vertical tab orientation."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Accessible name for the tablist."
+        }
+      ],
+      "usage": "TabbedView is a declarative tabbed container over a `tabs` array (key/title/content/isDisabled?/icon?). Renders the base Tabs strip + the active panel; manages the active tab itself (defaultActiveKey) or controlled (activeKey + onSelect). Supports isBox / isVertical.",
+      "examples": [
+        {
+          "name": "TabbedView",
+          "source": "/**\n * TabbedView — a declarative tabbed container over a `tabs` array (key /\n * title / content). Manages the active tab itself, or you control it.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport { Content, TabbedView, type TabDef } from \"@golden-passport/ds-patternfly\";\n\nconst TABS: TabDef[] = [\n  {\n    key: \"details\",\n    title: \"Details\",\n    content: <Content component=\"p\">Name, status, namespace, and metadata.</Content>,\n  },\n  {\n    key: \"yaml\",\n    title: \"YAML\",\n    content: <Content component=\"p\">The raw resource definition.</Content>,\n  },\n  {\n    key: \"events\",\n    title: \"Events\",\n    content: <Content component=\"p\">Recent lifecycle events for this resource.</Content>,\n  },\n];\n\nexport function Uncontrolled() {\n  return <TabbedView tabs={TABS} />;\n}\n\nexport function Controlled() {\n  const [active, setActive] = useState(\"yaml\");\n  return (\n    <>\n      <TabbedView\n        tabs={TABS}\n        activeKey={active}\n        onSelect={setActive}\n      />\n      <p style={{ marginBlockStart: 8, color: \"var(--gp-color-text-subtle)\", fontSize: 13 }}>\n        Active tab: <strong>{active}</strong>\n      </p>\n    </>\n  );\n}\n\nexport function BoxStyle() {\n  return <TabbedView tabs={TABS} isBox defaultActiveKey=\"events\" />;\n}\n\nexport default function TabbedViewExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Uncontrolled />\n      <Controlled />\n      <BoxStyle />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-navigation-treenavigation",
+      "kind": "ds",
+      "title": "TreeNavigation",
+      "breadcrumb": "Building blocks/Navigation/TreeNavigation",
+      "summary": "A controlled hierarchical navigation tree from a nested data array of `} nodes. Selection is a simple controlled selectedId — TreeNavigation maps your nodes to PF's data items and derives the active item for you. Use for file trees, nav hierarchies, and category pickers.",
+      "tags": [
+        "building",
+        "blocks",
+        "navigation",
+        "treenavigation",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-navigation-treenavigation--overview",
+      "layer": "ds",
+      "componentSource": "import { useMemo, type ReactNode } from \"react\";\nimport { TreeView, type TreeViewDataItem } from \"../base/index.js\";\n\n/** One tree node — nest via `children`. */\nexport interface TreeNode {\n  /** Stable id — the value passed to onSelect. */\n  id: string;\n  /** Display label. */\n  name: ReactNode;\n  /** Child nodes. */\n  children?: TreeNode[];\n  /** Optional leading icon (collapsed/leaf). */\n  icon?: ReactNode;\n  /** Optional expanded-state icon. */\n  expandedIcon?: ReactNode;\n}\n\n/**\n * TreeNavigation — a controlled hierarchical navigation tree from a nested\n * `data` array. Wraps the base TreeView, mapping your `TreeNode`s to PF's\n * data items and deriving the active item from `selectedId`, so selection is\n * a simple controlled string. Use for file trees, nav hierarchies, faceted\n * category pickers.\n */\nexport interface TreeNavigationProps {\n  /** The tree data (nested). */\n  data: TreeNode[];\n  /** Currently selected node id (controlled). */\n  selectedId?: string;\n  /** Fired with the node id when a node is selected. */\n  onSelect?: (id: string) => void;\n  /** Accessible name for the tree. */\n  ariaLabel: string;\n  /** Show the search field above the tree. */\n  hasSearch?: boolean;\n  /** Render selectable checkboxes on each node. */\n  hasCheckboxes?: boolean;\n  /** Use the guide-line / nested indentation treatment. */\n  hasGuides?: boolean;\n}\n\nfunction toDataItem(node: TreeNode): TreeViewDataItem {\n  return {\n    id: node.id,\n    name: node.name,\n    ...(node.icon ? { icon: node.icon } : {}),\n    ...(node.expandedIcon ? { expandedIcon: node.expandedIcon } : {}),\n    ...(node.children\n      ? { children: node.children.map(toDataItem) }\n      : {}),\n  };\n}\n\nfunction findItem(\n  items: TreeViewDataItem[],\n  id: string,\n): TreeViewDataItem | undefined {\n  for (const item of items) {\n    if (item.id === id) return item;\n    if (item.children) {\n      const hit = findItem(item.children, id);\n      if (hit) return hit;\n    }\n  }\n  return undefined;\n}\n\nexport function TreeNavigation({\n  data,\n  selectedId,\n  onSelect,\n  ariaLabel,\n  hasSearch,\n  hasCheckboxes,\n  hasGuides,\n}: TreeNavigationProps) {\n  const items = useMemo(() => data.map(toDataItem), [data]);\n  const active = useMemo(\n    () => (selectedId ? [findItem(items, selectedId)].filter(Boolean) as TreeViewDataItem[] : []),\n    [items, selectedId],\n  );\n\n  return (\n    <TreeView\n      data={items}\n      aria-label={ariaLabel}\n      activeItems={active}\n      onSelect={(_e, item) => {\n        if (item.id) onSelect?.(item.id);\n      }}\n      {...(hasSearch ? { hasSearch: true } : {})}\n      {...(hasCheckboxes ? { hasCheckboxes: true } : {})}\n      {...(hasGuides ? { hasGuides: true } : {})}\n    />\n  );\n}",
+      "import": "import { TreeNavigation } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "data",
+          "type": "TreeNode[]",
+          "required": true,
+          "description": "The tree data (nested) — each { id, name, children?, icon?, expandedIcon? }."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "required": true,
+          "description": "Accessible name for the tree."
+        },
+        {
+          "name": "selectedId",
+          "type": "string",
+          "description": "Currently selected node id (controlled)."
+        },
+        {
+          "name": "onSelect",
+          "type": "(id: string) => void",
+          "description": "Fired with the node id when a node is selected."
+        },
+        {
+          "name": "hasSearch",
+          "type": "boolean",
+          "description": "Show the search field above the tree."
+        },
+        {
+          "name": "hasCheckboxes",
+          "type": "boolean",
+          "description": "Render selectable checkboxes on each node."
+        },
+        {
+          "name": "hasGuides",
+          "type": "boolean",
+          "description": "Use the guide-line / nested indentation treatment."
+        }
+      ],
+      "usage": "TreeNavigation is a controlled hierarchical navigation tree from a nested `data` array of TreeNode (id/name/children?/icon?). Wraps the base TreeView, mapping your nodes to PF data items and deriving the active item from selectedId, so selection is a simple controlled string. Optional hasSearch / hasCheckboxes / hasGuides. Use for file trees, nav hierarchies, category pickers.",
+      "examples": [
+        {
+          "name": "TreeNavigation",
+          "source": "/**\n * TreeNavigation — a controlled hierarchical navigation tree from nested\n * `data`. Selection is a simple controlled node id.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport { TreeNavigation, type TreeNode } from \"@golden-passport/ds-patternfly\";\n\nconst TREE: TreeNode[] = [\n  {\n    id: \"workspace\",\n    name: \"Workspace\",\n    children: [\n      {\n        id: \"integrations\",\n        name: \"Integrations\",\n        children: [\n          { id: \"salesforce\", name: \"Salesforce\" },\n          { id: \"slack\", name: \"Slack\" },\n        ],\n      },\n      {\n        id: \"pipelines\",\n        name: \"Pipelines\",\n        children: [\n          { id: \"nightly\", name: \"Nightly build\" },\n          { id: \"release\", name: \"Release\" },\n        ],\n      },\n    ],\n  },\n  { id: \"settings\", name: \"Settings\" },\n];\n\nexport function Selectable() {\n  const [selected, setSelected] = useState(\"slack\");\n  return (\n    <div style={{ maxInlineSize: 320 }}>\n      <TreeNavigation\n        data={TREE}\n        ariaLabel=\"Workspace navigation\"\n        selectedId={selected}\n        onSelect={setSelected}\n        hasGuides\n      />\n      <p style={{ marginBlockStart: 8, color: \"var(--gp-color-text-subtle)\", fontSize: 13 }}>\n        Selected: <strong>{selected}</strong>\n      </p>\n    </div>\n  );\n}\n\nexport function WithSearch() {\n  const [selected, setSelected] = useState(\"\");\n  return (\n    <div style={{ maxInlineSize: 320 }}>\n      <TreeNavigation\n        data={TREE}\n        ariaLabel=\"Searchable navigation\"\n        selectedId={selected}\n        onSelect={setSelected}\n        hasSearch\n      />\n    </div>\n  );\n}\n\nexport default function TreeNavigationExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Selectable />\n      <WithSearch />\n    </div>\n  );\n}"
         }
       ]
     },

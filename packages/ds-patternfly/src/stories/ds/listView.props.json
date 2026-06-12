@@ -1,0 +1,11 @@
+{
+  "import": "import { ListView } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "items", "type": "ListViewItem[]", "required": true, "description": "Row data — each { id, title, description?, content?, actions? }." },
+    { "name": "ariaLabel", "type": "string", "required": true, "description": "Accessible name for the list." },
+    { "name": "selectedId", "type": "string", "description": "Selected row id (controlled). Enables selectable rows when onSelect is set." },
+    { "name": "onSelect", "type": "(id: string) => void", "description": "Fired with the row id when a row is selected." },
+    { "name": "emptyState", "type": "ReactNode", "description": "Shown when items is empty (e.g. a StatusPanel)." },
+    { "name": "isCompact", "type": "boolean", "description": "Compact row density." }
+  ]
+}

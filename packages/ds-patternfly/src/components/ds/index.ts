@@ -60,6 +60,12 @@ export { DataTable } from "./DataTable.js";
 export type { DataTableProps, DataTableColumn } from "./DataTable.js";
 export { CardGrid } from "./CardGrid.js";
 export type { CardGridProps } from "./CardGrid.js";
+export { ListView } from "./ListView.js";
+export type { ListViewProps, ListViewItem } from "./ListView.js";
+export { TabbedView } from "./TabbedView.js";
+export type { TabbedViewProps, TabDef } from "./TabbedView.js";
+export { TreeNavigation } from "./TreeNavigation.js";
+export type { TreeNavigationProps, TreeNode } from "./TreeNavigation.js";
 
 // Feedback & overlays
 export { ConfirmModal, confirmModalEnLabels } from "./ConfirmModal.js";

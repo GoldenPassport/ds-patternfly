@@ -1,0 +1,12 @@
+{
+  "import": "import { TreeNavigation } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "data", "type": "TreeNode[]", "required": true, "description": "The tree data (nested) — each { id, name, children?, icon?, expandedIcon? }." },
+    { "name": "ariaLabel", "type": "string", "required": true, "description": "Accessible name for the tree." },
+    { "name": "selectedId", "type": "string", "description": "Currently selected node id (controlled)." },
+    { "name": "onSelect", "type": "(id: string) => void", "description": "Fired with the node id when a node is selected." },
+    { "name": "hasSearch", "type": "boolean", "description": "Show the search field above the tree." },
+    { "name": "hasCheckboxes", "type": "boolean", "description": "Render selectable checkboxes on each node." },
+    { "name": "hasGuides", "type": "boolean", "description": "Use the guide-line / nested indentation treatment." }
+  ]
+}

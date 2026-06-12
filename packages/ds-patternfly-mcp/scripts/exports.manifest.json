@@ -69,6 +69,18 @@
     "propsFile": "src/stories/recipes/listManager.props.json",
     "usage": "ListManager is the layout-only page scaffold for a managed collection: header slot (PageHeader), a toolbar row (FilterToolbar + BulkSelectToolbar left via `toolbar`, Pagination right via `toolbarEnd`), the list body (children — a Table or Gallery), and a footer pagination slot. It owns the vertical rhythm and toolbar arrangement; you bring the pieces and the data."
   },
+  "building-blocks-data-listview": {
+    "propsFile": "src/stories/ds/listView.props.json",
+    "usage": "ListView is a selectable list of rows from an `items` array (id/title/description?/content?/actions?), wrapping the base DataList with single-select wiring (selectedId + onSelect) and an emptyState slot. The richer sibling of the base SimpleList (multi-cell rows + per-row actions). For tabular data with columns use DataTable; for browse-style cards use CardGrid."
+  },
+  "building-blocks-navigation-tabbedview": {
+    "propsFile": "src/stories/ds/tabbedView.props.json",
+    "usage": "TabbedView is a declarative tabbed container over a `tabs` array (key/title/content/isDisabled?/icon?). Renders the base Tabs strip + the active panel; manages the active tab itself (defaultActiveKey) or controlled (activeKey + onSelect). Supports isBox / isVertical."
+  },
+  "building-blocks-navigation-treenavigation": {
+    "propsFile": "src/stories/ds/treeNavigation.props.json",
+    "usage": "TreeNavigation is a controlled hierarchical navigation tree from a nested `data` array of TreeNode (id/name/children?/icon?). Wraps the base TreeView, mapping your nodes to PF data items and deriving the active item from selectedId, so selection is a simple controlled string. Optional hasSearch / hasCheckboxes / hasGuides. Use for file trees, nav hierarchies, category pickers."
+  },
 
   "building-blocks-feedback-confirmmodal": {
     "propsFile": "src/stories/ds/confirmModal.props.json",
