@@ -39,6 +39,8 @@ const CATEGORY = {
   ValidatedSelect: "Forms",
   FormScaffold: "Forms",
   ListTransfer: "Forms",
+  DateField: "Forms",
+  FutureDateField: "Forms",
   FilterToolbar: "Data",
   BulkSelectToolbar: "Data",
   ListManager: "Data",

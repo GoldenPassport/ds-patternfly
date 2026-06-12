@@ -48,6 +48,15 @@
     "propsFile": "src/stories/ds/formScaffold.props.json",
     "usage": "FormScaffold is the standard form frame: your fields as children, then a branded submit / cancel ActionGroup. Wires the submit handler (native submit prevented) and a disabled-submit guard, so you focus on the fields (e.g. the Validated* lego blocks). Localise the buttons via labels (formScaffoldEnLabels)."
   },
+  "building-blocks-forms-datefield": {
+    "propsFile": "src/stories/ds/dateField.props.json",
+    "usage": "DateField is the date picker lego block: pick a single date, shown as a text input + popover calendar (display=\"popover\", default) or an always-visible inline calendar (display=\"flat\"). Controlled by a Date | null value; restrict the selectable range with minDate / maxDate (out-of-range days disabled in both displays, and typed out-of-range input is rejected). Wraps the base DatePicker (popover) and CalendarMonth (flat). For future-only dates use FutureDateField.",
+    "keyTokens": ["--gp-control-pad-y", "--gp-radius-control"]
+  },
+  "building-blocks-forms-futuredatefield": {
+    "propsFile": "src/stories/ds/futureDateField.props.json",
+    "usage": "FutureDateField is a DateField restricted to future dates — today and earlier are disabled. Same flat / popover display + controlled Date | null API; minDate defaults to tomorrow (override for a different floor). For scheduling, expiries, and 'remind me on…' pickers."
+  },
   "building-blocks-forms-listtransfer": {
     "propsFile": "src/stories/ds/listTransfer.props.json",
     "usage": "ListTransfer is the dual list selector: two side-by-side lists with controls for moving items between an Available pane and a Chosen pane (select-some / move-all, both directions). Controlled by the `available` + `chosen` partitions (arrays of { id, text }); ListTransfer owns the transient per-item selection + move logic and fires onChange with the new partition. Use for permissions, column pickers, allow-lists. Localise via labels (listTransferEnLabels). The friendlier wrapper over the base DualListSelector composition."

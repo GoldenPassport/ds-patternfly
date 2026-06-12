@@ -1,0 +1,14 @@
+{
+  "import": "import { DateField } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "value", "type": "Date | null", "required": true, "description": "Controlled value, or null for no selection." },
+    { "name": "onChange", "type": "(date: Date | null) => void", "required": true, "description": "Fired with the new date (or null when the input is cleared)." },
+    { "name": "display", "type": "\"popover\" | \"flat\"", "default": "\"popover\"", "description": "Text input + popover calendar, or an always-visible inline calendar." },
+    { "name": "minDate", "type": "Date", "description": "Earliest selectable date (inclusive). Out-of-range days are disabled." },
+    { "name": "maxDate", "type": "Date", "description": "Latest selectable date (inclusive)." },
+    { "name": "isDisabled", "type": "boolean", "description": "Disable the control." },
+    { "name": "ariaLabel", "type": "string", "description": "Accessible name (popover input / flat calendar)." },
+    { "name": "placeholder", "type": "string", "default": "\"YYYY-MM-DD\"", "description": "Placeholder for the popover input." },
+    { "name": "rangeError", "type": "ReactNode", "description": "Message shown when an out-of-range date is typed (popover)." }
+  ]
+}

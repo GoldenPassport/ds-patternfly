@@ -74,7 +74,9 @@ wrappers when nothing fits.
 | `PageHeader` | Navigation | the standard top-of-page header: a title row (optional icon + status label + right-aligned actions), an optional subtitle, an optional breadcrumb above, and an optional tabs strip below. | `import { PageHeader } from "@golden-passport/ds-patternfly"` |
 | `TabbedView` | Navigation | a declarative tabbed container over a `tabs` array: each entry is { key, title, content }. | `import { TabbedView } from "@golden-passport/ds-patternfly"` |
 | `TreeNavigation` | Navigation | a controlled hierarchical navigation tree from a nested `data` array. | `import { TreeNavigation } from "@golden-passport/ds-patternfly"` |
+| `DateField` | Forms | the date picker lego block. | `import { DateField } from "@golden-passport/ds-patternfly"` |
 | `FormScaffold` | Forms | the standard form frame: your fields as `children`, then a branded submit / cancel ActionGroup. | `import { FormScaffold } from "@golden-passport/ds-patternfly"` |
+| `FutureDateField` | Forms | a DateField restricted to future dates (today and earlier are disabled). | `import { FutureDateField } from "@golden-passport/ds-patternfly"` |
 | `ListTransfer` | Forms | the "dual list selector": two side-by-side lists with controls for moving items between an Available pane and a Chosen pane (select-some / move-all, both directions). | `import { ListTransfer } from "@golden-passport/ds-patternfly"` |
 | `ValidatedSelect` | Forms | a labelled, validated single-select built on the base FormSelect. | `import { ValidatedSelect } from "@golden-passport/ds-patternfly"` |
 | `ValidatedTextArea` | Forms | the multi-line sibling of ValidatedTextField. | `import { ValidatedTextArea } from "@golden-passport/ds-patternfly"` |
