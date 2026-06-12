@@ -7,7 +7,12 @@ import {
   ConfigurationSection,
   Example,
 } from "../_kit/StoryKit.js";
-import { Popover, Flat, Bounded } from "../../examples/ds/DateField.example.js";
+import {
+  Popover,
+  Flat,
+  ModalPicker,
+  Bounded,
+} from "../../examples/ds/DateField.example.js";
 import dateFieldExampleSrc from "../../examples/ds/DateField.example.tsx?raw";
 import dateFieldComponentSrc from "../../components/ds/DateField.tsx?raw";
 import propsData from "./dateField.props.json";
@@ -32,8 +37,10 @@ export const Overview: StoryObj = {
         <>
           The date picker lego block — pick a single date, displayed either as
           a text input with a popover calendar (<code>display="popover"</code>,
-          the default) or as an always-visible inline calendar
-          (<code>display="flat"</code>). Controlled by a{" "}
+          the default), an always-visible inline calendar
+          (<code>display="flat"</code>), or a trigger button that opens the
+          calendar in a modal with Apply / Cancel (<code>display="modal"</code>
+          ). Controlled by a{" "}
           <code>Date | null</code> value; restrict the range with{" "}
           <code>minDate</code> / <code>maxDate</code> (out-of-range days are
           disabled in both displays). For future-only dates, use{" "}
@@ -53,6 +60,14 @@ export const Overview: StoryObj = {
         <Card>
           <Example source={dateFieldExampleSrc} region="Flat" fileName="DateField.example.tsx">
             <Flat />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section title="Modal" description="display='modal' renders a trigger button that opens the calendar in a modal with Apply / Cancel — for deliberate, focused date entry.">
+        <Card>
+          <Example source={dateFieldExampleSrc} region="Modal" fileName="DateField.example.tsx">
+            <ModalPicker />
           </Example>
         </Card>
       </Section>

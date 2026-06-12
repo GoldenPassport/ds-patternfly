@@ -10,6 +10,7 @@ import {
 import {
   ScheduleReminder,
   FlatFuture,
+  ModalFuture,
 } from "../../examples/ds/FutureDateField.example.js";
 import futureExampleSrc from "../../examples/ds/FutureDateField.example.tsx?raw";
 import futureComponentSrc from "../../components/ds/FutureDateField.tsx?raw";
@@ -34,7 +35,8 @@ export const Overview: StoryObj = {
       intro={
         <>
           A <code>DateField</code> restricted to future dates — today and
-          earlier are disabled. Same flat / popover display and controlled{" "}
+          earlier are disabled. Same popover / flat / modal display and
+          controlled{" "}
           <code>Date | null</code> API; <code>minDate</code> defaults to
           tomorrow, override it for a different floor (e.g. "no sooner than
           next week"). For scheduling, expiries, and "remind me on…" pickers.
@@ -53,6 +55,14 @@ export const Overview: StoryObj = {
         <Card>
           <Example source={futureExampleSrc} region="FlatFuture" fileName="FutureDateField.example.tsx">
             <FlatFuture />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section title="Modal" description="display='modal' opens the future-only calendar in a modal with Apply / Cancel.">
+        <Card>
+          <Example source={futureExampleSrc} region="ModalFuture" fileName="FutureDateField.example.tsx">
+            <ModalFuture />
           </Example>
         </Card>
       </Section>

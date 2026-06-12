@@ -819,7 +819,7 @@
       "kind": "ds",
       "title": "DateField",
       "breadcrumb": "Building blocks/Forms/DateField",
-      "summary": "The date picker lego block — pick a single date, displayed either as a text input with a popover calendar ( display=\"popover\" , the default) or as an always-visible inline calendar ( display=\"flat\" ). Controlled by a Date | null value; restrict the range with minDate / maxDate (out-of-range days are disabled in both di",
+      "summary": "The date picker lego block — pick a single date, displayed either as a text input with a popover calendar ( display=\"popover\" , the default), an always-visible inline calendar ( display=\"flat\" ), or a trigger button that opens the calendar in a modal with Apply / Cancel ( display=\"modal\" ). Controlled by a Date | null ",
       "tags": [
         "building",
         "blocks",
@@ -831,7 +831,7 @@
       ],
       "storybookUrl": "/?path=/story/building-blocks-forms-datefield--overview",
       "layer": "ds",
-      "componentSource": "import type { ReactNode } from \"react\";\nimport { CalendarMonth, DatePicker } from \"../base/index.js\";\n\n/** Local-time ISO date (yyyy-MM-dd) — the unambiguous wire format. */\nfunction toISO(d: Date): string {\n  const pad = (n: number) => String(n).padStart(2, \"0\");\n  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;\n}\nfunction fromISO(s: string): Date {\n  return new Date(`${s}T00:00:00`);\n}\n/** Midnight of a date, for inclusive day-range comparisons. */\nfunction startOfDay(d: Date): Date {\n  return new Date(d.getFullYear(), d.getMonth(), d.getDate());\n}\n\n/**\n * DateField — the date picker lego block. Pick a single date, displayed\n * either as a text input with a popover calendar (`display=\"popover\"`, the\n * default) or as an always-visible inline calendar (`display=\"flat\"`).\n * Controlled by a `Date | null` value; restrict the selectable range with\n * `minDate` / `maxDate` (out-of-range days are disabled in both displays).\n */\nexport interface DateFieldProps {\n  /** Controlled value, or null for no selection. */\n  value: Date | null;\n  /** Fired with the new date (or null when the input is cleared). */\n  onChange: (date: Date | null) => void;\n  /** How to render. Default \"popover\". */\n  display?: \"popover\" | \"flat\";\n  /** Earliest selectable date (inclusive). */\n  minDate?: Date;\n  /** Latest selectable date (inclusive). */\n  maxDate?: Date;\n  /** Disable the control. */\n  isDisabled?: boolean;\n  /** Accessible name (popover input / flat calendar). */\n  ariaLabel?: string;\n  /** Placeholder for the popover input. */\n  placeholder?: string;\n  /** Message shown when an out-of-range date is typed (popover). */\n  rangeError?: ReactNode;\n}\n\nexport function DateField({\n  value,\n  onChange,\n  display = \"popover\",\n  minDate,\n  maxDate,\n  isDisabled,\n  ariaLabel,\n  placeholder,\n  rangeError = \"Date is outside the allowed range\",\n}: DateFieldProps) {\n  const min = minDate ? startOfDay(minDate) : undefined;\n  const max = maxDate ? startOfDay(maxDate) : undefined;\n  const isAllowed = (d: Date): boolean => {\n    const day = startOfDay(d).getTime();\n    if (min && day < min.getTime()) return false;\n    if (max && day > max.getTime()) return false;\n    return true;\n  };\n\n  if (display === \"flat\") {\n    // CalendarMonth renders a roleless <div>; ARIA prohibits aria-label\n    // there (its day buttons are individually labelled). `ariaLabel` is\n    // the popover input's name only.\n    return (\n      <CalendarMonth\n        {...(value ? { date: value } : {})}\n        onChange={(_e, date) => onChange(date)}\n        validators={[isAllowed]}\n        {...(min ? { rangeStart: min } : {})}\n      />\n    );\n  }\n\n  return (\n    <DatePicker\n      value={value ? toISO(value) : \"\"}\n      placeholder={placeholder ?? \"YYYY-MM-DD\"}\n      dateFormat={toISO}\n      dateParse={fromISO}\n      onChange={(_e, _v, date) => onChange(date ?? null)}\n      validators={[(d) => (isAllowed(d) ? \"\" : String(rangeError))]}\n      isDisabled={!!isDisabled}\n      {...(ariaLabel ? { \"aria-label\": ariaLabel } : {})}\n      {...(min ? { rangeStart: min } : {})}\n    />\n  );\n}",
+      "componentSource": "import { useState, type ReactNode } from \"react\";\nimport {\n  Button,\n  CalendarMonth,\n  DatePicker,\n  Modal,\n  ModalBody,\n  ModalFooter,\n  ModalHeader,\n} from \"../base/index.js\";\nimport CalendarAltIcon from \"@patternfly/react-icons/dist/esm/icons/calendar-alt-icon\";\n\n/** Local-time ISO date (yyyy-MM-dd) — the unambiguous wire format. */\nfunction toISO(d: Date): string {\n  const pad = (n: number) => String(n).padStart(2, \"0\");\n  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;\n}\nfunction fromISO(s: string): Date {\n  return new Date(`${s}T00:00:00`);\n}\n/** Midnight of a date, for inclusive day-range comparisons. */\nfunction startOfDay(d: Date): Date {\n  return new Date(d.getFullYear(), d.getMonth(), d.getDate());\n}\n\n/**\n * DateField — the date picker lego block. Pick a single date, displayed as a\n * text input with a popover calendar (`display=\"popover\"`, the default), an\n * always-visible inline calendar (`display=\"flat\"`), or a trigger button that\n * opens the calendar in a modal with Apply / Cancel (`display=\"modal\"`).\n * Controlled by a `Date | null` value; restrict the selectable range with\n * `minDate` / `maxDate` (out-of-range days are disabled in every display).\n */\nexport interface DateFieldProps {\n  /** Controlled value, or null for no selection. */\n  value: Date | null;\n  /** Fired with the new date (or null when the input is cleared). */\n  onChange: (date: Date | null) => void;\n  /** How to render. Default \"popover\". */\n  display?: \"popover\" | \"flat\" | \"modal\";\n  /** Earliest selectable date (inclusive). */\n  minDate?: Date;\n  /** Latest selectable date (inclusive). */\n  maxDate?: Date;\n  /** Disable the control. */\n  isDisabled?: boolean;\n  /** Accessible name (popover input / modal trigger). */\n  ariaLabel?: string;\n  /** Placeholder text (popover input / empty modal trigger). */\n  placeholder?: string;\n  /** Message shown when an out-of-range date is typed (popover). */\n  rangeError?: ReactNode;\n  /** Modal title (display=\"modal\"). */\n  modalTitle?: string;\n  /** Modal apply-button text (display=\"modal\"). */\n  applyText?: string;\n  /** Modal cancel-button text (display=\"modal\"). */\n  cancelText?: string;\n}\n\nexport function DateField({\n  value,\n  onChange,\n  display = \"popover\",\n  minDate,\n  maxDate,\n  isDisabled,\n  ariaLabel,\n  placeholder,\n  rangeError = \"Date is outside the allowed range\",\n  modalTitle = \"Select a date\",\n  applyText = \"Apply\",\n  cancelText = \"Cancel\",\n}: DateFieldProps) {\n  // Modal-only transient state (hooks run unconditionally).\n  const [isOpen, setIsOpen] = useState(false);\n  const [draft, setDraft] = useState<Date | null>(value);\n\n  const min = minDate ? startOfDay(minDate) : undefined;\n  const max = maxDate ? startOfDay(maxDate) : undefined;\n  const isAllowed = (d: Date): boolean => {\n    const day = startOfDay(d).getTime();\n    if (min && day < min.getTime()) return false;\n    if (max && day > max.getTime()) return false;\n    return true;\n  };\n\n  if (display === \"flat\") {\n    // CalendarMonth renders a roleless <div>; ARIA prohibits aria-label\n    // there (its day buttons are individually labelled). `ariaLabel` is\n    // the popover input / modal trigger name only.\n    return (\n      <CalendarMonth\n        {...(value ? { date: value } : {})}\n        onChange={(_e, date) => onChange(date)}\n        validators={[isAllowed]}\n        {...(min ? { rangeStart: min } : {})}\n      />\n    );\n  }\n\n  if (display === \"modal\") {\n    const open = () => {\n      setDraft(value);\n      setIsOpen(true);\n    };\n    const apply = () => {\n      onChange(draft);\n      setIsOpen(false);\n    };\n    return (\n      <>\n        <Button\n          variant=\"secondary\"\n          icon={<CalendarAltIcon />}\n          onClick={open}\n          isDisabled={!!isDisabled}\n          {...(ariaLabel ? { \"aria-label\": ariaLabel } : {})}\n        >\n          {value ? toISO(value) : (placeholder ?? \"Select a date\")}\n        </Button>\n        <Modal\n          variant=\"small\"\n          isOpen={isOpen}\n          onClose={() => setIsOpen(false)}\n          aria-label={modalTitle}\n        >\n          <ModalHeader title={modalTitle} />\n          <ModalBody>\n            <CalendarMonth\n              {...(draft ? { date: draft } : {})}\n              onChange={(_e, date) => setDraft(date)}\n              validators={[isAllowed]}\n              {...(min ? { rangeStart: min } : {})}\n            />\n          </ModalBody>\n          <ModalFooter>\n            <Button variant=\"primary\" onClick={apply} isDisabled={!draft}>\n              {applyText}\n            </Button>\n            <Button variant=\"link\" onClick={() => setIsOpen(false)}>\n              {cancelText}\n            </Button>\n          </ModalFooter>\n        </Modal>\n      </>\n    );\n  }\n\n  return (\n    <DatePicker\n      value={value ? toISO(value) : \"\"}\n      placeholder={placeholder ?? \"YYYY-MM-DD\"}\n      dateFormat={toISO}\n      dateParse={fromISO}\n      onChange={(_e, _v, date) => onChange(date ?? null)}\n      validators={[(d) => (isAllowed(d) ? \"\" : String(rangeError))]}\n      isDisabled={!!isDisabled}\n      {...(ariaLabel ? { \"aria-label\": ariaLabel } : {})}\n      {...(min ? { rangeStart: min } : {})}\n    />\n  );\n}",
       "import": "import { DateField } from \"@golden-passport/ds-patternfly\";",
       "props": [
         {
@@ -848,9 +848,9 @@
         },
         {
           "name": "display",
-          "type": "\"popover\" | \"flat\"",
+          "type": "\"popover\" | \"flat\" | \"modal\"",
           "default": "\"popover\"",
-          "description": "Text input + popover calendar, or an always-visible inline calendar."
+          "description": "Text input + popover calendar, an always-visible inline calendar, or a trigger button that opens the calendar in a modal with Apply / Cancel."
         },
         {
           "name": "minDate",
@@ -882,6 +882,24 @@
           "name": "rangeError",
           "type": "ReactNode",
           "description": "Message shown when an out-of-range date is typed (popover)."
+        },
+        {
+          "name": "modalTitle",
+          "type": "string",
+          "default": "\"Select a date\"",
+          "description": "Modal title (display=\"modal\")."
+        },
+        {
+          "name": "applyText",
+          "type": "string",
+          "default": "\"Apply\"",
+          "description": "Modal apply-button text (display=\"modal\")."
+        },
+        {
+          "name": "cancelText",
+          "type": "string",
+          "default": "\"Cancel\"",
+          "description": "Modal cancel-button text (display=\"modal\")."
         }
       ],
       "usage": "DateField is the date picker lego block: pick a single date, shown as a text input + popover calendar (display=\"popover\", default) or an always-visible inline calendar (display=\"flat\"). Controlled by a Date | null value; restrict the selectable range with minDate / maxDate (out-of-range days disabled in both displays, and typed out-of-range input is rejected). Wraps the base DatePicker (popover) and CalendarMonth (flat). For future-only dates use FutureDateField.",
@@ -892,7 +910,7 @@
       "examples": [
         {
           "name": "DateField",
-          "source": "/**\n * DateField — pick a single date, as a text input + popover calendar\n * (default) or an always-visible inline calendar. Controlled by a Date | null.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport { DateField, FormGroup } from \"@golden-passport/ds-patternfly\";\n\nexport function Popover() {\n  const [date, setDate] = useState<Date | null>(null);\n  return (\n    <FormGroup label=\"Due date\" fieldId=\"due-date\">\n      <DateField value={date} onChange={setDate} ariaLabel=\"Due date\" />\n    </FormGroup>\n  );\n}\n\nexport function Flat() {\n  const [date, setDate] = useState<Date | null>(new Date());\n  return <DateField display=\"flat\" value={date} onChange={setDate} ariaLabel=\"Pick a date\" />;\n}\n\nexport function Bounded() {\n  const [date, setDate] = useState<Date | null>(null);\n  const today = new Date();\n  const inThirtyDays = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);\n  return (\n    <FormGroup label=\"Within the next 30 days\" fieldId=\"bounded-date\">\n      <DateField\n        value={date}\n        onChange={setDate}\n        minDate={today}\n        maxDate={inThirtyDays}\n        ariaLabel=\"Date within 30 days\"\n      />\n    </FormGroup>\n  );\n}\n\nexport default function DateFieldExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Popover />\n      <Flat />\n      <Bounded />\n    </div>\n  );\n}"
+          "source": "/**\n * DateField — pick a single date, as a text input + popover calendar\n * (default) or an always-visible inline calendar. Controlled by a Date | null.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport { DateField, FormGroup } from \"@golden-passport/ds-patternfly\";\n\nexport function Popover() {\n  const [date, setDate] = useState<Date | null>(null);\n  return (\n    <FormGroup label=\"Due date\" fieldId=\"due-date\">\n      <DateField value={date} onChange={setDate} ariaLabel=\"Due date\" />\n    </FormGroup>\n  );\n}\n\nexport function Flat() {\n  const [date, setDate] = useState<Date | null>(new Date());\n  return <DateField display=\"flat\" value={date} onChange={setDate} ariaLabel=\"Pick a date\" />;\n}\n\nexport function Bounded() {\n  const [date, setDate] = useState<Date | null>(null);\n  const today = new Date();\n  const inThirtyDays = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);\n  return (\n    <FormGroup label=\"Within the next 30 days\" fieldId=\"bounded-date\">\n      <DateField\n        value={date}\n        onChange={setDate}\n        minDate={today}\n        maxDate={inThirtyDays}\n        ariaLabel=\"Date within 30 days\"\n      />\n    </FormGroup>\n  );\n}\n\nexport function ModalPicker() {\n  const [date, setDate] = useState<Date | null>(null);\n  return (\n    <FormGroup label=\"Start date\" fieldId=\"modal-date\">\n      <DateField\n        display=\"modal\"\n        value={date}\n        onChange={setDate}\n        ariaLabel=\"Start date\"\n        modalTitle=\"Pick a start date\"\n      />\n    </FormGroup>\n  );\n}\n\nexport default function DateFieldExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <Popover />\n      <Flat />\n      <ModalPicker />\n      <Bounded />\n    </div>\n  );\n}"
         }
       ]
     },
@@ -963,7 +981,7 @@
       "kind": "ds",
       "title": "FutureDateField",
       "breadcrumb": "Building blocks/Forms/FutureDateField",
-      "summary": "A DateField restricted to future dates — today and earlier are disabled. Same flat / popover display and controlled Date | null API; minDate defaults to tomorrow, override it for a different floor (e.g. \"no sooner than next week\"). For scheduling, expiries, and \"remind me on…\" pickers.",
+      "summary": "A DateField restricted to future dates — today and earlier are disabled. Same popover / flat / modal display and controlled Date | null API; minDate defaults to tomorrow, override it for a different floor (e.g. \"no sooner than next week\"). For scheduling, expiries, and \"remind me on…\" pickers.",
       "tags": [
         "building",
         "blocks",
@@ -975,7 +993,7 @@
       ],
       "storybookUrl": "/?path=/story/building-blocks-forms-futuredatefield--overview",
       "layer": "ds",
-      "componentSource": "import { DateField, type DateFieldProps } from \"./DateField.js\";\n\n/** Midnight tomorrow (local) — the first allowed day for a future-only field. */\nfunction startOfTomorrow(): Date {\n  const t = new Date();\n  return new Date(t.getFullYear(), t.getMonth(), t.getDate() + 1);\n}\n\n/**\n * FutureDateField — a DateField restricted to future dates (today and\n * earlier are disabled). Same flat / popover display + controlled `Date |\n * null` API; `minDate` defaults to tomorrow, override it to set a different\n * floor (e.g. \"no sooner than next week\"). For scheduling, expiries, and\n * \"remind me on…\" pickers.\n */\nexport interface FutureDateFieldProps extends Omit<DateFieldProps, \"minDate\"> {\n  /** Earliest selectable date. Defaults to tomorrow (future-only). */\n  minDate?: Date;\n}\n\nexport function FutureDateField({ minDate, ...rest }: FutureDateFieldProps) {\n  return <DateField minDate={minDate ?? startOfTomorrow()} {...rest} />;\n}",
+      "componentSource": "import { DateField, type DateFieldProps } from \"./DateField.js\";\n\n/** Midnight tomorrow (local) — the first allowed day for a future-only field. */\nfunction startOfTomorrow(): Date {\n  const t = new Date();\n  return new Date(t.getFullYear(), t.getMonth(), t.getDate() + 1);\n}\n\n/**\n * FutureDateField — a DateField restricted to future dates (today and\n * earlier are disabled). Same popover / flat / modal display + controlled\n * `Date | null` API; `minDate` defaults to tomorrow, override it to set a\n * different floor (e.g. \"no sooner than next week\"). For scheduling,\n * expiries, and \"remind me on…\" pickers.\n */\nexport interface FutureDateFieldProps extends Omit<DateFieldProps, \"minDate\"> {\n  /** Earliest selectable date. Defaults to tomorrow (future-only). */\n  minDate?: Date;\n}\n\nexport function FutureDateField({ minDate, ...rest }: FutureDateFieldProps) {\n  return <DateField minDate={minDate ?? startOfTomorrow()} {...rest} />;\n}",
       "import": "import { FutureDateField } from \"@golden-passport/ds-patternfly\";",
       "props": [
         {
@@ -992,9 +1010,9 @@
         },
         {
           "name": "display",
-          "type": "\"popover\" | \"flat\"",
+          "type": "\"popover\" | \"flat\" | \"modal\"",
           "default": "\"popover\"",
-          "description": "Text input + popover calendar, or an always-visible inline calendar."
+          "description": "Text input + popover calendar, an always-visible inline calendar, or a trigger button that opens the calendar in a modal with Apply / Cancel."
         },
         {
           "name": "minDate",
@@ -1027,13 +1045,31 @@
           "name": "rangeError",
           "type": "ReactNode",
           "description": "Message shown when an out-of-range date is typed (popover)."
+        },
+        {
+          "name": "modalTitle",
+          "type": "string",
+          "default": "\"Select a date\"",
+          "description": "Modal title (display=\"modal\")."
+        },
+        {
+          "name": "applyText",
+          "type": "string",
+          "default": "\"Apply\"",
+          "description": "Modal apply-button text (display=\"modal\")."
+        },
+        {
+          "name": "cancelText",
+          "type": "string",
+          "default": "\"Cancel\"",
+          "description": "Modal cancel-button text (display=\"modal\")."
         }
       ],
       "usage": "FutureDateField is a DateField restricted to future dates — today and earlier are disabled. Same flat / popover display + controlled Date | null API; minDate defaults to tomorrow (override for a different floor). For scheduling, expiries, and 'remind me on…' pickers.",
       "examples": [
         {
           "name": "FutureDateField",
-          "source": "/**\n * FutureDateField — a DateField restricted to future dates (today and earlier\n * are disabled). Same flat / popover display + controlled Date | null API.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport { FormGroup, FutureDateField } from \"@golden-passport/ds-patternfly\";\n\nexport function ScheduleReminder() {\n  const [date, setDate] = useState<Date | null>(null);\n  return (\n    <FormGroup label=\"Remind me on\" fieldId=\"remind-date\">\n      <FutureDateField value={date} onChange={setDate} ariaLabel=\"Reminder date\" />\n    </FormGroup>\n  );\n}\n\nexport function FlatFuture() {\n  const [date, setDate] = useState<Date | null>(null);\n  return <FutureDateField display=\"flat\" value={date} onChange={setDate} ariaLabel=\"Pick a future date\" />;\n}\n\nexport default function FutureDateFieldExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <ScheduleReminder />\n      <FlatFuture />\n    </div>\n  );\n}"
+          "source": "/**\n * FutureDateField — a DateField restricted to future dates (today and earlier\n * are disabled). Same flat / popover display + controlled Date | null API.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { useState } from \"react\";\nimport { FormGroup, FutureDateField } from \"@golden-passport/ds-patternfly\";\n\nexport function ScheduleReminder() {\n  const [date, setDate] = useState<Date | null>(null);\n  return (\n    <FormGroup label=\"Remind me on\" fieldId=\"remind-date\">\n      <FutureDateField value={date} onChange={setDate} ariaLabel=\"Reminder date\" />\n    </FormGroup>\n  );\n}\n\nexport function FlatFuture() {\n  const [date, setDate] = useState<Date | null>(null);\n  return <FutureDateField display=\"flat\" value={date} onChange={setDate} ariaLabel=\"Pick a future date\" />;\n}\n\nexport function ModalFuture() {\n  const [date, setDate] = useState<Date | null>(null);\n  return (\n    <FormGroup label=\"Expires on\" fieldId=\"expires-date\">\n      <FutureDateField\n        display=\"modal\"\n        value={date}\n        onChange={setDate}\n        ariaLabel=\"Expiry date\"\n        modalTitle=\"Pick an expiry date\"\n      />\n    </FormGroup>\n  );\n}\n\nexport default function FutureDateFieldExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <ScheduleReminder />\n      <FlatFuture />\n      <ModalFuture />\n    </div>\n  );\n}"
         }
       ]
     },

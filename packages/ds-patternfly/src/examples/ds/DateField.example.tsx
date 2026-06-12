@@ -47,11 +47,29 @@ export function Bounded() {
 }
 // #endregion
 
+// #region Modal
+export function ModalPicker() {
+  const [date, setDate] = useState<Date | null>(null);
+  return (
+    <FormGroup label="Start date" fieldId="modal-date">
+      <DateField
+        display="modal"
+        value={date}
+        onChange={setDate}
+        ariaLabel="Start date"
+        modalTitle="Pick a start date"
+      />
+    </FormGroup>
+  );
+}
+// #endregion
+
 export default function DateFieldExample() {
   return (
     <div style={{ display: "grid", gap: 24 }}>
       <Popover />
       <Flat />
+      <ModalPicker />
       <Bounded />
     </div>
   );

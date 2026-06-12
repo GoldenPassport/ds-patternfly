@@ -28,11 +28,29 @@ export function FlatFuture() {
 }
 // #endregion
 
+// #region ModalFuture
+export function ModalFuture() {
+  const [date, setDate] = useState<Date | null>(null);
+  return (
+    <FormGroup label="Expires on" fieldId="expires-date">
+      <FutureDateField
+        display="modal"
+        value={date}
+        onChange={setDate}
+        ariaLabel="Expiry date"
+        modalTitle="Pick an expiry date"
+      />
+    </FormGroup>
+  );
+}
+// #endregion
+
 export default function FutureDateFieldExample() {
   return (
     <div style={{ display: "grid", gap: 24 }}>
       <ScheduleReminder />
       <FlatFuture />
+      <ModalFuture />
     </div>
   );
 }

@@ -8,10 +8,10 @@ function startOfTomorrow(): Date {
 
 /**
  * FutureDateField — a DateField restricted to future dates (today and
- * earlier are disabled). Same flat / popover display + controlled `Date |
- * null` API; `minDate` defaults to tomorrow, override it to set a different
- * floor (e.g. "no sooner than next week"). For scheduling, expiries, and
- * "remind me on…" pickers.
+ * earlier are disabled). Same popover / flat / modal display + controlled
+ * `Date | null` API; `minDate` defaults to tomorrow, override it to set a
+ * different floor (e.g. "no sooner than next week"). For scheduling,
+ * expiries, and "remind me on…" pickers.
  */
 export interface FutureDateFieldProps extends Omit<DateFieldProps, "minDate"> {
   /** Earliest selectable date. Defaults to tomorrow (future-only). */

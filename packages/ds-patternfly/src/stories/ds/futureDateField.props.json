@@ -3,12 +3,15 @@
   "rows": [
     { "name": "value", "type": "Date | null", "required": true, "description": "Controlled value, or null for no selection." },
     { "name": "onChange", "type": "(date: Date | null) => void", "required": true, "description": "Fired with the new date (or null when cleared)." },
-    { "name": "display", "type": "\"popover\" | \"flat\"", "default": "\"popover\"", "description": "Text input + popover calendar, or an always-visible inline calendar." },
+    { "name": "display", "type": "\"popover\" | \"flat\" | \"modal\"", "default": "\"popover\"", "description": "Text input + popover calendar, an always-visible inline calendar, or a trigger button that opens the calendar in a modal with Apply / Cancel." },
     { "name": "minDate", "type": "Date", "default": "tomorrow", "description": "Earliest selectable date. Defaults to tomorrow (future-only); override to set a different floor." },
     { "name": "maxDate", "type": "Date", "description": "Latest selectable date (inclusive)." },
     { "name": "isDisabled", "type": "boolean", "description": "Disable the control." },
     { "name": "ariaLabel", "type": "string", "description": "Accessible name (popover input / flat calendar)." },
     { "name": "placeholder", "type": "string", "default": "\"YYYY-MM-DD\"", "description": "Placeholder for the popover input." },
-    { "name": "rangeError", "type": "ReactNode", "description": "Message shown when an out-of-range date is typed (popover)." }
+    { "name": "rangeError", "type": "ReactNode", "description": "Message shown when an out-of-range date is typed (popover)." },
+    { "name": "modalTitle", "type": "string", "default": "\"Select a date\"", "description": "Modal title (display=\"modal\")." },
+    { "name": "applyText", "type": "string", "default": "\"Apply\"", "description": "Modal apply-button text (display=\"modal\")." },
+    { "name": "cancelText", "type": "string", "default": "\"Cancel\"", "description": "Modal cancel-button text (display=\"modal\")." }
   ]
 }
