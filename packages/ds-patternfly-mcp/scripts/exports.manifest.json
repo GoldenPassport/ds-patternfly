@@ -92,7 +92,11 @@
   },
   "building-blocks-feedback-statuspanel": {
     "propsFile": "src/stories/ds/statusPanel.props.json",
-    "usage": "StatusPanel is the one lego block for every full-panel state screen: pick a variant (empty | error | unauthorized | maintenance) which sets a sensible default icon + accent, set the title/body, and add primary/secondary actions. Composes the base EmptyState family. Drop it into DataTable/CardGrid empty slots."
+    "usage": "StatusPanel is the one lego block for every full-panel state screen: pick a variant (empty | error | unauthorized | maintenance) which sets a sensible default icon + accent, set the title/body, and add primary/secondary actions. Composes the base EmptyState family. Drop it into DataTable/CardGrid empty slots. For a plain empty state, EmptyStatePanel is the dedicated, self-describing alias."
+  },
+  "building-blocks-feedback-emptystatepanel": {
+    "propsFile": "src/stories/ds/emptyStatePanel.props.json",
+    "usage": "EmptyStatePanel is the dedicated 'nothing here yet' empty-state lego block: an icon, a title, optional body, and a primary call-to-action (plus optional secondary actions). It's StatusPanel's `empty` variant under a self-describing name — reach for it for first-run states and no-results states (swap the icon to SearchIcon). Drop it into the emptyState slot of DataTable / CardGrid / ListView. For error / unauthorized / maintenance, use StatusPanel directly."
   },
 
   "building-blocks-layouts-dashboardshell": {

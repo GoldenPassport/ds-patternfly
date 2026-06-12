@@ -47,6 +47,7 @@ const CATEGORY = {
   ListView: "Data",
   ConfirmModal: "Feedback",
   StatusPanel: "Feedback",
+  EmptyStatePanel: "Feedback",
   AiAssistant: "AI",
 };
 const CATEGORY_ORDER = [

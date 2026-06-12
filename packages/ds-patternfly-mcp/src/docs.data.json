@@ -689,6 +689,66 @@
       ]
     },
     {
+      "id": "building-blocks-feedback-emptystatepanel",
+      "kind": "ds",
+      "title": "EmptyStatePanel",
+      "breadcrumb": "Building blocks/Feedback/EmptyStatePanel",
+      "summary": "The \"nothing here yet\" panel — an icon, a title, optional body, and a primary call-to-action that gets the user started (plus optional secondary actions). The dedicated empty-state lego block; it's StatusPanel 's empty variant under a self-describing name. For error / unauthorized / maintenance states, use StatusPanel ",
+      "tags": [
+        "building",
+        "blocks",
+        "feedback",
+        "emptystatepanel",
+        "packages",
+        "ds-patternfly",
+        "src"
+      ],
+      "storybookUrl": "/?path=/story/building-blocks-feedback-emptystatepanel--overview",
+      "layer": "ds",
+      "componentSource": "import type { ComponentType, ReactNode } from \"react\";\nimport { StatusPanel } from \"./StatusPanel.js\";\n\n/**\n * EmptyStatePanel — the \"nothing here yet\" panel: an icon, a title, optional\n * body text, and a primary call-to-action that gets the user started (plus\n * optional secondary actions). The dedicated, discoverable empty-state lego\n * block; it's StatusPanel's `empty` variant under a self-describing name.\n * For error / unauthorized / maintenance states, use `StatusPanel` directly.\n */\nexport interface EmptyStatePanelProps {\n  /** Headline — \"No workflows yet\". */\n  title: ReactNode;\n  /** Explanatory body text. */\n  children?: ReactNode;\n  /** Override the default (cubes) icon. */\n  icon?: ComponentType;\n  /** Primary call-to-action (e.g. \"Create workflow\"). */\n  primaryAction?: ReactNode;\n  /** Secondary actions (links / buttons). */\n  secondaryActions?: ReactNode;\n  /** EmptyState sizing. */\n  size?: \"sm\" | \"lg\" | \"xl\";\n}\n\nexport function EmptyStatePanel({\n  title,\n  children,\n  icon,\n  primaryAction,\n  secondaryActions,\n  size,\n}: EmptyStatePanelProps) {\n  return (\n    <StatusPanel\n      variant=\"empty\"\n      title={title}\n      {...(icon ? { icon } : {})}\n      {...(primaryAction ? { primaryAction } : {})}\n      {...(secondaryActions ? { secondaryActions } : {})}\n      {...(size ? { size } : {})}\n    >\n      {children}\n    </StatusPanel>\n  );\n}",
+      "import": "import { EmptyStatePanel } from \"@golden-passport/ds-patternfly\";",
+      "props": [
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Headline — e.g. \"No workflows yet\"."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "Explanatory body text."
+        },
+        {
+          "name": "icon",
+          "type": "ComponentType",
+          "description": "Override the default (cubes) icon — pass an icon component (e.g. SearchIcon for no-results)."
+        },
+        {
+          "name": "primaryAction",
+          "type": "ReactNode",
+          "description": "Primary call-to-action (e.g. a Create button)."
+        },
+        {
+          "name": "secondaryActions",
+          "type": "ReactNode",
+          "description": "Secondary actions (links / buttons)."
+        },
+        {
+          "name": "size",
+          "type": "\"sm\" | \"lg\" | \"xl\"",
+          "description": "EmptyState sizing."
+        }
+      ],
+      "usage": "EmptyStatePanel is the dedicated 'nothing here yet' empty-state lego block: an icon, a title, optional body, and a primary call-to-action (plus optional secondary actions). It's StatusPanel's `empty` variant under a self-describing name — reach for it for first-run states and no-results states (swap the icon to SearchIcon). Drop it into the emptyState slot of DataTable / CardGrid / ListView. For error / unauthorized / maintenance, use StatusPanel directly.",
+      "examples": [
+        {
+          "name": "EmptyStatePanel",
+          "source": "/**\n * EmptyStatePanel — the \"nothing here yet\" panel: icon + title + body + a\n * primary call-to-action that gets the user started.\n *\n * App-entry setup (one time, e.g. main.tsx):\n *   import \"@patternfly/react-core/dist/styles/base.css\"; // PF6 base FIRST\n *   import \"@golden-passport/ds-patternfly/styles\";       // lib styles LAST\n *   // …then wrap your root in <ThemeProvider brand={…}>.\n */\nimport { Button, EmptyStatePanel } from \"@golden-passport/ds-patternfly\";\nimport SearchIcon from \"@patternfly/react-icons/dist/esm/icons/search-icon\";\n\nexport function FirstRun() {\n  return (\n    <EmptyStatePanel\n      title=\"No workflows yet\"\n      primaryAction={<Button variant=\"primary\">Create workflow</Button>}\n      secondaryActions={<Button variant=\"link\">Import from template</Button>}\n    >\n      Workflows you create will show up here. Start from a template or build\n      one from scratch.\n    </EmptyStatePanel>\n  );\n}\n\nexport function NoResults() {\n  return (\n    <EmptyStatePanel\n      icon={SearchIcon}\n      title=\"No matching results\"\n      size=\"sm\"\n      primaryAction={<Button variant=\"link\">Clear filters</Button>}\n    >\n      No items match your search. Try a broader query or clear the filters.\n    </EmptyStatePanel>\n  );\n}\n\nexport default function EmptyStatePanelExample() {\n  return (\n    <div style={{ display: \"grid\", gap: 24 }}>\n      <FirstRun />\n      <NoResults />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
       "id": "building-blocks-feedback-statuspanel",
       "kind": "ds",
       "title": "StatusPanel",
@@ -746,7 +806,7 @@
           "description": "EmptyState sizing."
         }
       ],
-      "usage": "StatusPanel is the one lego block for every full-panel state screen: pick a variant (empty | error | unauthorized | maintenance) which sets a sensible default icon + accent, set the title/body, and add primary/secondary actions. Composes the base EmptyState family. Drop it into DataTable/CardGrid empty slots.",
+      "usage": "StatusPanel is the one lego block for every full-panel state screen: pick a variant (empty | error | unauthorized | maintenance) which sets a sensible default icon + accent, set the title/body, and add primary/secondary actions. Composes the base EmptyState family. Drop it into DataTable/CardGrid empty slots. For a plain empty state, EmptyStatePanel is the dedicated, self-describing alias.",
       "examples": [
         {
           "name": "StatusPanel",

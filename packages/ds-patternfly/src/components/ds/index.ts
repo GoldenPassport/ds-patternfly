@@ -74,6 +74,8 @@ export { ConfirmModal, confirmModalEnLabels } from "./ConfirmModal.js";
 export type { ConfirmModalProps, ConfirmModalLabels } from "./ConfirmModal.js";
 export { StatusPanel } from "./StatusPanel.js";
 export type { StatusPanelProps, StatusPanelVariant } from "./StatusPanel.js";
+export { EmptyStatePanel } from "./EmptyStatePanel.js";
+export type { EmptyStatePanelProps } from "./EmptyStatePanel.js";
 
 // Forms — validated fields + scaffold, with composable validation utils
 export { ValidatedTextField } from "./ValidatedTextField.js";

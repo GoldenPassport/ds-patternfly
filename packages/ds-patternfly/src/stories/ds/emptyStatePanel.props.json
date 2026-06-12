@@ -1,0 +1,11 @@
+{
+  "import": "import { EmptyStatePanel } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "title", "type": "ReactNode", "required": true, "description": "Headline — e.g. \"No workflows yet\"." },
+    { "name": "children", "type": "ReactNode", "description": "Explanatory body text." },
+    { "name": "icon", "type": "ComponentType", "description": "Override the default (cubes) icon — pass an icon component (e.g. SearchIcon for no-results)." },
+    { "name": "primaryAction", "type": "ReactNode", "description": "Primary call-to-action (e.g. a Create button)." },
+    { "name": "secondaryActions", "type": "ReactNode", "description": "Secondary actions (links / buttons)." },
+    { "name": "size", "type": "\"sm\" | \"lg\" | \"xl\"", "description": "EmptyState sizing." }
+  ]
+}

@@ -107,6 +107,7 @@ components, apply the design tokens + brand styling, and add the TS logic.
 | `ListManager` | Data | the page scaffold for a managed collection: an optional header, a toolbar row (filters and/or bulk-select on the left, pagination on the right), the list body (a Table, a Gallery of Cards, …), and an optional footer pagination. | `import { ListManager } from "@golden-passport/ds-patternfly"` |
 | `ListView` | Data | a selectable list of rows from an `items` array, each with a title, optional description, extra content, and per-row actions. | `import { ListView } from "@golden-passport/ds-patternfly"` |
 | `ConfirmModal` | Feedback | a small controlled confirmation dialog: title, body, and a confirm / cancel footer. | `import { ConfirmModal } from "@golden-passport/ds-patternfly"` |
+| `EmptyStatePanel` | Feedback | the "nothing here yet" panel: an icon, a title, optional body text, and a primary call-to-action that gets the user started (plus optional secondary actions). | `import { EmptyStatePanel } from "@golden-passport/ds-patternfly"` |
 | `StatusPanel` | Feedback | the one lego block for every full-panel "state" screen: empty results, an error, unauthorized access, or maintenance. | `import { StatusPanel } from "@golden-passport/ds-patternfly"` |
 | `AiAssistant` | AI | a brandable AI prompt bar plus the surfaces it grows into: a transient "recent chat" popover, and a repositionable, resizable, searchable full-conversation panel (a modal on narrow viewports). | `import { AiAssistant } from "@golden-passport/ds-patternfly"` |
 
