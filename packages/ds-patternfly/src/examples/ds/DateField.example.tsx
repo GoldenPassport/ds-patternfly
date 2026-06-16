@@ -8,7 +8,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useState } from "react";
-import { DateField, FormGroup } from "../_lib.js";
+import { DateField, FormGroup } from "@golden-passport/ds-patternfly";
 
 // #region Popover
 export function Popover() {
@@ -64,6 +64,25 @@ export function ModalPicker() {
 }
 // #endregion
 
+// #region FutureOnly
+export function FutureOnly() {
+  const [date, setDate] = useState<Date | null>(null);
+  // futureOnly disables today + earlier; allowRelative adds an "In…" tab to
+  // pick a relative offset that resolves to an absolute date.
+  return (
+    <FormGroup label="Remind me on" fieldId="future-date">
+      <DateField
+        value={date}
+        onChange={setDate}
+        ariaLabel="Reminder date"
+        futureOnly
+        allowRelative
+      />
+    </FormGroup>
+  );
+}
+// #endregion
+
 export default function DateFieldExample() {
   return (
     <div style={{ display: "grid", gap: 24 }}>
@@ -71,6 +90,7 @@ export default function DateFieldExample() {
       <Flat />
       <ModalPicker />
       <Bounded />
+      <FutureOnly />
     </div>
   );
 }

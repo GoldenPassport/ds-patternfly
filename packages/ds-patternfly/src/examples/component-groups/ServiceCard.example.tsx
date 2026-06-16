@@ -10,7 +10,7 @@
  */
 import ServiceCard from "@patternfly/react-component-groups/dist/dynamic/ServiceCard";
 import { CogIcon, KeyIcon, ShieldAltIcon } from "@patternfly/react-icons";
-import { Button, Gallery, GalleryItem } from "../_lib.js";
+import { Button, Gallery, GalleryItem } from "@golden-passport/ds-patternfly";
 
 // #region Basic
 export function Basic() {

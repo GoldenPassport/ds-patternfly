@@ -7,7 +7,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useId, useState } from "react";
-import { FormGroup, TextArea } from "../../_lib.js";
+import { FormGroup, TextArea } from "@golden-passport/ds-patternfly";
 
 // Element ids derive from useId() so any number of instances can coexist
 // on one page without duplicate-id clashes.

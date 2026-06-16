@@ -86,7 +86,7 @@ import {
   Title,
   Tooltip,
   useTheme,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 // PF6's own SkipToContent (href/onClick API) — the DS exports its own
 // SkipToContent (targetId/label) under the same name.
 import { SkipToContent } from "@patternfly/react-core";

@@ -13,7 +13,7 @@ import {
   DataViewTable,
   useDataViewSelection,
 } from "@patternfly/react-data-view";
-import { Label } from "../_lib.js";
+import { Label } from "@golden-passport/ds-patternfly";
 
 type Workflow = { id: string; name: string; status: "Active" | "Paused" | "Failed"; owner: string };
 

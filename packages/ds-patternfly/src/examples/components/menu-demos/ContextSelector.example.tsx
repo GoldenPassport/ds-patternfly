@@ -18,7 +18,7 @@ import {
   SelectGroup,
   SelectList,
   SelectOption,
-} from "../../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { CheckIcon } from "@patternfly/react-icons";
 
 type Workspace = { id: string; name: string; section: "Recent" | "All" };

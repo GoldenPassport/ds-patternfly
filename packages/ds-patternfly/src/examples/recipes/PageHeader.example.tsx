@@ -22,7 +22,7 @@ import {
   Tab,
   Tabs,
   TabTitleText,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { CubesIcon, EllipsisVIcon } from "@patternfly/react-icons";
 
 // #region Basic
@@ -50,7 +50,7 @@ export function FullChrome() {
           </BreadcrumbItem>
         </Breadcrumb>
       }
-      icon={<CubesIcon style={{ width: 36, height: 36 }} />}
+      icon={<CubesIcon />}
       title="Quarterly review"
       status={<Label color="green">Active</Label>}
       subtitle="Triggered hourly · 4 steps · last run 12 minutes ago"
@@ -88,7 +88,7 @@ export function WithTabs() {
   const [activeTabKey, setActiveTabKey] = useState<string | number>(0);
   return (
     <PageHeader
-      icon={<CubesIcon style={{ width: 36, height: 36 }} />}
+      icon={<CubesIcon />}
       title="Pod details"
       status={<Label color="green">Running</Label>}
       tabs={

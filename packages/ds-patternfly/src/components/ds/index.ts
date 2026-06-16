@@ -9,7 +9,7 @@ export type { ShellProps } from "./Shell.js";
 export { PrimaryDetailLayout } from "./PrimaryDetailLayout.js";
 export type { PrimaryDetailLayoutProps } from "./PrimaryDetailLayout.js";
 export { DashboardShell } from "./DashboardShell.js";
-export type { DashboardShellProps } from "./DashboardShell.js";
+export type { DashboardShellProps, DashboardKpi } from "./DashboardShell.js";
 export { CompassShell, compassShellEnLabels } from "./CompassShell.js";
 export type { CompassShellProps, CompassShellLabels } from "./CompassShell.js";
 
@@ -88,8 +88,8 @@ export { FormScaffold, formScaffoldEnLabels } from "./FormScaffold.js";
 export type { FormScaffoldProps, FormScaffoldLabels } from "./FormScaffold.js";
 export { DateField } from "./DateField.js";
 export type { DateFieldProps } from "./DateField.js";
-export { FutureDateField } from "./FutureDateField.js";
-export type { FutureDateFieldProps } from "./FutureDateField.js";
+export { TimeField } from "./TimeField.js";
+export type { TimeFieldProps } from "./TimeField.js";
 export {
   required,
   minLength,

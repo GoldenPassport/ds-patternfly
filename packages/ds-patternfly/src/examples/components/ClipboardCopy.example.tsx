@@ -6,7 +6,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { ClipboardCopy, ClipboardCopyVariant } from "../_lib.js";
+import { ClipboardCopy, ClipboardCopyVariant } from "@golden-passport/ds-patternfly";
 
 // #region DefaultEditable
 export function DefaultEditable() {

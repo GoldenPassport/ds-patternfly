@@ -11,7 +11,7 @@ import {
   TwelveHour,
 } from "../../../examples/components/DateAndTime/TimePicker.example.js";
 import timePickerExampleSrc from "../../../examples/components/DateAndTime/TimePicker.example.tsx?raw";
-import timePickerComponentSrc from "../../../components/base/TimePicker.tsx?raw";
+import timeFieldComponentSrc from "../../../components/ds/TimeField.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/Date and time/TimePicker",
@@ -25,10 +25,12 @@ export const Overview: StoryObj = {
       title="TimePicker"
       intro={
         <>
-          A text input for time-of-day selection with a popover suggesting
-          common times in the configured step. Supports 12-hour and
-          24-hour modes; pick the one that matches your locale&apos;s
-          convention.
+          The time picker is the exported <code>TimeField</code> lego block: a
+          text input for time-of-day with a popover of suggested times in the
+          configured step, controlled by a string <code>value</code>. Supports
+          12-hour and 24-hour modes; pick the one that matches your
+          locale&apos;s convention. Pair it with <code>DateField</code> for
+          date-and-time entry.
         </>
       }
     >
@@ -69,18 +71,19 @@ export const Overview: StoryObj = {
       </Section>
 
       <ConfigurationSection
-        importStatement={'import { TimePicker } from "@golden-passport/ds-patternfly";'}
-        componentSource={timePickerComponentSrc}
-        componentFileName="TimePicker.tsx"
+        importStatement={'import { TimeField } from "@golden-passport/ds-patternfly";'}
+        componentSource={timeFieldComponentSrc}
+        componentFileName="TimeField.tsx"
         rows={[
-          { name: "id", type: "string", description: "Required for FormGroup wiring." },
-          { name: "time", type: "string | Date", description: "Controlled time. String form depends on is24Hour." },
-          { name: "onChange", type: "(event, time, hour?, minute?, seconds?, isValid?) => void", description: "Note the wide signature — five extra positional args after the string time." },
+          { name: "value", type: "string", description: "Controlled time string (format follows is24Hour / delimiter)." },
+          { name: "onChange", type: "(time: string) => void", description: "Fired with the new time string on every edit." },
           { name: "is24Hour", type: "boolean", description: "24-hour clock. Default false (12-hour with AM/PM)." },
           { name: "stepMinutes", type: "number", description: "Granularity for the popover suggestions (15 = quarter-hours)." },
-          { name: "delimiter", type: "string", description: 'Separator between hours and minutes. Default ":" — locales like Korean use other characters.' },
-          { name: "invalidFormatErrorMessage", type: "string", description: "Message when input doesn't parse. i18n." },
-          { name: "invalidMinMaxErrorMessage", type: "string", description: "Message when value falls outside min/max. i18n." },
+          { name: "minTime / maxTime", type: "string", description: "Restrict the selectable range (same string format as value)." },
+          { name: "delimiter", type: "string", description: 'Separator between hours and minutes. Default ":".' },
+          { name: "ariaLabel", type: "string", description: "Accessible name for the input." },
+          { name: "id", type: "string", description: "Field id — pairs with a FormGroup fieldId." },
+          { name: "width / isDisabled", type: "string / boolean", description: "Control width and disabled state." },
         ]}
       />
 

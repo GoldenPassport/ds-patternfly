@@ -6,7 +6,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Divider } from "../_lib.js";
+import { Divider } from "@golden-passport/ds-patternfly";
 
 // #region Horizontal
 export function Horizontal() {

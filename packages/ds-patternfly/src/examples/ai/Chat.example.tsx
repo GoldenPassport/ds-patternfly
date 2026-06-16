@@ -10,7 +10,7 @@
  */
 import { useState } from "react";
 import PaperPlaneIcon from "@patternfly/react-icons/dist/esm/icons/paper-plane-icon";
-import { Button } from "../_lib.js";
+import { Button } from "@golden-passport/ds-patternfly";
 
 // #region ChatBar
 // Scoped styles for the chat pill. The thinking glow lives on a ::before

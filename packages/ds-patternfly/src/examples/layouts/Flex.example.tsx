@@ -7,7 +7,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Flex, FlexItem } from "../_lib.js";
+import { Flex, FlexItem } from "@golden-passport/ds-patternfly";
 
 // Shaded placeholder block so the layout regions are visible in the demo.
 // In a real app these are your buttons / labels / panels.

@@ -9,7 +9,7 @@
  */
 import { useId, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import { Button, FileUpload, FormGroup } from "../../_lib.js";
+import { Button, FileUpload, FormGroup } from "@golden-passport/ds-patternfly";
 import { UploadIcon } from "@patternfly/react-icons";
 
 // Element ids derive from useId() so any number of instances can coexist

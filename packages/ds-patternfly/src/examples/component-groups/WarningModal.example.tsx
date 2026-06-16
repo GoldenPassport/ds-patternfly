@@ -10,7 +10,7 @@
  */
 import { useState } from "react";
 import WarningModal from "@patternfly/react-component-groups/dist/dynamic/WarningModal";
-import { Button, ButtonVariant } from "../_lib.js";
+import { Button, ButtonVariant } from "@golden-passport/ds-patternfly";
 
 // #region BasicConfirm
 export function BasicConfirm() {

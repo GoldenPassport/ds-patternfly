@@ -13,7 +13,7 @@ import {
   FlexItem,
   Hero,
   Title,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 // #region Basic
 export function Basic() {

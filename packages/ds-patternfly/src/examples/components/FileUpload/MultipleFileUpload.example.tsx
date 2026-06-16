@@ -13,7 +13,7 @@ import {
   MultipleFileUploadMain,
   MultipleFileUploadStatus,
   MultipleFileUploadStatusItem,
-} from "../../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { UploadIcon } from "@patternfly/react-icons";
 
 // #region DropZoneWithStatus

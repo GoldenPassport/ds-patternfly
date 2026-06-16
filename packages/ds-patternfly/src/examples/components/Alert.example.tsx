@@ -13,7 +13,7 @@ import {
   AlertActionLink,
   AlertGroup,
   Button,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { BellIcon } from "@patternfly/react-icons";
 
 // #region Variants

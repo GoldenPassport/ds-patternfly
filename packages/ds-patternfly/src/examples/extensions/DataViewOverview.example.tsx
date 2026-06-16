@@ -17,7 +17,7 @@ import {
   useDataViewPagination,
   useDataViewSelection,
 } from "@patternfly/react-data-view";
-import { Pagination } from "../_lib.js";
+import { Pagination } from "@golden-passport/ds-patternfly";
 
 type Workflow = { id: string; name: string; status: string; owner: string };
 

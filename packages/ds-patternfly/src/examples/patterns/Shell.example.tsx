@@ -2,7 +2,7 @@
  * Shell — a complete app frame: branded masthead with responsive utility
  * actions + user dropdown, collapsible sidebar nav, a PageHeader
  * (component-groups) driven by the active nav item, KPI cards, an activity
- * card, and a footer PageSection. The sidebar nav swaps the page metadata
+ * card, and a branded AppFooter. The sidebar nav swaps the page metadata
  * (title, label, breadcrumb, subtitle) like a real multi-page app.
  *
  * App-entry setup (one time, e.g. main.tsx):
@@ -12,6 +12,7 @@
  */
 import { useId, useState } from "react";
 import {
+  AppFooter,
   Avatar,
   Breadcrumb,
   BreadcrumbItem,
@@ -41,7 +42,7 @@ import {
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import {
   ArrowUpIcon,
   EllipsisVIcon,
@@ -384,39 +385,18 @@ export default function ShellExample() {
             </CardBody>
           </Card>
         </PageSection>
-        {/* Optional page footer. PF6 doesn't ship a dedicated PageFooter —
-            the convention is a final PageSection at the bottom. Use
-            `component="footer"` for landmark semantics and
-            `variant="secondary"` so the surface visually distinguishes
-            itself from the content sections above. Layout goes on an
-            inner wrapper — PageSection injects a `pf-v6-c-page__main-body`
-            div between the section element and its children, so flex
-            styles on the section itself don't reach the spans below. */}
-        {/* No aria-label here. The <footer> only gets an implicit
-            `contentinfo` role when it's a direct child of <body>; nested
-            inside the Page main it has no role, and axe flags aria-label
-            on a roleless element as aria-prohibited-attr. The visible
-            copyright + link group makes the section's purpose obvious. */}
-        <PageSection component="footer" variant="secondary">
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 16,
-              alignItems: "center",
-              justifyContent: "space-between",
-              color: "var(--gp-color-text-subtle)",
-              fontSize: 13,
-            }}
-          >
-            <span>© Acme — Internal build · v1.4.2</span>
-            <span style={{ display: "inline-flex", gap: 16 }}>
-              <a href="#" style={{ color: "inherit" }}>Privacy</a>
-              <a href="#" style={{ color: "inherit" }}>Terms</a>
-              <a href="#" style={{ color: "inherit" }}>Status</a>
-            </span>
-          </div>
-        </PageSection>
+        {/* Close the frame with the branded AppFooter — it owns the bottom-bar
+            layout (copyright + inline legal links), so the example just passes
+            content. AppFooter renders its own <footer>; nested inside the Page
+            main it carries no landmark role, which keeps axe happy. */}
+        <AppFooter
+          copyright="© Acme — Internal build · v1.4.2"
+          legalLinks={[
+            { label: "Privacy", href: "#" },
+            { label: "Terms", href: "#" },
+            { label: "Status", href: "#" },
+          ]}
+        />
       </Shell>
     </>
   );

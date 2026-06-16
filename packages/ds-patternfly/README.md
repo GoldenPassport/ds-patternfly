@@ -65,7 +65,7 @@ wrappers when nothing fits.
 | Component | Category | What it does | Import |
 | --- | --- | --- | --- |
 | `CompassShell` | Layouts | the full-viewport PatternFly Compass page frame: a header band, an optional left nav rail (`sidebarStart`) and right rail (`sidebarEnd`), the main content, and a docked footer (the `CompassMessageBar` slot — e.g. | `import { CompassShell } from "@golden-passport/ds-patternfly"` |
-| `DashboardShell` | Layouts | the page scaffold for an ops dashboard: a titled header band (title + optional description + right-aligned actions/toolbar) over a padded content region you fill with a KPI strip, charts, and status cards (a `Gallery` + `Grid` of `Card`s). | `import { DashboardShell } from "@golden-passport/ds-patternfly"` |
+| `DashboardShell` | Layouts | the page scaffold for an ops dashboard: a titled header band (title + optional description + right-aligned actions/toolbar), an optional built-in KPI strip, then a padded content region you fill with charts and status cards. | `import { DashboardShell } from "@golden-passport/ds-patternfly"` |
 | `PrimaryDetailLayout` | Layouts | Two-pane Primary–Detail layout (modeled on patternfly.org/patterns/primary-detail). | `import { PrimaryDetailLayout } from "@golden-passport/ds-patternfly"` |
 | `Shell` | Layouts | Top-level application shell: SkipToContent + Masthead + (optional) Sidebar + main. | `import { Shell } from "@golden-passport/ds-patternfly"` |
 | `AppFooter` | Navigation | the branded site footer: an optional logo + tagline, optional columns of link groups, and a bottom bar with copyright + inline legal links. | `import { AppFooter } from "@golden-passport/ds-patternfly"` |
@@ -76,8 +76,8 @@ wrappers when nothing fits.
 | `TreeNavigation` | Navigation | a controlled hierarchical navigation tree from a nested `data` array. | `import { TreeNavigation } from "@golden-passport/ds-patternfly"` |
 | `DateField` | Forms | the date picker lego block. | `import { DateField } from "@golden-passport/ds-patternfly"` |
 | `FormScaffold` | Forms | the standard form frame: your fields as `children`, then a branded submit / cancel ActionGroup. | `import { FormScaffold } from "@golden-passport/ds-patternfly"` |
-| `FutureDateField` | Forms | a DateField restricted to future dates (today and earlier are disabled). | `import { FutureDateField } from "@golden-passport/ds-patternfly"` |
 | `ListTransfer` | Forms | the "dual list selector": two side-by-side lists with controls for moving items between an Available pane and a Chosen pane (select-some / move-all, both directions). | `import { ListTransfer } from "@golden-passport/ds-patternfly"` |
+| `TimeField` | Forms | the time-of-day picker lego block. | `import { TimeField } from "@golden-passport/ds-patternfly"` |
 | `ValidatedSelect` | Forms | a labelled, validated single-select built on the base FormSelect. | `import { ValidatedSelect } from "@golden-passport/ds-patternfly"` |
 | `ValidatedTextArea` | Forms | the multi-line sibling of ValidatedTextField. | `import { ValidatedTextArea } from "@golden-passport/ds-patternfly"` |
 | `ValidatedTextField` | Forms | a labelled, validated single-line text field. | `import { ValidatedTextField } from "@golden-passport/ds-patternfly"` |

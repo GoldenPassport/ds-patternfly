@@ -7,7 +7,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useId, useState } from "react";
-import { Radio } from "../../_lib.js";
+import { Radio } from "@golden-passport/ds-patternfly";
 
 const PLANS = [
   { id: "free", label: "Free", description: "Up to 3 projects." },

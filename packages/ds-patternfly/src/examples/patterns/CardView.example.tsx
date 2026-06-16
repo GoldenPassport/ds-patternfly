@@ -20,7 +20,7 @@ import {
   Toolbar,
   ToolbarContent,
   ToolbarItem,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { CubeIcon } from "@patternfly/react-icons";
 
 type Item = { id: string; name: string; desc: string; status: "Active" | "Paused" };

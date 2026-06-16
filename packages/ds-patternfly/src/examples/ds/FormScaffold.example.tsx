@@ -15,16 +15,25 @@ import {
   ValidatedTextField,
   required,
   email,
-} from "../_lib.js";
+  runValidators,
+} from "@golden-passport/ds-patternfly";
+
+// Define each field's validators once, then reuse them for both the field
+// (which surfaces the error message) and the submit guard below — so there's
+// a single source of truth instead of a parallel hand-rolled check.
+const nameValidators = [required("Enter your name")];
+const emailValidators = [required("Enter your email"), email()];
 
 // #region BasicForm
 export function BasicForm() {
   const [name, setName] = useState("");
   const [addr, setAddr] = useState("");
 
-  // Disable submit until both fields are filled and the email looks valid.
+  // Disable submit until every field passes its own validators — reuse the
+  // exported runValidators rather than re-deriving validity here.
   const isSubmitDisabled =
-    name.trim() === "" || addr.trim() === "" || !/.+@.+\..+/.test(addr);
+    runValidators(name, nameValidators) !== null ||
+    runValidators(addr, emailValidators) !== null;
 
   return (
     <FormScaffold
@@ -45,7 +54,7 @@ export function BasicForm() {
         onChange={setName}
         isRequired
         helperText="As it should appear to your team."
-        validators={[required("Enter your name")]}
+        validators={nameValidators}
       />
       <ValidatedTextField
         label="Email"
@@ -54,7 +63,7 @@ export function BasicForm() {
         onChange={setAddr}
         isRequired
         helperText="We'll send notifications here."
-        validators={[required("Enter your email"), email()]}
+        validators={emailValidators}
       />
     </FormScaffold>
   );

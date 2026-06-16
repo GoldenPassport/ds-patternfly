@@ -14,22 +14,20 @@ export const Overview: StoryObj = {
       intro={
         <>
           The Date and time section collects every control for picking a
-          moment — single dates, paired date + time, ranges, time-only,
-          and relative waits. They all share the same{" "}
-          <strong>lib calendar primitives</strong> (CalendarPanel,
-          CalendarPopout, BottomSheet, useMobileViewport, date-format
-          helpers) — carried by each downloadable example file under{" "}
-          <code>src/examples/components/DateAndTime/</code> (e.g.{" "}
-          <code>DatePicker.example.tsx</code>) so the look, navigation,
-          validators, and locale behaviour are identical across
-          DatePicker, DateTimePicker, FuturePicker, and the standalone
-          CalendarMonth.
+          moment — single dates, paired date + time, future-only dates,
+          time-only, and relative durations. The whole calendar engine
+          (three-view navigation, responsive popover/bottom-sheet,
+          validators, locale) lives inside the exported{" "}
+          <code>DateField</code> and <code>TimeField</code> lego blocks, so
+          the look and behaviour are identical across DatePicker,
+          DateTimePicker, FuturePicker, and DurationPicker — each just
+          configures the same component.
         </>
       }
     >
       <Section
         title="The five controls"
-        description="Five primitives covering every date-and-time picking pattern. They share the same lib calendar + brand-dial styling — picking the right one is about UX shape, not visual consistency."
+        description="Five controls covering every date-and-time picking pattern, all built from DateField / TimeField — picking the right one is about UX shape, not visual consistency."
       >
         <Card>
           <ul
@@ -41,33 +39,35 @@ export const Overview: StoryObj = {
             }}
           >
             <li>
-              <strong>CalendarMonth</strong> — always-visible inline
-              grid. Scheduling sidebars, range builders, dashboards
-              where the calendar is part of the layout (not a popover).
+              <strong>DatePicker</strong> — <code>DateField</code>: text
+              input + popover calendar (or <code>display="flat"</code> for
+              an always-visible inline grid, <code>"modal"</code> for a
+              dialog). The default form-shaped control for single dates;
+              users can type or pick.
             </li>
             <li>
-              <strong>DatePicker</strong> — text input + popover
-              calendar. The default form-shaped control for single
-              dates; users can type or pick.
-            </li>
-            <li>
-              <strong>TimePicker</strong> — time-only input with
-              hour/minute selection. Use alongside a DatePicker for
-              paired entry, or alone for purely-temporal values like
-              "open daily at…".
+              <strong>TimePicker</strong> — <code>TimeField</code>:
+              time-only input with hour/minute selection. Use alongside a
+              DatePicker for paired entry, or alone for purely-temporal
+              values like "open daily at…".
             </li>
             <li>
               <strong>DateTimePicker</strong> — paired
-              DatePicker&nbsp;+&nbsp;TimePicker under one FormGroup.
-              The recipe for "when should this happen" — date and time
-              read as one decision but stay independently editable.
+              <code>DateField</code>&nbsp;+&nbsp;<code>TimeField</code> under
+              one FormGroup. The recipe for "when should this happen" — date
+              and time read as one decision but stay independently editable.
             </li>
             <li>
-              <strong>FuturePicker</strong> — tabbed Schedule popover
-              with two modes: <em>Wait</em> (days / hours / minutes /
-              seconds → ISO-8601 duration) and <em>Specific date</em>{" "}
-              (calendar). For automations and triggers that fire after
-              a relative interval or at a fixed moment.
+              <strong>FuturePicker</strong> — <code>DateField</code> with{" "}
+              <code>futureOnly</code>: today and earlier are disabled. For
+              scheduling, expiries, and "remind me on…" pickers.
+            </li>
+            <li>
+              <strong>DurationPicker</strong> — <code>DateField</code> with{" "}
+              <code>allowRelative</code> + <code>relativeMode="duration"</code>:
+              a Wait tab (days / hours / minutes → ISO-8601 duration like{" "}
+              <code>PT2H30M</code>) beside the calendar. For automations that
+              fire after a relative interval.
             </li>
           </ul>
         </Card>
@@ -87,47 +87,33 @@ export const Overview: StoryObj = {
             }}
           >
             <li>
-              <strong>Inline (CalendarMonth)</strong> — the calendar is
-              part of the page. No commit step; selection writes back
-              the moment a date is clicked. Best for browse-style flows
+              <strong>Inline (<code>display="flat"</code>)</strong> — the
+              calendar is part of the page. No commit step; selection writes
+              back the moment a date is clicked. Best for browse-style flows
               (filter sidebars, range builders, dashboards) where the
               calendar is a continuous control, not a transient action.
             </li>
             <li>
-              <strong>Popover (DatePicker / DateTimePicker /
-              FuturePicker)</strong> — calendar floats over the page
-              from the trigger. Lightweight commit (close = persist),
-              tap-outside to dismiss. Best for forms where the date is
-              one of many fields the user is fluidly editing — feels
-              like an inline edit, not a deliberate dialog.
+              <strong>Popover (<code>display="popover"</code>, default)</strong>{" "}
+              — calendar floats over the page from the trigger. Lightweight
+              commit (close = persist), tap-outside to dismiss. Best for forms
+              where the date is one of many fields the user is fluidly
+              editing — feels like an inline edit, not a deliberate dialog.
             </li>
             <li>
-              <strong>Modal (CalendarMonth → Modal recipe)</strong> —
-              calendar in a centered dialog with an explicit
-              Apply&nbsp;/&nbsp;Cancel footer. Page is dimmed, focus
-              trapped. Best when picking the date is a deliberate
-              decision in a wizard step, a confirmation flow, or
-              anywhere you want the user to consciously stop and
+              <strong>Modal (<code>display="modal"</code>)</strong> — calendar
+              in a centered dialog with an explicit Apply&nbsp;/&nbsp;Cancel
+              footer. Page is dimmed, focus trapped. Best when picking the
+              date is a deliberate decision in a wizard step, a confirmation
+              flow, or anywhere you want the user to consciously stop and
               choose.
             </li>
           </ul>
           <div style={{ padding: "0 24px 24px" }}>
-            <CodeBlock>{`// Inline — write-on-pick.
-<CalendarPanel date={date} onChange={setDate} />
-
-// Popover — opens on trigger, closes on outside-tap, writes on pick.
-<LibDatePicker value={date} onChange={setDate}
-  ariaLabel="Due date" buttonAriaLabel="Open date picker" />
-
-// Modal — explicit Apply / Cancel commit step.
-<Modal isOpen={open} onClose={() => setOpen(false)}>
-  <ModalHeader title="Pick a date" />
-  <ModalBody><CalendarPanel date={draft} onChange={setDraft} /></ModalBody>
-  <ModalFooter>
-    <Button variant="primary" onClick={() => { setDate(draft); setOpen(false); }}>Apply</Button>
-    <Button variant="link" onClick={() => setOpen(false)}>Cancel</Button>
-  </ModalFooter>
-</Modal>`}</CodeBlock>
+            <CodeBlock>{`// One component, three surfaces — the display prop picks the host.
+<DateField display="flat"    value={date} onChange={setDate} ariaLabel="Due date" />
+<DateField display="popover" value={date} onChange={setDate} ariaLabel="Due date" />
+<DateField display="modal"   value={date} onChange={setDate} ariaLabel="Due date" modalTitle="Pick a date" />`}</CodeBlock>
           </div>
         </Card>
       </Section>
@@ -168,8 +154,8 @@ export const Overview: StoryObj = {
                 while open, an X close button sits top-right.
               </li>
               <li>
-                <strong>Calendar</strong> — same{" "}
-                <code>CalendarPanel</code> as desktop. Day buttons
+                <strong>Calendar</strong> — the same three-view calendar
+                as desktop. Day buttons
                 shrink via container queries so all 7 columns fit on
                 narrow phones (down to ~31 × 31&nbsp;px on a 375&nbsp;px
                 viewport); switching between days&nbsp;/&nbsp;months&nbsp;/&nbsp;years
@@ -189,45 +175,32 @@ export const Overview: StoryObj = {
                 <code>prefers-reduced-motion</code>.
               </li>
               <li>
-                <strong>Detection</strong> — driven by the{" "}
-                <code>useMobileViewport()</code> hook (see{" "}
-                <code>DatePicker.example.tsx</code>), which subscribes to
-                a{" "}
+                <strong>Detection</strong> — built into{" "}
+                <code>DateField</code>, which subscribes to a{" "}
                 <code>matchMedia(&quot;(max-width: 47.98rem)&quot;)</code>{" "}
-                query. Hot-swaps between popover and sheet as the
+                query and hot-swaps between popover and sheet as the
                 viewport crosses the breakpoint, no remount.
               </li>
               <li>
-                <strong>FuturePicker exception</strong> — its Schedule
-                popover (Wait / Specific date tabs) becomes a tabbed
-                bottom sheet at the same breakpoint. The tabs stay at
-                the top of the sheet so the user sees their choices
-                immediately on open.
+                <strong>Tabbed pickers</strong> — when{" "}
+                <code>allowRelative</code> is set (DurationPicker), the
+                Wait / Specific date tabs become a tabbed bottom sheet at
+                the same breakpoint. The tabs stay at the top of the sheet
+                so the user sees their choices immediately on open.
               </li>
             </ul>
-            <CodeBlock>{`// Same prop API on both surfaces — the lib hook picks the right one.
-// The recipe lives in the downloadable example file:
-//   src/examples/components/DateAndTime/DatePicker.example.tsx
-// (also served by the MCP docs catalog via getGpExample).
-
-<LibDatePicker
-  value={value} onChange={setValue}
-  ariaLabel="Due date" buttonAriaLabel="Open date picker"
-  // Validators / range / locale all carry through to the bottom-sheet
-  // calendar — no mobile-specific config needed.
-  {...(validators ? { validators } : {})}
-/>
-
-// Or detect manually for custom surfaces:
-const isMobile = useMobileViewport();
+            <CodeBlock>{`// Nothing mobile-specific to configure — the same DateField picks the
+// right surface for the viewport. Validators / range / locale all carry
+// through to the bottom-sheet calendar.
+<DateField value={value} onChange={setValue} ariaLabel="Due date" />
 `}</CodeBlock>
           </div>
         </Card>
       </Section>
 
       <Section
-        title="Shared lib primitives"
-        description="Everything in this section is composed from a small set of helpers carried by the downloadable example files (src/examples/components/DateAndTime/DatePicker.example.tsx is the canonical copy). If you're building a new date-shaped control, start from those before re-implementing."
+        title="What's built into DateField"
+        description="The calendar engine is internal to the exported DateField — you configure it through props, you don't re-implement it. The pieces below all live inside the component."
       >
         <Card>
           <ul
@@ -239,38 +212,32 @@ const isMobile = useMobileViewport();
             }}
           >
             <li>
-              <strong>CalendarPanel</strong> — the lib calendar grid.
-              Three-view (days&nbsp;/&nbsp;months&nbsp;/&nbsp;years),
-              brand-styled, validators-aware. Click the header label to
-              cycle views. Drop it into any container.
+              <strong>Three-view calendar</strong> — days&nbsp;/&nbsp;months&nbsp;/&nbsp;years,
+              brand-styled and validators-aware. Click the header label to
+              cycle views.
             </li>
             <li>
-              <strong>CalendarPopout</strong> — wraps a trigger element
-              with the correct surface for the viewport: Popover on
-              desktop, BottomSheet on mobile. Same prop API on both.
+              <strong>Responsive surface</strong> — Popover on desktop,
+              focus-trapped <code>&lt;dialog&gt;</code> bottom sheet on
+              mobile, switched live as the viewport crosses the breakpoint.
             </li>
             <li>
-              <strong>LibDatePicker</strong> — the full DatePicker
-              recipe (TextInput + trigger button + CalendarPopout).
-              Used by DatePicker, DateTimePicker, and FuturePicker's
-              Specific date tab.
+              <strong>Relative entry</strong> — <code>allowRelative</code>{" "}
+              adds an offset tab that resolves to a date, or (with{" "}
+              <code>relativeMode="duration"</code>) emits an ISO-8601
+              duration like <code>PT2H30M</code>.
             </li>
             <li>
-              <strong>BottomSheet</strong> — native{" "}
-              <code>&lt;dialog&gt;</code> wrapper with brand
-              styling and animation. Reuse for any mobile sheet, not
-              just calendars.
+              <strong>Range &amp; locale</strong> — <code>minDate</code> /{" "}
+              <code>maxDate</code> / <code>futureOnly</code> /{" "}
+              <code>validators</code> control selectable days;{" "}
+              <code>locale</code> / <code>monthFormat</code> localise the
+              month names. The input is ISO (<code>YYYY-MM-DD</code>).
             </li>
             <li>
-              <strong>useMobileViewport()</strong> — hook that returns{" "}
-              <code>true</code> below the md breakpoint. Subscribes to{" "}
-              <code>matchMedia</code> so it updates live as the viewport
-              resizes (no remount needed).
-            </li>
-            <li>
-              <strong>fmtDDMMYYYY / parseDDMMYYYY / pad</strong> —
-              shared date-format helpers. The lib defaults to DD/MM/YYYY
-              (rest-of-world); US-style and ISO are one-prop swaps.
+              <strong>TimeField</strong> — the companion time-of-day control
+              (12/24-hour, step, min/max), used standalone or paired with
+              DateField for date-and-time entry.
             </li>
           </ul>
         </Card>

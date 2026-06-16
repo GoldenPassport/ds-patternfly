@@ -8,7 +8,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { Fragment, useId, useState } from "react";
-import { Pagination, PaginationVariant } from "../_lib.js";
+import { Pagination, PaginationVariant } from "@golden-passport/ds-patternfly";
 
 // #region TopVariant
 export function TopVariant() {

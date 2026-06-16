@@ -10,7 +10,7 @@ import {
   Timestamp,
   TimestampFormat,
   TimestampTooltipVariant,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 const fixed = new Date("2026-04-21T14:30:25");
 

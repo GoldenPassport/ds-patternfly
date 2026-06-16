@@ -12,6 +12,7 @@ import {
   Flat,
   ModalPicker,
   Bounded,
+  FutureOnly,
 } from "../../examples/ds/DateField.example.js";
 import dateFieldExampleSrc from "../../examples/ds/DateField.example.tsx?raw";
 import dateFieldComponentSrc from "../../components/ds/DateField.tsx?raw";
@@ -43,8 +44,8 @@ export const Overview: StoryObj = {
           ). Controlled by a{" "}
           <code>Date | null</code> value; restrict the range with{" "}
           <code>minDate</code> / <code>maxDate</code> (out-of-range days are
-          disabled in both displays). For future-only dates, use{" "}
-          <code>FutureDateField</code>.
+          disabled in both displays). For future-only dates, pass{" "}
+          <code>futureOnly</code>.
         </>
       }
     >
@@ -76,6 +77,14 @@ export const Overview: StoryObj = {
         <Card>
           <Example source={dateFieldExampleSrc} region="Bounded" fileName="DateField.example.tsx">
             <Bounded />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section title="Future only (+ relative)" description="futureOnly disables today and earlier (minDate defaults to tomorrow). allowRelative adds an 'In…' tab to pick a relative weeks/days offset that resolves to an absolute date — for scheduling and reminders.">
+        <Card>
+          <Example source={dateFieldExampleSrc} region="FutureOnly" fileName="DateField.example.tsx">
+            <FutureOnly />
           </Example>
         </Card>
       </Section>

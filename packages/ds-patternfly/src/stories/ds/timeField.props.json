@@ -1,0 +1,17 @@
+{
+  "import": "import { TimeField } from \"@golden-passport/ds-patternfly\";",
+  "rows": [
+    { "name": "value", "type": "string", "required": true, "description": "Controlled time string (format follows is24Hour / delimiter), e.g. \"14:30\" or \"2:30 PM\"." },
+    { "name": "onChange", "type": "(time: string) => void", "required": true, "description": "Fired with the new time string on every edit." },
+    { "name": "is24Hour", "type": "boolean", "description": "Use 24-hour time. Default is 12-hour with AM/PM." },
+    { "name": "stepMinutes", "type": "number", "description": "Minutes between suggested times in the popover (e.g. 15, 30)." },
+    { "name": "minTime", "type": "string", "description": "Earliest selectable time (same string format as value)." },
+    { "name": "maxTime", "type": "string", "description": "Latest selectable time." },
+    { "name": "delimiter", "type": "string", "description": "Separator between hours and minutes. Default \":\"." },
+    { "name": "placeholder", "type": "string", "description": "Placeholder text." },
+    { "name": "ariaLabel", "type": "string", "description": "Accessible name for the input." },
+    { "name": "id", "type": "string", "description": "Field id — pairs with a FormGroup fieldId." },
+    { "name": "width", "type": "string", "description": "Control width (CSS length, e.g. \"10rem\")." },
+    { "name": "isDisabled", "type": "boolean", "description": "Disable the control." }
+  ]
+}

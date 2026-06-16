@@ -46,7 +46,7 @@ import {
   TabTitleText,
   Title,
   Tooltip,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import AngleLeftIcon from "@patternfly/react-icons/dist/esm/icons/angle-left-icon";
 import AngleRightIcon from "@patternfly/react-icons/dist/esm/icons/angle-right-icon";
 import BarsIcon from "@patternfly/react-icons/dist/esm/icons/bars-icon";

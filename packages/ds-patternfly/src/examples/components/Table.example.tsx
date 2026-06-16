@@ -22,7 +22,7 @@ import {
   ToolbarItem,
   Tr,
   type ISortBy,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 type Workflow = {
   id: string;

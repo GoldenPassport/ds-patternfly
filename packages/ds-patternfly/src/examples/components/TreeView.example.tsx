@@ -12,7 +12,7 @@ import {
   SearchInput,
   TreeView,
   type TreeViewDataItem,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { FolderIcon, FolderOpenIcon } from "@patternfly/react-icons";
 
 // Sample tree. TreeViewDataItem ids become DOM ids, so each demo prefixes

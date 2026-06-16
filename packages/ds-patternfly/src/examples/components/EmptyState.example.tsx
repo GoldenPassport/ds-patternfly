@@ -15,7 +15,7 @@ import {
   EmptyStateBody,
   EmptyStateFooter,
   Spinner,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import {
   CubesIcon,
   ExclamationCircleIcon,

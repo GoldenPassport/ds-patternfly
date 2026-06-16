@@ -17,7 +17,7 @@ import {
   SelectGroup,
   SelectList,
   SelectOption,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 // #region BasicSingleSelect
 export function BasicSingleSelect() {

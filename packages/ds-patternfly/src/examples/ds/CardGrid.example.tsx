@@ -18,7 +18,7 @@ import {
   CardGrid,
   Label,
   StatusPanel,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import PlusCircleIcon from "@patternfly/react-icons/dist/esm/icons/plus-circle-icon";
 
 type Template = {

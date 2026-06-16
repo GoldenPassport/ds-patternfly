@@ -11,7 +11,7 @@
  */
 import { useState } from "react";
 import { FeedbackModal } from "@patternfly/react-user-feedback";
-import { Button } from "../_lib.js";
+import { Button } from "@golden-passport/ds-patternfly";
 
 // #region InlineFeedbackHandler
 export function InlineFeedbackHandler() {

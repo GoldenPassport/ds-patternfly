@@ -50,12 +50,13 @@
   },
   "building-blocks-forms-datefield": {
     "propsFile": "src/stories/ds/dateField.props.json",
-    "usage": "DateField is the date picker lego block: pick a single date, shown as a text input + popover calendar (display=\"popover\", default) or an always-visible inline calendar (display=\"flat\"). Controlled by a Date | null value; restrict the selectable range with minDate / maxDate (out-of-range days disabled in both displays, and typed out-of-range input is rejected). Wraps the base DatePicker (popover) and CalendarMonth (flat). For future-only dates use FutureDateField.",
+    "usage": "DateField is the date picker lego block: pick a single date, shown as a text input + popover calendar (display=\"popover\", default), an always-visible inline calendar (display=\"flat\"), or a modal trigger (display=\"modal\"). The calendar is a three-view picker (days → months → years) that adapts to a bottom sheet on touch. Controlled by a Date | null value; restrict selectable days with minDate / maxDate, futureOnly (today and earlier disabled — for scheduling/expiries), or arbitrary validators (return false to disable a day, e.g. holidays). allowRelative adds an 'In…' tab for relative-offset entry (in N weeks/days) that resolves to an absolute date. locale / monthFormat localise month names.",
     "keyTokens": ["--gp-control-pad-y", "--gp-radius-control"]
   },
-  "building-blocks-forms-futuredatefield": {
-    "propsFile": "src/stories/ds/futureDateField.props.json",
-    "usage": "FutureDateField is a DateField restricted to future dates — today and earlier are disabled. Same flat / popover display + controlled Date | null API; minDate defaults to tomorrow (override for a different floor). For scheduling, expiries, and 'remind me on…' pickers."
+  "building-blocks-forms-timefield": {
+    "propsFile": "src/stories/ds/timeField.props.json",
+    "usage": "TimeField is the time-of-day picker lego block: a text input with a popover of suggested times, controlled by a string value (\"14:30\", \"2:30 PM\"). 24- or 12-hour via is24Hour; stepMinutes sets the suggestion spacing; minTime / maxTime restrict the selectable range. The friendlier, fully-controlled wrapper over the base TimePicker (simplified value/onChange, ariaLabel, and a DS default that portals the popover to document.body so it never clips inside cards or modals). Pair with DateField for date-and-time entry.",
+    "keyTokens": ["--gp-control-pad-y", "--gp-radius-control"]
   },
   "building-blocks-forms-listtransfer": {
     "propsFile": "src/stories/ds/listTransfer.props.json",

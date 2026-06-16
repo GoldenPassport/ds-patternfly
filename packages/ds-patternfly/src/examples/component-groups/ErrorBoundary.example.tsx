@@ -11,7 +11,7 @@
  */
 import { useState } from "react";
 import { ErrorBoundary } from "@patternfly/react-component-groups/dist/dynamic/ErrorBoundary";
-import { Button } from "../_lib.js";
+import { Button } from "@golden-passport/ds-patternfly";
 
 function Bomb({ shouldThrow }: { shouldThrow: boolean }) {
   if (shouldThrow) {

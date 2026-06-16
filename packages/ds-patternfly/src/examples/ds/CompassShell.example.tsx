@@ -29,7 +29,7 @@ import {
   NavItem,
   NavList,
   SearchInput,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import BarsIcon from "@patternfly/react-icons/dist/esm/icons/bars-icon";
 
 const NAV = ["Overview", "Integrations", "Pipelines", "Settings"];

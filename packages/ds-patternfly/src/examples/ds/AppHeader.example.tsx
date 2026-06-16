@@ -17,7 +17,7 @@ import {
   Toolbar,
   ToolbarContent,
   ToolbarItem,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { BellIcon, OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 
 // Right-aligned global actions — a couple of plain icon buttons. Each carries

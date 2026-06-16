@@ -8,7 +8,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useId } from "react";
-import { MenuToggle, MenuToggleAction, MenuToggleCheckbox } from "../_lib.js";
+import { MenuToggle, MenuToggleAction, MenuToggleCheckbox } from "@golden-passport/ds-patternfly";
 import { CogIcon, EllipsisVIcon } from "@patternfly/react-icons";
 
 // #region Variants

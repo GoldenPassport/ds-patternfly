@@ -6,7 +6,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Brand, useTheme } from "../_lib.js";
+import { Brand, useTheme } from "@golden-passport/ds-patternfly";
 
 // Inline SVG data-URIs stand in for the four asset files the canonical PF6
 // pattern imports (PF-HorizontalLogo-Color, PF-HorizontalLogo-Reverse,

@@ -15,7 +15,7 @@ import {
   NavGroup,
   NavItem,
   NavList,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import {
   CloudIcon,
   CogIcon,

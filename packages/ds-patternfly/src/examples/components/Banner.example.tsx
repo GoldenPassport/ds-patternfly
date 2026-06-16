@@ -6,7 +6,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Banner, Flex, FlexItem } from "../_lib.js";
+import { Banner, Flex, FlexItem } from "@golden-passport/ds-patternfly";
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,

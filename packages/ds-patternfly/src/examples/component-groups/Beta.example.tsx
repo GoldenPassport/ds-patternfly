@@ -9,7 +9,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Label, LabelGroup } from "../_lib.js";
+import { Label, LabelGroup } from "@golden-passport/ds-patternfly";
 
 // #region Conventions
 export function Conventions() {

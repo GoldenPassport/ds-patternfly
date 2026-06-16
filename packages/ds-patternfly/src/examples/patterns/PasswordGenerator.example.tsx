@@ -14,7 +14,7 @@ import {
   InputGroup,
   InputGroupItem,
   TextInput,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { CopyIcon, EyeIcon, EyeSlashIcon, SyncIcon } from "@patternfly/react-icons";
 
 const ALPHA_L = "abcdefghijkmnopqrstuvwxyz"; // no l

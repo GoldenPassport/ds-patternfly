@@ -7,7 +7,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useId, useState, type CSSProperties } from "react";
-import { Button, FormSelect, FormSelectOption } from "../_lib.js";
+import { Button, FormSelect, FormSelectOption } from "@golden-passport/ds-patternfly";
 import {
   CogIcon,
   EllipsisVIcon,

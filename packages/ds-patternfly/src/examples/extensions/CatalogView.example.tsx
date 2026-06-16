@@ -15,7 +15,7 @@ import {
 } from "@patternfly/react-catalog-view-extension";
 import { StarIcon, CubeIcon } from "@patternfly/react-icons";
 import "@patternfly/react-catalog-view-extension/dist/css/react-catalog-view-extension.css";
-import { Gallery, GalleryItem } from "../_lib.js";
+import { Gallery, GalleryItem } from "@golden-passport/ds-patternfly";
 
 const items = [
   { id: "wf",     title: "Workflow engine",    vendor: "Acme",    desc: "Trigger and orchestrate jobs across services.", featured: true },

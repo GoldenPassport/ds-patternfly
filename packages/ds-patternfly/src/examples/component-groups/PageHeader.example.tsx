@@ -29,7 +29,7 @@ import {
   TabContentBody,
   TabTitleText,
   Tabs,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 const headerCss = `
   /* Breadcrumb → title spacing: PageHeader stacks the breadcrumb

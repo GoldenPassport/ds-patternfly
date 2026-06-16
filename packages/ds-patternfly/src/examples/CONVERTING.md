@@ -24,7 +24,7 @@ Shape:
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Badge } from "../_lib.js"; // ALWAYS via the _lib shim
+import { Badge } from "@golden-passport/ds-patternfly"; // the real package name
 
 // shared helpers/data the demos need — moved OUT of the story so the file
 // is self-contained (types, const tables, small helper components)
@@ -53,9 +53,9 @@ Rules:
 - One `// #region <PascalCaseName>` per story Section that has a demo; the
   region name ≈ the section title. Markers sit OUTSIDE the exported
   function, on their own lines.
-- Import the lib ONLY via `../_lib.js` (or `../../_lib.js` from a
-  subfolder) — the display/download/MCP pipeline rewrites it to the package
-  name. PF extension packages the DS doesn't wrap (react-charts,
+- Import the lib from `@golden-passport/ds-patternfly` — the real package
+  name (resolved in-repo via the tsconfig `paths` + Storybook Vite
+  self-alias). PF extension packages the DS doesn't wrap (react-charts,
   react-data-view, …) and react-icons are imported directly.
 - Move story-local helpers (shared const data, types, helper components,
   CSS template strings) into the example file. Stateful demos keep their

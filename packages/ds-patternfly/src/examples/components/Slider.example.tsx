@@ -7,7 +7,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useState } from "react";
-import { Slider } from "../_lib.js";
+import { Slider } from "@golden-passport/ds-patternfly";
 
 // #region Basic
 export function Basic() {

@@ -14,7 +14,7 @@ import {
   ListView,
   StatusPanel,
   type ListViewItem,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 const ITEMS: ListViewItem[] = [
   {

@@ -16,7 +16,7 @@ import {
 } from "@patternfly/react-catalog-view-extension";
 import { CubeIcon, LockIcon, StarIcon } from "@patternfly/react-icons";
 import "@patternfly/react-catalog-view-extension/dist/css/react-catalog-view-extension.css";
-import { Gallery, GalleryItem, Button } from "../_lib.js";
+import { Gallery, GalleryItem, Button } from "@golden-passport/ds-patternfly";
 
 // #region FeaturedAndStandard
 export function FeaturedAndStandard() {

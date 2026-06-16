@@ -21,7 +21,7 @@ import {
   Wizard,
   WizardStep,
   type WizardStepType,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 // Field / step ids derive from useId() so several wizards can coexist on
 // one page without duplicate-id clashes.

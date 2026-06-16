@@ -7,7 +7,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import type { CSSProperties } from "react";
-import { Badge } from "../_lib.js";
+import { Badge } from "@golden-passport/ds-patternfly";
 
 // Badge tones — apply via inline CSS variable overrides so the badge
 // inherits the right text contrast for each background. PF6 ships

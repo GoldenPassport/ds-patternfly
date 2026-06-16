@@ -19,7 +19,7 @@ import {
   Th,
   Thead,
   Tr,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 type Workflow = { id: string; name: string; status: string };
 const ROWS: Workflow[] = Array.from({ length: 5 }).map((_, i) => ({

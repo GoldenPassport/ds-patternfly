@@ -6,7 +6,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Label } from "../_lib.js";
+import { Label } from "@golden-passport/ds-patternfly";
 
 const COLORS = ["blue", "teal", "green", "orange", "purple", "red", "orangered", "grey", "yellow"] as const;
 

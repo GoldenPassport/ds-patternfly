@@ -9,7 +9,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import ErrorState from "@patternfly/react-component-groups/dist/dynamic/ErrorState";
-import { Button } from "../_lib.js";
+import { Button } from "@golden-passport/ds-patternfly";
 
 // #region Default
 export function Default() {

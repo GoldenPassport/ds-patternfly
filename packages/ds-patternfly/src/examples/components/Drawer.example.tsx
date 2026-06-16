@@ -20,7 +20,7 @@ import {
   DrawerPanelContent,
   DrawerPanelDescription,
   Title,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 const lorem =
   "Detail content goes here. The drawer pushes the main panel instead of overlaying it — main content stays interactive while the drawer is open.";

@@ -4,6 +4,8 @@
     { "name": "title", "type": "ReactNode", "required": true, "description": "Dashboard title. Rendered as an <h1>." },
     { "name": "description", "type": "ReactNode", "description": "Supporting line under the title." },
     { "name": "actions", "type": "ReactNode", "description": "Right-aligned header slot — a date-range picker, refresh button, etc." },
-    { "name": "children", "type": "ReactNode", "required": true, "description": "The dashboard body (KPI gallery, chart grid, status cards). Chart libraries stay in your app." }
+    { "name": "kpis", "type": "DashboardKpi[]", "description": "Optional KPI strip rendered above the body. DashboardShell owns the tile chrome (big number, subtle label, trend arrow + colour); you pass { label, value, delta?, trend? } data. trend: 'up' = success colour, 'down' = danger, 'flat'/omitted = neutral." },
+    { "name": "kpiMinWidth", "type": "string", "description": "Minimum KPI tile width passed to the responsive Gallery. Default '180px'." },
+    { "name": "children", "type": "ReactNode", "description": "The dashboard body below the KPI strip (chart grid, status cards). Chart libraries stay in your app." }
   ]
 }

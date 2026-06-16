@@ -15,7 +15,7 @@ import {
   DropdownList,
   MenuToggle,
   type MenuToggleElement,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 
 // #region PrimaryAndSecondary

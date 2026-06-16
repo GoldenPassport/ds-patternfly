@@ -9,7 +9,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { StatusPanel, Button } from "../_lib.js";
+import { StatusPanel, Button } from "@golden-passport/ds-patternfly";
 
 // #region Empty
 export function Empty() {

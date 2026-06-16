@@ -9,7 +9,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { LogSnippet } from "@patternfly/react-component-groups/dist/dynamic/LogSnippet";
-import { AlertVariant } from "../_lib.js";
+import { AlertVariant } from "@golden-passport/ds-patternfly";
 
 const sampleLog = `2026-05-10T09:21:14.231Z ERROR  worker-3   Failed to dispatch job 4892
   at WorkflowDispatcher.dispatch (workflow-dispatcher.ts:142)

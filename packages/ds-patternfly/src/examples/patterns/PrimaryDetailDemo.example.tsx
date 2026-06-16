@@ -60,7 +60,7 @@ import {
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 // Import the ESM build (not dist/js / CJS): the bare `@patternfly/react-core`
 // imports in the masthead below resolve to ESM under Vite, so the masthead's
 // PageToggleButton and DashboardWrapper's <Page> must share the SAME ESM

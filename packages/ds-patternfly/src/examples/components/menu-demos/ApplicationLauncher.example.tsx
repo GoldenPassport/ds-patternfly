@@ -15,7 +15,7 @@ import {
   DropdownItem,
   DropdownList,
   MenuToggle,
-} from "../../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import {
   ChartBarIcon,
   CodeBranchIcon,

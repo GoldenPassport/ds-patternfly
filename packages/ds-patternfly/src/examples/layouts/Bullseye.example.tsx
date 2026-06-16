@@ -9,7 +9,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import type { CSSProperties } from "react";
-import { Bullseye } from "../_lib.js";
+import { Bullseye } from "@golden-passport/ds-patternfly";
 
 // Shaded placeholder block so the centered content is visible in the demo.
 // In a real app this is your empty state / spinner / error message.

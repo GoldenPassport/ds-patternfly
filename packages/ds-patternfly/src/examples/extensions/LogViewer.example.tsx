@@ -14,7 +14,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { LogViewer, LogViewerSearch } from "@patternfly/react-log-viewer";
-import { Toolbar, ToolbarContent, ToolbarItem } from "../_lib.js";
+import { Toolbar, ToolbarContent, ToolbarItem } from "@golden-passport/ds-patternfly";
 
 const logText = `2026-05-10T09:21:14.231Z [ERROR] worker-3  ConnectionResetError: connection closed by upstream
 2026-05-10T09:21:15.402Z [WARN ] worker-1  step 2 took 14.2s (threshold: 10s)

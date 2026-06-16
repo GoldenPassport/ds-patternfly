@@ -15,7 +15,7 @@ import {
   DualListSelectorList,
   DualListSelectorListItem,
   DualListSelectorPane,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import {
   AngleDoubleLeftIcon,
   AngleDoubleRightIcon,

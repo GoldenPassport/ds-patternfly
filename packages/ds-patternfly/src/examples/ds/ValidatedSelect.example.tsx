@@ -13,7 +13,7 @@ import {
   ValidatedSelect,
   required,
   type SelectChoice,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 const ROLE_OPTIONS: SelectChoice[] = [
   { value: "", label: "Choose a role…", isPlaceholder: true },

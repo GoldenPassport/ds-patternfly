@@ -206,8 +206,10 @@ export function CodeBlock({
  * - `region` given → return only the `// #region <name>` … `// #endregion`
  *   span (markers stripped).
  * - no region → the whole file with all region markers stripped.
- * - The examples/_lib shim specifier is rewritten to the package name, so
- *   readers see real consumer imports.
+ *
+ * Examples import the lib by its real package name (resolved in-repo via the
+ * tsconfig "paths" + Storybook Vite self-alias), so the displayed source is
+ * already real consumer code — no specifier rewrite needed.
  */
 export function presentExampleSource(source: string, region?: string): string {
   let s = source;
@@ -220,9 +222,7 @@ export function presentExampleSource(source: string, region?: string): string {
   } else {
     s = s.replace(/^[ \t]*\/\/ #(?:region|endregion).*\r?\n?/gm, "");
   }
-  return s
-    .replace(/["'](?:\.{1,2}\/)+_lib\.js["']/g, '"@golden-passport/ds-patternfly"')
-    .trimEnd();
+  return s.trimEnd();
 }
 
 /** Client-side "save this text as a file" — used by the example/component

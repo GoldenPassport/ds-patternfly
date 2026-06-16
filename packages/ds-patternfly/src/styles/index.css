@@ -324,6 +324,28 @@
 }
 
 /*
+ * InputGroup addon buttons take the associated input's border treatment so a
+ * field + trigger reads as ONE control, not a flat input beside a separately
+ * outlined button. A DateField's calendar trigger, a SearchInput's button, any
+ * `<InputGroup>` button: transparent border at rest (matching the form-control)
+ * and the brand focus colour on hover/focus — same as the input. The button's
+ * ::after border resolves `--pf-v6-c-button--BorderColor`, so overriding it (and
+ * on hover/focus) mirrors the form-control across every button variant + brand.
+ * Fallbacks match the lib's form-control treatment when the token isn't in
+ * scope on the button.
+ */
+[data-brand] .pf-v6-c-input-group .pf-v6-c-button {
+  --pf-v6-c-button--BorderColor: var(--pf-v6-c-form-control--after--BorderColor, transparent);
+}
+[data-brand] .pf-v6-c-input-group .pf-v6-c-button:hover,
+[data-brand] .pf-v6-c-input-group .pf-v6-c-button:focus-visible {
+  --pf-v6-c-button--BorderColor: var(
+    --pf-v6-c-form-control--hover--after--BorderColor,
+    var(--gp-color-primary)
+  );
+}
+
+/*
  * Form-control icon alignment.
  *
  * PF6 sets `.pf-v6-c-form-control { align-items: start }` so leading/trailing

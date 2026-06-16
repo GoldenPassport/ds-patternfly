@@ -9,7 +9,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useState } from "react";
-import { PrimaryDetailLayout } from "../_lib.js";
+import { PrimaryDetailLayout } from "@golden-passport/ds-patternfly";
 
 type Instance = { id: string; name: string; subtitle: string; body: string };
 

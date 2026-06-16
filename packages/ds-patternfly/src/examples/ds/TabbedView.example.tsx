@@ -8,7 +8,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useState } from "react";
-import { Content, TabbedView, type TabDef } from "../_lib.js";
+import { Content, TabbedView, type TabDef } from "@golden-passport/ds-patternfly";
 
 const TABS: TabDef[] = [
   {

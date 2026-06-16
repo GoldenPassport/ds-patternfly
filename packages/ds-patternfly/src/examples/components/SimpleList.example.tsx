@@ -8,7 +8,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useId, useState } from "react";
-import { SimpleList, SimpleListGroup, SimpleListItem } from "../_lib.js";
+import { SimpleList, SimpleListGroup, SimpleListItem } from "@golden-passport/ds-patternfly";
 
 // #region Basic
 export function Basic() {

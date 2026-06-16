@@ -7,7 +7,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useState } from "react";
-import { Backdrop, Bullseye, Button, Spinner } from "../_lib.js";
+import { Backdrop, Bullseye, Button, Spinner } from "@golden-passport/ds-patternfly";
 
 // #region CustomBlockingOverlay
 export function CustomBlockingOverlay() {

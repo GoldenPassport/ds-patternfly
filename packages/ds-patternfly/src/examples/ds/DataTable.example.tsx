@@ -16,7 +16,7 @@ import {
   SearchInput,
   StatusPanel,
   type DataTableColumn,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 type Service = {
   id: string;

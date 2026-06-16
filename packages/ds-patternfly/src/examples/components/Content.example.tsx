@@ -6,7 +6,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Content } from "../_lib.js";
+import { Content } from "@golden-passport/ds-patternfly";
 
 // #region CommonElements
 export function CommonElements() {

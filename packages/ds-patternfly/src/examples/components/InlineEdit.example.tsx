@@ -18,7 +18,7 @@ import {
   FlexItem,
   TextArea,
   TextInput,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import {
   CheckIcon,
   PencilAltIcon,

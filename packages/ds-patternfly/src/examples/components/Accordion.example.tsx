@@ -12,7 +12,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionToggle,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 // #region SingleExpand
 export function SingleExpand() {

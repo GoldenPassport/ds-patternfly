@@ -15,7 +15,7 @@ import {
   ProgressMeasureLocation,
   ProgressSize,
   TextInput,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 type Score = { value: number; label: string; variant: "danger" | "warning" | "success" };
 

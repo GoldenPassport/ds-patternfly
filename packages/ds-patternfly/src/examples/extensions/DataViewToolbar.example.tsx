@@ -16,7 +16,7 @@ import {
   DataViewTextFilter,
   useDataViewPagination,
 } from "@patternfly/react-data-view";
-import { Button, Pagination } from "../_lib.js";
+import { Button, Pagination } from "@golden-passport/ds-patternfly";
 
 // #region FiltersActionsPagination
 export function FiltersActionsPagination() {

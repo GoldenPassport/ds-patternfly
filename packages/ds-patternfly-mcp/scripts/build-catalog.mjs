@@ -144,14 +144,13 @@ function cleanText(s) {
 // ---------- exported-component enrichment ----------
 
 /**
- * Read an example file, rewriting the local `_lib` shim import to the real
- * package name and stripping `// #region` markers, so the embedded source
+ * Read an example file, stripping `// #region` markers so the embedded source
  * matches what the story displays and the download produces (see
  * presentExampleSource in the lib's _kit/StoryKit.tsx — keep in sync).
+ * Examples import the lib by its real package name already, so no rewrite.
  */
 function readExample(entry) {
   const source = readFileSync(join(LIB_ROOT, entry.file), "utf8")
-    .replace(/["'](?:\.{1,2}\/)+_lib\.js["']/g, JSON.stringify(PKG.name))
     .replace(/^[ \t]*\/\/ #(?:region|endregion).*\r?\n?/gm, "")
     .trimEnd();
   const name = entry.file

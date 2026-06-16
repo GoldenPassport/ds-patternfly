@@ -20,7 +20,7 @@ import {
   ModalVariant,
   Popover,
   TextInput,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { BellIcon, HelpIcon } from "@patternfly/react-icons";
 
 // #region Basic

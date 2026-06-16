@@ -13,7 +13,7 @@ import {
   Button,
   ButtonVariant,
   Tooltip,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import OutlinedCopyIcon from "@patternfly/react-icons/dist/esm/icons/outlined-copy-icon";
 import OutlinedPlusSquareIcon from "@patternfly/react-icons/dist/esm/icons/outlined-plus-square-icon";
 import OutlinedQuestionCircleIcon from "@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon";

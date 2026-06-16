@@ -1,7 +1,8 @@
 /**
  * DashboardShell pattern — the lib's exported dashboard page scaffold: a
- * titled header band (+ actions slot) over a content region you fill with a
- * KPI strip, charts, and status cards. Chart libraries stay in your app.
+ * titled header band (+ actions slot), a built-in KPI strip (pass `kpis`), then
+ * a content region you fill with charts and status cards. Chart libraries stay
+ * in your app.
  *
  * App-entry setup (one time, e.g. main.tsx):
  *   import "@patternfly/react-core/dist/styles/base.css"; // PF6 base FIRST
@@ -17,117 +18,26 @@ import {
   DashboardShell,
   Flex,
   FlexItem,
-  Gallery,
-  GalleryItem,
   Grid,
   GridItem,
   Label,
   Progress,
-} from "../_lib.js";
+  type DashboardKpi,
+} from "@golden-passport/ds-patternfly";
 import {
-  ArrowDownIcon,
-  ArrowUpIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
 } from "@patternfly/react-icons";
 
-/** KPI tile — big number + sub-label + delta with trend arrow. */
-function KPI({
-  label,
-  value,
-  delta,
-  trend,
-}: {
-  label: string;
-  value: string;
-  delta: string;
-  trend: "up" | "down";
-}) {
-  return (
-    <Card isCompact>
-      <CardBody>
-        <div style={{ color: "var(--gp-color-text-subtle)", fontSize: 13 }}>{label}</div>
-        <div style={{ fontSize: 28, fontWeight: 600, color: "var(--gp-color-text-regular)" }}>
-          {value}
-        </div>
-        <div
-          style={{
-            marginTop: 4,
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 4,
-            color:
-              trend === "up"
-                ? "var(--pf-t--global--icon--color--status--success--default, #3e8635)"
-                : "var(--pf-t--global--icon--color--status--danger--default, #c9190b)",
-            fontSize: 13,
-          }}
-        >
-          {trend === "up" ? <ArrowUpIcon /> : <ArrowDownIcon />}
-          {delta}
-        </div>
-      </CardBody>
-    </Card>
-  );
-}
-
-/** Placeholder chart panel — drop in @patternfly/react-charts when real. */
-function ChartPlaceholder({ title }: { title: string }) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-      <CardBody>
-        <div
-          style={{
-            height: 140,
-            background: "linear-gradient(180deg, rgba(0,102,204,0.10), rgba(0,102,204,0.02))",
-            border: "1px dashed var(--gp-color-border-subtle)",
-            borderRadius: 8,
-            display: "grid",
-            placeItems: "center",
-            color: "var(--gp-color-text-subtle)",
-            fontStyle: "italic",
-          }}
-        >
-          chart placeholder — drop in @patternfly/react-charts
-        </div>
-      </CardBody>
-    </Card>
-  );
-}
-
-function StatusCard() {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>System health</CardTitle>
-      </CardHeader>
-      <CardBody>
-        <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsMd" }}>
-          <FlexItem>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <CheckCircleIcon style={{ color: "var(--pf-t--global--icon--color--status--success--default, #3e8635)" }} />
-              <strong>API</strong>
-              <Label color="green" isCompact>Healthy</Label>
-            </div>
-          </FlexItem>
-          <FlexItem>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <ExclamationTriangleIcon style={{ color: "var(--pf-t--global--icon--color--status--warning--default, #f0ab00)" }} />
-              <strong>Queue</strong>
-              <Label color="yellow" isCompact>Degraded</Label>
-            </div>
-          </FlexItem>
-          <FlexItem>
-            <Progress value={62} title="Disk usage" />
-          </FlexItem>
-        </Flex>
-      </CardBody>
-    </Card>
-  );
-}
+// The KPI strip is now data — DashboardShell owns the tile chrome (big number,
+// trend arrow + colour). `trend` reflects whether the change is good, not its
+// sign: a falling failure count is still "up".
+const KPIS: DashboardKpi[] = [
+  { label: "Active workflows", value: "142", delta: "+12 (8%)", trend: "up" },
+  { label: "Failed runs (24h)", value: "3", delta: "-2 (-40%)", trend: "up" },
+  { label: "Avg runtime", value: "42s", delta: "+3s", trend: "down" },
+  { label: "Pending approvals", value: "7", delta: "+1", trend: "flat" },
+];
 
 // #region OpsDashboard
 export function OpsDashboard() {
@@ -136,19 +46,59 @@ export function OpsDashboard() {
       title="Operations"
       description="Live workflow and system metrics."
       actions={<Button variant="secondary">Last 24h</Button>}
+      kpis={KPIS}
     >
-      <div style={{ display: "grid", gap: 16 }}>
-        <Gallery hasGutter minWidths={{ default: "180px" }}>
-          <GalleryItem><KPI label="Active workflows" value="142" delta="+12 (8%)" trend="up" /></GalleryItem>
-          <GalleryItem><KPI label="Failed runs (24h)" value="3" delta="-2 (-40%)" trend="down" /></GalleryItem>
-          <GalleryItem><KPI label="Avg runtime" value="42s" delta="+3s" trend="down" /></GalleryItem>
-          <GalleryItem><KPI label="Pending approvals" value="7" delta="+1" trend="up" /></GalleryItem>
-        </Gallery>
-        <Grid hasGutter>
-          <GridItem md={8}><ChartPlaceholder title="Run volume — last 24h" /></GridItem>
-          <GridItem md={4}><StatusCard /></GridItem>
-        </Grid>
-      </div>
+      <Grid hasGutter>
+        <GridItem md={8}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Run volume — last 24h</CardTitle>
+            </CardHeader>
+            <CardBody>
+              {/* Drop in @patternfly/react-charts (or your chart lib) here. */}
+              <div
+                style={{
+                  height: 140,
+                  display: "grid",
+                  placeItems: "center",
+                  color: "var(--gp-color-text-subtle)",
+                  fontStyle: "italic",
+                }}
+              >
+                chart placeholder
+              </div>
+            </CardBody>
+          </Card>
+        </GridItem>
+        <GridItem md={4}>
+          <Card>
+            <CardHeader>
+              <CardTitle>System health</CardTitle>
+            </CardHeader>
+            <CardBody>
+              <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsMd" }}>
+                <FlexItem>
+                  <Flex spaceItems={{ default: "spaceItemsSm" }} alignItems={{ default: "alignItemsCenter" }}>
+                    <CheckCircleIcon color="var(--pf-t--global--icon--color--status--success--default, #3e8635)" />
+                    <strong>API</strong>
+                    <Label color="green" isCompact>Healthy</Label>
+                  </Flex>
+                </FlexItem>
+                <FlexItem>
+                  <Flex spaceItems={{ default: "spaceItemsSm" }} alignItems={{ default: "alignItemsCenter" }}>
+                    <ExclamationTriangleIcon color="var(--pf-t--global--icon--color--status--warning--default, #f0ab00)" />
+                    <strong>Queue</strong>
+                    <Label color="yellow" isCompact>Degraded</Label>
+                  </Flex>
+                </FlexItem>
+                <FlexItem>
+                  <Progress value={62} title="Disk usage" />
+                </FlexItem>
+              </Flex>
+            </CardBody>
+          </Card>
+        </GridItem>
+      </Grid>
     </DashboardShell>
   );
 }

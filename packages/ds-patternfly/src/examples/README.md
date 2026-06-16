@@ -10,7 +10,13 @@ one is:
   the file (and the DS component source) as a download;
 - **served by MCP** — `@golden-passport/ds-patternfly-mcp` embeds every
   example verbatim (`getGpExample`) and every DS component file
-  (`getGpComponent`), with the `_lib` shim rewritten to the package name.
+  (`getGpComponent`).
+
+Examples import the lib by its real package name —
+`@golden-passport/ds-patternfly` — exactly as a consuming app would. In-repo
+that specifier resolves to `src/index.ts` via the tsconfig `paths` entry and
+the Storybook Vite `resolve.alias` (kept in sync), so the displayed/downloaded/
+MCP source is already real consumer code.
 
 They are **not** part of the runtime bundle (nothing here is reachable
 from `src/index.ts`).
@@ -32,11 +38,11 @@ See [CONVERTING.md](./CONVERTING.md) for the full recipe. The essentials:
 
 1. **One `// #region <PascalCaseName>` per story section** with a matching
    named export; a zero-props **default export** composes them.
-2. **Import the library only via the `_lib.js` shim** (depth-relative).
+2. **Import the library from `@golden-passport/ds-patternfly`** — the real
+   package name (resolved in-repo via the tsconfig/Storybook self-alias).
    PF extension packages (react-charts, react-data-view, …) and
    react-icons are imported directly, with the required package named in
-   the header comment. The display/download/MCP pipeline rewrites the shim
-   to `@golden-passport/ds-patternfly`.
+   the header comment.
 3. **DOM ids derive from `useId()`** — regions render more than once per
    docs page; hardcoded ids fail axe.
 4. **Self-contained**: story-local helpers/data move in; no

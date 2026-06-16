@@ -17,7 +17,8 @@ export interface PageHeaderProps {
   title: ReactNode;
   /** Supporting line under the title. */
   subtitle?: ReactNode;
-  /** Leading glyph beside the title (e.g. a 36×36 icon). */
+  /** Leading glyph beside the title. PageHeader sizes it to 36px — pass a bare
+   * PF icon (e.g. `<CubesIcon />`), no width/height needed. */
   icon?: ReactNode;
   /** Status slot rendered inline after the title (e.g. a `<Label>`). */
   status?: ReactNode;
@@ -55,6 +56,9 @@ export function PageHeader({
                 alignItems: "center",
                 justifyContent: "center",
                 blockSize: 36,
+                // Size the icon slot so consumers pass a bare PF icon — PF6
+                // icons render at 1em, so fontSize drives their box.
+                fontSize: 36,
               }}
             >
               {icon}

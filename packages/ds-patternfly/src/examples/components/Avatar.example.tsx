@@ -6,7 +6,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Avatar } from "../_lib.js";
+import { Avatar } from "@golden-passport/ds-patternfly";
 
 const SIZES = ["sm", "md", "lg", "xl"] as const;
 

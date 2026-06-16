@@ -8,7 +8,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useState } from "react";
-import { SearchInput } from "../_lib.js";
+import { SearchInput } from "@golden-passport/ds-patternfly";
 
 // #region Basic
 export function Basic() {

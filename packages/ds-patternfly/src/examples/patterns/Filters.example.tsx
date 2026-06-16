@@ -24,7 +24,7 @@ import {
   ToolbarGroup,
   ToolbarItem,
   ToolbarToggleGroup,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { FilterIcon } from "@patternfly/react-icons";
 
 const STATUSES = ["Active", "Paused", "Failed"];

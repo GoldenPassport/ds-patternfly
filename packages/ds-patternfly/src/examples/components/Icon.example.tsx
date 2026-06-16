@@ -6,7 +6,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Icon } from "../_lib.js";
+import { Icon } from "@golden-passport/ds-patternfly";
 import {
   CheckCircleIcon,
   InfoCircleIcon,

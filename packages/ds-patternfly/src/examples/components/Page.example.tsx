@@ -21,7 +21,7 @@ import {
   Page,
   PageSection,
   Title,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 // Minimal brand masthead shared by the demos — swap the wordmark for your
 // product's logo component.

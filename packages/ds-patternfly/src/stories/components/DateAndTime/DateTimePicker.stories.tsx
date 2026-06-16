@@ -20,17 +20,16 @@ export const Overview: StoryObj = {
       title="DateTimePicker"
       intro={
         <>
-          PatternFly 6 doesn&apos;t ship a single &quot;date and time&quot;
-          component — the recommended pattern is two paired controls:{" "}
-          <code>DatePicker</code> for the day and <code>TimePicker</code>{" "}
-          for the time, side-by-side under one FormGroup. This page shows
-          the recipe.
+          There&apos;s no single &quot;date and time&quot; component — the
+          pattern is two paired controls: the exported <code>DateField</code>{" "}
+          for the day and <code>TimePicker</code> for the time, side-by-side
+          under one FormGroup. This page shows the recipe.
         </>
       }
     >
       <Section
         title="Side-by-side composition"
-        description="Two paired controls — date input + time input. Year navigation lives inside the DatePicker's popover (PF6's stock controls); no extra year stepper sibling."
+        description="Two paired controls — DateField (date) + TimePicker (time). Each owns its own UI and validation; the consumer holds both values and combines them at submit."
       >
         <Card>
           <Example

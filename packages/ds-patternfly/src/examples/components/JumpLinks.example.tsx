@@ -8,7 +8,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useId } from "react";
-import { JumpLinks, JumpLinksItem, JumpLinksList } from "../_lib.js";
+import { JumpLinks, JumpLinksItem, JumpLinksList } from "@golden-passport/ds-patternfly";
 
 // #region HorizontalBasic
 export function HorizontalBasic() {

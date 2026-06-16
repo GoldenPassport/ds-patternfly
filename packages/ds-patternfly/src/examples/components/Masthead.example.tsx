@@ -35,7 +35,7 @@ import {
   Toolbar,
   ToolbarContent,
   ToolbarItem,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { BellIcon, CogIcon, EllipsisVIcon } from "@patternfly/react-icons";
 
 /**

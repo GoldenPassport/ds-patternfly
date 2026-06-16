@@ -9,7 +9,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import type { CSSProperties } from "react";
-import { Split, SplitItem } from "../_lib.js";
+import { Split, SplitItem } from "@golden-passport/ds-patternfly";
 
 // Shaded placeholder block so the row segments are visible in the demo.
 // In a real app these are your sidebar / content / action contents.

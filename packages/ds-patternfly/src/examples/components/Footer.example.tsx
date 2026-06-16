@@ -8,7 +8,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { PageSection } from "../_lib.js";
+import { PageSection } from "@golden-passport/ds-patternfly";
 
 /**
  * Demo brand mark for the multi-column footer. Real apps render a

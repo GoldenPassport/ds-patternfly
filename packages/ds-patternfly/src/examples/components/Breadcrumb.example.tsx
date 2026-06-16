@@ -6,7 +6,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Breadcrumb, BreadcrumbHeading, BreadcrumbItem } from "../_lib.js";
+import { Breadcrumb, BreadcrumbHeading, BreadcrumbItem } from "@golden-passport/ds-patternfly";
 
 // #region Default
 export function Default() {

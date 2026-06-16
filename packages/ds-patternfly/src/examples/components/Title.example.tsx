@@ -6,7 +6,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Title } from "../_lib.js";
+import { Title } from "@golden-passport/ds-patternfly";
 
 const SIZES = ["4xl", "3xl", "2xl", "xl", "lg", "md"] as const;
 

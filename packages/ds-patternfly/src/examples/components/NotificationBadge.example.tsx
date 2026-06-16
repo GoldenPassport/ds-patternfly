@@ -8,7 +8,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useState } from "react";
-import { NotificationBadge, NotificationBadgeVariant } from "../_lib.js";
+import { NotificationBadge, NotificationBadgeVariant } from "@golden-passport/ds-patternfly";
 
 // #region Variants
 export function Variants() {

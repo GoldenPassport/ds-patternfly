@@ -7,7 +7,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Hint, HintBody, HintFooter, HintTitle, Hyperlink } from "../_lib.js";
+import { Hint, HintBody, HintFooter, HintTitle, Hyperlink } from "@golden-passport/ds-patternfly";
 
 // #region TitleBodyFooter
 // HintFooter links use the lib's Hyperlink component — universal blue,

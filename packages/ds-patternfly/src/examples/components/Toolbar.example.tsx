@@ -15,7 +15,7 @@ import {
   ToolbarFilter,
   ToolbarGroup,
   ToolbarItem,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import {
   CloneIcon,
   EditIcon,

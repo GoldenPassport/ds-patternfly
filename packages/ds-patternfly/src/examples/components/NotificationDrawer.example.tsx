@@ -21,7 +21,7 @@ import {
   NotificationDrawerListItem,
   NotificationDrawerListItemBody,
   NotificationDrawerListItemHeader,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { SearchIcon } from "@patternfly/react-icons";
 
 // #region Basic

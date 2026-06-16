@@ -19,7 +19,7 @@ import {
   OverflowMenuDropdownItem,
   OverflowMenuGroup,
   OverflowMenuItem,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 
 // #region BreakpointCollapse

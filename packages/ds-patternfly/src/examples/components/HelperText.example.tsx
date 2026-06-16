@@ -7,7 +7,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { HelperText, HelperTextItem } from "../_lib.js";
+import { HelperText, HelperTextItem } from "@golden-passport/ds-patternfly";
 
 // #region SingleHelper
 export function SingleHelper() {

@@ -8,7 +8,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useState } from "react";
-import { TreeNavigation, type TreeNode } from "../_lib.js";
+import { TreeNavigation, type TreeNode } from "@golden-passport/ds-patternfly";
 
 const TREE: TreeNode[] = [
   {

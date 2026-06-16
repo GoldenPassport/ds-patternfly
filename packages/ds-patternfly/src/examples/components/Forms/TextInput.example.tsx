@@ -13,7 +13,7 @@ import {
   HelperText,
   HelperTextItem,
   TextInput,
-} from "../../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 // Element ids derive from useId() so any number of instances can coexist
 // on one page without duplicate-id clashes.

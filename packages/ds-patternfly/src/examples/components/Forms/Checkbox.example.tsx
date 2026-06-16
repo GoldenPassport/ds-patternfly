@@ -7,7 +7,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useId, useState } from "react";
-import { Checkbox } from "../../_lib.js";
+import { Checkbox } from "@golden-passport/ds-patternfly";
 
 // Element ids derive from useId() so any number of instances can coexist
 // on one page without duplicate-id clashes.

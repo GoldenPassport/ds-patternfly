@@ -26,7 +26,7 @@ import {
   Thead,
   Tr,
   type FilterDef,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 type Workflow = { id: string; name: string; status: string };
 const ALL: Workflow[] = Array.from({ length: 23 }).map((_, i) => ({

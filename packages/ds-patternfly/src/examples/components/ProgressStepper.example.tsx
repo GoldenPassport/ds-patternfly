@@ -7,7 +7,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useId } from "react";
-import { ProgressStep, ProgressStepper } from "../_lib.js";
+import { ProgressStep, ProgressStepper } from "@golden-passport/ds-patternfly";
 
 // #region Basic
 export function Basic() {

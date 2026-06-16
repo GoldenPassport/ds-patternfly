@@ -7,7 +7,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Gallery, GalleryItem } from "../_lib.js";
+import { Gallery, GalleryItem } from "@golden-passport/ds-patternfly";
 
 // Shaded placeholder tile so the gallery cells are visible in the demo.
 // In a real app these are your cards / dashboard widgets.

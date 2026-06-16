@@ -21,7 +21,7 @@ import {
   GridItem,
   Label,
   Progress,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import {
   ArrowDownIcon,
   ArrowUpIcon,

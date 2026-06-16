@@ -1,6 +1,7 @@
 /**
- * TimePicker — a text input for time-of-day selection with a popover
- * suggesting common times in the configured step.
+ * TimePicker — the exported TimeField lego block: a text input for
+ * time-of-day with a popover of suggested times, controlled by a string
+ * value. 24- or 12-hour.
  *
  * App-entry setup (one time, e.g. main.tsx):
  *   import "@patternfly/react-core/dist/styles/base.css"; // PF6 base FIRST
@@ -8,25 +9,15 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useId, useState } from "react";
-import { FormGroup, TimePicker } from "../../_lib.js";
-
-// Element ids derive from useId() so any number of instances can coexist
-// on one page without duplicate-id clashes.
+import { FormGroup, TimeField } from "@golden-passport/ds-patternfly";
 
 // #region Basic24Hour
 export function Basic24Hour() {
   const id = useId();
-  const [t, setT] = useState("");
-
+  const [time, setTime] = useState("");
   return (
     <FormGroup label="Start time" fieldId={id} isRequired>
-      <TimePicker
-        id={id}
-        time={t}
-        onChange={(_, value) => setT(value)}
-        is24Hour
-        stepMinutes={15}
-      />
+      <TimeField id={id} value={time} onChange={setTime} is24Hour stepMinutes={15} />
     </FormGroup>
   );
 }
@@ -35,11 +26,10 @@ export function Basic24Hour() {
 // #region TwelveHour
 export function TwelveHour() {
   const id = useId();
-  const [t, setT] = useState("");
-
+  const [time, setTime] = useState("");
   return (
     <FormGroup label="Reminder time" fieldId={id}>
-      <TimePicker id={id} time={t} onChange={(_, value) => setT(value)} />
+      <TimeField id={id} value={time} onChange={setTime} />
     </FormGroup>
   );
 }

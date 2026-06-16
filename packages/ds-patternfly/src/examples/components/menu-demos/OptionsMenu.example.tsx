@@ -17,7 +17,7 @@ import {
   SelectGroup,
   SelectList,
   SelectOption,
-} from "../../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { CogIcon, FilterIcon } from "@patternfly/react-icons";
 
 // #region MultiSelectFilterSet

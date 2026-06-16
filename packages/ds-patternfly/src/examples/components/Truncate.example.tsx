@@ -6,7 +6,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Truncate, TruncatePosition } from "../_lib.js";
+import { Truncate, TruncatePosition } from "@golden-passport/ds-patternfly";
 
 const longString =
   "redhat_logo_black_and_white_reversed_simple_with_fedora_container.zip";

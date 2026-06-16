@@ -21,7 +21,7 @@ import {
   MenuSearch,
   MenuSearchInput,
   SearchInput,
-} from "../../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 const allCommands = [
   "Run workflow",

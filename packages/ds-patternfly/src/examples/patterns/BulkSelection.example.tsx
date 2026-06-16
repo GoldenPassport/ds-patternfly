@@ -22,7 +22,7 @@ import {
   ToolbarContent,
   ToolbarItem,
   Tr,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import BulkSelect, { BulkSelectValue } from "@patternfly/react-component-groups/dist/dynamic/BulkSelect";
 
 type Workflow = { id: string; name: string; status: string };

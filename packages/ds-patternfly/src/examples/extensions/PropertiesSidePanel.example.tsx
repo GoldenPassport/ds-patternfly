@@ -14,7 +14,7 @@ import {
   PropertyItem,
 } from "@patternfly/react-catalog-view-extension";
 import "@patternfly/react-catalog-view-extension/dist/css/react-catalog-view-extension.css";
-import { Button } from "../_lib.js";
+import { Button } from "@golden-passport/ds-patternfly";
 
 // #region StandardLayout
 export function StandardLayout() {

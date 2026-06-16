@@ -7,7 +7,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useId, useState } from "react";
-import { Switch } from "../_lib.js";
+import { Switch } from "@golden-passport/ds-patternfly";
 
 // #region States
 export function States() {

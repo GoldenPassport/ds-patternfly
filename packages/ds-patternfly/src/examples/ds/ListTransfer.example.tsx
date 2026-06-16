@@ -14,7 +14,7 @@ import {
   listTransferEnLabels,
   type ListTransferLabels,
   type TransferItem,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 const LABELS: ListTransferLabels = {
   ...listTransferEnLabels,

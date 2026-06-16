@@ -8,7 +8,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useState } from "react";
-import { Button, Popover } from "../_lib.js";
+import { Button, Popover } from "@golden-passport/ds-patternfly";
 
 // #region Basic
 export function Basic() {

@@ -19,7 +19,7 @@ import {
   Flex,
   FlexItem,
   Label,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { ChevronRightIcon, BellIcon } from "@patternfly/react-icons";
 
 function PreviewBlock() {

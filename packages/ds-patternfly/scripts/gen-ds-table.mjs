@@ -40,7 +40,7 @@ const CATEGORY = {
   FormScaffold: "Forms",
   ListTransfer: "Forms",
   DateField: "Forms",
-  FutureDateField: "Forms",
+  TimeField: "Forms",
   FilterToolbar: "Data",
   BulkSelectToolbar: "Data",
   ListManager: "Data",

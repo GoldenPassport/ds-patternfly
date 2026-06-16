@@ -13,7 +13,7 @@ import {
   PanelHeader,
   PanelMain,
   PanelMainBody,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 const filler = (
   <>

@@ -9,7 +9,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useState } from "react";
-import { ConfirmModal, confirmModalEnLabels, Button } from "../_lib.js";
+import { ConfirmModal, confirmModalEnLabels, Button } from "@golden-passport/ds-patternfly";
 
 // #region Confirm
 export function Confirm() {

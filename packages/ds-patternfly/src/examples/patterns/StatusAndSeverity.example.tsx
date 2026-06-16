@@ -18,7 +18,7 @@ import {
   Th,
   Thead,
   Tr,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { Severity } from "@patternfly/react-component-groups/dist/dynamic/Severity";
 import { Status } from "@patternfly/react-component-groups/dist/dynamic/Status";
 

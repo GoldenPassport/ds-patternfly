@@ -6,7 +6,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Button, Tooltip } from "../_lib.js";
+import { Button, Tooltip } from "@golden-passport/ds-patternfly";
 
 // #region Basic
 export function Basic() {

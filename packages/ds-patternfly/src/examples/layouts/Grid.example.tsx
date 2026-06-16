@@ -7,7 +7,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Grid, GridItem } from "../_lib.js";
+import { Grid, GridItem } from "@golden-passport/ds-patternfly";
 
 // Shaded placeholder block so the grid cells are visible in the demo.
 // In a real app these are your charts / stats / form fields.

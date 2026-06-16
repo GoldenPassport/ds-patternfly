@@ -16,7 +16,7 @@ import {
   ExpandableSection,
   ExpandableSectionToggle,
   Tooltip,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { PlayIcon } from "@patternfly/react-icons";
 
 const sampleYaml = `apiVersion: workflows.acme.io/v1

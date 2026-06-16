@@ -12,7 +12,7 @@ import { useState } from "react";
 import ColumnManagementModal, {
   type ColumnManagementModalColumn,
 } from "@patternfly/react-component-groups/dist/dynamic/ColumnManagementModal";
-import { Button } from "../_lib.js";
+import { Button } from "@golden-passport/ds-patternfly";
 
 const initial: ColumnManagementModalColumn[] = [
   { key: "name",    title: "Name",    isShown: true,  isShownByDefault: true,  isUntoggleable: true },

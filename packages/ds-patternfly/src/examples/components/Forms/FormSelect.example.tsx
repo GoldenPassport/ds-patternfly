@@ -7,7 +7,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useId, useState } from "react";
-import { FormGroup, FormSelect, FormSelectOption } from "../../_lib.js";
+import { FormGroup, FormSelect, FormSelectOption } from "@golden-passport/ds-patternfly";
 
 const REGIONS: { value: string; label: string; isPlaceholder?: boolean }[] = [
   { value: "", label: "Select a region", isPlaceholder: true },

@@ -22,7 +22,7 @@ import {
   AiAssistant,
   Shell,
   shellEnLabels,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 
 // Replace with your backend call — the thinking indicator shows until the
 // returned promise resolves.

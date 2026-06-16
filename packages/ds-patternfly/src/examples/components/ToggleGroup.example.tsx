@@ -8,7 +8,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useId, useState } from "react";
-import { ToggleGroup, ToggleGroupItem } from "../_lib.js";
+import { ToggleGroup, ToggleGroupItem } from "@golden-passport/ds-patternfly";
 import {
   ColumnsIcon,
   ListIcon,

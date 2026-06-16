@@ -11,7 +11,7 @@
  */
 import { useId, useState } from "react";
 import { FieldBuilder } from "@patternfly/react-component-groups/dist/dynamic/FieldBuilder";
-import { TextInput } from "../_lib.js";
+import { TextInput } from "@golden-passport/ds-patternfly";
 
 // FieldBuilder renders as a PF6 Table. The Table's TDs default to
 // `padding-inline: 0`, so the Name / Value columns butt against each other

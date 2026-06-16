@@ -7,7 +7,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { BackToTop } from "../_lib.js";
+import { BackToTop } from "@golden-passport/ds-patternfly";
 
 // #region Default
 export function Default() {

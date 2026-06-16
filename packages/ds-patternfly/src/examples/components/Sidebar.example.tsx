@@ -8,7 +8,7 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Sidebar, SidebarContent, SidebarPanel } from "../_lib.js";
+import { Sidebar, SidebarContent, SidebarPanel } from "@golden-passport/ds-patternfly";
 
 const filler = (
   <>

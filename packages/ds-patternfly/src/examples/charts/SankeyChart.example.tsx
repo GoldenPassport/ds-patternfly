@@ -14,7 +14,7 @@ import * as echarts from "echarts/core";
 import { SankeyChart } from "echarts/charts";
 import { TitleComponent, TooltipComponent } from "echarts/components";
 import { SVGRenderer } from "echarts/renderers";
-import { useTheme } from "../_lib.js";
+import { useTheme } from "@golden-passport/ds-patternfly";
 
 // Register only the ECharts pieces the Sankey needs (tree-shakeable).
 echarts.use([SankeyChart, SVGRenderer, TitleComponent, TooltipComponent]);

@@ -14,7 +14,7 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
   Popover,
-} from "../_lib.js";
+} from "@golden-passport/ds-patternfly";
 import { OutlinedQuestionCircleIcon, ServerIcon } from "@patternfly/react-icons";
 
 // Shared set of term/description pairs the layout demos reuse.
