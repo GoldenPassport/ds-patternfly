@@ -1,13 +1,22 @@
 /**
- * Button — the action primitive. Triggers a discrete operation.
+ * Button — the action primitive. The base Button covers variants / states /
+ * icons; the exported ActionButton adds a `shape` prop (rounded / pill /
+ * circle …) that owns the border-radius and the icon-only squaring, so a
+ * circular icon button is one prop, not a hand-rolled inline style.
  *
  * App-entry setup (one time, e.g. main.tsx):
  *   import "@patternfly/react-core/dist/styles/base.css"; // PF6 base FIRST
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { useId, useState, type CSSProperties } from "react";
-import { Button, FormSelect, FormSelectOption } from "@golden-passport/ds-patternfly";
+import { useId, useState } from "react";
+import {
+  ActionButton,
+  Button,
+  FormSelect,
+  FormSelectOption,
+  type ButtonShape,
+} from "@golden-passport/ds-patternfly";
 import {
   CogIcon,
   EllipsisVIcon,
@@ -19,19 +28,13 @@ import {
 
 const VARIANTS = ["primary", "secondary", "tertiary", "danger", "warning", "link", "plain"] as const;
 
-/**
- * Border-radius presets used by the configurable demo below. PF6 ships
- * no `shape` prop on Button, so the override lands as an inline style
- * (the value applies to text + icon-only buttons alike).
- */
-const RADIUS_PRESETS = {
-  none:    { label: "None (0)",                value: "0" },
-  default: { label: "Default (brand dial)",    value: "var(--gp-radius-control, var(--pf-v6-c-button--BorderRadius))" },
-  rounded: { label: "Rounded (8px)",           value: "8px" },
-  strong:  { label: "Strong (12px)",           value: "12px" },
-  pill:    { label: "Pill (999px)",            value: "999px" },
-} as const;
-type RadiusKey = keyof typeof RADIUS_PRESETS;
+const SHAPES: { value: ButtonShape; label: string }[] = [
+  { value: "square", label: "None (square)" },
+  { value: "default", label: "Default (brand dial)" },
+  { value: "rounded", label: "Rounded (8px)" },
+  { value: "strong", label: "Strong (12px)" },
+  { value: "pill", label: "Pill" },
+];
 
 // #region Variants
 export function Variants() {
@@ -65,42 +68,22 @@ export function States() {
 
 // #region IconButtons
 export function IconButtons() {
-  // Icon-only with background / border, rendered circular. PF6 ships no
-  // `circular` variant on Button, so override inline: `border-radius: 50%`,
-  // `aspect-ratio: 1`, and zero inline padding so the icon centres in a
-  // square.
-  const round: CSSProperties = {
-    borderRadius: "50%",
-    aspectRatio: "1",
-    paddingInline: 0,
-  };
-
   return (
     <div style={{ display: "grid", gap: 16 }}>
-      {/* Icon + text — the common CTA pattern. icon prop puts the glyph on
-          the leading edge; pass `iconPosition` to swap it to the trailing
-          edge. */}
+      {/* Icon + text — the common CTA pattern. */}
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-        <Button variant="primary" icon={<PlusIcon />}>
-          Add resource
-        </Button>
-        <Button variant="secondary" icon={<PencilAltIcon />}>
-          Edit
-        </Button>
-        <Button variant="danger" icon={<TrashIcon />}>
-          Delete
-        </Button>
+        <Button variant="primary" icon={<PlusIcon />}>Add resource</Button>
+        <Button variant="secondary" icon={<PencilAltIcon />}>Edit</Button>
+        <Button variant="danger" icon={<TrashIcon />}>Delete</Button>
       </div>
-      {/* Icon-only with background / border, rendered circular. */}
+      {/* Icon-only, circular — shape="circle" owns the radius + square box. */}
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-        <Button variant="primary"   aria-label="Add resource" icon={<PlusIcon />}       style={round} />
-        <Button variant="secondary" aria-label="Edit"         icon={<PencilAltIcon />} style={round} />
-        <Button variant="tertiary"  aria-label="Settings"     icon={<CogIcon />}       style={round} />
-        <Button variant="danger"    aria-label="Delete"       icon={<TrashIcon />}     style={round} />
+        <ActionButton shape="circle" variant="primary" aria-label="Add resource" icon={<PlusIcon />} />
+        <ActionButton shape="circle" variant="secondary" aria-label="Edit" icon={<PencilAltIcon />} />
+        <ActionButton shape="circle" variant="tertiary" aria-label="Settings" icon={<CogIcon />} />
+        <ActionButton shape="circle" variant="danger" aria-label="Delete" icon={<TrashIcon />} />
       </div>
-      {/* Icon-only plain buttons — the canonical toolbar / table-row
-          pattern. The icon goes in `icon`, NOT as children; that triggers
-          PF6's icon-only sizing. */}
+      {/* Icon-only plain — toolbar / table-row pattern. The icon goes in `icon`. */}
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
         <Button variant="plain" aria-label="Edit" icon={<PencilAltIcon />} />
         <Button variant="plain" aria-label="Settings" icon={<CogIcon />} />
@@ -108,29 +91,15 @@ export function IconButtons() {
         <Button variant="plain" aria-label="More actions" icon={<EllipsisVIcon />} />
         <Button variant="plain" aria-label="Close" icon={<TimesIcon />} />
       </div>
-      {/* PF6 `isSettings` shorthand bakes in the cog icon but does NOT
-          inject an aria-label — still your job. */}
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-        <Button variant="plain" isSettings aria-label="Settings" />
-      </div>
     </div>
   );
 }
 // #endregion
 
-// #region BorderRadius
-export function BorderRadius() {
+// #region Shape
+export function Shape() {
   const selectId = useId();
-  const [shape, setShape] = useState<RadiusKey>("default");
-  const radius = RADIUS_PRESETS[shape].value;
-  const textStyle: CSSProperties = { borderRadius: radius };
-  // Icon-only buttons need a square aspect so the chosen radius reads
-  // as a true circle / pill instead of an ellipse.
-  const iconOnlyStyle: CSSProperties = {
-    borderRadius: radius,
-    aspectRatio: "1",
-    paddingInline: 0,
-  };
+  const [shape, setShape] = useState<ButtonShape>("default");
   return (
     <div style={{ display: "grid", gap: 12 }}>
       <label style={{ display: "grid", gap: 4, fontSize: 13, maxWidth: 240 }}>
@@ -138,43 +107,34 @@ export function BorderRadius() {
         <FormSelect
           id={`${selectId}-shape`}
           value={shape}
-          onChange={(_e, v) => setShape(v as RadiusKey)}
-          aria-label="Border radius preset"
+          onChange={(_e, v) => setShape(v as ButtonShape)}
+          aria-label="Button shape"
         >
-          {(Object.keys(RADIUS_PRESETS) as RadiusKey[]).map((k) => (
-            <FormSelectOption key={k} value={k} label={RADIUS_PRESETS[k].label} />
+          {SHAPES.map((s) => (
+            <FormSelectOption key={s.value} value={s.value} label={s.label} />
           ))}
         </FormSelect>
       </label>
       <div style={{ display: "grid", gap: 12 }}>
         {/* Text buttons */}
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-          <Button variant="primary"   style={textStyle}>Primary</Button>
-          <Button variant="secondary" style={textStyle}>Secondary</Button>
-          <Button variant="tertiary"  style={textStyle}>Tertiary</Button>
-          <Button variant="danger"    style={textStyle}>Danger</Button>
+          <ActionButton shape={shape} variant="primary">Primary</ActionButton>
+          <ActionButton shape={shape} variant="secondary">Secondary</ActionButton>
+          <ActionButton shape={shape} variant="tertiary">Tertiary</ActionButton>
+          <ActionButton shape={shape} variant="danger">Danger</ActionButton>
         </div>
         {/* Icon + text */}
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-          <Button variant="primary" icon={<PlusIcon />}      style={textStyle}>Add</Button>
-          <Button variant="secondary" icon={<PencilAltIcon />} style={textStyle}>Edit</Button>
-          <Button variant="danger" icon={<TrashIcon />}     style={textStyle}>Delete</Button>
+          <ActionButton shape={shape} variant="primary" icon={<PlusIcon />}>Add</ActionButton>
+          <ActionButton shape={shape} variant="secondary" icon={<PencilAltIcon />}>Edit</ActionButton>
+          <ActionButton shape={shape} variant="danger" icon={<TrashIcon />}>Delete</ActionButton>
         </div>
-        {/* Icon-only variants (square aspect, has background/border) */}
+        {/* Icon-only — the component squares the box so the shape reads true. */}
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-          <Button variant="primary"   aria-label="Add"      icon={<PlusIcon />}       style={iconOnlyStyle} />
-          <Button variant="secondary" aria-label="Edit"     icon={<PencilAltIcon />} style={iconOnlyStyle} />
-          <Button variant="tertiary"  aria-label="Settings" icon={<CogIcon />}       style={iconOnlyStyle} />
-          <Button variant="danger"    aria-label="Delete"   icon={<TrashIcon />}     style={iconOnlyStyle} />
-        </div>
-        {/* Icon-only plain — the radius shows on hover/focus backgrounds
-            (PF6 paints a hover halo behind the glyph). */}
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-          <Button variant="plain" aria-label="Edit"         icon={<PencilAltIcon />} style={iconOnlyStyle} />
-          <Button variant="plain" aria-label="Settings"     icon={<CogIcon />}       style={iconOnlyStyle} />
-          <Button variant="plain" aria-label="Delete"       icon={<TrashIcon />}     style={iconOnlyStyle} />
-          <Button variant="plain" aria-label="More actions" icon={<EllipsisVIcon />} style={iconOnlyStyle} />
-          <Button variant="plain" aria-label="Close"        icon={<TimesIcon />}     style={iconOnlyStyle} />
+          <ActionButton shape={shape} variant="primary" aria-label="Add" icon={<PlusIcon />} />
+          <ActionButton shape={shape} variant="secondary" aria-label="Edit" icon={<PencilAltIcon />} />
+          <ActionButton shape={shape} variant="tertiary" aria-label="Settings" icon={<CogIcon />} />
+          <ActionButton shape={shape} variant="plain" aria-label="More actions" icon={<EllipsisVIcon />} />
         </div>
       </div>
     </div>
@@ -188,7 +148,7 @@ export default function ButtonExample() {
       <Variants />
       <States />
       <IconButtons />
-      <BorderRadius />
+      <Shape />
     </div>
   );
 }

@@ -14,7 +14,7 @@ import {
   Compact,
 } from "../../examples/components/ToggleGroup.example.js";
 import toggleGroupExampleSrc from "../../examples/components/ToggleGroup.example.tsx?raw";
-import toggleGroupComponentSrc from "../../components/base/ToggleGroup.tsx?raw";
+import selectableToggleGroupComponentSrc from "../../components/ds/SelectableToggleGroup.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/ToggleGroup",
@@ -108,20 +108,18 @@ export const Overview: StoryObj = {
       </Section>
 
       <ConfigurationSection
-        importStatement={'import { ToggleGroup, ToggleGroupItem } from "@golden-passport/ds-patternfly";'}
-        componentSource={toggleGroupComponentSrc}
-        componentFileName="ToggleGroup.tsx"
+        importStatement={'import { SelectableToggleGroup, type ToggleOption } from "@golden-passport/ds-patternfly";'}
+        componentSource={selectableToggleGroupComponentSrc}
+        componentFileName="SelectableToggleGroup.tsx"
+        description="SelectableToggleGroup owns the per-item id wiring and the single- vs multi-select state transitions. You pass items and the controlled value / onChange; the value type follows selectionMode."
         rows={[
-          { name: "ToggleGroup.aria-label", type: "string", description: "Required — names the group." },
-          { name: "ToggleGroup.isCompact", type: "boolean", description: "Tighter padding." },
-          { name: "ToggleGroup.areAllGroupsDisabled", type: "boolean", description: "Disable every item in the group." },
-          { name: "ToggleGroupItem.text", type: "ReactNode", description: "Visible label." },
-          { name: "ToggleGroupItem.icon", type: "ReactNode", description: "Leading glyph." },
-          { name: "ToggleGroupItem.buttonId", type: "string", description: "Required — used by isSelected matching and DOM identity." },
-          { name: "ToggleGroupItem.isSelected", type: "boolean", description: "Selected state. Drives aria-pressed." },
-          { name: "ToggleGroupItem.onChange", type: "(event, isSelected) => void", description: "Fires on click. Note the event is the first arg." },
-          { name: "ToggleGroupItem.isDisabled", type: "boolean", description: "Disable a single item." },
-          { name: "ToggleGroupItem.aria-label", type: "string", description: "Required when icon-only (no text)." },
+          { name: "items", type: "ToggleOption[]", description: "Options: { id, text?, icon?, ariaLabel?, isDisabled? }. Use ariaLabel for icon-only options." },
+          { name: "ariaLabel", type: "string", description: "Required — names the group as a region." },
+          { name: "selectionMode", type: '"single" | "multiple"', description: 'Default "single" (one active id, or none). "multiple" toggles each option independently.' },
+          { name: "value", type: 'string | string[]', description: 'Controlled selection. string ("" = none) in single mode; string[] in multiple mode.' },
+          { name: "onChange", type: '(value: string | string[]) => void', description: "Fires with the next selection; signature follows selectionMode." },
+          { name: "allowDeselect", type: "boolean", description: 'Single mode only — clicking the active option clears it (default true).' },
+          { name: "isCompact", type: "boolean", description: "Tighter pill sizing for toolbars / dense panels." },
         ]}
       />
 
@@ -141,7 +139,7 @@ export const Overview: StoryObj = {
           <ul style={{ margin: 0, padding: "16px 24px 16px 40px", color: "var(--gp-color-text-regular)", lineHeight: 1.8 }}>
             <li><strong>aria-label is required on the group</strong> — names the cluster as a region.</li>
             <li><strong>Icon-only items need aria-label per item</strong> — the icon alone doesn&rsquo;t announce.</li>
-            <li><strong>buttonId must be unique per group</strong> — used both as DOM id and the matching key for isSelected.</li>
+            <li><strong>Per-item DOM ids are handled for you</strong> — SelectableToggleGroup derives a unique buttonId from each option&rsquo;s id.</li>
             <li><strong>Keyboard:</strong> Tab between items, Space / Enter to toggle.</li>
           </ul>
         </Card>

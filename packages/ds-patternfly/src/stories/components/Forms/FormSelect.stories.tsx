@@ -10,6 +10,12 @@ import {
 import { Basic } from "../../../examples/components/Forms/FormSelect.example.js";
 import formSelectExampleSrc from "../../../examples/components/Forms/FormSelect.example.tsx?raw";
 import formSelectComponentSrc from "../../../components/base/FormSelect.tsx?raw";
+import {
+  Grouped as DropdownGrouped,
+  WithDescriptions as DropdownWithDescriptions,
+  KebabToggle as DropdownKebab,
+} from "../../../examples/components/Menu/Dropdown.example.js";
+import dropdownExampleSrc from "../../../examples/components/Menu/Dropdown.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/FormSelect",
@@ -38,6 +44,39 @@ export const Overview: StoryObj = {
             fileName="FormSelect.example.tsx"
           >
             <Basic />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Advanced — Dropdown"
+        description="When you need more than a flat native list — grouped options, per-item descriptions, custom triggers (kebab), icons, disabled-with-tooltip — drop to the Dropdown component (Components/Menus/Dropdown). It renders a JS menu you fully control, at the cost of the native a11y FormSelect gives for free. For value selection with search / multi-select, use Select instead."
+      >
+        <Card>
+          <Example
+            source={dropdownExampleSrc}
+            region="Grouped"
+            fileName="Dropdown.example.tsx"
+          >
+            <DropdownGrouped />
+          </Example>
+        </Card>
+        <Card>
+          <Example
+            source={dropdownExampleSrc}
+            region="WithDescriptions"
+            fileName="Dropdown.example.tsx"
+          >
+            <DropdownWithDescriptions />
+          </Example>
+        </Card>
+        <Card>
+          <Example
+            source={dropdownExampleSrc}
+            region="KebabToggle"
+            fileName="Dropdown.example.tsx"
+          >
+            <DropdownKebab />
           </Example>
         </Card>
       </Section>

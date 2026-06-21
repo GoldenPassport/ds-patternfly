@@ -102,7 +102,7 @@ export const Overview: StoryObj = {
 
       <Section
         title="Date and time"
-        description="Pickers built on the same field chrome. Nested in their own sub-folder."
+        description="Pickers built on the same field chrome — all configurations of the exported DateField / TimeField. Nested in their own sub-folder."
       >
         <Card>
           <ul
@@ -113,11 +113,11 @@ export const Overview: StoryObj = {
               lineHeight: 1.9,
             }}
           >
-            <li><strong>DatePicker</strong> — text-field trigger + inline calendar popover.</li>
-            <li><strong>DateTimePicker</strong> — date + time in one composed control.</li>
-            <li><strong>TimePicker</strong> — hours / minutes with optional 12-hour AM/PM.</li>
-            <li><strong>CalendarMonth</strong> — the raw inline calendar primitive (PF6).</li>
-            <li><strong>FuturePicker</strong> — schedule-style chooser: relative wait (ISO duration) or absolute future date.</li>
+            <li><strong>DatePicker</strong> — <code>DateField</code>: text input + popover calendar (or <code>display="flat"</code> / <code>"modal"</code>).</li>
+            <li><strong>TimePicker</strong> — <code>TimeField</code>: hours / minutes with optional 12-hour AM/PM.</li>
+            <li><strong>DateTimePicker</strong> — paired <code>DateField</code> + <code>TimeField</code> in one FormGroup.</li>
+            <li><strong>FuturePicker</strong> — <code>DateField futureOnly</code>: today and earlier disabled (scheduling, expiries).</li>
+            <li><strong>DurationPicker</strong> — <code>DateField</code> with <code>relativeMode="duration"</code>: an ISO-8601 duration (<code>PT2H30M</code>) or a date.</li>
           </ul>
         </Card>
       </Section>

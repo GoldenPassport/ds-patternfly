@@ -15,7 +15,7 @@ import {
   DefinitionList,
 } from "../../examples/components/Accordion.example.js";
 import accordionExampleSrc from "../../examples/components/Accordion.example.tsx?raw";
-import accordionComponentSrc from "../../components/base/Accordion.tsx?raw";
+import accordionComponentSrc from "../../components/ds/AccordionPanel.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Accordion",
@@ -123,15 +123,16 @@ export const Overview: StoryObj = {
       </Section>
 
       <ConfigurationSection
-        importStatement={'import { Accordion, AccordionItem, AccordionToggle, AccordionContent } from "@golden-passport/ds-patternfly";'}
+        importStatement={'import { AccordionPanel } from "@golden-passport/ds-patternfly";'}
         componentSource={accordionComponentSrc}
-        componentFileName="Accordion.tsx"
+        componentFileName="AccordionPanel.tsx"
         rows={[
-          { name: "asDefinitionList", type: "boolean", description: "Default true. Renders as <dl>/<dt>/<dd> for term/definition semantics. Set false for general action-style accordions." },
-          { name: "isBordered", type: "boolean", description: "Outer border + per-item dividers — accordion as a card stack." },
-          { name: "displaySize", type: '"default" | "lg"', description: "Toggle text size. lg for hero / settings-page accordions; default for content accordions." },
-          { name: "headingLevel", type: '"h1" | ... | "h6"', description: "HTML heading level for the toggles. Match the page outline." },
-          { name: "togglePosition", type: '"start" | "end"', description: "Caret position. Default 'end' (right of the title); 'start' for tree-style left-caret accordions." },
+          { name: "items", type: "AccordionPanelItem[]", description: "The sections: { id?, title, content, isDisabled? }. The id is optional (auto-generated) unless you control expansion." },
+          { name: "multiple", type: "boolean", description: "Allow several sections open at once. Default false (single-open — opening one closes the rest)." },
+          { name: "defaultExpanded", type: "string | string[]", description: "Initially-expanded id(s) — uncontrolled." },
+          { name: "expanded / onExpandedChange", type: "string | string[]  /  (next) => void", description: "Controlled expansion — drive the open id(s) yourself." },
+          { name: "isBordered", type: "boolean", description: "Outline each item as a card." },
+          { name: "asDefinitionList", type: "boolean", description: "Render as a semantic <dl> for term/description pairs." },
         ]}
       />
 

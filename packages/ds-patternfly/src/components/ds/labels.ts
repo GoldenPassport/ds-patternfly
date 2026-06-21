@@ -145,6 +145,45 @@ export const compassShellEnLabels: CompassShellLabels = {
   skipToContent: "Skip to content",
 };
 
+export interface CompassTabsNavLabels {
+  /** aria-label for the desktop top-level tabs nav. */
+  tabsAriaLabel: string;
+  /** aria-label for the desktop subtab strip. */
+  subtabsAriaLabel: string;
+  /** aria-label for the mobile Nav landmark. */
+  mobileNavAriaLabel: string;
+  /** Heading text in the mobile nav drawer head. */
+  mobileNavTitle: string;
+  /** aria-label for the mobile nav close button. */
+  closeMobileNav: string;
+  /** aria-label for the home button (desktop nav). */
+  home: string;
+  /** aria-label for the search button (desktop nav). */
+  search: string;
+}
+
+export const compassTabsNavEnLabels: CompassTabsNavLabels = {
+  tabsAriaLabel: "Primary navigation",
+  subtabsAriaLabel: "Secondary navigation",
+  mobileNavAriaLabel: "Navigation",
+  mobileNavTitle: "Navigation",
+  closeMobileNav: "Close navigation",
+  home: "Home",
+  search: "Search",
+};
+
+export interface CompassRailLabels {
+  /** aria-label for the open handle. `{side}` is replaced with start/end. */
+  openRail: string;
+  /** aria-label for the close handle. `{side}` is replaced with start/end. */
+  closeRail: string;
+}
+
+export const compassRailEnLabels: CompassRailLabels = {
+  openRail: "Open {side} rail",
+  closeRail: "Close {side} rail",
+};
+
 export interface AppHeaderLabels {
   /** Accessible name for the sidebar toggle (hamburger) button. */
   toggleNav: string;

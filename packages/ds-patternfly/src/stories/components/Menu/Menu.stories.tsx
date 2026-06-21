@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FoundationPage, Section, Card, CodeBlock, Example } from "../_kit/StoryKit.js";
-import { PropsTable } from "../_kit/DemoKit.js";
+import { FoundationPage, Section, Card, CodeBlock, Example } from "../../_kit/StoryKit.js";
+import { PropsTable } from "../../_kit/DemoKit.js";
 import {
   Basic,
   WithIcons,
@@ -13,8 +13,8 @@ import {
   ExternalLinks,
   ViewMore,
   Plain,
-} from "../../examples/components/Menu.example.js";
-import menuExampleSrc from "../../examples/components/Menu.example.tsx?raw";
+} from "../../../examples/components/Menu/Menu.example.js";
+import menuExampleSrc from "../../../examples/components/Menu/Menu.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Menu/Menu",

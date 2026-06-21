@@ -12,6 +12,18 @@ export { DashboardShell } from "./DashboardShell.js";
 export type { DashboardShellProps, DashboardKpi } from "./DashboardShell.js";
 export { CompassShell, compassShellEnLabels } from "./CompassShell.js";
 export type { CompassShellProps, CompassShellLabels } from "./CompassShell.js";
+export { CompassTabsNav, compassTabsNavEnLabels } from "./CompassTabsNav.js";
+export type {
+  CompassTabsNavProps,
+  CompassTabsNavLabels,
+  CompassNavTab,
+  CompassNavSubtab,
+} from "./CompassTabsNav.js";
+export { CompassRail, compassRailEnLabels } from "./CompassRail.js";
+export type { CompassRailProps, CompassRailLabels, CompassRailAction } from "./CompassRail.js";
+export { CompassProfileMenu } from "./CompassProfileMenu.js";
+export type { CompassProfileMenuProps, CompassProfileMenuItem } from "./CompassProfileMenu.js";
+export { useCompassResponsive, compassRailRootClasses } from "./compassModels.js";
 
 // AI
 export {
@@ -90,6 +102,35 @@ export { DateField } from "./DateField.js";
 export type { DateFieldProps } from "./DateField.js";
 export { TimeField } from "./TimeField.js";
 export type { TimeFieldProps } from "./TimeField.js";
+export { StepperInput } from "./StepperInput.js";
+export type { StepperInputProps } from "./StepperInput.js";
+export { SelectableToggleGroup } from "./SelectableToggleGroup.js";
+export type { SelectableToggleGroupProps, ToggleOption } from "./SelectableToggleGroup.js";
+export { InlineEditField } from "./InlineEditField.js";
+export type { InlineEditFieldProps } from "./InlineEditField.js";
+export { ToastStack, useToasts } from "./ToastStack.js";
+export type { ToastStackProps, Toast, ToastVariant, AddToastOptions } from "./ToastStack.js";
+export { StatusBanner } from "./StatusBanner.js";
+export type { StatusBannerProps, BannerStatus } from "./StatusBanner.js";
+export { LoadingOverlay } from "./LoadingOverlay.js";
+export type { LoadingOverlayProps } from "./LoadingOverlay.js";
+export { CodeSnippet, useCopyToClipboard } from "./CodeSnippet.js";
+export type { CodeSnippetProps } from "./CodeSnippet.js";
+export { SelectableCard } from "./SelectableCard.js";
+export type { SelectableCardProps } from "./SelectableCard.js";
+export { ExpandableCard } from "./ExpandableCard.js";
+export type { ExpandableCardProps } from "./ExpandableCard.js";
+export { ActionButton } from "./ActionButton.js";
+export type { ActionButtonProps, ButtonShape } from "./ActionButton.js";
+export { AccordionPanel } from "./AccordionPanel.js";
+export type { AccordionPanelProps, AccordionPanelItem } from "./AccordionPanel.js";
+export { MenuButton } from "./MenuButton.js";
+export type {
+  MenuButtonProps,
+  MenuButtonItem,
+  MenuAction,
+  MenuActionGroup,
+} from "./MenuButton.js";
 export {
   required,
   minLength,

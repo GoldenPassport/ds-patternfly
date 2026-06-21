@@ -95,7 +95,7 @@ export const Overview: StoryObj = {
 
       <Section
         title="Single-select gallery (radio behaviour)"
-        description="isSelectable + matching selectableActions on each card's header turn the gallery into a radio group. Track the selected id yourself; PF6 wires aria-checked + role='radio'."
+        description="The SelectableCard lego block owns the selectableActions + id / aria plumbing. Give every card the same name to form one radio group and track the chosen id in the parent."
       >
         <DocCard>
           <Example
@@ -110,7 +110,7 @@ export const Overview: StoryObj = {
 
       <Section
         title="Multi-select"
-        description="Drop variant='single' (or set 'multiple') and each card becomes an independent checkbox. Use for bulk-action gallery views."
+        description="Pass selectionVariant='multiple' and each SelectableCard becomes an independent checkbox. Use for bulk-action gallery views."
       >
         <DocCard>
           <Example
@@ -125,7 +125,7 @@ export const Overview: StoryObj = {
 
       <Section
         title="Expandable"
-        description="CardExpandableContent collapses the body + footer behind a disclosure toggle in the header. Wire onExpand on the header, isExpanded on the Card, and the toggle's aria attributes for screen readers."
+        description="The ExpandableCard lego block collapses the body + footer behind a disclosure toggle. It owns the expand state (controlled or uncontrolled) and the toggle's aria wiring; you pass title, content, and an optional footer."
       >
         <DocCard>
           <Example
@@ -184,11 +184,32 @@ export const Overview: StoryObj = {
         ]}
       />
 
+      <Section
+        title="SelectableCard & ExpandableCard — DS lego blocks"
+        description="import { SelectableCard, ExpandableCard } from '@golden-passport/ds-patternfly'. The selectable + expandable demos above route through these; the base Card composition table is for the simpler variants."
+      >
+        <DocCard>
+          <div style={{ padding: 24, display: "grid", gap: 24 }}>
+            <PropsTable
+              rows={[
+                { name: "SelectableCard.title / children", type: "ReactNode", description: "Card heading and body." },
+                { name: "SelectableCard.isSelected / onChange", type: "boolean / (checked) => void", description: "Controlled selection. You hold the state; the block wires the input." },
+                { name: "SelectableCard.selectionVariant", type: '"single" | "multiple"', description: 'Radio (default) or independent checkbox.' },
+                { name: "SelectableCard.name", type: "string", description: "Radio group name — single-select cards in one group MUST share it. Defaults to a generated id." },
+                { name: "ExpandableCard.title / children / footer", type: "ReactNode", description: "Always-visible heading, revealed content, optional footer." },
+                { name: "ExpandableCard.defaultExpanded / isExpanded / onExpandedChange", type: "boolean / boolean / (e) => void", description: "Uncontrolled or controlled expand state." },
+                { name: "ExpandableCard.toggleAriaLabel", type: "string", description: 'Accessible label for the toggle (default "Details").' },
+              ]}
+            />
+          </div>
+        </DocCard>
+      </Section>
+
       <Section title="Accessibility">
         <DocCard>
           <ul style={{ margin: 0, padding: "16px 24px 16px 40px", color: "var(--gp-color-text-regular)", lineHeight: 1.8 }}>
-            <li><strong>Selectable cards need <code>id</code></strong> on the Card and <code>selectableActionAriaLabelledby</code> in the header — the input gets its name from the title.</li>
-            <li><strong>Expandable cards need full toggle wiring</strong> — <code>id</code> + <code>aria-label</code> + <code>aria-labelledby</code> + <code>aria-expanded</code> on <code>toggleButtonProps</code>.</li>
+            <li><strong>Selection a11y is handled for you</strong> — SelectableCard wires the Card <code>id</code>, the input, and <code>selectableActionAriaLabelledby</code>; the input takes its name from the title.</li>
+            <li><strong>Expand a11y is handled for you</strong> — ExpandableCard wires the toggle <code>id</code> + <code>aria-label</code> + <code>aria-labelledby</code> + <code>aria-expanded</code>.</li>
             <li><strong>Don&rsquo;t make a single card both <code>isClickable</code> AND interactive inside</strong> — wrap interactive children carefully so they don&rsquo;t steal the click target.</li>
             <li><strong>Keep titles short.</strong> Selectable card grids announce the title via the input label — a wall of text becomes unusable.</li>
           </ul>

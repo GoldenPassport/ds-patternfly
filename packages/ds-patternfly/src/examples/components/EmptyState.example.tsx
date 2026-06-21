@@ -14,6 +14,7 @@ import {
   EmptyStateActions,
   EmptyStateBody,
   EmptyStateFooter,
+  EmptyStatePanel,
   Spinner,
 } from "@golden-passport/ds-patternfly";
 import {
@@ -25,26 +26,23 @@ import {
 
 // #region Basic
 export function Basic() {
+  // EmptyStatePanel — the DS empty-state lego block: icon + title + body +
+  // primary CTA + secondary actions, no EmptyStateFooter/Actions plumbing.
   return (
-    <EmptyState
-      titleText="No projects yet"
-      headingLevel="h2"
+    <EmptyStatePanel
+      title="No projects yet"
       icon={CubesIcon}
-    >
-      <EmptyStateBody>
-        Projects collect related workflows and resources.
-        Create your first one to get started.
-      </EmptyStateBody>
-      <EmptyStateFooter>
-        <EmptyStateActions>
-          <Button variant="primary">Create project</Button>
-        </EmptyStateActions>
-        <EmptyStateActions>
+      primaryAction={<Button variant="primary">Create project</Button>}
+      secondaryActions={
+        <>
           <Button variant="link">Import from template</Button>
           <Button variant="link">View documentation</Button>
-        </EmptyStateActions>
-      </EmptyStateFooter>
-    </EmptyState>
+        </>
+      }
+    >
+      Projects collect related workflows and resources. Create your first one
+      to get started.
+    </EmptyStatePanel>
   );
 }
 // #endregion
@@ -52,21 +50,14 @@ export function Basic() {
 // #region NoResults
 export function NoResults() {
   return (
-    <EmptyState
-      titleText="No matching tasks"
-      headingLevel="h2"
+    <EmptyStatePanel
+      title="No matching tasks"
       icon={SearchIcon}
+      secondaryActions={<Button variant="link">Clear all filters</Button>}
     >
-      <EmptyStateBody>
-        No tasks match the current filters. Try clearing some
-        filters or broadening the search.
-      </EmptyStateBody>
-      <EmptyStateFooter>
-        <EmptyStateActions>
-          <Button variant="link">Clear all filters</Button>
-        </EmptyStateActions>
-      </EmptyStateFooter>
-    </EmptyState>
+      No tasks match the current filters. Try clearing some filters or
+      broadening the search.
+    </EmptyStatePanel>
   );
 }
 // #endregion

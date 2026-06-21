@@ -6,13 +6,14 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import {
   Alert,
   AlertActionCloseButton,
   AlertActionLink,
-  AlertGroup,
   Button,
+  ToastStack,
+  useToasts,
 } from "@golden-passport/ds-patternfly";
 import { BellIcon } from "@patternfly/react-icons";
 
@@ -115,13 +116,9 @@ export function CustomIcon() {
 
 // #region ToastGroup
 export function ToastGroup() {
-  const [toasts, setToasts] = useState<
-    Array<{ key: number; variant: "success" | "danger" | "info"; title: string }>
-  >([]);
-  const addToast = (variant: "success" | "danger" | "info", title: string) =>
-    setToasts((t) => [{ key: Date.now(), variant, title }, ...t]);
-  const removeToast = (key: number) =>
-    setToasts((t) => t.filter((a) => a.key !== key));
+  // useToasts owns the queue (keys, add / remove); ToastStack renders the
+  // floating live-region AlertGroup and wires each toast's timeout + close.
+  const { toasts, addToast, removeToast } = useToasts();
 
   return (
     <>
@@ -136,24 +133,7 @@ export function ToastGroup() {
           Add info toast
         </Button>
       </div>
-      <AlertGroup hasAnimations isToast isLiveRegion>
-        {toasts.map((t) => (
-          <Alert
-            key={t.key}
-            variant={t.variant}
-            title={t.title}
-            timeout={6000}
-            onTimeout={() => removeToast(t.key)}
-            actionClose={
-              <AlertActionCloseButton
-                title={t.title}
-                variantLabel={`${t.variant} alert`}
-                onClose={() => removeToast(t.key)}
-              />
-            }
-          />
-        ))}
-      </AlertGroup>
+      <ToastStack toasts={toasts} onDismiss={removeToast} />
     </>
   );
 }

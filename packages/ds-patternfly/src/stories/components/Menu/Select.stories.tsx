@@ -7,15 +7,15 @@ import {
   ConfigurationSection,
   Example,
   ThemingPointer,
-} from "../_kit/StoryKit.js";
-import { PropsTable } from "../_kit/DemoKit.js";
+} from "../../_kit/StoryKit.js";
+import { PropsTable } from "../../_kit/DemoKit.js";
 import {
   BasicSingleSelect,
   Grouped,
   MultiSelectCheckboxes,
-} from "../../examples/components/Select.example.js";
-import selectExampleSrc from "../../examples/components/Select.example.tsx?raw";
-import selectComponentSrc from "../../components/base/Select.tsx?raw";
+} from "../../../examples/components/Menu/Select.example.js";
+import selectExampleSrc from "../../../examples/components/Menu/Select.example.tsx?raw";
+import selectComponentSrc from "../../../components/base/Select.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Menu/Select",

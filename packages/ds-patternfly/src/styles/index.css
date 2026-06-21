@@ -2257,6 +2257,208 @@
 }
 
 /* ---------------------------------------------------------------
+ * Compass off-canvas icon rails (CompassRail isMobile).
+ *
+ * Below PF6's 62rem breakpoint the two icon rails leave the Compass grid
+ * and become absolute overlays anchored to the .gp-compass-mobile-overlay
+ * box. Each carries an edge-handle button that expands / collapses it; the
+ * open/closed slide is driven by gp-rail-{left,right}-{open,closed} classes
+ * on the <Compass> root (see compassRailRootClasses). Scoped under the
+ * wrapper so other Compass instances are unaffected.
+ * --------------------------------------------------------------- */
+@media (max-width: 61.99rem) {
+  /* Clip the box so a collapsed rail (+ its backdrop-filter) can't bleed
+     into the page margin; the closed rail's handle sits just inside the edge. */
+  .gp-compass-mobile-overlay {
+    overflow: hidden;
+  }
+  /* With the rails off-canvas, keep main as an inset column rather than
+     sprawling edge-to-edge under the full-bleed header. */
+  .gp-compass-mobile-overlay .pf-v6-c-compass__main {
+    margin-inline: var(--pf-t--global--spacer--md, 1rem);
+  }
+  /* Bare avatar profile toggle — strip the circular toggle chrome so only
+     the avatar shows, in every state. */
+  .gp-compass-mobile-overlay .gp-compass-avatar-toggle,
+  .gp-compass-mobile-overlay .gp-compass-avatar-toggle:hover,
+  .gp-compass-mobile-overlay .gp-compass-avatar-toggle.pf-m-expanded {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+  .gp-compass-mobile-overlay .gp-compass-avatar-toggle::before {
+    display: none !important;
+  }
+  /* Header grid is align-items:start — centre the profile cell in the row. */
+  .gp-compass-mobile-overlay .pf-v6-c-compass__profile {
+    align-self: center;
+  }
+  /* Rails out of the grid → absolute overlays anchored to the box. Keep the
+     wrapper visible (PF6 hides collapsed rails) so the handle stays tappable;
+     the Panel content is gated separately below. */
+  .gp-compass-mobile-overlay .pf-v6-c-compass__sidebar.pf-m-start,
+  .gp-compass-mobile-overlay .pf-v6-c-compass__sidebar.pf-m-end {
+    position: absolute;
+    grid-area: unset;
+    inset-block-start: 0;
+    block-size: 100%;
+    z-index: 300;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  .gp-compass-mobile-overlay .pf-v6-c-compass__sidebar.pf-m-start {
+    inset-inline-start: 0;
+  }
+  .gp-compass-mobile-overlay .pf-v6-c-compass__sidebar.pf-m-end {
+    inset-inline-end: 0;
+  }
+  /* Slide open/closed, driven by classes on the Compass root. */
+  .gp-compass-mobile-overlay .gp-rail-left-closed .pf-v6-c-compass__sidebar.pf-m-start {
+    translate: calc(var(--pf-v6-c-compass--section--slide--length--sidebar) * -1);
+  }
+  .gp-compass-mobile-overlay .gp-rail-left-open .pf-v6-c-compass__sidebar.pf-m-start {
+    translate: 0;
+  }
+  .gp-compass-mobile-overlay .gp-rail-right-closed .pf-v6-c-compass__sidebar.pf-m-end {
+    translate: var(--pf-v6-c-compass--section--slide--length--sidebar);
+  }
+  .gp-compass-mobile-overlay .gp-rail-right-open .pf-v6-c-compass__sidebar.pf-m-end {
+    translate: 0;
+  }
+  /* Hide rail content when closed; keep the wrapper for the handle. */
+  .gp-compass-mobile-overlay .gp-rail-left-closed .pf-v6-c-compass__sidebar.pf-m-start > .pf-v6-c-panel,
+  .gp-compass-mobile-overlay .gp-rail-right-closed .pf-v6-c-compass__sidebar.pf-m-end > .pf-v6-c-panel {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .gp-compass-mobile-overlay .gp-rail-left-open .pf-v6-c-compass__sidebar.pf-m-start > .pf-v6-c-panel,
+  .gp-compass-mobile-overlay .gp-rail-right-open .pf-v6-c-compass__sidebar.pf-m-end > .pf-v6-c-panel {
+    visibility: visible;
+    opacity: 1;
+    /* On mobile the open rail floats OVER the content, so make it a solid
+       surface (matching the edge handle's background) with a drop shadow
+       instead of the see-through glass used on desktop. */
+    background: var(--gp-color-bg-secondary-default, rgba(255, 255, 255, 0.96));
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  /* The plain icon-button hover defaults to the secondary surface — now the
+     same colour as the open rail, so the hover would be invisible. Bump it to
+     the darker secondary-hover tone so the hover reads against the rail. */
+  .gp-compass-mobile-overlay .gp-rail-left-open .pf-v6-c-compass__sidebar.pf-m-start > .pf-v6-c-panel .pf-v6-c-button,
+  .gp-compass-mobile-overlay .gp-rail-right-open .pf-v6-c-compass__sidebar.pf-m-end > .pf-v6-c-panel .pf-v6-c-button {
+    --pf-v6-c-button--m-plain--hover--BackgroundColor: var(--gp-color-bg-secondary-hover, #e6dcc8);
+  }
+  /* Glass theme — frost the open rail to match the handles. */
+  .pf-v6-theme-glass .gp-compass-mobile-overlay .gp-rail-left-open .pf-v6-c-compass__sidebar.pf-m-start > .pf-v6-c-panel,
+  .pf-v6-theme-glass .gp-compass-mobile-overlay .gp-rail-right-open .pf-v6-c-compass__sidebar.pf-m-end > .pf-v6-c-panel {
+    background: var(--pf-t--global--background--color--glass--primary--default);
+    backdrop-filter: var(--pf-t--global--background--filter--glass--blur--primary);
+    -webkit-backdrop-filter: var(--pf-t--global--background--filter--glass--blur--primary);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+  /* Glass theme — brand-tint the icon-button hover so it reads on the frosted rail. */
+  .pf-v6-theme-glass .gp-compass-mobile-overlay .gp-rail-left-open .pf-v6-c-compass__sidebar.pf-m-start > .pf-v6-c-panel .pf-v6-c-button,
+  .pf-v6-theme-glass .gp-compass-mobile-overlay .gp-rail-right-open .pf-v6-c-compass__sidebar.pf-m-end > .pf-v6-c-panel .pf-v6-c-button {
+    --pf-v6-c-button--m-plain--hover--BackgroundColor: color-mix(in srgb, var(--pf-t--global--background--color--glass--primary--default) 70%, var(--gp-color-brand-default) 30%);
+  }
+  /* Edge handle — absolute to the (fixed) rail; forced visible so it stays
+     tappable while the collapsed rail is hidden. */
+  .gp-compass-mobile-overlay .gp-cmp-rail-handle {
+    position: absolute;
+    inset-block-start: 50%;
+    transform: translateY(-50%);
+    z-index: 200;
+    inline-size: 24px;
+    block-size: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid var(--gp-color-border-default, rgba(0, 0, 0, 0.15));
+    background: var(--gp-color-bg-secondary-default, rgba(255, 255, 255, 0.85));
+    color: var(--gp-color-text-regular);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  .gp-compass-mobile-overlay .gp-cmp-rail-handle:hover,
+  .gp-compass-mobile-overlay .gp-cmp-rail-handle:focus-visible {
+    background: var(--gp-color-bg-secondary-hover, var(--gp-color-bg-secondary-default));
+  }
+  /* Glass theme — frost the handles to match the rail panels (use the
+     glass--* token, not --primary--default which the dials make opaque). */
+  .pf-v6-theme-glass .gp-compass-mobile-overlay .gp-cmp-rail-handle {
+    background: var(--pf-t--global--background--color--glass--primary--default);
+    backdrop-filter: var(--pf-t--global--background--filter--glass--blur--primary);
+    -webkit-backdrop-filter: var(--pf-t--global--background--filter--glass--blur--primary);
+    border-color: color-mix(in srgb, var(--pf-t--global--border--color--default, currentColor) 30%, transparent);
+  }
+  .pf-v6-theme-glass .gp-compass-mobile-overlay .gp-cmp-rail-handle:hover,
+  .pf-v6-theme-glass .gp-compass-mobile-overlay .gp-cmp-rail-handle:focus-visible {
+    background: color-mix(in srgb, var(--pf-t--global--background--color--glass--primary--default) 80%, var(--gp-color-brand-default) 20%);
+  }
+  /* Anchor each handle to its rail's outer edge (chevron pokes out). */
+  .gp-compass-mobile-overlay .gp-cmp-rail-handle--start {
+    inset-inline-end: -24px;
+    border-inline-start: 0;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+    border-start-end-radius: 8px;
+    border-end-end-radius: 8px;
+    box-shadow: 2px 1px 4px rgba(0, 0, 0, 0.18);
+    transition: inset-inline-end 200ms ease;
+  }
+  .gp-compass-mobile-overlay .gp-cmp-rail-handle--end {
+    inset-inline-start: -24px;
+    border-inline-end: 0;
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+    border-start-start-radius: 8px;
+    border-end-start-radius: 8px;
+    box-shadow: -2px 1px 4px rgba(0, 0, 0, 0.18);
+    transition: inset-inline-start 200ms ease;
+  }
+  /* When open, tuck the handle tighter against the rail edge. */
+  .gp-compass-mobile-overlay .gp-rail-left-open .pf-v6-c-compass__sidebar.pf-m-start .gp-cmp-rail-handle--start {
+    inset-inline-end: -16px;
+  }
+  .gp-compass-mobile-overlay .gp-rail-right-open .pf-v6-c-compass__sidebar.pf-m-end .gp-cmp-rail-handle--end {
+    inset-inline-start: -16px;
+  }
+  /* Mobile nav drawer sits ABOVE the rail edge-handles (z 300); its scrim
+     covers them, so the open sidenav is modal over the rail buttons. Square
+     corners — it's a flush full-height edge drawer, not a floating card. */
+  .gp-compass-mobile-overlay .gp-compass-scrim {
+    z-index: 350;
+  }
+  .gp-compass-mobile-overlay .gp-compass-drawer {
+    z-index: 400;
+  }
+  .gp-compass-mobile-overlay .gp-compass-drawer,
+  .gp-compass-mobile-overlay .gp-compass-drawer > .pf-v6-c-panel {
+    border-radius: 0;
+  }
+}
+/* Desktop: the header spans the full width of the box (breaking out of the
+   container's inline padding) while rails + main stay inset — a full-bleed
+   app bar over a margined content area. */
+@media (min-width: 62rem) {
+  .gp-compass-mobile-overlay .pf-v6-c-compass__header {
+    margin-inline: calc(-1 * var(--pf-t--global--spacer--lg, 1.5rem));
+  }
+}
+
+/* ---------------------------------------------------------------
  * Floating menu trigger gap.
  *
  * PF6's Popper-based menus (Dropdown, Select, MenuToggle-driven

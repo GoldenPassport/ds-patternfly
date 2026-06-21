@@ -135,8 +135,8 @@ export const Overview: StoryObj = {
       </Section>
 
       <Section
-        title="Toast group (AlertGroup + isToast)"
-        description="AlertGroup with isToast pins alerts to the top-right of the viewport (above all content). Pair with isLiveRegion so screen readers announce new entries. Use timeout for auto-dismiss; track keys yourself so each alert can be removed individually."
+        title="Toast stack (ToastStack + useToasts)"
+        description="The transient, top-right toast queue is promoted to the ToastStack lego block + the useToasts hook. useToasts owns the queue — collision-free keys, add / remove — and ToastStack renders the animated, live-region AlertGroup, wiring each toast's timeout and close button back to onDismiss. import { ToastStack, useToasts } from '@golden-passport/ds-patternfly'."
       >
         <Card>
           <Example
@@ -146,6 +146,16 @@ export const Overview: StoryObj = {
           >
             <ToastGroup />
           </Example>
+          <div style={{ padding: 24 }}>
+            <PropsTable
+              rows={[
+                { name: "useToasts(defaults?)", type: "() => { toasts, addToast, removeToast, clearToasts }", description: "Queue hook. addToast(variant, title, { timeout? }) returns the new key; defaults.timeout sets the auto-dismiss (default 6000ms)." },
+                { name: "ToastStack.toasts", type: "Toast[]", description: "The live queue from useToasts." },
+                { name: "ToastStack.onDismiss", type: "(key: number) => void", description: "Fired on timeout or close — pass useToasts' removeToast." },
+                { name: "Toast.timeout", type: "number", description: "Per-toast auto-dismiss in ms; 0 keeps it until closed." },
+              ]}
+            />
+          </div>
         </Card>
       </Section>
 

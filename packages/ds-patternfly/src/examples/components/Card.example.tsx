@@ -7,15 +7,16 @@
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { Fragment, useId, useState } from "react";
+import { Fragment, useState } from "react";
 import {
   Button,
   Card,
   CardBody,
-  CardExpandableContent,
   CardFooter,
   CardHeader,
   CardTitle,
+  ExpandableCard,
+  SelectableCard,
 } from "@golden-passport/ds-patternfly";
 
 // #region Basic
@@ -84,31 +85,24 @@ export function Modifiers() {
 
 // #region SingleSelectGallery
 export function SingleSelectGallery() {
-  const id = useId();
+  // SelectableCard owns the selectableActions + id / aria plumbing. For a
+  // single-select gallery, share one `name` across the cards and track the
+  // chosen id here.
   const [sel, setSel] = useState<string | null>(null);
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
-      {(["small", "medium", "large"] as const).map((size) => {
-        const cardId = `${id}-size-card-${size}`;
-        const inputId = `${id}-card-radio-${size}`;
-        return (
-          <Card key={size} id={cardId} isSelectable isSelected={sel === size}>
-            <CardHeader
-              selectableActions={{
-                selectableActionId: inputId,
-                selectableActionAriaLabelledby: cardId,
-                name: `${id}-size-radio`,
-                variant: "single",
-                onChange: () => setSel(size),
-              }}
-            >
-              <CardTitle>{size[0]?.toUpperCase()}{size.slice(1)}</CardTitle>
-            </CardHeader>
-            <CardBody>1 vCPU · 2 GB RAM</CardBody>
-          </Card>
-        );
-      })}
+      {(["small", "medium", "large"] as const).map((size) => (
+        <SelectableCard
+          key={size}
+          name="card-size-radio"
+          title={`${size[0]?.toUpperCase()}${size.slice(1)}`}
+          isSelected={sel === size}
+          onChange={() => setSel(size)}
+        >
+          1 vCPU · 2 GB RAM
+        </SelectableCard>
+      ))}
     </div>
   );
 }
@@ -116,34 +110,23 @@ export function SingleSelectGallery() {
 
 // #region MultiSelect
 export function MultiSelect() {
-  const id = useId();
   const [multi, setMulti] = useState<{ a: boolean; b: boolean; c: boolean }>(
     { a: false, b: false, c: false },
   );
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
-      {(["a", "b", "c"] as const).map((key) => {
-        const cardId = `${id}-multi-card-${key}`;
-        const inputId = `${id}-card-multi-${key}`;
-        return (
-          <Card key={key} id={cardId} isSelectable isSelected={multi[key]}>
-            <CardHeader
-              selectableActions={{
-                selectableActionId: inputId,
-                selectableActionAriaLabelledby: cardId,
-                name: inputId,
-                variant: "multiple",
-                onChange: (_e, checked) =>
-                  setMulti((m) => ({ ...m, [key]: checked })),
-              }}
-            >
-              <CardTitle>Resource {key.toUpperCase()}</CardTitle>
-            </CardHeader>
-            <CardBody>Pick one or more.</CardBody>
-          </Card>
-        );
-      })}
+      {(["a", "b", "c"] as const).map((key) => (
+        <SelectableCard
+          key={key}
+          selectionVariant="multiple"
+          title={`Resource ${key.toUpperCase()}`}
+          isSelected={multi[key]}
+          onChange={(checked) => setMulti((m) => ({ ...m, [key]: checked }))}
+        >
+          Pick one or more.
+        </SelectableCard>
+      ))}
     </div>
   );
 }
@@ -151,31 +134,13 @@ export function MultiSelect() {
 
 // #region Expandable
 export function Expandable() {
-  const id = useId();
-  const [exp, setExp] = useState(false);
-
   return (
-    <Card id={`${id}-expandable`} isExpanded={exp}>
-      <CardHeader
-        onExpand={() => setExp((v) => !v)}
-        toggleButtonProps={{
-          id: `${id}-expandable-toggle`,
-          "aria-label": "Details",
-          "aria-labelledby": `${id}-expandable-title ${id}-expandable-toggle`,
-          "aria-expanded": exp,
-        }}
-      >
-        <CardTitle id={`${id}-expandable-title`}>Run history</CardTitle>
-      </CardHeader>
-      <CardExpandableContent>
-        <CardBody>
-          Last 10 runs · 9 successful · 1 retry · 0 failed.
-        </CardBody>
-        <CardFooter>
-          <Button variant="link">View full history</Button>
-        </CardFooter>
-      </CardExpandableContent>
-    </Card>
+    <ExpandableCard
+      title="Run history"
+      footer={<Button variant="link">View full history</Button>}
+    >
+      Last 10 runs · 9 successful · 1 retry · 0 failed.
+    </ExpandableCard>
   );
 }
 // #endregion

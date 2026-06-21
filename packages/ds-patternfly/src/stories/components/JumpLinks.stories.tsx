@@ -87,7 +87,7 @@ export const Overview: StoryObj = {
             source={jumpLinksExampleSrc}
             region="VerticalSubSections"
             fileName="JumpLinks.example.tsx"
-            height={260}
+            height={380}
           >
             <VerticalSubSections />
           </Example>

@@ -12,7 +12,7 @@ import {
   Expandable,
 } from "../../examples/components/CodeBlock.example.js";
 import codeBlockExampleSrc from "../../examples/components/CodeBlock.example.tsx?raw";
-import codeBlockComponentSrc from "../../components/base/CodeBlock.tsx?raw";
+import codeSnippetComponentSrc from "../../components/ds/CodeSnippet.tsx?raw";
 
 const meta: Meta = {
   title: "Components/CodeBlock",
@@ -74,15 +74,17 @@ export const Overview: StoryObj = {
         </Card>
       </Section>
 
-      <Section title="Composition">
+      <Section
+        title="useCopyToClipboard"
+        description="The copy-with-feedback hook behind CodeSnippet, exported for reuse elsewhere (a copy button on an id, a token, a share URL)."
+      >
         <Card>
           <div style={{ padding: 24 }}>
             <PropsTable
               rows={[
-                { name: "CodeBlock", type: "container", description: "Outer wrapper. actions={node} renders trailing icon buttons (copy / run / share)." },
-                { name: "CodeBlockCode", type: "child", description: "The monospace body. Pass id when you need to reference it from aria attributes elsewhere." },
-                { name: "CodeBlockAction", type: "child", description: "Wraps each trailing action so PF6 spaces them consistently. Holds ClipboardCopyButton, run buttons, kebab menus." },
-                { name: "ClipboardCopyButton", type: "child", description: "Copy-to-clipboard button with built-in 'Copied!' tooltip flip. exitDelay + onTooltipHidden control the confirmation timing." },
+                { name: "useCopyToClipboard(resetMs?)", type: "() => { copied, copy }", description: "Returns a copied flag and a copy(text) function; copied flips true on copy and resets after resetMs (default 1500)." },
+                { name: "copied", type: "boolean", description: "True for resetMs after the last copy — drive a 'Copied!' label / tooltip." },
+                { name: "copy", type: "(text: string) => void", description: "Writes text to the clipboard and sets copied." },
               ]}
             />
           </div>
@@ -90,15 +92,17 @@ export const Overview: StoryObj = {
       </Section>
 
       <ConfigurationSection
-        importStatement={'import { CodeBlock, CodeBlockCode, CodeBlockAction, ClipboardCopyButton } from "@golden-passport/ds-patternfly";'}
-        componentSource={codeBlockComponentSrc}
-        componentFileName="CodeBlock.tsx"
+        importStatement={'import { CodeSnippet, useCopyToClipboard } from "@golden-passport/ds-patternfly";'}
+        componentSource={codeSnippetComponentSrc}
+        componentFileName="CodeSnippet.tsx"
+        description="CodeSnippet owns the copy action (with 'Copied!' feedback), the optional Run action, and collapse-after-N-lines expansion. You pass the code string."
         rows={[
-          { name: "CodeBlock.actions", type: "ReactNode", description: "Trailing action slot — wrap each in a CodeBlockAction for consistent spacing." },
-          { name: "CodeBlockCode.id", type: "string", description: "DOM id — useful when you reference the body from aria-controls / aria-labelledby." },
-          { name: "ClipboardCopyButton.exitDelay", type: "number", description: "How long the 'Copied!' tooltip stays visible after click. Use ~1500ms for confirmation." },
-          { name: "ClipboardCopyButton.maxWidth", type: "string", description: "Cap the tooltip width — long copy labels wrap nicely." },
-          { name: "ClipboardCopyButton.onTooltipHidden", type: "() => void", description: "Reset your 'just copied' state when the tooltip fades — pairs with a useState toggle." },
+          { name: "code", type: "string", description: "The code to display and copy." },
+          { name: "onRun", type: "() => void", description: "When set, renders a Run action (play button + live tooltip)." },
+          { name: "runLabel", type: "string", description: "Tooltip for the Run action (default \"Run snippet\")." },
+          { name: "collapseAfter", type: "number", description: "Collapse to this many lines, revealing the rest behind a Show more / Show less toggle." },
+          { name: "copyLabel / copiedLabel", type: "string", description: "Copy-button labels in the resting / just-copied states." },
+          { name: "id", type: "string", description: "Id base for the code body + expand a11y wiring." },
         ]}
       />
 
@@ -115,8 +119,7 @@ export const Overview: StoryObj = {
       <Section title="Accessibility">
         <Card>
           <ul style={{ margin: 0, padding: "16px 24px 16px 40px", color: "var(--gp-color-text-regular)", lineHeight: 1.8 }}>
-            <li><strong>ClipboardCopyButton needs aria-label</strong> — describes what it copies (&ldquo;Copy install command&rdquo;), not just &ldquo;Copy&rdquo;.</li>
-            <li><strong>Use <code>aria-live=&quot;polite&quot;</code></strong> on action tooltips so the &ldquo;Copied!&rdquo; / &ldquo;Running…&rdquo; confirmation is announced to screen readers.</li>
+            <li><strong>Copy + run a11y is built in</strong> — CodeSnippet labels the copy button and announces the &ldquo;Copied!&rdquo; / &ldquo;Running…&rdquo; confirmation via a polite live region.</li>
             <li><strong>Don&rsquo;t hide critical commands behind expand</strong> — if the snippet is the answer to a question, show it by default.</li>
           </ul>
         </Card>

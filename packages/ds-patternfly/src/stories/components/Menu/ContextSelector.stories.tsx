@@ -5,8 +5,8 @@ import {
   Card,
   Example,
 } from "../../_kit/StoryKit.js";
-import { Demo as SelectorDemo } from "../../../examples/components/menu-demos/ContextSelector.example.js";
-import selectorExampleSrc from "../../../examples/components/menu-demos/ContextSelector.example.tsx?raw";
+import { Demo as SelectorDemo } from "../../../examples/components/Menu/ContextSelector.example.js";
+import selectorExampleSrc from "../../../examples/components/Menu/ContextSelector.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Menu/Context selector",

@@ -12,7 +12,7 @@ import {
   BuildInfo,
 } from "../../examples/components/Footer.example.js";
 import footerExampleSrc from "../../examples/components/Footer.example.tsx?raw";
-import pageComponentSrc from "../../components/base/Page.tsx?raw";
+import appFooterComponentSrc from "../../components/ds/AppFooter.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Footer",
@@ -21,27 +21,23 @@ const meta: Meta = {
 export default meta;
 
 /**
- * PF6 doesn't ship a dedicated `<PageFooter>` component — the convention
- * is a final `<PageSection component="footer">` at the bottom of the
- * Page. These demos show three common shapes:
+ * PF6 doesn't ship a dedicated `<PageFooter>` component, so the lib exports
+ * `AppFooter`. All three demos below are the same component, configured for
+ * three common shapes:
  *
- *   1. **Compact** — single row, copyright + inline links. Suits dense
- *      app shells (the lib's `<Shell>` uses this pattern by default).
- *   2. **Multi-column** — marketing-style 4-column grid with link lists
- *      + brand. Use on public / docs pages.
- *   3. **Build info** — left-side status (version, env, last-deployed),
- *      right-side support links. Useful for internal tools.
+ *   1. **Compact** — copyright + inline links only (no link groups). Suits
+ *      dense app shells.
+ *   2. **Multi-column** — logo + tagline + sitemap `linkGroups`. Use on
+ *      public / docs pages; columns wrap on narrow viewports.
+ *   3. **Build info** — a build-status node in the `copyright` slot + ops
+ *      links in `legalLinks`. Useful for internal tools.
  *
  * Accessibility notes:
  *
- *   - The native `<footer>` element only gets an implicit `contentinfo`
- *     role when it's a direct child of `<body>`. When `<PageSection
- *     component="footer">` is nested inside a Page main area it has no
- *     role, so don't add `aria-label` — axe flags label-on-roleless as
- *     `aria-prohibited-attr`. Visible content makes the purpose obvious.
- *   - PageSection injects a `pf-v6-c-page__main-body` div between the
- *     section element and its children, so flex / grid styles need to
- *     live on an inner wrapper, not the section itself.
+ *   - AppFooter renders a real `<footer>` element and labels each link
+ *     column as a `<nav aria-label={group.title}>` for you.
+ *   - Decorative dots and separators in caller-supplied `copyright` nodes
+ *     should carry `aria-hidden` so the line reads as one phrase.
  */
 export const Overview: StoryObj = {
   render: () => (
@@ -50,10 +46,11 @@ export const Overview: StoryObj = {
       intro={
         <>
           PatternFly 6 doesn&rsquo;t ship a dedicated <code>PageFooter</code>{" "}
-          component. The canonical pattern is a final{" "}
-          <code>&lt;PageSection component=&quot;footer&quot;&gt;</code> at
-          the bottom of the page, rendered as a <code>&lt;footer&gt;</code>{" "}
-          landmark for assistive tech.
+          component, so the lib exports <code>AppFooter</code> — it renders a{" "}
+          real <code>&lt;footer&gt;</code> landmark and owns the layout (logo +
+          tagline, link-group columns, bottom bar) plus the brand dials. You
+          pass content; each region appears only when its prop is set. The three
+          shapes below are all the same component, configured differently.
         </>
       }
     >
@@ -112,34 +109,39 @@ export const Overview: StoryObj = {
       </Section>
 
       <ConfigurationSection
-        importStatement={'import { PageSection } from "@golden-passport/ds-patternfly";'}
-        componentSource={pageComponentSrc}
-        componentFileName="Page.tsx"
-        description="How to import PageSection and the props most used for footers."
+        importStatement={'import { AppFooter, type FooterLinkGroup } from "@golden-passport/ds-patternfly";'}
+        componentSource={appFooterComponentSrc}
+        componentFileName="AppFooter.tsx"
+        description="AppFooter owns the footer layout (logo + tagline, link-group columns, and the bottom bar with copyright + inline legal links) and the brand dials. You supply content; every section renders only when its prop is given."
         rows={[
           {
-            name: 'component="footer"',
-            type: "ElementType",
+            name: "logo",
+            type: "ReactNode",
             description:
-              "Render the section as a <footer> element. Required for landmark semantics.",
+              "Brand mark / logo node, shown top-left above the tagline.",
           },
           {
-            name: 'variant="secondary"',
-            type: '"default" | "secondary"',
-            description:
-              "Tones the bg to the alt surface so the footer reads as separate from the content above.",
+            name: "tagline",
+            type: "ReactNode",
+            description: "Short line under the logo.",
           },
           {
-            name: "padding",
-            type: "BreakpointObject<'padding' | 'noPadding'>",
+            name: "linkGroups",
+            type: "FooterLinkGroup[]",
             description:
-              "Override the section's padding per breakpoint when the footer needs to bleed edge-to-edge.",
+              "Sitemap-style columns. Each group is { title, links: { label, href, isExternal? }[] } and renders as a labelled <nav>.",
           },
           {
-            name: "isFilled",
-            type: "boolean",
+            name: "copyright",
+            type: "ReactNode",
             description:
-              "Off by default for footers — you don't want it stretching to fill remaining height.",
+              "Bottom-bar copyright / status line. Takes any node — pass a build-status row for internal tools.",
+          },
+          {
+            name: "legalLinks",
+            type: "{ label: string; href: string }[]",
+            description:
+              "Inline links in the bottom bar (Privacy, Terms, support links, …).",
           },
         ]}
       />
@@ -155,21 +157,16 @@ export const Overview: StoryObj = {
             }}
           >
             <li>
-              <strong>
-                Don&rsquo;t add <code>aria-label</code> on a nested footer.
-              </strong>{" "}
-              <code>&lt;footer&gt;</code> only carries an implicit{" "}
-              <code>contentinfo</code> role when it&rsquo;s a direct child
-              of <code>&lt;body&gt;</code>. Inside a Page main it has no
-              role, so a label would be flagged as{" "}
-              <code>aria-prohibited-attr</code>.
+              <strong>AppFooter renders a real <code>&lt;footer&gt;</code>.</strong>{" "}
+              As a direct child of the page body it carries the implicit{" "}
+              <code>contentinfo</code> landmark for assistive tech — you don&rsquo;t
+              add a role or label yourself.
             </li>
             <li>
-              <strong>Each nav group needs a name.</strong> If the footer
-              has multiple link columns, wrap each in{" "}
-              <code>&lt;nav aria-label=&quot;Product&quot;&gt;</code> so
-              screen readers can list and jump between them. The visible
-              heading text is the natural label.
+              <strong>Link columns are auto-named.</strong> Each{" "}
+              <code>linkGroups</code> entry renders as{" "}
+              <code>&lt;nav aria-label=&#123;group.title&#125;&gt;</code>, so
+              screen readers can list and jump between them.
             </li>
             <li>
               <strong>

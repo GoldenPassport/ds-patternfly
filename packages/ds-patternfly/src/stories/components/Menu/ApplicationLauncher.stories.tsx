@@ -5,8 +5,8 @@ import {
   Card,
   Example,
 } from "../../_kit/StoryKit.js";
-import { Demo as LauncherDemo } from "../../../examples/components/menu-demos/ApplicationLauncher.example.js";
-import launcherExampleSrc from "../../../examples/components/menu-demos/ApplicationLauncher.example.tsx?raw";
+import { Demo as LauncherDemo } from "../../../examples/components/Menu/ApplicationLauncher.example.js";
+import launcherExampleSrc from "../../../examples/components/Menu/ApplicationLauncher.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Menu/Application launcher",

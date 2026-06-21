@@ -11,7 +11,7 @@ import {
   PlainBanner,
 } from "../../examples/components/Banner.example.js";
 import bannerExampleSrc from "../../examples/components/Banner.example.tsx?raw";
-import bannerComponentSrc from "../../components/base/Banner.tsx?raw";
+import statusBannerComponentSrc from "../../components/ds/StatusBanner.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Banner",
@@ -74,14 +74,15 @@ export const Overview: StoryObj = {
       </Section>
 
       <ConfigurationSection
-        importStatement={'import { Banner } from "@golden-passport/ds-patternfly";'}
-        componentSource={bannerComponentSrc}
-        componentFileName="Banner.tsx"
+        importStatement={'import { StatusBanner } from "@golden-passport/ds-patternfly";'}
+        componentSource={statusBannerComponentSrc}
+        componentFileName="StatusBanner.tsx"
+        description="StatusBanner maps a status to its accent colour, leading icon, and screen-reader text. Pass status + a message; omit status for a plain neutral banner."
         rows={[
-          { name: "status", type: '"success" | "warning" | "danger" | "info" | "custom"', description: "Status accent. Drives the brand status bg + border. Omit for a neutral default banner." },
-          { name: "color", type: '"red" | "orangered" | "orange" | "yellow" | "green" | "teal" | "blue" | "purple"', description: "PF6 categorical-colour alternative to status — use when the banner is informational rather than status (e.g. environment markers, brand notices) and you want a non-status hue." },
-          { name: "screenReaderText", type: "string", description: "Visually-hidden text appended for screen readers. Required when the banner's visible content is icon-only or relies on colour to convey meaning." },
-          { name: "isSticky", type: "boolean", description: "Pin the banner to the top of its scrolling ancestor. Use as a sticky environment marker that stays visible as the user scrolls." },
+          { name: "status", type: '"success" | "warning" | "danger" | "info"', description: "Status accent + default icon + screen-reader text. Omit for a plain neutral banner." },
+          { name: "children", type: "ReactNode", description: "The banner message." },
+          { name: "icon", type: "ReactNode", description: "Override the default status icon." },
+          { name: "screenReaderText", type: "string", description: "Override the screen-reader text (defaults from status, e.g. \"Success banner\")." },
         ]}
       />
 
@@ -98,7 +99,7 @@ export const Overview: StoryObj = {
       <Section title="Accessibility">
         <Card>
           <ul style={{ margin: 0, padding: "16px 24px 16px 40px", color: "var(--gp-color-text-regular)", lineHeight: 1.8 }}>
-            <li><strong>Set <code>screenReaderText</code></strong> for status variants — the visual icon alone doesn&rsquo;t announce.</li>
+            <li><strong>Screen-reader text is supplied for you</strong> — StatusBanner adds it per status (e.g. &ldquo;Success banner&rdquo;); override with <code>screenReaderText</code> when the message needs more context.</li>
             <li><strong>Don&rsquo;t rely on colour alone</strong> — pair the status colour with an icon and clear text.</li>
             <li><strong>Place above main</strong> — banners go directly under the masthead, before the page sidebar / content. Sticky banners should not occlude focus targets.</li>
           </ul>

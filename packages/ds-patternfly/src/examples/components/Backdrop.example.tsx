@@ -1,5 +1,8 @@
 /**
- * Backdrop — a semi-transparent overlay that dims the page behind a focused surface.
+ * LoadingOverlay — a semi-transparent overlay that dims the page behind a
+ * centered spinner card, blocking interaction until an operation finishes. The
+ * exported LoadingOverlay lego block owns the Backdrop + centered card
+ * assembly; you toggle `isOpen` and optionally supply a message / onCancel.
  *
  * App-entry setup (one time, e.g. main.tsx):
  *   import "@patternfly/react-core/dist/styles/base.css"; // PF6 base FIRST
@@ -7,7 +10,7 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useState } from "react";
-import { Backdrop, Bullseye, Button, Spinner } from "@golden-passport/ds-patternfly";
+import { Button, LoadingOverlay } from "@golden-passport/ds-patternfly";
 
 // #region CustomBlockingOverlay
 export function CustomBlockingOverlay() {
@@ -16,29 +19,11 @@ export function CustomBlockingOverlay() {
   return (
     <>
       <Button onClick={() => setOpen(true)}>Show overlay</Button>
-      {open && (
-        <Backdrop>
-          <Bullseye>
-            <div
-              style={{
-                background: "var(--gp-color-bg-elevated)",
-                padding: 24,
-                borderRadius: "var(--gp-radius-md)",
-                display: "grid",
-                gap: 12,
-                justifyItems: "center",
-                color: "var(--gp-color-text-regular)",
-              }}
-            >
-              <Spinner aria-label="Loading" />
-              <span>Loading workspace…</span>
-              <Button variant="link" onClick={() => setOpen(false)}>
-                Cancel
-              </Button>
-            </div>
-          </Bullseye>
-        </Backdrop>
-      )}
+      <LoadingOverlay
+        isOpen={open}
+        message="Loading workspace…"
+        onCancel={() => setOpen(false)}
+      />
     </>
   );
 }

@@ -2159,6 +2159,40 @@ export default function IntegrationsDemo() {
           .gp-rail-right-open .pf-v6-c-compass__sidebar.pf-m-end > .pf-v6-c-panel {
             visibility: visible;
             opacity: 1;
+            /* The open rail floats OVER the content here, so make it a solid
+               surface (matching the edge handle) with a drop shadow instead
+               of the see-through glass used on desktop. */
+            background: var(--gp-color-bg-secondary-default, rgba(255, 255, 255, 0.96));
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+          }
+          /* The plain icon-button hover defaults to the secondary surface —
+             now the same colour as the open rail, so the hover would be
+             invisible. Bump it to the darker secondary-hover tone. */
+          .gp-rail-left-open .pf-v6-c-compass__sidebar.pf-m-start > .pf-v6-c-panel .pf-v6-c-button,
+          .gp-rail-right-open .pf-v6-c-compass__sidebar.pf-m-end > .pf-v6-c-panel .pf-v6-c-button {
+            --pf-v6-c-button--m-plain--hover--BackgroundColor:
+              var(--gp-color-bg-secondary-hover, #e6dcc8);
+          }
+          .pf-v6-theme-glass .gp-rail-left-open .pf-v6-c-compass__sidebar.pf-m-start > .pf-v6-c-panel,
+          .pf-v6-theme-glass .gp-rail-right-open .pf-v6-c-compass__sidebar.pf-m-end > .pf-v6-c-panel {
+            background:
+              var(--pf-t--global--background--color--glass--primary--default);
+            backdrop-filter:
+              var(--pf-t--global--background--filter--glass--blur--primary);
+            -webkit-backdrop-filter:
+              var(--pf-t--global--background--filter--glass--blur--primary);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+          }
+          /* Glass theme — brand-tint the icon-button hover so it reads on
+             the frosted rail. */
+          .pf-v6-theme-glass .gp-rail-left-open .pf-v6-c-compass__sidebar.pf-m-start > .pf-v6-c-panel .pf-v6-c-button,
+          .pf-v6-theme-glass .gp-rail-right-open .pf-v6-c-compass__sidebar.pf-m-end > .pf-v6-c-panel .pf-v6-c-button {
+            --pf-v6-c-button--m-plain--hover--BackgroundColor:
+              color-mix(in srgb,
+                var(--pf-t--global--background--color--glass--primary--default) 70%,
+                var(--gp-color-brand-default) 30%);
           }
           /* 3. Search input — restore the magnifying-glass icon's
                 inline-start padding. With the panel-body padding

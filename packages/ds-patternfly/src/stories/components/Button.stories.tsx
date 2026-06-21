@@ -7,11 +7,12 @@ import {
   Example,
   ThemingPointer,
 } from "../_kit/StoryKit.js";
+import { PropsTable } from "../_kit/DemoKit.js";
 import {
   Variants,
   States,
   IconButtons,
-  BorderRadius,
+  Shape,
 } from "../../examples/components/Button.example.js";
 import buttonExampleSrc from "../../examples/components/Button.example.tsx?raw";
 import buttonComponentSrc from "../../components/base/Button.tsx?raw";
@@ -75,16 +76,16 @@ export const Overview: StoryObj = {
       </Section>
 
       <Section
-        title="Border radius"
-        description="PF6 ships no `shape` prop on Button — pick a radius preset (none / default / rounded / strong / pill) and the value lands on each demo button via inline style. `Default` reads the brand-root `--gp-radius-control` dial so this preview matches the rest of the DS. Apply the same approach in your app via the dial for a global shape change."
+        title="Shape"
+        description="PF6 ships no shape prop on Button, so reach for the exported ActionButton — its shape prop (square / default / rounded / strong / pill / circle) owns the border-radius and, for icon-only buttons, squares the box so a circle or pill reads true. The default shape follows the brand --gp-radius-control dial."
       >
         <Card>
           <Example
             source={buttonExampleSrc}
-            region="BorderRadius"
+            region="Shape"
             fileName="Button.example.tsx"
           >
-            <BorderRadius />
+            <Shape />
           </Example>
         </Card>
       </Section>
@@ -160,6 +161,22 @@ export const Overview: StoryObj = {
           },
         ]}
       />
+
+      <Section
+        title="ActionButton — shaped buttons"
+        description="The DS export for non-default corner shapes. import { ActionButton } from '@golden-passport/ds-patternfly' — it's the base Button plus a shape prop; every other Button prop (variant, icon, isLoading, …) passes straight through."
+      >
+        <Card>
+          <div style={{ padding: 24 }}>
+            <PropsTable
+              rows={[
+                { name: "shape", type: '"default" | "square" | "rounded" | "strong" | "pill" | "circle"', description: "Corner shape. Owns the border-radius; circle/pill also square an icon-only button so the shape reads true. Default follows the --gp-radius-control dial." },
+                { name: "…ButtonProps", type: "ButtonProps", description: "All base Button props (variant, icon, isDisabled, isLoading, onClick, …) are accepted and forwarded." },
+              ]}
+            />
+          </div>
+        </Card>
+      </Section>
 
       <Section
         title="Accessibility"

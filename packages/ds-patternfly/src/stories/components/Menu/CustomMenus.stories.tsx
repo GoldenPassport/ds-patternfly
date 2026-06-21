@@ -9,8 +9,8 @@ import {
   FilterSearchPalette,
   WithFooter,
   GroupedScrollable,
-} from "../../../examples/components/menu-demos/CustomMenus.example.js";
-import customMenusExampleSrc from "../../../examples/components/menu-demos/CustomMenus.example.tsx?raw";
+} from "../../../examples/components/Menu/CustomMenus.example.js";
+import customMenusExampleSrc from "../../../examples/components/Menu/CustomMenus.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Menu/Custom menus",

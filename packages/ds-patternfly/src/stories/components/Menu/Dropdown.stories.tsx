@@ -7,16 +7,16 @@ import {
   ConfigurationSection,
   Example,
   ThemingPointer,
-} from "../_kit/StoryKit.js";
-import { PropsTable } from "../_kit/DemoKit.js";
+} from "../../_kit/StoryKit.js";
+import { PropsTable } from "../../_kit/DemoKit.js";
 import {
   Basic,
   KebabToggle,
   Grouped,
   WithDescriptions,
-} from "../../examples/components/Dropdown.example.js";
-import dropdownExampleSrc from "../../examples/components/Dropdown.example.tsx?raw";
-import dropdownComponentSrc from "../../components/base/Dropdown.tsx?raw";
+} from "../../../examples/components/Menu/Dropdown.example.js";
+import dropdownExampleSrc from "../../../examples/components/Menu/Dropdown.example.tsx?raw";
+import menuButtonComponentSrc from "../../../components/ds/MenuButton.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Menu/Dropdown",
@@ -30,17 +30,19 @@ export const Overview: StoryObj = {
       title="Dropdown"
       intro={
         <>
-          A menu of actions opened by a trigger. Use for action menus
-          (kebab in toolbars / cards), command lists (&ldquo;Run&rdquo;,
-          &ldquo;Duplicate&rdquo;, &ldquo;Delete&rdquo;), and any
-          click-to-open list of <em>things to do</em>. For value
-          selection, use <code>Select</code> instead.
+          A menu of actions opened by a trigger — the exported{" "}
+          <code>MenuButton</code> lego block. It owns the open state, the
+          toggle, and the close-on-select wiring; you pass <code>items</code>{" "}
+          (actions, <code>"divider"</code>, or <code>{`{ group, items }`}</code>
+          ) and an optional <code>onSelect</code>. Use for action menus (kebab
+          in toolbars / cards), command lists, and any click-to-open list of{" "}
+          <em>things to do</em>. For value selection, use <code>Select</code>.
         </>
       }
     >
       <Section
         title="Basic"
-        description="Wrap a Dropdown around a MenuToggle (the trigger) + a DropdownList (the menu). Track the open state yourself; PF6 wires aria-expanded, focus on open, Escape to close, and shouldFocusToggleOnSelect to return focus to the trigger after a selection."
+        description="Pass a label + an items array. MenuButton renders the toggle and the list, and owns the open state — aria-expanded, focus on open, Escape to close, and return-focus-to-trigger on select are all handled."
       >
         <Card>
           <Example
@@ -100,7 +102,7 @@ export const Overview: StoryObj = {
 
       <Section
         title="Split-button (action + chevron)"
-        description="Pass splitButtonItems on the MenuToggle — the primary action is always one click away; the chevron opens the menu of related actions. Code-only here because the wiring needs the parent to manage both the action click AND the dropdown open state."
+        description="Beyond MenuButton's surface: a split button (primary action + chevron) drops to the base Dropdown + MenuToggle splitButtonItems, since the parent manages both the action click AND the open state."
       >
         <Card>
           <div style={{ padding: 24 }}>
@@ -152,11 +154,10 @@ export const Overview: StoryObj = {
           <div style={{ padding: 24 }}>
             <PropsTable
               rows={[
-                { name: "Dropdown", type: "container", description: "The wrapper. Owns isOpen, onSelect, onOpenChange, popperProps." },
-                { name: "DropdownList", type: "child", description: "The actual menu list. Holds DropdownItem and Divider children." },
-                { name: "DropdownItem", type: "child", description: "A single action. value identifies it; description for sub-label; tooltipProps + isAriaDisabled for inline disable explanations; to / href for link items." },
-                { name: "DropdownGroup", type: "child", description: "Titled section for grouped items." },
-                { name: "MenuToggle (passed to toggle prop)", type: "child", description: "The trigger. See Components/MenuToggle for variants and split-button options." },
+                { name: "MenuAction", type: "item", description: "{ id?, label, description?, icon?, isDisabled?, isSelected?, onClick? } — a single action." },
+                { name: '"divider"', type: "item", description: "A separator between items / groups." },
+                { name: "MenuActionGroup", type: "item", description: "{ group, items } — a labelled cluster of actions." },
+                { name: "children", type: "escape hatch", description: "Pass raw menu nodes instead of items for bespoke compositions." },
               ]}
             />
           </div>
@@ -164,17 +165,20 @@ export const Overview: StoryObj = {
       </Section>
 
       <ConfigurationSection
-        importStatement={'import { Dropdown, DropdownList, DropdownItem, DropdownGroup, MenuToggle } from "@golden-passport/ds-patternfly";'}
-        componentSource={dropdownComponentSrc}
-        componentFileName="Dropdown.tsx"
+        importStatement={'import { MenuButton } from "@golden-passport/ds-patternfly";'}
+        componentSource={menuButtonComponentSrc}
+        componentFileName="MenuButton.tsx"
         rows={[
-          { name: "isOpen", type: "boolean", description: "Open/closed state. Controlled." },
-          { name: "onOpenChange", type: "(isOpen) => void", description: "Fires when the menu opens or closes (Escape, outside click, item selection). Update your isOpen state here." },
-          { name: "onSelect", type: "(event, value) => void", description: "Fires when an item is activated. Typical pattern: setIsOpen(false) + handle the action." },
-          { name: "shouldFocusToggleOnSelect", type: "boolean", description: "Return focus to the trigger after selection. Recommended for action menus so keyboard users land back where they started." },
-          { name: "toggle", type: "(toggleRef) => ReactNode", description: "Render-prop for the trigger. Accepts a ref that PF6 wires for focus management." },
-          { name: "popperProps", type: "PopperProps", description: "Override placement / appendTo / etc. Default opens below-start; pass position='right' for kebab menus near the right edge." },
-          { name: "ouiaId", type: "string", description: "Stable test selector." },
+          { name: "label", type: "ReactNode", description: "Toggle text. Omit for an icon-only trigger (pass icon + ariaLabel)." },
+          { name: "icon", type: "ReactNode", description: "Toggle icon (e.g. a kebab, launcher grid, filter glyph)." },
+          { name: "toggleVariant", type: '"default" | "plain" | "primary" | "secondary"', description: "Toggle style. 'plain' is the icon-only / kebab look. Default 'default'." },
+          { name: "ariaLabel", type: "string", description: "Accessible name — required for icon-only toggles." },
+          { name: "badge", type: "number", description: "Count badge on the toggle (e.g. active-filter count)." },
+          { name: "items", type: "MenuButtonItem[]", description: "Menu contents as data: MenuAction, 'divider', or { group, items }." },
+          { name: "children", type: "ReactNode", description: "Bespoke menu body (escape hatch) — overrides items." },
+          { name: "onSelect", type: "(id, action?) => void", description: "Fired when an action is chosen (closes the menu automatically)." },
+          { name: "position", type: '"start" | "end" | "center" | "right" | "left"', description: "Popper placement of the menu." },
+          { name: "isDisabled", type: "boolean", description: "Disable the trigger." },
         ]}
       />
 

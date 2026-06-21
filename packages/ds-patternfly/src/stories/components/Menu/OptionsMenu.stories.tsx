@@ -8,8 +8,8 @@ import {
 import {
   MultiSelectFilterSet,
   SettingsCluster,
-} from "../../../examples/components/menu-demos/OptionsMenu.example.js";
-import optionsMenuExampleSrc from "../../../examples/components/menu-demos/OptionsMenu.example.tsx?raw";
+} from "../../../examples/components/Menu/OptionsMenu.example.js";
+import optionsMenuExampleSrc from "../../../examples/components/Menu/OptionsMenu.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Menu/Options menu",

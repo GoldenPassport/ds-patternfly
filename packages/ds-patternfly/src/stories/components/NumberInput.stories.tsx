@@ -13,7 +13,7 @@ import {
   InternalStepperLayout,
 } from "../../examples/components/NumberInput.example.js";
 import numberInputExampleSrc from "../../examples/components/NumberInput.example.tsx?raw";
-import numberInputComponentSrc from "../../components/base/NumberInput.tsx?raw";
+import stepperInputComponentSrc from "../../components/ds/StepperInput.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Forms/NumberInput",
@@ -152,28 +152,29 @@ export const Overview: StoryObj = {
       </Section>
 
       <ConfigurationSection
-        importStatement={'import { NumberInput } from "@golden-passport/ds-patternfly";'}
-        componentSource={numberInputComponentSrc}
-        componentFileName="NumberInput.tsx"
+        importStatement={'import { StepperInput } from "@golden-passport/ds-patternfly";'}
+        componentSource={stepperInputComponentSrc}
+        componentFileName="StepperInput.tsx"
+        description="StepperInput owns the clamp logic, brand-styled steppers, disabled-at-bounds wiring, and the three layouts. You pass the controlled value / onChange and the bounds."
         rows={[
-          { name: "value", type: 'number | ""', description: 'Controlled value. Empty string for "no value yet".' },
-          { name: "min / max", type: "number", description: "Range bounds. Component does not enforce them automatically — clamp inside your handlers." },
-          { name: "onChange", type: "(event) => void", description: "Fires on direct text edit." },
-          { name: "onMinus / onPlus", type: "(event) => void", description: "Fires when the stepper buttons are clicked." },
-          { name: "unit", type: "ReactNode", description: 'Display a unit alongside the input ("%", "GB", "min").' },
-          { name: "unitPosition", type: '"before" | "after"', description: "Where the unit sits relative to the input." },
-          { name: "widthChars", type: "number", description: "Character width of the input area. Use to size to expected magnitude (3 for 0–999, 5 for 0–99999)." },
-          { name: "inputAriaLabel", type: "string", description: "Required for the input." },
-          { name: "minusBtnAriaLabel / plusBtnAriaLabel", type: "string", description: "Required for the stepper buttons. Include the field's purpose for clarity." },
+          { name: "value", type: 'number | ""', description: 'Controlled value. Empty string is an empty field.' },
+          { name: "onChange", type: '(value: number | "") => void', description: "Fires on every edit / step, with the clamped value." },
+          { name: "min / max", type: "number", description: "Range bounds (default 0 / 99). The component clamps edits and steps, and disables the bound-reaching control." },
+          { name: "step", type: "number", description: "Amount the ± / caret controls add or subtract (default 1)." },
+          { name: "unit", type: "ReactNode", description: 'Trailing unit ("%", "GB", …), shown in the "stepper" layout.' },
+          { name: "layout", type: '"stepper" | "internal" | "input-only"', description: 'Presentation. "stepper" (default) external ± buttons; "internal" compact caret stack; "input-only" bare numeric input.' },
+          { name: "minDigits", type: "number", description: '"internal" only — minimum visible digits the field is sized to hold so the value never truncates.' },
+          { name: "ariaLabel", type: "string", description: "Required. Names the field and derives the ± / caret button labels (e.g. \"Increase Quantity\")." },
+          { name: "width", type: "string", description: "Control width (CSS length). Maps to the wrapper's max / inline size." },
         ]}
       />
 
       <Section title="Accessibility">
         <Card>
           <ul style={{ margin: 0, padding: "16px 24px 16px 40px", color: "var(--gp-color-text-regular)", lineHeight: 1.8 }}>
-            <li><strong>All three a11y labels are required.</strong> Input, plus button, minus button — none have text content, so each needs an aria-label.</li>
-            <li><strong>Clamp in your handlers, not by trusting min/max.</strong> Users can paste values that exceed your bounds; the component will accept whatever you set into state.</li>
-            <li><strong>Don&apos;t use NumberInput for huge ranges.</strong> Stepping from 0 to 1,000,000 by ones is hostile — use a plain TextInput with type=&quot;number&quot;.</li>
+            <li><strong>One label drives all three.</strong> Pass <code>ariaLabel</code> — StepperInput names the input and derives the ± / caret button labels (&quot;Increase&nbsp;Quantity&quot;, &quot;Decrease&nbsp;Quantity&quot;) from it. None of the controls have text content of their own.</li>
+            <li><strong>Bounds are enforced for you.</strong> StepperInput clamps both typed edits and steps to <code>min</code> / <code>max</code>, and disables whichever control would cross a bound.</li>
+            <li><strong>Don&apos;t use a stepper for huge ranges.</strong> Stepping from 0 to 1,000,000 by ones is hostile — use a plain TextInput with type=&quot;number&quot;.</li>
           </ul>
         </Card>
       </Section>

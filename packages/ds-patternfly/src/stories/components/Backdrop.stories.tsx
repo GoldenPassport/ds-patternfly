@@ -8,7 +8,7 @@ import {
 } from "../_kit/StoryKit.js";
 import { CustomBlockingOverlay } from "../../examples/components/Backdrop.example.js";
 import backdropExampleSrc from "../../examples/components/Backdrop.example.tsx?raw";
-import backdropComponentSrc from "../../components/base/Backdrop.tsx?raw";
+import loadingOverlayComponentSrc from "../../components/ds/LoadingOverlay.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Backdrop",
@@ -53,12 +53,16 @@ export const Overview: StoryObj = {
       </Section>
 
       <ConfigurationSection
-        importStatement={'import { Backdrop } from "@golden-passport/ds-patternfly";'}
-        componentSource={backdropComponentSrc}
-        componentFileName="Backdrop.tsx"
+        importStatement={'import { LoadingOverlay } from "@golden-passport/ds-patternfly";'}
+        componentSource={loadingOverlayComponentSrc}
+        componentFileName="LoadingOverlay.tsx"
+        description="LoadingOverlay wraps the Backdrop + centered spinner card. Toggle isOpen; optionally supply a message and onCancel. For a bespoke overlay, compose Backdrop + Bullseye directly."
         rows={[
-          { name: "children", type: "ReactNode", description: "Content rendered above the dimmed backdrop. Pair with Bullseye for centred content." },
-          { name: "className", type: "string", description: "Additional class for the backdrop element. Use to layer custom overrides on top of the PF6 visuals." },
+          { name: "isOpen", type: "boolean", description: "Show the overlay. When false, nothing renders." },
+          { name: "message", type: "ReactNode", description: "Caption under the spinner (e.g. \"Loading workspace…\")." },
+          { name: "spinnerAriaLabel", type: "string", description: "Accessible label for the spinner (default \"Loading\")." },
+          { name: "onCancel", type: "() => void", description: "When set, renders a Cancel link wired to this handler." },
+          { name: "cancelLabel", type: "string", description: "Label for the cancel link (default \"Cancel\")." },
         ]}
       />
 

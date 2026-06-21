@@ -5,8 +5,8 @@ import {
   Card,
   Example,
   ThemingPointer,
-} from "../_kit/StoryKit.js";
-import { PropsTable } from "../_kit/DemoKit.js";
+} from "../../_kit/StoryKit.js";
+import { PropsTable } from "../../_kit/DemoKit.js";
 import {
   Variants,
   States,
@@ -14,8 +14,8 @@ import {
   WithIcon,
   SplitButtonAction,
   SplitButtonCheckbox,
-} from "../../examples/components/MenuToggle.example.js";
-import menuToggleExampleSrc from "../../examples/components/MenuToggle.example.tsx?raw";
+} from "../../../examples/components/Menu/MenuToggle.example.js";
+import menuToggleExampleSrc from "../../../examples/components/Menu/MenuToggle.example.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Menu/Menu toggle",
