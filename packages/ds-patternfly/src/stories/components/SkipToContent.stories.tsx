@@ -6,11 +6,12 @@ import {
   ConfigurationSection,
   Example,
 } from "../_kit/StoryKit.js";
-// PF6's own SkipToContent (href/onClick API). The DS exports its own
-// SkipToContent (targetId/label, see src/a11y/SkipToContent.tsx) under the
-// same name — this story documents the PF6 primitive it builds on.
+// The DS exports its own SkipToContent (targetId/label for a single link, or
+// links[] for a menu — see src/a11y/SkipToContent.tsx). The example consumes
+// that exported component.
 import { TryIt } from "../../examples/components/SkipToContent.example.js";
 import skipToContentExampleSrc from "../../examples/components/SkipToContent.example.tsx?raw";
+import skipToContentComponentSrc from "../../a11y/SkipToContent.tsx?raw";
 
 const meta: Meta = {
   title: "Components/SkipToContent",
@@ -19,10 +20,10 @@ const meta: Meta = {
 export default meta;
 
 // ──────────────────────────────────────────────────────────────────
-// Story: Basic — visually hidden link that surfaces on focus
+// Story: Overview — docs page (no live demo; see the Demo story).
 // ──────────────────────────────────────────────────────────────────
 
-export const Basic: StoryObj = {
+export const Overview: StoryObj = {
   render: () => (
     <FoundationPage
       title="SkipToContent"
@@ -47,33 +48,20 @@ export const Basic: StoryObj = {
     >
       <Section
         title="Try it"
-        description="Click into the demo below, press Tab — the link surfaces visually. Press Enter, focus jumps to the main region."
+        description="The link only works as the first focusable element, so the live demo lives in its own story. Open the Demo story, click into the canvas, press Tab to surface the link, then Enter to jump focus to the main region."
       >
-        {/* Glass: the mock-page demo uses inline-styled surfaces (not a
-            .pf-v6-c-card), so the lib glass layer can't auto-frost them.
-            Frost the chrome wrapper + main region explicitly when the
-            glass theme is active. */}
-        <style>{`
-          .pf-v6-theme-glass .gp-skip-demo-main {
-            background: color-mix(in srgb, var(--pf-t--global--background--color--secondary--default) 65%, transparent) !important;
-            backdrop-filter: blur(12px) saturate(140%);
-            -webkit-backdrop-filter: blur(12px) saturate(140%);
-          }
-        `}</style>
         <Card>
           <Example
             source={skipToContentExampleSrc}
             region="TryIt"
             fileName="SkipToContent.example.tsx"
-          >
-            <TryIt />
-          </Example>
+          />
         </Card>
       </Section>
 
       <Section
         title="Full example"
-        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+        description="The complete example file behind the demo — ready to drop into an app. The same file ships in the MCP docs catalog."
       >
         <Card>
           <Example
@@ -84,25 +72,34 @@ export const Basic: StoryObj = {
       </Section>
 
       <ConfigurationSection
-        importStatement={'import { SkipToContent } from "@patternfly/react-core";'}
+        importStatement={'import { SkipToContent } from "@golden-passport/ds-patternfly";'}
+        componentSource={skipToContentComponentSrc}
+        componentFileName="SkipToContent.tsx"
+        description="The DS SkipToContent renders a single skip link or a focus-revealed menu of skip links. Targets are reached by native fragment navigation, so each target element must be focusable (tabIndex={-1})."
         rows={[
           {
-            name: "href",
+            name: "targetId",
             type: "string",
             description:
-              "Fragment ID of the target element (e.g. '#main'). Even with onClick, set this so right-click + native browser behaviour still works.",
+              "Single-link mode: element id of the landmark to jump to (e.g. \"main-content\"). The target must be focusable (tabIndex={-1}).",
           },
           {
-            name: "onClick",
-            type: "(e: MouseEvent<HTMLDivElement>) => void",
+            name: "label",
+            type: "string",
             description:
-              "Call preventDefault() and move focus imperatively. Native fragment-jump scrolls but does NOT focus the target — the click handler is what makes the link useful for keyboard users.",
+              "Single-link mode: visible link text. Conventionally 'Skip to main content' — kept short; AT users hear it announced first.",
           },
           {
-            name: "children",
-            type: "ReactNode",
+            name: "links",
+            type: "SkipLink[]",
             description:
-              "Link text. Conventionally 'Skip to content' / 'Skip to main content' — keep it short, screen-reader users hear it announced first.",
+              "Menu mode: an array of { targetId, label } skip targets (main content, navigation, search, …) revealed together on focus. Takes precedence over targetId/label.",
+          },
+          {
+            name: "ariaLabel",
+            type: "string",
+            description:
+              "Menu mode: accessible name for the skip-links nav (default 'Skip links').",
           },
         ]}
       />
@@ -145,5 +142,37 @@ export const Basic: StoryObj = {
         </Card>
       </Section>
     </FoundationPage>
+  ),
+};
+
+// ──────────────────────────────────────────────────────────────────
+// Story: Demo — the live skip link, standalone.
+//
+// SkipToContent only works when it's the first focusable element on the
+// page, so the interaction can't be demoed inside the Overview docs page
+// (its chrome steals the first Tab stops). This dedicated story renders
+// the mock page on its own: click into the canvas, press Tab to surface
+// the link, Enter to jump focus to the main region.
+// ──────────────────────────────────────────────────────────────────
+
+export const Demo: StoryObj = {
+  parameters: { layout: "fullscreen", fullBleed: true },
+  render: () => (
+    <>
+      {/* Glass: the mock-page demo uses inline-styled surfaces (not a
+          .pf-v6-c-card), so the lib glass layer can't auto-frost them.
+          Frost the main region explicitly when the glass theme is active. */}
+      <style>{`
+        .pf-v6-theme-glass .gp-skip-demo-main,
+        .pf-v6-theme-glass .gp-skip-demo-region {
+          background: color-mix(in srgb, var(--pf-t--global--background--color--secondary--default) 65%, transparent) !important;
+          backdrop-filter: blur(12px) saturate(140%);
+          -webkit-backdrop-filter: blur(12px) saturate(140%);
+        }
+      `}</style>
+      <div style={{ padding: 24 }}>
+        <TryIt />
+      </div>
+    </>
   ),
 };

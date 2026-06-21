@@ -72,6 +72,7 @@ import {
   PanelMain,
   PanelMainBody,
   SearchInput,
+  SkipToContent,
   Tab,
   Tabs,
   TabsComponent,
@@ -87,9 +88,6 @@ import {
   Tooltip,
   useTheme,
 } from "@golden-passport/ds-patternfly";
-// PF6's own SkipToContent (href/onClick API) — the DS exports its own
-// SkipToContent (targetId/label) under the same name.
-import { SkipToContent } from "@patternfly/react-core";
 import AngleLeftIcon from "@patternfly/react-icons/dist/esm/icons/angle-left-icon";
 import AngleRightIcon from "@patternfly/react-icons/dist/esm/icons/angle-right-icon";
 import BarsIcon from "@patternfly/react-icons/dist/esm/icons/bars-icon";
@@ -999,6 +997,9 @@ export default function IntegrationsDemo() {
           isAutoHeight
           isGlass
           id={mainContentId}
+          // Focusable so the SkipToContent link's native fragment jump lands
+          // focus here, not just scroll.
+          tabIndex={-1}
           // In card view the gallery tiles are themselves glass; drop
           // the panel's own glass fill so the tiles sit directly on
           // the gradient canvas and read as frosted (otherwise two
@@ -1043,15 +1044,6 @@ export default function IntegrationsDemo() {
       </div>
     </CompassMessageBar>
   );
-
-  const handleSkipClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault();
-    const el = document.getElementById(mainContentId);
-    if (el) {
-      el.focus();
-      el.scrollIntoView();
-    }
-  };
 
   return (
     <>
@@ -2617,12 +2609,7 @@ export default function IntegrationsDemo() {
         }
         .gp-cmp-ai-root .gp-ai-fullchat { pointer-events: auto; }
       `}</style>
-      <SkipToContent
-        onClick={handleSkipClick}
-        href={`#${mainContentId}`}
-      >
-        Skip to content
-      </SkipToContent>
+      <SkipToContent targetId={mainContentId} label="Skip to content" />
       <Compass
         // PF6 adds `inert="true"` to the sidebar wrapper when
         // isSidebarXExpanded={false}, which disables clicks on

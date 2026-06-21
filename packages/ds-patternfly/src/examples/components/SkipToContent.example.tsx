@@ -1,5 +1,7 @@
 /**
- * SkipToContent — keyboard-only escape hatch that jumps focus to main content.
+ * SkipToContent — keyboard-only escape hatch that jumps focus past page chrome
+ * to the content that matters. The exported DS component renders a single skip
+ * link (targetId + label) or a focus-revealed menu of skip links (links[]).
  *
  * App-entry setup (one time, e.g. main.tsx):
  *   import "@patternfly/react-core/dist/styles/base.css"; // PF6 base FIRST
@@ -7,14 +9,13 @@
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
 import { useId } from "react";
-// PF6's own SkipToContent (href/onClick API). The DS exports its own
-// SkipToContent (targetId/label, see src/a11y/SkipToContent.tsx) under the
-// same name — this example documents the PF6 primitive it builds on.
-import { SkipToContent } from "@patternfly/react-core";
+import { SkipToContent } from "@golden-passport/ds-patternfly";
 
 // #region TryIt
 export function TryIt() {
   const id = useId();
+  const navId = `${id}-nav`;
+  const searchId = `${id}-search`;
   const mainId = `${id}-main`;
 
   return (
@@ -24,44 +25,70 @@ export function TryIt() {
         border: "1px dashed var(--gp-color-border-subtle)",
         borderRadius: 6,
         padding: 24,
-        minHeight: 160,
+        minHeight: 220,
       }}
     >
+      {/* A menu of skip links — revealed together on focus, each jumping to a
+          different landmark. Every target is focusable (tabIndex={-1}). */}
       <SkipToContent
-        onClick={(e) => {
-          e.preventDefault();
-          document.getElementById(mainId)?.focus();
-        }}
-        href={`#${mainId}`}
-      >
-        Skip to content
-      </SkipToContent>
+        ariaLabel="Skip links"
+        links={[
+          { targetId: mainId, label: "Skip to main content" },
+          { targetId: navId, label: "Skip to navigation" },
+          { targetId: searchId, label: "Skip to search" },
+        ]}
+      />
+
       <p style={{ marginTop: 0 }}>
-        <strong>Mock page chrome.</strong> Press <kbd>Tab</kbd>{" "}
-        to surface the skip link.
+        <strong>Mock page chrome.</strong> Press <kbd>Tab</kbd> to surface the
+        skip-links menu, then pick a destination.
       </p>
+
+      <nav
+        id={navId}
+        tabIndex={-1}
+        aria-label="Primary"
+        className="gp-skip-demo-region"
+        style={regionStyle}
+      >
+        <strong>Navigation</strong> — Dashboard · Workflows · Integrations · Settings
+      </nav>
+
+      <div
+        id={searchId}
+        tabIndex={-1}
+        role="search"
+        className="gp-skip-demo-region"
+        style={regionStyle}
+      >
+        <strong>Search</strong> — find workflows, runs, and integrations
+      </div>
+
       <main
         id={mainId}
         tabIndex={-1}
         className="gp-skip-demo-main"
-        style={{
-          marginTop: 16,
-          padding: 16,
-          background: "var(--gp-color-bg-secondary-default)",
-          borderRadius: 6,
-          outline: "none",
-        }}
+        style={{ ...regionStyle, marginBottom: 0 }}
       >
         <h2 style={{ marginTop: 0 }}>Main content</h2>
-        <p>
-          The skip link sets focus here so AT users don&apos;t
-          have to crawl through the masthead and side nav on
-          every page load.
+        <p style={{ marginBottom: 0 }}>
+          The skip links set focus straight here (or to nav / search) so
+          assistive-tech users don&apos;t have to crawl through the masthead and
+          side nav on every page load.
         </p>
       </main>
     </div>
   );
 }
+
+const regionStyle = {
+  marginTop: 16,
+  marginBottom: 16,
+  padding: 16,
+  background: "var(--gp-color-bg-secondary-default)",
+  borderRadius: 6,
+  outline: "none",
+} as const;
 // #endregion
 
 export default function SkipToContentExample() {

@@ -32,11 +32,11 @@ type Story = StoryObj;
 /**
  * Full-page variant — the end-to-end demo lives in
  * `src/examples/patterns/PrimaryDetailDemo.example.tsx` (filterable DataList
- * + detail Drawer inside a PF6 app shell). See the
- * **Patterns/PrimaryDetailDemo example** page for the full-bleed render and
- * its complete source.
+ * + detail Drawer inside a PF6 app shell). Rendered full-bleed so the app
+ * shell fills the canvas.
  */
 export const Default: Story = {
+  parameters: { layout: "fullscreen", fullBleed: true },
   render: () => <PrimaryDetailDemoExample />,
 };
 
@@ -54,9 +54,8 @@ export const CardView: Story = {
 
 /**
  * The complete example file behind the Default demo — ready to drop into an
- * app, and shipped verbatim in the MCP docs catalog. Source-only: the demo
- * above is already the live render; for a full-bleed live render see the
- * **Patterns/PrimaryDetailDemo example** page.
+ * app, and shipped verbatim in the MCP docs catalog. Source-only: the Default
+ * story above is already the live full-bleed render.
  */
 export const FullExample: Story = {
   name: "Full example",
@@ -64,7 +63,7 @@ export const FullExample: Story = {
   render: () => (
     <Section
       title="Full example"
-      description="The complete example file behind the Default demo — ready to drop into an app. The same file ships in the MCP docs catalog. For the full-bleed live render, see the Patterns/PrimaryDetailDemo example page."
+      description="The complete example file behind the Default demo — ready to drop into an app. The same file ships in the MCP docs catalog."
     >
       <Card>
         <Example

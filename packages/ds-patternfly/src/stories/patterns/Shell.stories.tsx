@@ -29,11 +29,10 @@ type Story = StoryObj<typeof Shell>;
 /**
  * The end-to-end demo lives in `src/examples/patterns/Shell.example.tsx` —
  * branded masthead + responsive utility actions, sidebar nav driving a
- * PageHeader, KPI cards, activity card, footer. See the
- * **Patterns/Shell example** page for the same render with the full source
- * + download. The play function locks the Shell's accessibility contract:
- * skip-to-content reveal, nav-driven title updates, keyboard-reachable
- * sidebar toggle.
+ * PageHeader, KPI cards, activity card, footer. The Full example story below
+ * carries the complete source + download. The play function locks the Shell's
+ * accessibility contract: skip-to-content reveal, nav-driven title updates,
+ * keyboard-reachable sidebar toggle.
  */
 export const WithSidebarAndPrimaryDetail: Story = {
   render: () => <ShellExample />,
@@ -91,8 +90,7 @@ export const WithSidebarAndPrimaryDetail: Story = {
 /**
  * The complete example file behind the demo above — ready to drop into an
  * app, and shipped verbatim in the MCP docs catalog. Source-only: the demo
- * above is already the live render; for the full-bleed live render see the
- * **Patterns/Shell example** page.
+ * above is already the live full-bleed render.
  */
 export const FullExample: Story = {
   name: "Full example",
@@ -100,7 +98,7 @@ export const FullExample: Story = {
   render: () => (
     <Section
       title="Full example"
-      description="The complete example file behind the demo above — ready to drop into an app. The same file ships in the MCP docs catalog. For the full-bleed live render, see the Patterns/Shell example page."
+      description="The complete example file behind the demo above — ready to drop into an app. The same file ships in the MCP docs catalog."
     >
       <Card>
         <Example source={shellExampleSrc} fileName="Shell.example.tsx" />

@@ -1,5 +1,5 @@
 export { SkipToContent } from "./SkipToContent.js";
-export type { SkipToContentProps } from "./SkipToContent.js";
+export type { SkipToContentProps, SkipLink } from "./SkipToContent.js";
 export {
   contrastRatio,
   WCAG_AA_NORMAL,

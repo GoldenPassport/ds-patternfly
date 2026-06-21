@@ -33,7 +33,7 @@ export type {
 
 // A11y
 export { SkipToContent } from "./a11y/SkipToContent.js";
-export type { SkipToContentProps } from "./a11y/SkipToContent.js";
+export type { SkipToContentProps, SkipLink } from "./a11y/SkipToContent.js";
 export {
   contrastRatio,
   WCAG_AA_NORMAL,

@@ -34,10 +34,10 @@ const meta: Meta = {
 export default meta;
 
 // ──────────────────────────────────────────────────────────────────
-// Story: Basic
+// Story: Overview
 // ──────────────────────────────────────────────────────────────────
 
-export const Basic: StoryObj = {
+export const Overview: StoryObj = {
   render: () => (
     <FoundationPage
       title="Compass"
@@ -185,192 +185,6 @@ export const Basic: StoryObj = {
 
 
 // ──────────────────────────────────────────────────────────────────
-// Story: FullDemo — canonical PF6 Compass demo
-// ──────────────────────────────────────────────────────────────────
-
-export const FullDemo: StoryObj = {
-  parameters: {
-    a11y: {
-      config: {
-        rules: [
-          // Glass-styled nav + transparent gradients knock text below
-          // AA on demo content. The chrome itself is fine; the demo
-          // strings ("Tab 1", "Hero") are placeholders.
-          { id: "color-contrast", enabled: false },
-          { id: "scrollable-region-focusable", enabled: false },
-        ],
-      },
-    },
-  },
-  render: () => (
-    <FoundationPage
-      title="Compass — full demo"
-      intro={
-        <>
-          The canonical PF6 Compass example, translated 1:1 from{" "}
-          <a
-            href="https://www.patternfly.org/components/compass/react-demos/compass-layout/"
-            target="_blank"
-            rel="noopener"
-          >
-            patternfly.org
-          </a>
-          . Glass-styled <code>Panel</code> rails, a two-level Tabs
-          nav inside <code>CompassNavContent</code> (top tabs +
-          contextual subtabs), icon-action sidebars on both edges,
-          brand-gradient <code>Hero</code> banner, titled main panel,
-          and a <code>CompassMessageBar</code> footer. The body
-          content scrolls independently inside its own Panel.
-        </>
-      }
-    >
-      <Section
-        title="Composed Compass layout"
-        description="Same component set as PF6's CompassBasic demo. The nav uses Tabs with isNav + component=nav so the strip is a real <nav> landmark; the subtab strip is anchored via tabContentRef. Gradient colours feed from --gp-color-* brand tokens."
-      >
-        <Card>
-          <Example
-            source={compassExampleSrc}
-            region="FullDemo"
-            fileName="Compass.example.tsx"
-          >
-            <FullDemoRegion />
-          </Example>
-        </Card>
-      </Section>
-
-      <Section
-        title="Full example"
-        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
-      >
-        <Card>
-          <Example source={compassExampleSrc} fileName="Compass.example.tsx" />
-        </Card>
-      </Section>
-
-      <Section
-        title="Built from these lego blocks"
-        description="The full demo no longer hand-rolls its chrome — it composes three exported DS blocks into the Compass slots, plus the useCompassResponsive hook for the breakpoint switch. import { CompassTabsNav, CompassRail, CompassProfileMenu, useCompassResponsive } from '@golden-passport/ds-patternfly'."
-      >
-        <Card>
-          <ul
-            style={{
-              margin: 0,
-              padding: "16px 24px 16px 40px",
-              color: "var(--gp-color-text-regular)",
-              lineHeight: 1.8,
-            }}
-          >
-            <li>
-              <strong>
-                <code>CompassTabsNav</code>
-              </strong>{" "}
-              owns the two-level nav from one <code>tabs</code> model — it
-              renders the inline tabs + subtabs strip (
-              <code>variant=&quot;desktop&quot;</code>, in the header{" "}
-              <code>nav</code> slot) and the slide-in{" "}
-              <code>Nav</code> drawer body (
-              <code>variant=&quot;mobile&quot;</code>, the tab that owns
-              subtabs becomes a <code>NavExpandable</code>). It owns the
-              active tab/subtab state (controlled or uncontrolled) and the
-              subtab-content wiring.
-            </li>
-            <li>
-              <strong>
-                <code>CompassRail</code>
-              </strong>{" "}
-              renders an icon rail from an <code>actions</code> model (
-              <code>groupId</code> clusters with dividers). On mobile it adds
-              the off-canvas edge handle and owns its open state; pair{" "}
-              <code>compassRailRootClasses(&#123;…&#125;)</code> on the{" "}
-              <code>Compass</code> root for the slide.
-            </li>
-            <li>
-              <strong>
-                <code>CompassProfileMenu</code>
-              </strong>{" "}
-              is the profile dropdown — name + avatar on desktop, avatar-only
-              when <code>isCompact</code>. Owns its open state.
-            </li>
-            <li>
-              <strong>
-                <code>useCompassResponsive()</code>
-              </strong>{" "}
-              wraps the <code>matchMedia(62rem)</code> listener and returns{" "}
-              <code>isMobile</code> — the single signal the demo threads to
-              each block. The mobile-overlay CSS ships in the lib stylesheet;
-              the <code>gp-compass-mobile-overlay</code> wrapper opts in.
-            </li>
-          </ul>
-        </Card>
-      </Section>
-
-      <Section title="CompassTabsNav / CompassRail / CompassProfileMenu — props">
-        <Card>
-          <div style={{ padding: 24, display: "grid", gap: 24 }}>
-            <PropsTable
-              rows={[
-                { name: "CompassTabsNav.tabs", type: "CompassNavTab[]", description: "Nav model: { id, label, isDisabled?, subtabs?: { id, label, isDisabled? }[] }." },
-                { name: "CompassTabsNav.variant", type: '"desktop" | "mobile"', description: "Desktop tabs+subtabs strip, or the mobile Nav drawer body. Pick via useCompassResponsive()." },
-                { name: "CompassTabsNav.activeTab / activeSubtab", type: "string", description: "Controlled active ids (with onTabChange / onSubtabChange). Uncontrolled via defaultActiveTab / defaultActiveSubtab." },
-                { name: "CompassTabsNav.onHome / onSearch", type: "() => void", description: "Desktop home / search icon-button handlers (omit to hide)." },
-                { name: "CompassTabsNav.onNavigate", type: "() => void", description: "Mobile: fired when an item is chosen or the drawer is closed." },
-                { name: "CompassRail.side", type: '"start" | "end"', description: "Which edge — drives chevron direction + handle anchoring." },
-                { name: "CompassRail.actions", type: "CompassRailAction[]", description: "{ id, icon, label, onClick?, isDisabled?, groupId? }. Shared groupId clusters in one ActionListGroup." },
-                { name: "CompassRail.isMobile / isOpen / onOpenChange", type: "boolean / boolean / (open) => void", description: "Mobile off-canvas behavior + controlled open state (uncontrolled via defaultOpen)." },
-                { name: "CompassProfileMenu", type: "{ name, avatarSrc, items, isCompact?, isOpen?, onOpenChange?, position? }", description: "Profile dropdown; isCompact collapses to avatar-only." },
-                { name: "compassRailRootClasses({ startOpen, endOpen })", type: "string", description: "Builds the gp-rail-* classes for the <Compass> root from each rail's open state." },
-              ]}
-            />
-          </div>
-        </Card>
-      </Section>
-
-      <Section
-        title="Responsive behaviour"
-        description="How the chrome adapts below PF6's 62rem breakpoint. Resize the preview (or use the Storybook viewport toolbar) to see it."
-      >
-        <Card>
-          <ul
-            style={{
-              margin: 0,
-              padding: "16px 24px 16px 40px",
-              color: "var(--gp-color-text-regular)",
-              lineHeight: 1.8,
-            }}
-          >
-            <li>
-              <strong>Nav collapses to a hamburger side nav.</strong> On
-              mobile the inline header tabs + subtabs fold away and a
-              hamburger appears to the left of the logo. It opens the same
-              nav as an <strong>overlay drawer</strong> (the Page-sidebar
-              pattern) — a PatternFly <code>Nav</code> where the tab that
-              owns subtabs becomes an expandable nested section. The drawer
-              floats over the content with a dismiss scrim, so the{" "}
-              <code>main</code> section never resizes.
-            </li>
-            <li>
-              <strong>Desktop rails collapse with open / close
-              buttons.</strong> At desktop widths the two toolbar toggles
-              by the content title collapse and reveal the start / end icon
-              rails. On mobile those rails go off-canvas so the{" "}
-              <code>main</code> content keeps the full width.
-            </li>
-            <li>
-              <strong>Docked-nav alternative.</strong> For a single
-              anchored nav that folds behind a hamburger masthead on
-              mobile, pass <code>dock</code> + <code>masthead</code>{" "}
-              instead of <code>header</code> + sidebars (PF6 renders the
-              masthead only at mobile).
-            </li>
-          </ul>
-        </Card>
-      </Section>
-    </FoundationPage>
-  ),
-};
-
-// ──────────────────────────────────────────────────────────────────
 // Story: StructuralPatterns — PF6 dev guide reference
 // Mirrors the "Development guide → Structural patterns" section of
 // the PatternFly Compass docs so engineers don't have to leave the
@@ -389,8 +203,8 @@ export const StructuralPatterns: StoryObj = {
           conversational UI: which sub-component lives in which slot,
           where to apply the <code>isGlass</code> Panel stack, and
           which props on the <code>Compass</code> root toggle the
-          docked-nav vs. header layouts. Working code lives in{" "}
-          <code>Basic</code> and <code>FullDemo</code> above; this
+          docked-nav vs. header layouts. Working code lives in the{" "}
+          <code>Overview</code> and <code>Full demo</code> stories; this
           story is documentation.
         </>
       }
@@ -731,3 +545,190 @@ export const StructuralPatterns: StoryObj = {
     </FoundationPage>
   ),
 };
+
+// ──────────────────────────────────────────────────────────────────
+// Story: FullDemo — canonical PF6 Compass demo
+// ──────────────────────────────────────────────────────────────────
+
+export const FullDemo: StoryObj = {
+  parameters: {
+    a11y: {
+      config: {
+        rules: [
+          // Glass-styled nav + transparent gradients knock text below
+          // AA on demo content. The chrome itself is fine; the demo
+          // strings ("Tab 1", "Hero") are placeholders.
+          { id: "color-contrast", enabled: false },
+          { id: "scrollable-region-focusable", enabled: false },
+        ],
+      },
+    },
+  },
+  render: () => (
+    <FoundationPage
+      title="Compass — full demo"
+      intro={
+        <>
+          The canonical PF6 Compass example, translated 1:1 from{" "}
+          <a
+            href="https://www.patternfly.org/components/compass/react-demos/compass-layout/"
+            target="_blank"
+            rel="noopener"
+          >
+            patternfly.org
+          </a>
+          . Glass-styled <code>Panel</code> rails, a two-level Tabs
+          nav inside <code>CompassNavContent</code> (top tabs +
+          contextual subtabs), icon-action sidebars on both edges,
+          brand-gradient <code>Hero</code> banner, titled main panel,
+          and a <code>CompassMessageBar</code> footer. The body
+          content scrolls independently inside its own Panel.
+        </>
+      }
+    >
+      <Section
+        title="Composed Compass layout"
+        description="Same component set as PF6's CompassBasic demo. The nav uses Tabs with isNav + component=nav so the strip is a real <nav> landmark; the subtab strip is anchored via tabContentRef. Gradient colours feed from --gp-color-* brand tokens."
+      >
+        <Card>
+          <Example
+            source={compassExampleSrc}
+            region="FullDemo"
+            fileName="Compass.example.tsx"
+          >
+            <FullDemoRegion />
+          </Example>
+        </Card>
+      </Section>
+
+      <Section
+        title="Full example"
+        description="The complete example file behind the demos above — every section composed, ready to drop into an app. The same file ships in the MCP docs catalog."
+      >
+        <Card>
+          <Example source={compassExampleSrc} fileName="Compass.example.tsx" />
+        </Card>
+      </Section>
+
+      <Section
+        title="Built from these lego blocks"
+        description="The full demo no longer hand-rolls its chrome — it composes three exported DS blocks into the Compass slots, plus the useCompassResponsive hook for the breakpoint switch. import { CompassTabsNav, CompassRail, CompassProfileMenu, useCompassResponsive } from '@golden-passport/ds-patternfly'."
+      >
+        <Card>
+          <ul
+            style={{
+              margin: 0,
+              padding: "16px 24px 16px 40px",
+              color: "var(--gp-color-text-regular)",
+              lineHeight: 1.8,
+            }}
+          >
+            <li>
+              <strong>
+                <code>CompassTabsNav</code>
+              </strong>{" "}
+              owns the two-level nav from one <code>tabs</code> model — it
+              renders the inline tabs + subtabs strip (
+              <code>variant=&quot;desktop&quot;</code>, in the header{" "}
+              <code>nav</code> slot) and the slide-in{" "}
+              <code>Nav</code> drawer body (
+              <code>variant=&quot;mobile&quot;</code>, the tab that owns
+              subtabs becomes a <code>NavExpandable</code>). It owns the
+              active tab/subtab state (controlled or uncontrolled) and the
+              subtab-content wiring.
+            </li>
+            <li>
+              <strong>
+                <code>CompassRail</code>
+              </strong>{" "}
+              renders an icon rail from an <code>actions</code> model (
+              <code>groupId</code> clusters with dividers). On mobile it adds
+              the off-canvas edge handle and owns its open state; pair{" "}
+              <code>compassRailRootClasses(&#123;…&#125;)</code> on the{" "}
+              <code>Compass</code> root for the slide.
+            </li>
+            <li>
+              <strong>
+                <code>CompassProfileMenu</code>
+              </strong>{" "}
+              is the profile dropdown — name + avatar on desktop, avatar-only
+              when <code>isCompact</code>. Owns its open state.
+            </li>
+            <li>
+              <strong>
+                <code>useCompassResponsive()</code>
+              </strong>{" "}
+              wraps the <code>matchMedia(62rem)</code> listener and returns{" "}
+              <code>isMobile</code> — the single signal the demo threads to
+              each block. The mobile-overlay CSS ships in the lib stylesheet;
+              the <code>gp-compass-mobile-overlay</code> wrapper opts in.
+            </li>
+          </ul>
+        </Card>
+      </Section>
+
+      <Section title="CompassTabsNav / CompassRail / CompassProfileMenu — props">
+        <Card>
+          <div style={{ padding: 24, display: "grid", gap: 24 }}>
+            <PropsTable
+              rows={[
+                { name: "CompassTabsNav.tabs", type: "CompassNavTab[]", description: "Nav model: { id, label, isDisabled?, subtabs?: { id, label, isDisabled? }[] }." },
+                { name: "CompassTabsNav.variant", type: '"desktop" | "mobile"', description: "Desktop tabs+subtabs strip, or the mobile Nav drawer body. Pick via useCompassResponsive()." },
+                { name: "CompassTabsNav.activeTab / activeSubtab", type: "string", description: "Controlled active ids (with onTabChange / onSubtabChange). Uncontrolled via defaultActiveTab / defaultActiveSubtab." },
+                { name: "CompassTabsNav.onHome / onSearch", type: "() => void", description: "Desktop home / search icon-button handlers (omit to hide)." },
+                { name: "CompassTabsNav.onNavigate", type: "() => void", description: "Mobile: fired when an item is chosen or the drawer is closed." },
+                { name: "CompassRail.side", type: '"start" | "end"', description: "Which edge — drives chevron direction + handle anchoring." },
+                { name: "CompassRail.actions", type: "CompassRailAction[]", description: "{ id, icon, label, onClick?, isDisabled?, groupId? }. Shared groupId clusters in one ActionListGroup." },
+                { name: "CompassRail.isMobile / isOpen / onOpenChange", type: "boolean / boolean / (open) => void", description: "Mobile off-canvas behavior + controlled open state (uncontrolled via defaultOpen)." },
+                { name: "CompassProfileMenu", type: "{ name, avatarSrc, items, isCompact?, isOpen?, onOpenChange?, position? }", description: "Profile dropdown; isCompact collapses to avatar-only." },
+                { name: "compassRailRootClasses({ startOpen, endOpen })", type: "string", description: "Builds the gp-rail-* classes for the <Compass> root from each rail's open state." },
+              ]}
+            />
+          </div>
+        </Card>
+      </Section>
+
+      <Section
+        title="Responsive behaviour"
+        description="How the chrome adapts below PF6's 62rem breakpoint. Resize the preview (or use the Storybook viewport toolbar) to see it."
+      >
+        <Card>
+          <ul
+            style={{
+              margin: 0,
+              padding: "16px 24px 16px 40px",
+              color: "var(--gp-color-text-regular)",
+              lineHeight: 1.8,
+            }}
+          >
+            <li>
+              <strong>Nav collapses to a hamburger side nav.</strong> On
+              mobile the inline header tabs + subtabs fold away and a
+              hamburger appears to the left of the logo. It opens the same
+              nav as an <strong>overlay drawer</strong> (the Page-sidebar
+              pattern) — a PatternFly <code>Nav</code> where the tab that
+              owns subtabs becomes an expandable nested section. The drawer
+              floats over the content with a dismiss scrim, so the{" "}
+              <code>main</code> section never resizes.
+            </li>
+            <li>
+              <strong>Desktop rails collapse with open / close
+              buttons.</strong> At desktop widths the two toolbar toggles
+              by the content title collapse and reveal the start / end icon
+              rails. On mobile those rails go off-canvas so the{" "}
+              <code>main</code> content keeps the full width.
+            </li>
+            <li>
+              <strong>Docked-nav alternative.</strong> For a single
+              anchored nav that folds behind a hamburger masthead on
+              mobile, pass <code>dock</code> + <code>masthead</code>{" "}
+              instead of <code>header</code> + sidebars (PF6 renders the
+              masthead only at mobile).
+            </li>
+          </ul>
+        </Card>
+      </Section>
+    </FoundationPage>
+  ),
+};
+

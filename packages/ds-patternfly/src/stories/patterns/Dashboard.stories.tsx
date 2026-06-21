@@ -121,14 +121,7 @@ export const Basic: StoryObj = {
 
       <Section
         title="Full example"
-        description={
-          <>
-            The complete example file behind the demo above — ready to drop
-            into an app, and shipped verbatim in the MCP docs catalog. For a
-            full-bleed live render, see the{" "}
-            <strong>Patterns/Dashboard example</strong> page.
-          </>
-        }
+        description="The complete example file behind the demo above — ready to drop into an app, and shipped verbatim in the MCP docs catalog."
       >
         <DocCard>
           <Example
