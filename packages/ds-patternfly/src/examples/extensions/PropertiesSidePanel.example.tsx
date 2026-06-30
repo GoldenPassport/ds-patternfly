@@ -29,9 +29,13 @@ export function StandardLayout() {
           label="Documentation"
           value={<a href="#docs">Read the docs ›</a>}
         />
-        <Button variant="primary" isBlock>
-          Install
-        </Button>
+        {/* Give the action room to breathe — separate it from the property
+            list above and keep it off the panel's bottom edge. */}
+        <div style={{ marginBlockStart: "1.5rem", marginBlockEnd: "0.5rem" }}>
+          <Button variant="primary" isBlock>
+            Install
+          </Button>
+        </div>
       </PropertiesSidePanel>
     </div>
   );

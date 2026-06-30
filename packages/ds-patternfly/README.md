@@ -77,7 +77,7 @@ wrappers when nothing fits.
 | `Hyperlink` | Navigation | Inline-friendly hyperlink wrapping a real `<a>`. | `import { Hyperlink } from "@golden-passport/ds-patternfly"` |
 | `MenuButton` | Navigation | the action-menu lego block. | `import { MenuButton } from "@golden-passport/ds-patternfly"` |
 | `PageHeader` | Navigation | the standard top-of-page header: a title row (optional icon + status label + right-aligned actions), an optional subtitle, an optional breadcrumb above, and an optional tabs strip below. | `import { PageHeader } from "@golden-passport/ds-patternfly"` |
-| `TabbedView` | Navigation | a declarative tabbed container over a `tabs` array: each entry is { key, title, content }. | `import { TabbedView } from "@golden-passport/ds-patternfly"` |
+| `TabbedView` | Navigation | a declarative tabbed container over a `tabs` array: each entry is { key, title, content, … }. | `import { TabbedView } from "@golden-passport/ds-patternfly"` |
 | `TreeNavigation` | Navigation | a controlled hierarchical navigation tree from a nested `data` array. | `import { TreeNavigation } from "@golden-passport/ds-patternfly"` |
 | `DateField` | Forms | the date picker lego block. | `import { DateField } from "@golden-passport/ds-patternfly"` |
 | `FormScaffold` | Forms | the standard form frame: your fields as `children`, then a branded submit / cancel ActionGroup. | `import { FormScaffold } from "@golden-passport/ds-patternfly"` |

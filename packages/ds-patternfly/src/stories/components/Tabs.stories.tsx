@@ -18,7 +18,7 @@ import {
   Dynamic,
 } from "../../examples/components/Tabs.example.js";
 import tabsExampleSrc from "../../examples/components/Tabs.example.tsx?raw";
-import tabsComponentSrc from "../../components/base/Tabs.tsx?raw";
+import tabbedViewComponentSrc from "../../components/ds/TabbedView.tsx?raw";
 
 const meta: Meta = {
   title: "Components/Tabs",
@@ -110,7 +110,7 @@ export const Overview: StoryObj = {
 
       <Section
         title="With help action"
-        description="TabAction renders a trailing icon-button per tab — pair with Popover for inline contextual help."
+        description="Pass tab.help and TabbedView renders a per-tab help icon-button wired to a Popover — the trigger ref + Popover plumbing is handled for you."
       >
         <Card>
           <Example
@@ -125,7 +125,7 @@ export const Overview: StoryObj = {
 
       <Section
         title="Dynamic (addable / closeable)"
-        description="onClose + onAdd handlers turn Tabs into a terminal-style dynamic strip. Manage the tab array yourself; the component just emits intents."
+        description="onAdd / onClose turn the strip into a terminal-style dynamic tab set. You own the tab array; TabbedView moves the active tab to a neighbour when the active one is closed."
       >
         <Card>
           <Example
@@ -168,7 +168,10 @@ const ref1 = useRef<HTMLElement>(null);
         </Card>
       </Section>
 
-      <Section title="Composition">
+      <Section
+        title="Underlying primitives"
+        description="TabbedView composes these base PF6 parts. Reach for them directly only when you need a layout TabbedView doesn't cover (e.g. detached panels above)."
+      >
         <Card>
           <div style={{ padding: 24 }}>
             <PropsTable
@@ -186,21 +189,19 @@ const ref1 = useRef<HTMLElement>(null);
       </Section>
 
       <ConfigurationSection
-        importStatement={'import { Tabs, Tab, TabAction, TabContent, TabTitleIcon, TabTitleText } from "@golden-passport/ds-patternfly";'}
-        componentSource={tabsComponentSrc}
-        componentFileName="Tabs.tsx"
+        importStatement={'import { TabbedView, type TabDef } from "@golden-passport/ds-patternfly";'}
+        componentSource={tabbedViewComponentSrc}
+        componentFileName="TabbedView.tsx"
+        description="TabbedView owns the active-tab state and the Tabs/Tab/TabContent wiring. Pass a tabs array; opt into icons, help popovers, and dynamic add/close declaratively."
         rows={[
-          { name: "activeKey", type: "string | number", description: "Currently selected eventKey. Required for controlled use." },
-          { name: "onSelect", type: "(event, eventKey) => void", description: "Called when the user picks a tab." },
-          { name: "aria-label", type: "string", description: "Required when there's no visible label above the strip — names the tablist for screen readers." },
-          { name: 'role="region"', type: "string", description: "Set to 'region' to make the Tabs wrapper a landmark — pairs with aria-label per WAI-ARIA tabs pattern." },
-          { name: "isBox", type: "boolean", description: "Boxed style — tabs render as connected card edges. Good when tabs sit above a clearly bounded surface." },
-          { name: "isFilled", type: "boolean", description: "Each tab takes equal share of the available width." },
-          { name: "isVertical", type: "boolean", description: "Vertical orientation — tab strip on the side, panel to the right." },
-          { name: 'variant', type: '"default" | "secondary"', description: "Secondary level styling — for nested tabs under a primary set." },
-          { name: "onClose / onAdd", type: "fn", description: "Enable closeable tabs (X button per tab) and an Add (+) button at the end of the strip." },
-          { name: "isOverflowHorizontal", type: "boolean | { showTabCount }", description: "When tabs overflow the container, wrap in scroll buttons (and optionally show a count)." },
-          { name: "mountOnEnter / unmountOnExit", type: "boolean", description: "Lazy-mount panels on first visit / unmount when hidden. Use for heavy panels." },
+          { name: "tabs", type: "TabDef[]", description: "The tabs: { key, title, content, icon?, isDisabled?, tabAriaLabel?, help?, isCloseDisabled? }." },
+          { name: "activeKey / defaultActiveKey", type: "string", description: "Controlled active key (with onSelect), or the initial key when uncontrolled (defaults to the first tab)." },
+          { name: "onSelect", type: "(key: string) => void", description: "Fired with the next key when a tab is selected." },
+          { name: "ariaLabel", type: "string", description: "Names the tablist; rendered as a <nav> so the label is valid." },
+          { name: "isBox / isFilled / isVertical", type: "boolean", description: "Box (card-edge) styling, equal-width fill, or vertical orientation." },
+          { name: "tab.help", type: "{ header?, body, ariaLabel?, icon? }", description: "Renders a per-tab help icon-button wired to a Popover — trigger ref + Popover handled for you." },
+          { name: "onAdd / addAriaLabel", type: "() => void / string", description: "Show an add-tab (+) button. You append to your tab array in the handler." },
+          { name: "onClose", type: "(key: string) => void", description: "Make tabs closable. Remove the key from your array; TabbedView re-focuses a neighbour if the active tab closed." },
         ]}
       />
 

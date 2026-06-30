@@ -1,286 +1,138 @@
 /**
- * Tabs — switch between sibling views without leaving the page.
+ * Tabs — switch between sibling views without leaving the page. The exported
+ * TabbedView lego block owns the active-tab state, the Tabs/Tab/TabContent
+ * wiring, leading icons, per-tab help popovers, and closable / dynamic tabs;
+ * you pass a `tabs` array of { key, title, content }.
  *
  * App-entry setup (one time, e.g. main.tsx):
  *   import "@patternfly/react-core/dist/styles/base.css"; // PF6 base FIRST
  *   import "@golden-passport/ds-patternfly/styles";       // lib styles LAST
  *   // …then wrap your root in <ThemeProvider brand={…}>.
  */
-import { createRef, useState } from "react";
-import {
-  Popover,
-  Tab,
-  TabAction,
-  TabTitleIcon,
-  TabTitleText,
-  Tabs,
-} from "@golden-passport/ds-patternfly";
-import {
-  CogIcon,
-  HelpIcon,
-  InfoCircleIcon,
-  UsersIcon,
-} from "@patternfly/react-icons";
+import { useState } from "react";
+import { TabbedView, type TabDef } from "@golden-passport/ds-patternfly";
+import { CogIcon, InfoCircleIcon, UsersIcon } from "@patternfly/react-icons";
+
+const panel = (text: string) => (
+  <div style={{ padding: "16px 0", color: "var(--gp-color-text-subtle)" }}>{text}</div>
+);
 
 // #region Default
 export function Default() {
-  const [active, setActive] = useState<string | number>(0);
-
   return (
-    <Tabs
-      activeKey={active}
-      onSelect={(_, k) => setActive(k)}
-      aria-label="Project tabs"
-      role="region"
-      ouiaId="ProjectTabs"
-    >
-      <Tab
-        eventKey={0}
-        title={<TabTitleText>Overview</TabTitleText>}
-        aria-label="Overview content"
-      >
-        <div style={{ padding: "16px 0", color: "var(--gp-color-text-subtle)" }}>
-          Overview panel content.
-        </div>
-      </Tab>
-      <Tab
-        eventKey={1}
-        title={<TabTitleText>Members</TabTitleText>}
-        aria-label="Members content"
-      >
-        <div style={{ padding: "16px 0", color: "var(--gp-color-text-subtle)" }}>
-          Members panel content.
-        </div>
-      </Tab>
-      <Tab
-        eventKey={2}
-        title={<TabTitleText>Settings</TabTitleText>}
-        aria-label="Settings content"
-      >
-        <div style={{ padding: "16px 0", color: "var(--gp-color-text-subtle)" }}>
-          Settings panel content.
-        </div>
-      </Tab>
-      <Tab
-        eventKey={3}
-        title={<TabTitleText>Archived</TabTitleText>}
-        isAriaDisabled
-      >
-        Archived
-      </Tab>
-    </Tabs>
+    <TabbedView
+      ariaLabel="Project tabs"
+      tabs={[
+        { key: "overview", title: "Overview", content: panel("Overview panel content.") },
+        { key: "members", title: "Members", content: panel("Members panel content.") },
+        { key: "settings", title: "Settings", content: panel("Settings panel content.") },
+        { key: "archived", title: "Archived", content: panel("Archived."), isDisabled: true },
+      ]}
+    />
   );
 }
 // #endregion
 
 // #region BoxWithIcons
 export function BoxWithIcons() {
-  const [active, setActive] = useState<string | number>(0);
-
   return (
-    <Tabs
-      activeKey={active}
-      onSelect={(_, k) => setActive(k)}
-      aria-label="Resource tabs"
-      role="region"
+    <TabbedView
       isBox
-    >
-      <Tab
-        eventKey={0}
-        aria-label="Details content"
-        title={
-          <>
-            <TabTitleIcon><InfoCircleIcon /></TabTitleIcon>
-            <TabTitleText>Details</TabTitleText>
-          </>
-        }
-      >
-        <div style={{ padding: "16px 0", color: "var(--gp-color-text-subtle)" }}>
-          Resource details.
-        </div>
-      </Tab>
-      <Tab
-        eventKey={1}
-        aria-label="Access content"
-        title={
-          <>
-            <TabTitleIcon><UsersIcon /></TabTitleIcon>
-            <TabTitleText>Access</TabTitleText>
-          </>
-        }
-      >
-        <div style={{ padding: "16px 0", color: "var(--gp-color-text-subtle)" }}>
-          Access policies.
-        </div>
-      </Tab>
-      <Tab
-        eventKey={2}
-        aria-label="Config content"
-        title={
-          <>
-            <TabTitleIcon><CogIcon /></TabTitleIcon>
-            <TabTitleText>Config</TabTitleText>
-          </>
-        }
-      >
-        <div style={{ padding: "16px 0", color: "var(--gp-color-text-subtle)" }}>
-          Configuration.
-        </div>
-      </Tab>
-    </Tabs>
+      ariaLabel="Resource tabs"
+      tabs={[
+        { key: "details", title: "Details", icon: <InfoCircleIcon />, content: panel("Resource details.") },
+        { key: "access", title: "Access", icon: <UsersIcon />, content: panel("Access policies.") },
+        { key: "config", title: "Config", icon: <CogIcon />, content: panel("Configuration.") },
+      ]}
+    />
   );
 }
 // #endregion
 
 // #region Filled
 export function Filled() {
-  const [active, setActive] = useState<string | number>(0);
-
   return (
-    <Tabs
-      activeKey={active}
-      onSelect={(_, k) => setActive(k)}
-      aria-label="Range tabs"
-      role="region"
+    <TabbedView
       isFilled
-    >
-      <Tab eventKey={0} title={<TabTitleText>Today</TabTitleText>} aria-label="Today" />
-      <Tab eventKey={1} title={<TabTitleText>Week</TabTitleText>} aria-label="Week" />
-      <Tab eventKey={2} title={<TabTitleText>Month</TabTitleText>} aria-label="Month" />
-      <Tab eventKey={3} title={<TabTitleText>Year</TabTitleText>} aria-label="Year" />
-    </Tabs>
+      ariaLabel="Range tabs"
+      tabs={[
+        { key: "today", title: "Today", content: panel("Today.") },
+        { key: "week", title: "Week", content: panel("This week.") },
+        { key: "month", title: "Month", content: panel("This month.") },
+        { key: "year", title: "Year", content: panel("This year.") },
+      ]}
+    />
   );
 }
 // #endregion
 
 // #region Vertical
 export function Vertical() {
-  const [active, setActive] = useState<string | number>(0);
-
   return (
-    <Tabs
-      activeKey={active}
-      onSelect={(_, k) => setActive(k)}
-      aria-label="Settings tabs"
-      role="region"
+    <TabbedView
       isVertical
-    >
-      <Tab eventKey={0} title={<TabTitleText>General</TabTitleText>} aria-label="General">
-        <div style={{ padding: 16, color: "var(--gp-color-text-subtle)" }}>
-          General settings.
-        </div>
-      </Tab>
-      <Tab eventKey={1} title={<TabTitleText>Notifications</TabTitleText>} aria-label="Notifications">
-        <div style={{ padding: 16, color: "var(--gp-color-text-subtle)" }}>
-          Notification preferences.
-        </div>
-      </Tab>
-      <Tab eventKey={2} title={<TabTitleText>Integrations</TabTitleText>} aria-label="Integrations">
-        <div style={{ padding: 16, color: "var(--gp-color-text-subtle)" }}>
-          Integration credentials.
-        </div>
-      </Tab>
-    </Tabs>
+      ariaLabel="Settings tabs"
+      tabs={[
+        { key: "general", title: "General", content: panel("General settings.") },
+        { key: "notifications", title: "Notifications", content: panel("Notification preferences.") },
+        { key: "integrations", title: "Integrations", content: panel("Integration credentials.") },
+      ]}
+    />
   );
 }
 // #endregion
 
 // #region WithHelpAction
 export function WithHelpAction() {
-  const [active, setActive] = useState<string | number>(0);
-
   return (
-    <Tabs
-      activeKey={active}
-      onSelect={(_, k) => setActive(k)}
-      aria-label="Help tabs"
-      role="region"
-    >
-      {(["Users", "Containers", "Database"] as const).map((t, i) => {
-        const ref = createRef<HTMLElement>();
-        return (
-          <Tab
-            key={i}
-            eventKey={i}
-            title={<TabTitleText>{t}</TabTitleText>}
-            aria-label={`${t} content`}
-            actions={
-              <>
-                <TabAction aria-label={`Help for ${t}`} ref={ref}>
-                  <HelpIcon />
-                </TabAction>
-                <Popover
-                  triggerRef={ref}
-                  headerContent={<div>{t}</div>}
-                  bodyContent={
-                    <div>
-                      Help content for the {t.toLowerCase()} tab.
-                    </div>
-                  }
-                />
-              </>
-            }
-          >
-            <div style={{ padding: "16px 0", color: "var(--gp-color-text-subtle)" }}>
-              {t} panel content.
-            </div>
-          </Tab>
-        );
-      })}
-    </Tabs>
+    <TabbedView
+      ariaLabel="Help tabs"
+      tabs={(["Users", "Containers", "Database"] as const).map((t) => ({
+        key: t.toLowerCase(),
+        title: t,
+        content: panel(`${t} panel content.`),
+        help: {
+          header: t,
+          body: `Help content for the ${t.toLowerCase()} tab.`,
+          ariaLabel: `Help for ${t}`,
+        },
+      }))}
+    />
   );
 }
 // #endregion
 
 // #region Dynamic
 export function Dynamic() {
-  const [active, setActive] = useState<number>(0);
-  const [tabs, setTabs] = useState<string[]>([
-    "Terminal 1",
-    "Terminal 2",
-    "Terminal 3",
-  ]);
-  const [nextNum, setNextNum] = useState<number>(4);
-  const onAdd = () => {
-    setTabs([...tabs, `Terminal ${nextNum}`]);
-    setActive(tabs.length);
-    setNextNum(nextNum + 1);
-  };
-  const onClose = (_e: unknown, idx: string | number) => {
-    const i = idx as number;
-    let nextIdx = active;
-    if (i < active) nextIdx = Math.max(active - 1, 0);
-    else if (active === tabs.length - 1)
-      nextIdx = Math.max(tabs.length - 2, 0);
-    setActive(nextIdx);
-    setTabs(tabs.filter((_, j) => j !== i));
-  };
+  const [tabs, setTabs] = useState<string[]>(["Terminal 1", "Terminal 2", "Terminal 3"]);
+  const [active, setActive] = useState("terminal-1");
+  const [nextNum, setNextNum] = useState(4);
+
+  const items: TabDef[] = tabs.map((t) => ({
+    key: t.toLowerCase().replace(/\s+/g, "-"),
+    title: t,
+    tabAriaLabel: t,
+    content: panel(`${t} content`),
+    isCloseDisabled: tabs.length === 1,
+  }));
 
   return (
-    <Tabs
+    <TabbedView
+      ariaLabel="Dynamic tabs"
+      tabs={items}
       activeKey={active}
-      onSelect={(_, k) => setActive(k as number)}
-      onClose={onClose}
-      onAdd={onAdd}
-      aria-label="Dynamic tabs"
-      role="region"
-      addButtonAriaLabel="Add new tab"
-    >
-      {tabs.map((t, i) => (
-        <Tab
-          key={i}
-          eventKey={i}
-          title={<TabTitleText>{t}</TabTitleText>}
-          aria-label={t}
-          closeButtonAriaLabel={`Close ${t}`}
-          isCloseDisabled={tabs.length === 1}
-        >
-          <div style={{ padding: "16px 0", color: "var(--gp-color-text-subtle)" }}>
-            {t} content
-          </div>
-        </Tab>
-      ))}
-    </Tabs>
+      onSelect={setActive}
+      addAriaLabel="Add new tab"
+      onAdd={() => {
+        const label = `Terminal ${nextNum}`;
+        setTabs([...tabs, label]);
+        setActive(label.toLowerCase().replace(/\s+/g, "-"));
+        setNextNum(nextNum + 1);
+      }}
+      onClose={(key) =>
+        setTabs(tabs.filter((t) => t.toLowerCase().replace(/\s+/g, "-") !== key))
+      }
+    />
   );
 }
 // #endregion

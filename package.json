@@ -25,7 +25,7 @@
   "packageManager": "pnpm@10.6.5",
   "pnpm": {
     "patchedDependencies": {
-      "@storybook/addon-vitest@10.4.0": "patches/@storybook__addon-vitest@10.4.0.patch"
+      "@storybook/addon-vitest@10.4.6": "patches/@storybook__addon-vitest@10.4.6.patch"
     },
     "onlyBuiltDependencies": [
       "esbuild"

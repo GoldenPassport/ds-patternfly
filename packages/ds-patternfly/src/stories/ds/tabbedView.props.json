@@ -1,12 +1,17 @@
 {
-  "import": "import { TabbedView } from \"@golden-passport/ds-patternfly\";",
+  "import": "import { TabbedView, type TabDef } from \"@golden-passport/ds-patternfly\";",
   "rows": [
-    { "name": "tabs", "type": "TabDef[]", "required": true, "description": "The tabs — each { key, title, content, isDisabled?, icon? }." },
+    { "name": "tabs", "type": "TabDef[]", "required": true, "description": "The tabs — each { key, title, content, isDisabled?, icon?, tabAriaLabel?, help?, isCloseDisabled? }." },
     { "name": "activeKey", "type": "string", "description": "Controlled active key. Omit to let TabbedView manage it." },
     { "name": "defaultActiveKey", "type": "string", "description": "Initial active key when uncontrolled. Defaults to the first tab." },
     { "name": "onSelect", "type": "(key: string) => void", "description": "Fired with the next key when a tab is selected." },
     { "name": "isBox", "type": "boolean", "description": "Box (card-like) tab styling." },
+    { "name": "isFilled", "type": "boolean", "description": "Stretch tabs to fill the available width." },
     { "name": "isVertical", "type": "boolean", "description": "Vertical tab orientation." },
-    { "name": "ariaLabel", "type": "string", "description": "Accessible name for the tablist." }
+    { "name": "ariaLabel", "type": "string", "description": "Accessible name for the tablist (rendered as a <nav>)." },
+    { "name": "tab.help", "type": "{ header?, body, ariaLabel?, icon? }", "description": "Per-tab help popover — TabbedView wires the trigger ref + Popover for you." },
+    { "name": "onAdd", "type": "() => void", "description": "Show an add-tab (+) button; append to your tab array in the handler." },
+    { "name": "addAriaLabel", "type": "string", "description": "Accessible name for the add button." },
+    { "name": "onClose", "type": "(key: string) => void", "description": "Make tabs closable; remove the key from your array. TabbedView re-focuses a neighbour if the active tab closed." }
   ]
 }

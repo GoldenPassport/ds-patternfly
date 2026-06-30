@@ -1961,6 +1961,14 @@
      references the same token the tab text resolves from. */
   --pf-v6-c-tabs--before--BorderColor: var(--pf-v6-c-tabs__link--Color);
 }
+/* Box variant: box tabs outline themselves with the neutral border token,
+   but the strip rule above paints with the (darker) tab-text colour — so the
+   line under the strip reads a different shade from the box borders beside it.
+   Match the strip to the box border so every line in a box tab set is one
+   consistent colour (the active-tab indicator stays brand). */
+.pf-v6-c-tabs.pf-v6-c-tabs.pf-m-box {
+  --pf-v6-c-tabs--before--BorderColor: var(--gp-color-border, currentColor);
+}
 /* Disabled tabs draw their own 1px bottom border on the link ::before
    (PF6 hard-codes it to the darker default border colour, with no
    token). That segment overlays the strip rule under the disabled tab,
